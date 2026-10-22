@@ -25,6 +25,7 @@ This is an integrative programme to learn, use and research all domains of scien
   - **Meteorology** is atmospheric science in the broad sense; ocean and atmosphere are one coupled system ([ADR 0007](development/decisions/0007-atmosphere-and-ocean-as-coupled-system.md)).
   - **Geodesy** supports the other Earth sciences.
   - **Geophysics** is the solid Earth: plate motion, earthquakes and the crust ([ADR 0024](development/decisions/0024-the-solid-earth.md)).
+- **Neuroscience** is the first domain beyond the Earth and the sky ([ADR 0028](development/decisions/0028-neuroscience-and-the-brain-atlas.md)): the brain's reference spaces, parcellations and maps, and the head with its electrodes, drawn by the Brain Atlas. It is a repository of its own, attached as a submodule.
 - **Further domains** join the same order as the work reaches them: chemistry, the life sciences, health, the social sciences, engineering.
 - **No laboratories.** The word is retired as the name of what we are. A themed grouping of works, if ever needed, is a *programme*: a README and a roadmap, owning no code. Do not use "laboratory" for any part of the infrastructure; proper names (the Nevada Geodetic Laboratory) and the decision records keep it.
 
@@ -91,8 +92,9 @@ This section summarises [docs/architecture.md](docs/architecture.md). Read that 
 | calx | `foundations/calx` | Retargetable computation stack; numerical methods on floating-point numbers and arrays | — |
 | morphe | `foundations/morphe` | Mathematical structures and their equivalences: arithmetic, algebra, categories, topology, algebraic geometry, formal structures | — |
 | physis | `foundations/physis` | Geometry and theoretical physics: units, geometry, discretisation, mechanics, gravitation, thermodynamics, continuum, chemistry, radiation; a provisional JavaScript stand-in for discretisation | calx, morphe |
+| neuroscience | `domains/neuroscience` | A domain in its own repository (ADR 0028): the brain's reference spaces, parcellations, maps and the head | calx, physis (declared; no domain) |
 
-The foundations are git submodules. A domain or application that grows large, or gains collaborators of its own, may be extracted with its history into its own repository (ADR 0026, the graduation rule).
+The foundations and the neuroscience domain are git submodules. A domain or application that grows large, or gains collaborators of its own, may be extracted with its history into its own repository (ADR 0026, the graduation rule); neuroscience was created so at the user's request.
 
 ### 3.2 The Order of the Domains
 
@@ -101,7 +103,7 @@ height 4   climate
 height 3   tides · navigation · air-sea
 height 2   astronomy · geophysics · geography · oceanography · meteorology
 height 1   geodesy
-height 0   metrology
+height 0   metrology · neuroscience
 ```
 
 A bridge is a domain with several fields beneath it. A new domain is placed in the order by what it may depend on.
@@ -218,11 +220,12 @@ These conventions are shared with the foundation libraries.
 │   ├── oceanography/  the ocean column · waves · seawater · sea floor
 │   ├── meteorology/   dynamics · our models · cyclones · wind
 │   ├── tides/ · navigation/ · air-sea/     bridges (planned)
-│   └── climate/       bridge: climate classes · energy balance · orbital forcing
+│   ├── climate/       bridge: climate classes · energy balance · orbital forcing
+│   └── neuroscience/  reference spaces · parcellations · maps · the head (git submodule, ADR 0028)
 ├── data/              dataset registry · acquisition · formats · products · provenance
 ├── visualization/     scene model · renderers · styles (ADR 0005); provisional js/
 ├── observation/       instruments · field work
-├── applications/      one folder per application: celestial-atlas · earth-atlas
+├── applications/      one folder per application: celestial-atlas · earth-atlas · brain-atlas
 ├── research/          questions · experiments · papers
 ├── notebooks/         exploration and teaching
 ├── docs/              architecture · gallery (later: glossary · references)
@@ -262,7 +265,7 @@ A domain directory contains:
 
 - Record decisions that shape structure, conventions or tooling in `development/decisions/NNNN-slug.md`, using the template in the index.
 - Never rewrite a record. A new record supersedes or amends it, and the old record's status is updated to point to the new one. Paths in old records are as they were written; ADR 0026 maps them to the present.
-- Records accepted so far: 0001–0027. Records 0001–0024 were written in the first laboratory, which the infrastructure absorbed; 0025 founded this repository.
+- Records accepted so far: 0001–0028. Records 0001–0024 were written in the first laboratory, which the infrastructure absorbed; 0025 founded this repository.
 
 ### 6.4 Change Discipline
 
@@ -283,8 +286,8 @@ A domain directory contains:
 
 ### 6.6 Working with the Foundations
 
-- **Submodule commits.** Edit a foundation in place under `foundations/<name>` and commit there first. Then commit the updated submodule pointer here. Commit only the pointer, by path, when other changes are staged.
-- **Commit order.** calx and morphe first, then physis, then this repository.
+- **Submodule commits.** Edit a foundation in place under `foundations/<name>` and commit there first. Then commit the updated submodule pointer here. Commit only the pointer, by path, when other changes are staged. The same holds for the neuroscience domain under `domains/neuroscience`.
+- **Commit order.** calx and morphe first, then physis, then neuroscience, then this repository.
 - **Each foundation's own CLAUDE.md** governs work inside it.
 - **Links between repositories.** Use absolute GitHub URLs.
 - **Shared conventions.** The writing style, status vocabulary, and decision and idea conventions are shared by every repository. Change them in all of them together.
@@ -306,7 +309,7 @@ A domain directory contains:
   - Load three.js from jsDelivr, pinned to an exact version (0.170.0).
   - Serve locally with Python's standard library. Each application's server mounts `domains/`, `foundations/` and `visualization/` beside its page, and the data cache at `/data/`; it reports the application's data recipe (`recipe.json`) at `/setup` and runs it on the page's request.
   - Test with Node (v22 is installed).
-  - Each application has its own local server: the Celestial Atlas on port 8770, the Earth Atlas on 8790.
+  - Each application has its own local server: the Celestial Atlas on port 8770, the Earth Atlas on 8790, the Brain Atlas on 8810.
   - A public instance runs on the user's server, `eu_region_server` (173.212.213.207): the Celestial Atlas on port 9200, the Earth Atlas on 9201, in the tmux session `science`, served with `--host 0.0.0.0 --sibling`. The READMEs link to it; keep the links current if it moves.
 - **Visual style:**
   - The Celestial Atlas uses Dusty Orchid (#CA8DBE) as its main colour, chosen by the user: plum nights, orchid accents and orchid-tinted paper for charts.
@@ -314,7 +317,7 @@ A domain directory contains:
   - All interfaces use serif type (Source Serif 4).
   - Each application may carry its own main colour within the warm, gentle family the user prefers.
 - **Version control.**
-  - This repository's remote is `https://github.com/huangwanhong-maker/The-Science-Infrastructures`; the foundations' are `https://github.com/huangwanhong-maker/{calx,morphe,physis}`.
+  - This repository's remote is `https://github.com/huangwanhong-maker/The-Science-Infrastructures`; the foundations' are `https://github.com/huangwanhong-maker/{calx,morphe,physis}`; the neuroscience domain's is `https://github.com/huangwanhong-maker/neuroscience`.
   - Each repository fetches over HTTPS and pushes over the SSH alias `serendip_wanhong` (its `pushurl`).
   - The first laboratory's repository, `https://github.com/huangwanhong-maker/Integrative_Astronomy_Geography_Oceanography_Laboratory`, is superseded by this one (ADR 0026); archiving it is the user's decision.
 - **Licences.** Every repository is MIT-licensed.
@@ -349,7 +352,8 @@ A domain directory contains:
 As of 2026-10-22:
 
 - **The structure of ADR 0026 is in place.** The first laboratory's history is joined to this repository, and the foundations are submodules under `foundations/`.
-- **The domains.** Eight domains have code: metrology, geodesy, astronomy, geophysics, geography, oceanography, meteorology and climate. Tides, navigation and air–sea are planned. All the code is provisional JavaScript, with 229 checks against published references and closed-form answers, run in twelve suites. Every domain passes its checks alone.
+- **The domains.** Nine domains have code: metrology, geodesy, astronomy, geophysics, geography, oceanography, meteorology, climate and neuroscience. Tides, navigation and air–sea are planned. All the code is provisional JavaScript, with 348 checks against published references and closed-form answers, run in fourteen suites. Every domain passes its checks alone.
+- **The Brain Atlas** (`applications/brain-atlas`, [ADR 0028](development/decisions/0028-neuroscience-and-the-brain-atlas.md)) shows a template brain in three slices and in the round, its parcellations as a tree (Julich-Brain, Schaefer, the Allen mouse ontology), and data mapped onto it by region, by coordinate and from electrodes on the scalp; the brain can be scaled to a subject's head.
 - **The Celestial Atlas** (`applications/celestial-atlas`, [ADR 0011](development/decisions/0011-first-application-celestial-atlas.md)) is a web application with five views:
   - the Solar System;
   - the stellar neighbourhood, from HYG or Gaia;

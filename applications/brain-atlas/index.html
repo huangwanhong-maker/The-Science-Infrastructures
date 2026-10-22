@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Brain Atlas</title>
+  <meta name="description" content="The brain in three slices and in the round: a template brain, its parcellations as a tree, and data mapped onto it by region, by coordinate, and from electrodes on the scalp.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M9 24c-3 0-5-2.4-5-5.2 0-1.6.7-3 1.8-3.9C5.3 14 5 13 5 12c0-2.4 1.9-4.3 4.2-4.3.3-2.2 2.1-3.9 4.4-3.9 1.3 0 2.4.5 3.2 1.4.8-.9 1.9-1.4 3.2-1.4 2.3 0 4.1 1.7 4.4 3.9C26.1 7.7 28 9.6 28 12c0 1-.3 2-.8 2.9 1.1.9 1.8 2.3 1.8 3.9 0 2.8-2.2 5.2-5 5.2' fill='none' stroke='%23ca8dbe' stroke-width='1.8' stroke-linejoin='round'/%3E%3Cpath d='M16 5.5v18.5M16 24l-2.5 4M16 24l2.5 4' fill='none' stroke='%23e8c3dc' stroke-width='1.4'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" media="print" onload="this.media='all'"
+        href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..600&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"
+      }
+    }
+  </script>
+  <script type="module" src="src/app.js"></script>
+</head>
+<body>
+  <!-- The mark: a brain in outline, with the brain stem. -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="mark" viewBox="0 0 32 32">
+        <path d="M9 24c-3 0-5-2.4-5-5.2 0-1.6.7-3 1.8-3.9C5.3 14 5 13 5 12c0-2.4 1.9-4.3 4.2-4.3.3-2.2 2.1-3.9 4.4-3.9 1.3 0 2.4.5 3.2 1.4.8-.9 1.9-1.4 3.2-1.4 2.3 0 4.1 1.7 4.4 3.9C26.1 7.7 28 9.6 28 12c0 1-.3 2-.8 2.9 1.1.9 1.8 2.3 1.8 3.9 0 2.8-2.2 5.2-5 5.2" fill="none" stroke="#ca8dbe" stroke-width="1.8" stroke-linejoin="round"/>
+        <path d="M16 5.5v18.5M16 24l-2.5 4M16 24l2.5 4" fill="none" stroke="#e8c3dc" stroke-width="1.4"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <header class="top">
+    <div class="brand">
+      <svg class="mark" aria-hidden="true"><use href="#mark"/></svg>
+      <span>Brain Atlas</span>
+    </div>
+    <nav class="views" role="tablist" aria-label="Atlas">
+      <button type="button" role="tab" data-atlas="human">Human</button>
+      <button type="button" role="tab" data-atlas="mouse">Mouse</button>
+    </nav>
+    <div class="layouts" role="group" aria-label="Layout">
+      <button type="button" data-layout="four" aria-pressed="true" title="Three slices and the brain">Four</button>
+      <button type="button" data-layout="three" aria-pressed="false" title="The brain in the round">Round</button>
+      <button type="button" data-layout="slices" aria-pressed="false" title="The three slices">Slices</button>
+    </div>
+    <button type="button" class="link" id="data-link">Data and method</button>
+  </header>
+
+  <main>
+    <section id="stage">
+      <canvas id="gl"></canvas>
+      <div id="views">
+        <div class="view" data-view="axial"><span class="name">Axial</span><svg class="overlay"></svg><div class="labels"></div><span class="corner nw">L</span><span class="corner ne">R</span><span class="corner top">A</span><span class="corner bottom">P</span></div>
+        <div class="view" data-view="coronal"><span class="name">Coronal</span><svg class="overlay"></svg><div class="labels"></div><span class="corner nw">L</span><span class="corner ne">R</span><span class="corner top">S</span><span class="corner bottom">I</span></div>
+        <div class="view" data-view="sagittal"><span class="name">Sagittal</span><svg class="overlay"></svg><div class="labels"></div><span class="corner nw">A</span><span class="corner ne">P</span><span class="corner top">S</span><span class="corner bottom">I</span></div>
+        <div class="view" data-view="three"><span class="name">In the round</span><svg class="overlay"></svg><div class="labels"></div></div>
+      </div>
+      <div id="legend"></div>
+      <div id="credits"></div>
+      <div id="toast" role="status" hidden></div>
+      <div id="loading">
+        <div class="loading-inner">
+          <svg class="mark" aria-hidden="true"><use href="#mark"/></svg>
+          <p id="loading-text">Reading the template and the parcellation…</p>
+          <div class="progress"><span id="loading-bar"></span></div>
+        </div>
+      </div>
+    </section>
+    <aside id="panel">
+      <section id="point" aria-live="polite"></section>
+      <section id="parcellations"></section>
+      <section id="regions">
+        <h3>Regions</h3>
+        <input type="search" id="region-search" placeholder="Find a region…" aria-label="Find a region" autocomplete="off">
+        <div id="tree" class="tree"></div>
+      </section>
+      <section id="data"></section>
+      <section id="head"></section>
+    </aside>
+  </main>
+
+  <dialog id="about">
+    <form method="dialog" tabindex="-1" autofocus>
+      <h2>Data and method</h2>
+      <div id="about-body"></div>
+      <button class="link" value="close">Close</button>
+    </form>
+  </dialog>
+</body>
+</html>

@@ -16,6 +16,7 @@
   - Its knowledge became the domains: one library per science, each declaring its dependencies, each passing its checks alone.
   - Geophysics is a domain.
   - The word "laboratory" is retired.
+- **2026-10-22. Neuroscience, the first domain beyond the Earth and the sky** ([ADR 0028](decisions/0028-neuroscience-and-the-brain-atlas.md)), in a repository of its own as a submodule: a brain atlas in the sense of the Human Brain Project's (reference spaces, parcellations, maps, for the human, the mouse and the rat), and the head with the 10–20 electrode system; the Brain Atlas application draws it and maps data onto it. Phase 4's choice of the next domains has begun.
 
 ## Phase 0. Foundations
 
@@ -75,7 +76,7 @@ This slice touches every tier at small scale. It reaches astronomy, geodesy, oce
 
 ## Phase 4. The Next Domains
 
-- **Choose them,** with the user, by where their structures meet those already here (see [the idea on shared structures](ideas/2026-10-22-shared-structures-across-the-sciences.md)). Candidates:
+- **Choose them,** with the user, by where their structures meet those already here (see [the idea on shared structures](ideas/2026-10-22-shared-structures-across-the-sciences.md)). Neuroscience came first (ADR 0028); its next modules are cortical surfaces, connectivity as networks, neurons, and signals (the inverse problem of EEG, with the inference foundation). Candidates:
   - **chemistry**, where physis's chemistry and thermodynamics would become a domain's foundation;
   - **the life sciences:** genomics and sequence analysis would meet morphe's formal structures, and ecology the climate;
   - **the cryosphere**, between climate, oceanography and geophysics.

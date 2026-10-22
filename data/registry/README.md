@@ -12,7 +12,7 @@ Manifests are read by [`../acquisition/fetch.py`](../acquisition/fetch.py). It d
 
 | Kind | Meaning | Example |
 |---|---|---|
-| `files` | Fixed files, downloaded as they are, or taken from a zip archive on the web. Each file's SHA-256 is recorded in the manifest and verified on every retrieval. | `jpl-de440s`, `natural-earth-50m`, `solar-system-maps`, `koppen-geiger`, `pangu-weather`, `pb2002`, `crust1` |
+| `files` | Fixed files, downloaded as they are, or taken from a zip archive on the web. Each file's SHA-256 is recorded in the manifest and verified on every retrieval. | `jpl-de440s`, `natural-earth-50m`, `solar-system-maps`, `koppen-geiger`, `pangu-weather`, `pb2002`, `crust1`, `templateflow-mni152`, `schaefer-2018`, `ebrains-julich-brain`, `allen-mouse-ccf` |
 | `tap` | A query to an astronomical archive through the IVOA Table Access Protocol | `gaia-dr3`, `ungc`, `tully-2mass-groups` |
 | `griddap` | A subset of a gridded dataset served by ERDDAP: which variables, which times, how fine a grid | `gfs`, `oisst`, `ww3`, `etopo-2022` |
 | `http` | One or more web requests built from URL templates, and optionally those the results link to | `worldbank-indicators`, `usgs-earthquakes`, `gibs-daily`, `gibs-static`, `gibs-relief`, `gfs-analysis-0p25`, `gdacs`, `ngl-midas`, `ngl-station`, `gcmt` |
@@ -27,7 +27,7 @@ All kinds except `files` declare parameters and profiles, so that a user chooses
 |---|---|
 | `id` | Identifier; also the name of the cache folder |
 | `kind` | `files` (the default), `tap`, `griddap`, `http`, `ncss` or `opendap` |
-| `domain` | The field the data belong to: `astronomy`, `geography`, `oceanography`, `meteorology`, `geophysics`, `climate`. Applications group data by it. |
+| `domain` | The field the data belong to: `astronomy`, `geography`, `oceanography`, `meteorology`, `geophysics`, `climate`, `neuroscience`. Applications group data by it. |
 | `title`, `provider` | What the dataset is and who produced it |
 | `credit` | A short attribution, shown on maps |
 | `model` | For forecast models: the model's short name (GFS, AIGFS), by which applications offer a choice of model |

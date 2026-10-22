@@ -1,0 +1,40 @@
+{
+  "id": "ebrains-julich-brain",
+  "domain": "neuroscience",
+  "title": "Julich-Brain, the cytoarchitectonic atlas of the human brain (v3.1): the maximum probability maps of its 207 areas in the MNI 152 ICBM 2009c asymmetric space, one volume per hemisphere, with the EBRAINS configuration that names the areas, their hierarchy and their labels",
+  "provider": "Forschungszentrum Jülich, Institute of Neuroscience and Medicine (INM-1), through EBRAINS, the research infrastructure of the Human Brain Project",
+  "credit": "Cytoarchitecture: Julich-Brain v3.1 (Amunts et al. 2020), EBRAINS",
+  "files": [
+    {
+      "url": "https://data-proxy.ebrains.eu/api/v1/public/buckets/d-f1fe19e8-99bd-44bc-9616-a52850680777/maximum-probability-maps_MPMs_207-areas/JulichBrainAtlas_3.1_207areas_MPM_lh_MNI152.nii.gz",
+      "file": "JulichBrainAtlas_3.1_207areas_MPM_lh_MNI152.nii.gz",
+      "size": 151961,
+      "sha256": "3a1a4d5a89fb3ec14eafe1702b47f49b61f11223223c4b33c979d0f605265487"
+    },
+    {
+      "url": "https://data-proxy.ebrains.eu/api/v1/public/buckets/d-f1fe19e8-99bd-44bc-9616-a52850680777/maximum-probability-maps_MPMs_207-areas/JulichBrainAtlas_3.1_207areas_MPM_rh_MNI152.nii.gz",
+      "file": "JulichBrainAtlas_3.1_207areas_MPM_rh_MNI152.nii.gz",
+      "size": 154140,
+      "sha256": "5558b6640975f4b55d00dbf2b2900c61146364747623862542e2b17ea48fb5ba"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/FZJ-INM1-BDA/siibra-configurations/08c492996bce6ed206d19e09a6526357aac6513f/parcellations/julichbrain_v3_1.json",
+      "file": "julichbrain_v3_1.json",
+      "size": 95568,
+      "sha256": "6fe74a8ec668185216a13a395620e8101f16134423d45d2221bb04acccab270a"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/FZJ-INM1-BDA/siibra-configurations/08c492996bce6ed206d19e09a6526357aac6513f/maps/mni152-jba31-labelled.json",
+      "file": "mni152-jba31-labelled.json",
+      "size": 58048,
+      "sha256": "124747e8768c66349d62419df315f02c8c304a0be80f8ceeabdc841999631bd0"
+    }
+  ],
+  "format": "Two gzipped NIfTI volumes of integer labels on the MNI152NLin2009cAsym grid, the left and the right hemisphere, 0 outside the mapped areas; julichbrain_v3_1.json, the tree of regions of the EBRAINS atlas configuration (siibra-configurations, pinned to the commit of 2026-10-22); mni152-jba31-labelled.json, the map's configuration, whose indices give for each area the volume (hemisphere) and label of its voxels. The domain's neuroscience/js/labels.js joins them.",
+  "coverage": "The cortex and subcortical nuclei mapped so far, with gap maps for the rest of the cortex",
+  "licence": "The EBRAINS Knowledge Graph states the terms of the dataset version f1fe19e8-99bd-44bc-9616-a52850680777 (search.kg.ebrains.eu); the Julich-Brain maps are published under Creative Commons terms with a non-commercial clause. Fetched into the cache, not redistributed; cite the dataset and Amunts et al. (2020).",
+  "citation": "Amunts, K., Mohlberg, H., Bludau, S. and Zilles, K. (2020), Julich-Brain: a 3D probabilistic atlas of the human brain's cytoarchitecture, Science 369(6506), 988-992, doi:10.1126/science.abb4588. Dickscheid, T. et al. (2026), siibra: a software tool suite for realizing a Multilevel Human Brain Atlas from complex data resources, Nature Methods 23, 1647-1658.",
+  "used_by": [
+    "applications/brain-atlas"
+  ]
+}

@@ -2,13 +2,13 @@
 
 *Status: draft, 2026-10-22.*
 
-These are screenshots of the infrastructure's two applications, taken on 22 October 2026 from their local servers, with the data of that day.
+These are screenshots of the infrastructure's three applications, taken on 22 October 2026 from their local servers, with the data of that day.
 
 - Both are web applications without a build step.
-- Their science is the provisional JavaScript of the domains they draw on, tested against published references in 218 checks.
+- Their science is the provisional JavaScript of the domains they draw on, tested against published references and closed-form answers in 229 checks.
 - Each caption says what is shown, where the data come from, and how the picture is made.
 
-Click an image to see it at full size. To run the applications yourself, see the READMEs of the [Earth Atlas](../applications/earth-atlas/README.md) and the [Celestial Atlas](../applications/celestial-atlas/README.md).
+Click an image to see it at full size. To run the applications yourself, see the READMEs of the [Earth Atlas](../applications/earth-atlas/README.md), the [Celestial Atlas](../applications/celestial-atlas/README.md) and the [Brain Atlas](../applications/brain-atlas/README.md).
 
 ## 1. The Earth Atlas
 
@@ -129,6 +129,23 @@ Choose a place, and the atlas looks beneath it: into the ocean, fetched on deman
 
 Their verification: plate velocities agree with the EarthScope calculator to 0.005 mm/yr; GPS stations in stable plate interiors move by 0.3 to 0.6 mm/yr relative to their plate; the nodal planes of all 70,451 Global CMT earthquakes agree with the catalogue's within 0.76° (99 %). The theory is in [the note on plate kinematics](../domains/geophysics/theory/plate-kinematics.md), [the note on earthquake mechanisms](../domains/geophysics/theory/earthquake-mechanisms.md) and [the note on the ocean column](../domains/oceanography/theory/the-ocean-column.md).
 
+### 1.8 Plug-ins: Algorithms Loaded on Request
+
+A plug-in is a script the atlas loads when asked, runs on the data it holds, and shows on the Earth. It derives from one of four classes, `Diagnostic`, `ForecastModel`, `DataAssimilation` or `Trajectories`, says which fields it needs, and returns products and sketches that the atlas draws like anything else ([ADR 0027](../development/decisions/0027-earth-atlas-plugins.md)). The four built in are shown here, each loaded and run from the panel, which is on the right of every picture: the source of each field, the parameters, Run, and the tables.
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/earth-25-plugin-vorticity.jpg"><img src="../assets/gallery/earth-25-plugin-vorticity.jpg" alt="Relative vorticity at 500 hPa over the western Pacific, computed by a plug-in, with the panel's Plug-ins section"></a><br><b>A diagnostic.</b> Relative vorticity at 500 hPa, computed from the GFS wind by centred differences on the sphere, in the unit of synoptic charts. The jet stream shows as paired bands, cyclonic (red) and anticyclonic (blue), and a typhoon near Taiwan as a knot of red; particles trace the wind that was differenced. The source and its level are chosen in the panel.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/earth-26-plugin-parcels.jpg"><img src="../assets/gallery/earth-26-plugin-parcels.jpg" alt="Air parcels from a ring around Tokyo carried across the Pacific by the 500 hPa wind"></a><br><b>Trajectories.</b> Twenty-four parcels started on a ring 300 km around Tokyo and carried through the GFS forecast's 500 hPa wind, hour by hour through the forecast's own times, by a fourth-order Runge–Kutta step on the sphere. The paths are drawn whole; the points on them move with the time shown, here 36 hours on, well out over the Pacific.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/earth-27-plugin-assimilation.jpg"><img src="../assets/gallery/earth-27-plugin-assimilation.jpg" alt="Analysis increment of 2 m temperature from optimal interpolation on the Equal Earth projection, with the observations"></a><br><b>Data assimilation.</b> Optimal interpolation of the GFS temperature at 2 m, the background, toward 300 observations taken from NOAA's AI model AIGFS at a lattice of points: the increment the analysis adds, on a symmetric scale, with the observations drawn warm where they lie above the background and cool below (correlation length 500 km, σ<sub>b</sub> = 2 K, σ<sub>o</sub> = 1 K). The analysis itself joins the models of the quantity, and can be differenced against either.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/earth-28-plugin-barotropic.jpg"><img src="../assets/gallery/earth-28-plugin-barotropic.jpg" alt="The barotropic model's 500 hPa heights 48 hours on, with its verification table in the panel"></a><br><b>A forecast model.</b> The barotropic vorticity equation at T42, run through the <code>ForecastModel</code> class from the GFS wind at 500 hPa, 48 hours on: the height in balance with the flow, contours every 60 m, a low of 5070 m over Iceland. The panel sets its root-mean-square error of height over 20–80° N beside persistence at every recorded lead.</td>
+</tr>
+</table>
+
+Each plug-in is checked without a page, in [the Earth Atlas's suite](../applications/earth-atlas/tests/run-tests.mjs), against an answer in closed form: the vorticity of a solid-body rotation, a parcel in such a rotation, an analysis that reproduces exact observations and leaves the far field alone, and a rotation the barotropic model keeps steady. How to use and write one is in [plugins/README.md](../applications/earth-atlas/plugins/README.md).
+
 ## 2. The Celestial Atlas
 
 The Sun, the Moon, the planets, the stars and the galaxies, at any instant from 1849 to 2150 or live. Positions come from JPL's DE440 ephemeris, read directly from its kernel.
@@ -176,7 +193,26 @@ The Sun, the Moon, the planets, the stars and the galaxies, at any instant from 
 </tr>
 </table>
 
-## 3. Credits
+## 3. The Brain Atlas
+
+A template brain in three slices and in the round, its parcellations as a tree, and data mapped onto it by region, by coordinate and from electrodes on the scalp ([ADR 0028](../development/decisions/0028-neuroscience-and-the-brain-atlas.md)).
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/brain-01-julich-area.jpg"><img src="../assets/gallery/brain-01-julich-area.jpg" alt="The MNI 152 brain in axial, coronal and sagittal slices with the Julich-Brain areas in colour, and Area 44 chosen"></a><br><b>Julich-Brain</b> on the MNI 152 ICBM 2009c template: the cytoarchitectonic areas of Amunts et al. (2020), one hue per area, with Area 44 of the inferior frontal gyrus chosen and measured (6.65 cm³ over both hemispheres). The views follow the neurological convention, the subject's left on the viewer's left.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/brain-05-networks.jpg"><img src="../assets/gallery/brain-05-networks.jpg" alt="Schaefer's 400 parcels coloured by their seven networks"></a><br><b>Schaefer's 400 parcels</b> coloured by the network each belongs to, the seven of Yeo et al. (2011), by the atlas's built-in grouping of the tree. The point, at (−38, −22, 56) mm, lies in a left somatomotor parcel: the hand area.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/brain-02-electrodes.jpg"><img src="../assets/gallery/brain-02-electrodes.jpg" alt="The electrodes of the 10-20 system on the template's scalp, in the slices and in the round"></a><br><b>The 10–20 system</b> on the template's scalp: the electrodes placed by the arcs between the nasion, inion and preauricular points (Jasper 1958; Oostenveld and Praamstra 2001), shown in the round and as rings in the slices they are near. The scalp carries a map interpolated from eleven channel values by spherical splines (Perrin et al. 1989).</td>
+<td width="50%" valign="top"><a href="../assets/gallery/brain-03-scalp-map.jpg"><img src="../assets/gallery/brain-03-scalp-map.jpg" alt="A scalp map of pasted channel values on the head, seen from above and behind"></a><br><b>A scalp map</b> from pasted channel values, positive at the vertex (Cz) and negative over the occiput (O1, O2), with the brain scaled to a head 150 mm wide and 190 mm long; the electrodes were placed again on the scaled scalp.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/brain-04-mouse.jpg"><img src="../assets/gallery/brain-04-mouse.jpg" alt="The Allen mouse brain in three slices and in the round, with the ontology's colours, and field CA1 chosen"></a><br><b>The mouse brain</b> in the Allen Common Coordinate Framework v3 (Wang et al. 2020), at 50 µm, with every voxel coloured by its structure in the Allen ontology and field CA1 of the hippocampus chosen (10.2 mm³). Coordinates are shown in RAS millimetres and in the framework's own micrometres.</td>
+<td width="50%" valign="top"></td>
+</tr>
+</table>
+
+## 4. Credits
 
 The screenshots are the infrastructure's, under its MIT licence, except the three that show Pangu-Weather's forecasts (§1.3: earth-15, earth-16 and earth-17). Those are shared under CC BY-NC-SA 4.0, the licence of the model's parameters: for learning and research, not for commercial use. The data in all of them keep their own licences.
 
@@ -203,7 +239,7 @@ The screenshots are the infrastructure's, under its MIT licence, except the thre
 | Stars | HYG v4.1 | CC BY-SA 4.0 |
 | Galaxies | Karachentsev et al. (2013); Tully (2015); names from SIMBAD (CDS) | Published catalogues; cite |
 
-## 4. Making the Screenshots
+## 5. Making the Screenshots
 
 The screenshots were taken with headless Chrome at 1600 × 1000 pixels, driven over the DevTools protocol, and saved as JPEG.
 

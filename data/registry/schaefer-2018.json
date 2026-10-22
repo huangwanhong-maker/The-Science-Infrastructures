@@ -1,0 +1,52 @@
+{
+  "id": "schaefer-2018",
+  "domain": "neuroscience",
+  "title": "The Schaefer 2018 parcellation of the human cerebral cortex into 100 and 400 parcels, each in one of the seven networks of Yeo et al. (2011), in the MNI 152 ICBM 2009c asymmetric space at 1 mm and 2 mm, with the tables naming the parcels",
+  "provider": "Computational Brain Imaging Group (CBIG), National University of Singapore, as served by TemplateFlow",
+  "credit": "Parcellation: Schaefer et al. (2018); networks: Yeo et al. (2011)",
+  "files": [
+    {
+      "url": "https://templateflow.s3.amazonaws.com/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_res-01_atlas-Schaefer2018_desc-100Parcels7Networks_dseg.nii.gz",
+      "file": "tpl-MNI152NLin2009cAsym_res-01_atlas-Schaefer2018_desc-100Parcels7Networks_dseg.nii.gz",
+      "size": 415157,
+      "sha256": "6451253870267d695bce91b292feb60d4805eb3817fb1bd4f8dc626f901f3def"
+    },
+    {
+      "url": "https://templateflow.s3.amazonaws.com/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_res-02_atlas-Schaefer2018_desc-100Parcels7Networks_dseg.nii.gz",
+      "file": "tpl-MNI152NLin2009cAsym_res-02_atlas-Schaefer2018_desc-100Parcels7Networks_dseg.nii.gz",
+      "size": 77904,
+      "sha256": "7221cee56943599833dc2b98aac56626584e9c0067f28c768b46f7b7ff7408ac"
+    },
+    {
+      "url": "https://templateflow.s3.amazonaws.com/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_atlas-Schaefer2018_desc-100Parcels7Networks_dseg.tsv",
+      "file": "tpl-MNI152NLin2009cAsym_atlas-Schaefer2018_desc-100Parcels7Networks_dseg.tsv",
+      "size": 3701,
+      "sha256": "a81a63f67fdaffd7b2b4b6c7df05f75b16899cba70100f464bbccba0a257cc6c"
+    },
+    {
+      "url": "https://templateflow.s3.amazonaws.com/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_res-01_atlas-Schaefer2018_desc-400Parcels7Networks_dseg.nii.gz",
+      "file": "tpl-MNI152NLin2009cAsym_res-01_atlas-Schaefer2018_desc-400Parcels7Networks_dseg.nii.gz",
+      "size": 479435,
+      "sha256": "ae402a191ed5e8a37546f6fc25a30affd6813dbd01f2797c8db095f5d45d6795"
+    },
+    {
+      "url": "https://templateflow.s3.amazonaws.com/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_res-02_atlas-Schaefer2018_desc-400Parcels7Networks_dseg.nii.gz",
+      "file": "tpl-MNI152NLin2009cAsym_res-02_atlas-Schaefer2018_desc-400Parcels7Networks_dseg.nii.gz",
+      "size": 91904,
+      "sha256": "e5dfdc5674fe6122609fa8d223d7d7c17f989ff1b03d7746559c95b11da1d264"
+    },
+    {
+      "url": "https://templateflow.s3.amazonaws.com/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_atlas-Schaefer2018_desc-400Parcels7Networks_dseg.tsv",
+      "file": "tpl-MNI152NLin2009cAsym_atlas-Schaefer2018_desc-400Parcels7Networks_dseg.tsv",
+      "size": 15164,
+      "sha256": "91fe503df22267bb6c9ab3b9e9e82eec0e08f496d4f9dcb9661e67d1abb14f07"
+    }
+  ],
+  "format": "NIfTI-1, gzipped, int16 labels 1..N on the grid of the MNI152NLin2009cAsym template (1 mm: 193 x 229 x 193; 2 mm: 97 x 115 x 97), 0 outside the cortex; and tab-separated tables with the columns index, name and color, the names of the form 7Networks_LH_Vis_1 (network, hemisphere, parcel). The domain's neuroscience/js/labels.js reads the tables into a tree of networks.",
+  "coverage": "The cerebral cortex of both hemispheres",
+  "licence": "MIT (the CBIG repository, Copyright (c) 2016 CBIG, National University of Singapore), as served by TemplateFlow.",
+  "citation": "Schaefer, A., Kong, R., Gordon, E. M., Laumann, T. O., Zuo, X.-N., Holmes, A. J., Eickhoff, S. B. and Yeo, B. T. T. (2018), Local-global parcellation of the human cerebral cortex from intrinsic functional connectivity MRI, Cerebral Cortex 28(9), 3095-3114, doi:10.1093/cercor/bhx179. Yeo, B. T. T. et al. (2011), The organization of the human cerebral cortex estimated by intrinsic functional connectivity, J. Neurophysiol. 106(3), 1125-1165.",
+  "used_by": [
+    "applications/brain-atlas"
+  ]
+}

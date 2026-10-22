@@ -1,0 +1,46 @@
+{
+  "id": "allen-mouse-ccf",
+  "domain": "neuroscience",
+  "title": "The Allen Mouse Brain Common Coordinate Framework, version 3: the average template brain and the 2017 annotation volume, at 50 and 25 micrometres, and the structure ontology that names every label",
+  "provider": "Allen Institute for Brain Science",
+  "credit": "Mouse brain: Allen Mouse Brain Atlas, CCFv3 (Wang et al. 2020)",
+  "files": [
+    {
+      "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/average_template/average_template_50.nrrd",
+      "file": "average_template_50.nrrd",
+      "size": 5346363,
+      "sha256": "6114c341d526f9782ca93b314b3244bb0c4c6cea17045f432d4cda63339915aa"
+    },
+    {
+      "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/annotation_50.nrrd",
+      "file": "annotation_50.nrrd",
+      "size": 880845,
+      "sha256": "84e7cecea1b03af16e923c3639602b8324929f833425ba03582bf56f962ea0d4"
+    },
+    {
+      "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/average_template/average_template_25.nrrd",
+      "file": "average_template_25.nrrd",
+      "size": 32998960,
+      "sha256": "e4a2b483e842b4c8c1b5452d940ea59e14bc1ebaa38fe6a9c3bacac6db2a8f4b"
+    },
+    {
+      "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/annotation_25.nrrd",
+      "file": "annotation_25.nrrd",
+      "size": 4035363,
+      "sha256": "c620cbcc562183e4dcd40250d440130501781f74b41de35b1c1bdabace290c42"
+    },
+    {
+      "url": "https://api.brain-map.org/api/v2/structure_graph_download/1.json",
+      "file": "structure_graph_1.json",
+      "size": 637735,
+      "sha256": "b5f0d024d1df09ee18aef15093f55240f4a70b3924ee9689add612dadff80386"
+    }
+  ],
+  "format": "NRRD (gzip-encoded): the template as unsigned 16-bit intensities, the annotation as unsigned 32-bit structure ids, 528 x 320 x 456 voxels at 25 um and 264 x 160 x 228 at 50 um. The voxel axes run anterior to posterior, superior to inferior and left to right (PIR) from the volume's corner, in micrometres; the files' headers say left-posterior-superior, which the domain overrides (neuroscience/js/spaces.js). The ontology is the JSON of the API's structure_graph_download for graph 1 (the adult mouse brain): a tree of 1,327 structures with id, acronym, name, colour and children. neuroscience/js/nrrd.js and labels.js read them.",
+  "coverage": "The whole mouse brain",
+  "licence": "Allen Institute Terms of Use (https://alleninstitute.org/terms-of-use/), which ask that the Allen Mouse Brain Atlas be cited; fetched into the cache, not redistributed.",
+  "citation": "Wang, Q. et al. (2020), The Allen Mouse Brain Common Coordinate Framework: a 3D reference atlas, Cell 181(4), 936-953, doi:10.1016/j.cell.2020.04.007. Allen Institute for Brain Science (2011), Allen Reference Atlas - Mouse Brain, atlas.brain-map.org.",
+  "used_by": [
+    "applications/brain-atlas"
+  ]
+}

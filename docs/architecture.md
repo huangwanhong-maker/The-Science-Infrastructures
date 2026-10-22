@@ -73,7 +73,7 @@ Domains      height 4   climate
 (domains/)   height 3   tides · navigation · air-sea
              height 2   astronomy · geophysics · geography · oceanography · meteorology
              height 1   geodesy
-             height 0   metrology
+             height 0   metrology · neuroscience (a submodule)
                     │ use
 Foundations  physis           units · geometry · discretisation · mechanics · gravitation ·
 (foundations/,                thermodynamics · continuum · chemistry · radiation
@@ -95,7 +95,7 @@ physis ──► calx
 
 This repository holds the domains, the edges, the works and the documents. The foundations are repositories of their own, attached as git submodules, because they are general enough to be used outside the programme.
 
-*Remark.* A domain is independent by the order and the checks of §3, not by a repository boundary. A domain or application that grows large, or gains collaborators of its own, may be extracted with its history into its own repository and attached as a submodule (ADR 0026, the graduation rule).
+*Remark.* A domain is independent by the order and the checks of §3, not by a repository boundary. A domain or application that grows large, or gains collaborators of its own, may be extracted with its history into its own repository and attached as a submodule (ADR 0026, the graduation rule). Neuroscience is such a domain from its birth ([ADR 0028](../development/decisions/0028-neuroscience-and-the-brain-atlas.md)): `domains/neuroscience` is the submodule of `https://github.com/huangwanhong-maker/neuroscience`, with its own CLAUDE.md and logs, and the checks run it like any other domain.
 
 ## 3. Dependency Rules
 
@@ -218,10 +218,12 @@ The applications run in the browser, as ES modules without a build step. They im
 | Tide-generating potential, tidal prediction, atmospheric tides | `domains/tides/` |
 | Bulk formulae for air–sea fluxes, wind waves | `domains/air-sea/` |
 | Energy-balance models, orbital forcing of insolation, climate classification | `domains/climate/` |
+| Reference spaces of the brain, parcellations and their maps, the head and the 10–20 system, readers of NIfTI and NRRD | `domains/neuroscience/` |
 | A new science, such as chemistry or ecology | a new domain in `domains/`, placed in the order |
 | Downloading and registering DE440 or a tide-gauge record | `data/` |
 | Telescope or sensor control | `observation/` |
 | A 3D globe or planetarium renderer | `visualization/renderers/` |
+| A surface extracted from a volume, for any application to draw | `visualization/js/isosurface.js` |
 | An orbital sandbox, a digital tide-predicting machine | `applications/<name>/` |
 | Reference values from JPL Horizons or NOAA | the tests of the domain they verify, in `tests/fixtures/` |
 | A derivation about a domain | `domains/<name>/theory/` |
@@ -230,9 +232,9 @@ The applications run in the browser, as ES modules without a build step. They im
 
 ## 8. Working with the Foundations
 
-- **Submodules.** `foundations/` holds the libraries as git submodules, each pinned to an exact commit.
-- **Editing a foundation.** Edit it in place under `foundations/<name>`, commit there, then commit the updated pointer here.
-- **Commit order.** Commit in dependency order: calx and morphe first, then physis, then this repository.
+- **Submodules.** `foundations/` holds the libraries as git submodules, each pinned to an exact commit; `domains/neuroscience` is a submodule too.
+- **Editing a foundation.** Edit it in place under `foundations/<name>`, commit there, then commit the updated pointer here. The same for a domain that is a submodule.
+- **Commit order.** Commit in dependency order: calx and morphe first, then physis, then the domain submodules, then this repository.
 - **Local rules.** Each foundation's CLAUDE.md governs work inside it.
 - **Links between repositories.** Use absolute GitHub URLs.
 - **Provenance.** Every result records the commit of each foundation it used.

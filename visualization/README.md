@@ -31,6 +31,7 @@ Until the scene model and the renderers exist, the parts of the two atlases' dra
 | `flow.js` | Particles carried by a vector field on the sphere, to make a flow visible ([note](theory/particles-on-the-sphere.md)) |
 | `units.js` | The units in which quantities are shown, and numbers written for reading |
 | `tiles.js` | The tiles of an equirectangular map service that cover a region at a resolution |
+| `isosurface.js` | A surface at a level of a volume (a brain, a region), as a triangle mesh, by surface nets |
 
 Their checks run with `node visualization/tests/run-tests.mjs`.
 

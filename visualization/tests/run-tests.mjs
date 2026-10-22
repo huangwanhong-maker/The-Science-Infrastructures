@@ -115,4 +115,29 @@ const { check, assert, done } = suite();
     Math.abs(t.z - 6) + Math.abs(t.c1 - t.c0 + 1 - 8) + Math.abs(t.r1 - t.r0 + 1 - 4), 0, '');
 }
 
+// ---- isosurfaces by surface nets ----------------------------------------------------------
+{
+  const { isosurface, meshMeasures } = await import('../js/index.js');
+  // A ball of radius 12 voxels of 2 mm: a closed surface, outward normals, the area and volume of a sphere of 24 mm.
+  const n = 40, c = 19.5, r = 12, R = 2 * r;
+  const data = new Uint8Array(n * n * n);
+  for (let k = 0; k < n; k++) for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) if (Math.hypot(i - c, j - c, k - c) <= r) data[i + n * (j + n * k)] = 1;
+  const affine = [2, 0, 0, -39, 0, 2, 0, -39, 0, 0, 2, -39, 0, 0, 0, 1];
+  const m = isosurface({ dims: [n, n, n], data, affine }, 0.5, { smoothing: 2 });
+  const mm = meshMeasures(m.positions, m.indices);
+  check('isosurface: the area of a ball', Math.abs(mm.area / (4 * Math.PI * R * R) - 1), 0.02);
+  check('isosurface: the volume enclosed, positive for outward faces', Math.abs(mm.volume / ((4 / 3) * Math.PI * R ** 3) - 1), 0.03);
+  assert('isosurface: closed, with the Euler characteristic of a sphere', mm.euler === 2 && m.triangleCount === mm.faces, `${mm.euler}`);
+  let inward = 0, far = 0;
+  for (let v = 0; v < m.positions.length; v += 3) {
+    const d = m.positions[v] * m.normals[v] + m.positions[v + 1] * m.normals[v + 1] + m.positions[v + 2] * m.normals[v + 2];
+    if (d < 0) inward++;
+    if (Math.abs(Math.hypot(m.positions[v], m.positions[v + 1], m.positions[v + 2]) - R) > 1.5) far++;
+  }
+  check('isosurface: every normal points outward', inward, 0, 'vertices');
+  check('isosurface: every vertex within 1.5 mm of the sphere', far, 0, 'vertices');
+  const empty = isosurface({ dims: [4, 4, 4], data: new Uint8Array(64), affine }, 0.5);
+  assert('isosurface: nothing from an empty volume', empty.vertexCount === 0 && empty.triangleCount === 0);
+}
+
 done();

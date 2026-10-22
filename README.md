@@ -44,7 +44,14 @@ python3 -m venv .venv
 .venv/bin/python applications/earth-atlas/serve.py --open
 ```
 
-The Earth Atlas opens in your browser at http://127.0.0.1:8790/. For the Celestial Atlas, run the last line with `applications/celestial-atlas/serve.py` in a second terminal; it opens at http://127.0.0.1:8770/, and the two link to each other.
+The Earth Atlas opens in your browser at http://127.0.0.1:8790/. For the Celestial Atlas, run the last line with `applications/celestial-atlas/serve.py` in a second terminal; it opens at http://127.0.0.1:8770/, and the two link to each other. For the Brain Atlas, fetch its data (about 80 MB) and serve it:
+
+```
+python data/acquisition/fetch.py templateflow-mni152 schaefer-2018 ebrains-julich-brain allen-mouse-ccf
+python applications/brain-atlas/serve.py --open
+```
+
+It opens at http://127.0.0.1:8810/.
 
 *If something goes wrong.*
 
@@ -124,7 +131,7 @@ height 4   climate
 height 3   tides · navigation · air-sea
 height 2   astronomy · geophysics · geography · oceanography · meteorology
 height 1   geodesy
-height 0   metrology
+height 0   metrology · neuroscience
            ─────────────────────────────── foundations: physis ─► calx, morphe
 ```
 
@@ -143,11 +150,12 @@ Dependencies point down. No foundation depends on a domain; no domain depends on
 | [meteorology](domains/meteorology/) | field | Atmospheric dynamics, our own models, cyclones | draft |
 | [climate](domains/climate/) | bridge | Climate classes; energy balance and orbital forcing planned | draft |
 | [tides](domains/tides/), [navigation](domains/navigation/), [air-sea](domains/air-sea/) | bridges | Tides; celestial navigation and routes; exchange at the sea surface | planned |
+| [neuroscience](domains/neuroscience/) | field | The brain: reference spaces, parcellations and maps; the head and its electrodes (a repository of its own, as a submodule) | draft |
 
 Further domains join the same order as the work reaches them. As a map of intent, not commitments:
 
 - chemistry and materials;
-- molecular and cell biology, genomics, ecology, evolution and neuroscience;
+- molecular and cell biology, genomics, ecology and evolution;
 - health and medicine;
 - demography, economics, linguistics and cognition;
 - engineering.
@@ -164,7 +172,9 @@ Mathematics, logic, computation and statistics are foundations.
   - the plates and their motion, 20,000 GPS stations and 70,000 earthquake mechanisms;
   - the crust, and sections through subduction zones.
 
-Both run online on the project's server, the [Celestial Atlas](http://173.212.213.207:9200/) and the [Earth Atlas](http://173.212.213.207:9201/), and on your own computer in a few lines (Quick Start, above). The [index of applications](applications/README.md) lists those planned.
+- The [Brain Atlas](applications/brain-atlas/README.md) shows a template brain in three slices and in the round, with Julich-Brain's cytoarchitectonic areas and Schaefer's functional parcels as a tree, and the mouse brain in the Allen framework; data are mapped onto it by region, by coordinate and from electrodes on the scalp, and the brain can be scaled to a subject's head.
+
+The first two run online on the project's server, the [Celestial Atlas](http://173.212.213.207:9200/) and the [Earth Atlas](http://173.212.213.207:9201/), and all three on your own computer in a few lines (Quick Start, above). The [index of applications](applications/README.md) lists those planned.
 
 ## 6. Organisation of the Repository
 
@@ -172,11 +182,11 @@ Both run online on the project's server, the [Celestial Atlas](http://173.212.21
 .
 ├── foundations/     calx · morphe · physis (git submodules); inference planned
 ├── domains/         metrology · geodesy · astronomy · geophysics · geography · oceanography ·
-│                    meteorology · tides · navigation · air-sea · climate
+│                    meteorology · tides · navigation · air-sea · climate · neuroscience (submodule)
 ├── data/            registry · acquisition · formats · products · requests on demand
 ├── visualization/   scene model · renderers · styles; provisional drawing helpers
 ├── observation/     instruments · field work
-├── applications/    celestial-atlas · earth-atlas
+├── applications/    celestial-atlas · earth-atlas · brain-atlas
 ├── research/        questions · experiments · papers
 ├── notebooks/       exploration and teaching
 ├── docs/            architecture · gallery
@@ -184,7 +194,7 @@ Both run online on the project's server, the [Celestial Atlas](http://173.212.21
 └── assets/          images · fonts · style tokens
 ```
 
-To clone it with the foundations:
+To clone it with the foundations and the neuroscience domain:
 
 ```
 git clone --recurse-submodules https://github.com/huangwanhong-maker/The-Science-Infrastructures.git
@@ -200,7 +210,7 @@ To run an application, follow the Quick Start at the top of this page; each appl
 
 ## 7. Status
 
-**As of 2026-10-22.** Two applications work, online and on any computer (Quick Start). Their science is the provisional JavaScript of eight domains, of physis and of the visualization layer, tested against published references and closed-form answers in 229 checks. Each domain passes its checks on its own. The Earth Atlas takes plug-ins: scripts for prediction, assimilation and analysis, loaded on request ([ADR 0027](development/decisions/0027-earth-atlas-plugins.md)). There is no C++ yet. The next steps are in the [roadmap](development/roadmap.md):
+**As of 2026-10-22.** Three applications work, two of them online, all on any computer (Quick Start). Their science is the provisional JavaScript of nine domains, of physis and of the visualization layer, tested against published references and closed-form answers in 348 checks. Each domain passes its checks on its own. Neuroscience, the first domain beyond the Earth and the sky, is a repository of its own attached as a submodule, with the Brain Atlas drawing it ([ADR 0028](development/decisions/0028-neuroscience-and-the-brain-atlas.md)). The Earth Atlas takes plug-ins: scripts for prediction, assimilation and analysis, loaded on request ([ADR 0027](development/decisions/0027-earth-atlas-plugins.md)). There is no C++ yet. The next steps are in the [roadmap](development/roadmap.md):
 
 - Phase 0, the toolchain and the build;
 - the choice of the next domains.

@@ -7,3 +7,6 @@
 [submodule "physis"]
 	path = foundations/physis
 	url = https://github.com/huangwanhong-maker/physis.git
+[submodule "neuroscience"]
+	path = domains/neuroscience
+	url = https://github.com/huangwanhong-maker/neuroscience.git

@@ -18,18 +18,21 @@ Let D be the set of domains, and let d → e mean that domain d may depend on do
 - **Works compose domains.** An application or a study uses a set S of domains, and so needs the order ideal ↓S = ⋃_{d∈S} ↓d. Two works may share domains freely: the domains are covered by the works, not partitioned among them.
 
 ```
-height 0   metrology
+height 0   metrology · neuroscience
 height 1   geodesy
 height 2   astronomy · geophysics · geography · oceanography · meteorology
 height 3   tides · navigation · air-sea                                  (bridges)
 height 4   climate                                                       (bridge)
 ```
 
+*Remark.* A domain may live in a repository of its own and be attached here as a git submodule (the graduation rule of ADR 0026); neuroscience is the first ([ADR 0028](../development/decisions/0028-neuroscience-and-the-brain-atlas.md)). The order and the checks do not see the difference.
+
 ## 3. Index
 
 | Domain | Kind | Scope | May depend on | Status |
 |---|---|---|---|---|
 | [metrology](metrology/) | field | Time scales, reference frames, Earth orientation | — | draft |
+| [neuroscience](neuroscience/) | field | The brain: reference spaces, parcellations and maps, the head and its electrodes; later surfaces, connectivity, neurons, signals (a submodule) | — | draft |
 | [geodesy](geodesy/) | field | The figure of the Earth, its gravity field and rotation, reference systems; places, distances, directions | metrology | draft |
 | [astronomy](astronomy/) | field | Positional astronomy, ephemerides, the rotation of the bodies, galaxies; later astrophysics and cosmology | metrology, geodesy | draft |
 | [geophysics](geophysics/) | field | The solid Earth: plate motion, earthquake mechanisms, the crust, sections; later seismology, gravity and magnetism | geodesy | draft |
@@ -41,7 +44,7 @@ height 4   climate                                                       (bridge
 | [air-sea](air-sea/) | bridge | Exchange of momentum, heat, water and gases at the sea surface; wind waves | meteorology, oceanography | planned |
 | [climate](climate/) | bridge | The coupled system, energy balance, climatic zones, variability, orbital forcing | meteorology, oceanography, geography, astronomy, air-sea | draft |
 
-Future domains join the same order: chemistry, biology and ecology, among others, each beside or above the domains it stands on.
+Future domains join the same order: chemistry, biology and ecology, among others, each beside or above the domains it stands on. Neuroscience, the first beyond the Earth and the sky, stands beside metrology.
 
 ## 4. The Contract of a Domain
 
