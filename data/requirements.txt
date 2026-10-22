@@ -1,11 +1,15 @@
 # The data library: fetching datasets and building products (data/README.md §3).
 # fetch.py needs only the standard library; the product builders need numpy, and
-# the imagery and class rasters need Pillow. The AI model needs more, from
+# the imagery and class rasters need Pillow, and the GRIB2 decoders (ECMWF's
+# forecasts) need eccodes. The AI model needs more, from
 # data/products/requirements-models.txt (ADR 0022), in the same environment.
 #
 #   python -m venv .venv
 #   .venv/Scripts/python -m pip install -r data/requirements.txt      (.venv/bin/python on Unix)
 #
-# Licences: numpy BSD-3-Clause; Pillow MIT-CMU.
+# Licences: numpy BSD-3-Clause; Pillow MIT-CMU; eccodes Apache-2.0 (its wheel carries the ecCodes
+# library, Apache-2.0, with libaec and OpenJPEG, both BSD-2-Clause; it needs attrs MIT, cffi MIT,
+# findlibs Apache-2.0).
 numpy==2.3.5
 pillow==12.2.0
+eccodes==2.50.0

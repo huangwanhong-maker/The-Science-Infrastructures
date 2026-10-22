@@ -1,0 +1,141 @@
+{
+  "id": "ecmwf-ens",
+  "kind": "ecmwf",
+  "domain": "meteorology",
+  "model": "ECMWF ENS",
+  "title": "ECMWF ENS: probabilities from the ensemble of ECMWF's Integrated Forecasting System, of heavy precipitation, strong gusts and warm or cold spells",
+  "provider": "European Centre for Medium-Range Weather Forecasts (ECMWF); open data of the IFS ensemble (stream enfo, 51 members), its probability products (type ep) at 0.25°, from data.ecmwf.int",
+  "credit": "ECMWF ENS (CC BY 4.0): based on data and products of the European Centre for Medium-Range Weather Forecasts (ECMWF); sampled to 1°",
+  "service": "https://data.ecmwf.int/forecasts",
+  "mirrors": [
+    {
+      "service": "https://ecmwf-forecasts.s3.eu-central-1.amazonaws.com",
+      "dataset": "the copy on Amazon S3 (registry.opendata.aws/ecmwf-forecasts), in the same layout"
+    }
+  ],
+  "source": {
+    "model": "ifs",
+    "resolution": "0p25",
+    "stream": "enfo",
+    "type": "ep"
+  },
+  "cycles": [
+    0,
+    12
+  ],
+  "file_steps": [
+    240,
+    360
+  ],
+  "first_step": 24,
+  "variables": [
+    {
+      "param": "tpg10",
+      "levtype": "sfc",
+      "window": 24,
+      "name": "tpg10",
+      "long_name": "Probability of at least 10 mm of precipitation in the 24 h before",
+      "units": "%"
+    },
+    {
+      "param": "tpg20",
+      "levtype": "sfc",
+      "window": 24,
+      "name": "tpg20",
+      "long_name": "Probability of at least 20 mm of precipitation in the 24 h before",
+      "units": "%"
+    },
+    {
+      "param": "tpg50",
+      "levtype": "sfc",
+      "window": 24,
+      "name": "tpg50",
+      "long_name": "Probability of at least 50 mm of precipitation in the 24 h before",
+      "units": "%"
+    },
+    {
+      "param": "10fgg10",
+      "levtype": "sfc",
+      "window": 24,
+      "name": "fgg10",
+      "long_name": "Probability of a 10 m wind gust of at least 10 m s-1 in the 24 h before",
+      "units": "%"
+    },
+    {
+      "param": "10fgg15",
+      "levtype": "sfc",
+      "window": 24,
+      "name": "fgg15",
+      "long_name": "Probability of a 10 m wind gust of at least 15 m s-1 in the 24 h before",
+      "units": "%"
+    },
+    {
+      "param": "10fgg25",
+      "levtype": "sfc",
+      "window": 24,
+      "name": "fgg25",
+      "long_name": "Probability of a 10 m wind gust of at least 25 m s-1 in the 24 h before",
+      "units": "%"
+    },
+    {
+      "param": "ptsa_gt_1stdev",
+      "levtype": "pl",
+      "levelist": 850,
+      "name": "ptsa_gt_1stdev",
+      "level": "850 hPa",
+      "long_name": "Probability of a temperature more than 1 standard deviation above normal",
+      "units": "%"
+    },
+    {
+      "param": "ptsa_lt_1stdev",
+      "levtype": "pl",
+      "levelist": 850,
+      "name": "ptsa_lt_1stdev",
+      "level": "850 hPa",
+      "long_name": "Probability of a temperature more than 1 standard deviation below normal",
+      "units": "%"
+    }
+  ],
+  "parameters": {
+    "cycle": {
+      "type": "time",
+      "default": "now",
+      "description": "The run taken is the latest at 00 or 12 UTC, at or before this time (UTC), whose probabilities are published; ECMWF keeps the last 12 runs (about three days)"
+    },
+    "hours": {
+      "type": "int",
+      "default": 120,
+      "min": 24,
+      "max": 240,
+      "description": "Last time, in hours after the run: the end of the last 24 h period"
+    },
+    "step_hours": {
+      "type": "int",
+      "default": 12,
+      "min": 12,
+      "max": 24,
+      "description": "Hours between times: 12 (the periods overlap by half) or 24"
+    },
+    "stride": {
+      "type": "int",
+      "default": 4,
+      "min": 1,
+      "max": 16,
+      "description": "Take every n-th point of the 0.25° grid when the product is built: 4 gives 1° (the file holds the whole grid)"
+    }
+  },
+  "profiles": {
+    "probabilities": {
+      "description": "The latest run, periods ending 24 to 120 h ahead, every 12 h: 8 probabilities at 9 times, about 23 MB of GRIB2; a 1° product",
+      "parameters": {}
+    }
+  },
+  "default_profile": "probabilities",
+  "format": "GRIB2, one file holding the selected messages in the order of the source file (the run's probabilities to 240 h), all in percent: tpg10, tpg20, tpg50, the probability that the precipitation accumulated over a 24 h period reaches 10, 20 or 50 mm; 10fgg10, 10fgg15, 10fgg25, the probability that the largest 10 m wind gust in a 24 h period reaches 10, 15 or 25 m s-1; ptsa_gt_1stdev, ptsa_lt_1stdev, the probability that the temperature at 850 hPa at the time lies more than one standard deviation above or below the mean of ECMWF's model climate for the date and lead time. Periods are named by their end (step 96-120 at 120 h). Each probability is the fraction of the 51 members (the control and 50 perturbed forecasts) in which the event happens. Grid 0.25°, 1440 x 721, latitude 90° to −90°, longitude −180° to 179.75°. Decoded with ecCodes by data/products/ecmwf_fields.py.",
+  "coverage": "Global; runs at 00 and 12 UTC; 24 h periods ending every 12 h from 24 to 240 h (to 360 h in a second file); the last 12 runs are kept",
+  "licence": "CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) with ECMWF's Terms of Use (https://apps.ecmwf.int/datasets/licences/general/): use and redistribution, commercial too, with attribution. Copyright © 2026 European Centre for Medium-Range Weather Forecasts (ECMWF); source www.ecmwf.int. ECMWF does not accept any liability whatsoever for any error or omission in the data, their availability, or for any loss or damage arising from their use. Our products are modified: sampled to 1° and precipitation given as mean rates.",
+  "citation": "European Centre for Medium-Range Weather Forecasts (2026). ECMWF open data: real-time forecasts from IFS and AIFS, IFS ensemble probabilities (enfo, ep), 0.25°. https://www.ecmwf.int/en/forecasts/datasets/open-data. The model climate and standardised anomalies: ECMWF, IFS Documentation, Part V: Ensemble Prediction System.",
+  "used_by": [
+    "applications/earth-atlas"
+  ]
+}

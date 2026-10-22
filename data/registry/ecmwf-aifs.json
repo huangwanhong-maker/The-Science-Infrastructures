@@ -1,0 +1,186 @@
+{
+  "id": "ecmwf-aifs",
+  "kind": "ecmwf",
+  "domain": "meteorology",
+  "model": "ECMWF AIFS",
+  "title": "ECMWF AIFS: the forecast of ECMWF's AI model AIFS Single, near the surface and aloft",
+  "provider": "European Centre for Medium-Range Weather Forecasts (ECMWF); open data of the Artificial Intelligence Forecasting System, AIFS Single (model aifs-single, stream oper), at 0.25°, from data.ecmwf.int",
+  "credit": "ECMWF AIFS (CC BY 4.0): based on data and products of the European Centre for Medium-Range Weather Forecasts (ECMWF); sampled to 1°",
+  "service": "https://data.ecmwf.int/forecasts",
+  "mirrors": [
+    {
+      "service": "https://ecmwf-forecasts.s3.eu-central-1.amazonaws.com",
+      "dataset": "the copy on Amazon S3 (registry.opendata.aws/ecmwf-forecasts), in the same layout"
+    }
+  ],
+  "source": {
+    "model": "aifs-single",
+    "resolution": "0p25",
+    "stream": "oper",
+    "type": "fc"
+  },
+  "cycles": [
+    0,
+    12
+  ],
+  "variables": [
+    {
+      "param": "msl",
+      "levtype": "sfc",
+      "name": "msl",
+      "long_name": "Pressure at mean sea level",
+      "standard_name": "air_pressure_at_sea_level",
+      "units": "Pa"
+    },
+    {
+      "param": "2t",
+      "levtype": "sfc",
+      "name": "t",
+      "level": "2 m",
+      "long_name": "Air temperature",
+      "standard_name": "air_temperature",
+      "units": "K"
+    },
+    {
+      "param": "10u",
+      "levtype": "sfc",
+      "name": "u",
+      "level": "10 m",
+      "long_name": "Eastward wind",
+      "standard_name": "eastward_wind",
+      "units": "m s-1"
+    },
+    {
+      "param": "10v",
+      "levtype": "sfc",
+      "name": "v",
+      "level": "10 m",
+      "long_name": "Northward wind",
+      "standard_name": "northward_wind",
+      "units": "m s-1"
+    },
+    {
+      "param": "tp",
+      "levtype": "sfc",
+      "name": "mtpr",
+      "long_name": "Precipitation rate, mean over the {interval} h before",
+      "standard_name": "precipitation_flux",
+      "units": "kg m-2 s-1",
+      "derive": "rate",
+      "cell_methods": "time: mean"
+    },
+    {
+      "param": "t",
+      "levtype": "pl",
+      "levelist": 850,
+      "name": "t",
+      "level": "850 hPa",
+      "long_name": "Temperature",
+      "standard_name": "air_temperature",
+      "units": "K"
+    },
+    {
+      "param": [
+        "gh",
+        "z"
+      ],
+      "levtype": "pl",
+      "levelist": 500,
+      "name": "gh",
+      "level": "500 hPa",
+      "long_name": "Geopotential height",
+      "standard_name": "geopotential_height",
+      "units": "m"
+    },
+    {
+      "param": "u",
+      "levtype": "pl",
+      "levelist": 500,
+      "name": "u",
+      "level": "500 hPa",
+      "long_name": "Eastward wind",
+      "standard_name": "eastward_wind",
+      "units": "m s-1"
+    },
+    {
+      "param": "v",
+      "levtype": "pl",
+      "levelist": 500,
+      "name": "v",
+      "level": "500 hPa",
+      "long_name": "Northward wind",
+      "standard_name": "northward_wind",
+      "units": "m s-1"
+    },
+    {
+      "param": "u",
+      "levtype": "pl",
+      "levelist": 250,
+      "name": "u",
+      "level": "250 hPa",
+      "long_name": "Eastward wind",
+      "standard_name": "eastward_wind",
+      "units": "m s-1"
+    },
+    {
+      "param": "v",
+      "levtype": "pl",
+      "levelist": 250,
+      "name": "v",
+      "level": "250 hPa",
+      "long_name": "Northward wind",
+      "standard_name": "northward_wind",
+      "units": "m s-1"
+    }
+  ],
+  "parameters": {
+    "cycle": {
+      "type": "time",
+      "default": "now",
+      "description": "The run taken is the latest at 00 or 12 UTC, at or before this time (UTC), whose files reach the last step; ECMWF keeps the last 12 runs (about three days)"
+    },
+    "hours": {
+      "type": "int",
+      "default": 120,
+      "min": 0,
+      "max": 360,
+      "description": "Last step, in hours after the run"
+    },
+    "step_hours": {
+      "type": "int",
+      "default": 6,
+      "min": 6,
+      "max": 24,
+      "description": "Hours between steps: a multiple of 6, the model's step"
+    },
+    "stride": {
+      "type": "int",
+      "default": 4,
+      "min": 1,
+      "max": 16,
+      "description": "Take every n-th point of the 0.25° grid when the product is built: 4 gives 1°, 8 gives 2° (the files hold the whole grid)"
+    }
+  },
+  "profiles": {
+    "forecast": {
+      "description": "The latest run to five days ahead, every 6 h: 11 fields at 21 steps, about 105 MB of GRIB2; a 1° product",
+      "parameters": {}
+    },
+    "glance": {
+      "description": "The latest run to two days ahead, every 12 h: about 25 MB of GRIB2; a 2° product",
+      "parameters": {
+        "hours": 48,
+        "step_hours": 12,
+        "stride": 8
+      }
+    }
+  },
+  "default_profile": "forecast",
+  "format": "GRIB2 with CCSDS packing, one file per step holding the selected messages in the order of the source file: msl (Pa); 2t (K); 10u, 10v (m s-1); tp (kg m-2, accumulated from the start of the run); t at 850 hPa (K); gh at 500 hPa (geopotential metres); u, v at 500 and 250 hPa (m s-1). Grid 0.25°, 1440 x 721, latitude 90° to −90°, longitude −180° to 179.75°. Decoded with ecCodes by data/products/ecmwf_fields.py.",
+  "coverage": "Global; runs at 00, 06, 12 and 18 UTC, every 6 h to 360 h; the model runs on a reduced Gaussian grid (N320, about 31 km) and the files are interpolated to 0.25°; the last 12 runs are kept",
+  "licence": "CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) with ECMWF's Terms of Use (https://apps.ecmwf.int/datasets/licences/general/): use and redistribution, commercial too, with attribution. Copyright © 2026 European Centre for Medium-Range Weather Forecasts (ECMWF); source www.ecmwf.int. ECMWF does not accept any liability whatsoever for any error or omission in the data, their availability, or for any loss or damage arising from their use. Our products are modified: sampled to 1° and precipitation given as mean rates.",
+  "citation": "Lang, S., Alexe, M., Chantry, M., Dramsch, J., Pinault, F., Raoult, B., Clare, M. C. A., Lessig, C., Maier-Gerber, M., Magnusson, L. et al. (2024). AIFS - ECMWF's data-driven forecasting system. arXiv:2406.01465. Data: European Centre for Medium-Range Weather Forecasts (2026), ECMWF open data: real-time forecasts from IFS and AIFS, AIFS Single (aifs-single, oper, fc), 0.25°. https://www.ecmwf.int/en/forecasts/datasets/open-data",
+  "used_by": [
+    "applications/earth-atlas"
+  ]
+}

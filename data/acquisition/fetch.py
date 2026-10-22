@@ -1,7 +1,7 @@
 """Acquire registered datasets into the local cache.
 
 A dataset is described by a manifest in ``data/registry/`` (schema:
-``data/registry/README.md``). There are six kinds:
+``data/registry/README.md``). There are seven kinds:
 
 ``files``
     Fixed files, downloaded as they are, such as the DE440 kernel. Their
@@ -26,6 +26,11 @@ A dataset is described by a manifest in ``data/registry/`` (schema:
     Subsets of gridded datasets on an OPeNDAP (DAP2) server, by index ranges
     and strides, saved as netCDF classic files, such as TerraClimate's monthly
     climate normals.
+
+``ecmwf``
+    Fields of ECMWF's open forecasts (IFS, AIFS, the ensemble's probabilities),
+    taken from the per-step GRIB2 files of the latest complete run by HTTP range
+    requests guided by each file's index (data/acquisition/ecmwf_open.py).
 
 Every kind except ``files`` declares parameters (which part of the data and how
 much of it) and named profiles. A retrieval chooses a profile and may override
@@ -73,6 +78,7 @@ sys.path.insert(0, str(DATA / "catalogs"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import erddap  # noqa: E402
 import ncss  # noqa: E402
+import ecmwf_open  # noqa: E402
 import remotezip  # noqa: E402
 import tap  # noqa: E402
 
@@ -667,7 +673,7 @@ def acquire_opendap(manifest: dict, profile: str | None, overrides: dict, refres
 
 
 ACQUIRE = {"tap": acquire_tap, "griddap": acquire_griddap, "http": acquire_http, "ncss": acquire_ncss,
-           "opendap": acquire_opendap}
+           "opendap": acquire_opendap, "ecmwf": ecmwf_open.acquire}
 
 
 # ---- listing ----------------------------------------------------------------
