@@ -27,6 +27,9 @@ const AFFINE = {
   's-1': { unit: '10⁻⁵ s⁻¹', a: 1e5, b: 0 },           // vorticity, in the unit of synoptic charts
   'mm yr-1': { unit: 'mm/yr', a: 1, b: 0 },            // plate motion
   'km': { unit: 'km', a: 1, b: 0 },
+  'km-2': { unit: 'per km²', a: 1, b: 0 },              // population density
+  'km2': { unit: 'km²', a: 1, b: 0 },                  // areas, such as a watershed's
+  'h': { unit: 'h', a: 1, b: 0 },                      // travel times
 };
 
 // Alternative units the reader may choose for a quantity stored in given units.

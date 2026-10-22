@@ -1,0 +1,23 @@
+{
+  "id": "natural-earth-10m-admin1",
+  "domain": "geography",
+  "title": "Natural Earth 1:10 million: the first-order administrative divisions of the countries (states, provinces, prefectures, regions)",
+  "provider": "Natural Earth (N. V. Kelso, T. Patterson and contributors), version 5.1.2, GeoJSON from the natural-earth-vector repository",
+  "credit": "Natural Earth",
+  "files": [
+    {
+      "url": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/v5.1.2/geojson/ne_10m_admin_1_states_provinces.geojson",
+      "file": "ne_10m_admin_1_states_provinces.geojson",
+      "size": 40726851,
+      "sha256": "22d0e3ad85eb3e27f17cabf8ba2d50e554fbc27a87796ff891d958185da62fb5"
+    }
+  ],
+  "format": "GeoJSON; WGS 84 longitude and latitude in degrees; one (Multi)Polygon per division, cut at the antimeridian, with its codes (adm1_code, iso_3166_2, the country's adm0_a3 and iso_a2), its type and names in some 25 languages",
+  "coverage": "The whole Earth at 1:10 million: about 4,600 divisions of some 250 countries and territories; Natural Earth's default (de facto) depiction of boundaries",
+  "licence": "Public domain",
+  "citation": "Made with Natural Earth. Free vector and raster map data @ naturalearthdata.com.",
+  "used_by": [
+    "data/products/regions.py",
+    "applications/earth-atlas"
+  ]
+}

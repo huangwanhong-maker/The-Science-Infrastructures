@@ -1,0 +1,27 @@
+{
+  "id": "ghsl-population",
+  "domain": "geography",
+  "model": "GHSL",
+  "title": "GHS-POP R2023A: the residential population of the Earth in 2025, on the WGS 84 grid of 30 arc-seconds",
+  "provider": "European Commission, Joint Research Centre (JRC), Global Human Settlement Layer; GHS_POP_E2025_GLOBE_R2023A_4326_30ss, version 1.0, from the JRC open-data repository",
+  "credit": "GHS-POP R2023A, European Commission JRC, CC BY 4.0",
+  "release": "R2023A",
+  "epoch": 2025,
+  "files": [
+    {
+      "url": "https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_POP_GLOBE_R2023A/GHS_POP_E2025_GLOBE_R2023A_4326_30ss/V1-0/GHS_POP_E2025_GLOBE_R2023A_4326_30ss_V1_0.zip",
+      "member": "GHS_POP_E2025_GLOBE_R2023A_4326_30ss_V1_0.tif",
+      "file": "GHS_POP_E2025_GLOBE_R2023A_4326_30ss_V1_0.tif",
+      "size": 384285897,
+      "sha256": "6a3dac929afc5f5f77893c81b6e2a0c4771d76e267d2a2a19ade526f0e25ddc2"
+    }
+  ],
+  "format": "BigTIFF (GeoTIFF), one band of float64 people per cell (residential population, not per km²), on WGS 84 geographic coordinates (EPSG:4326, PixelIsArea): 43 202 × 21 384 cells of 30″ (0.0083333333°), the corner at -180.0079°, 89.0996° (the trace of the warping from World Mollweide), so that one column lies beyond each antimeridian; 256 × 256 tiles, LZW, no predictor; no NoData (the sea is 0). The member of a 461 MB zip archive, read by range requests (384 MB, deflated to 356 MB in the archive). The release's own total for 2025 is 8 191 988 536 (GHSL Data Package 2023, Table 20)",
+  "coverage": "The whole Earth, at the epoch 2025 (an estimate made in 2023 from census data up to then and the UN World Population Prospects 2022), the latest epoch at or before the present of the release; epochs 1975-2030 every five years are in the same release",
+  "licence": "CC BY 4.0 (\"(c) European Union, 1995-2026. The Commission's reuse policy is implemented by the Commission Decision of 12 December 2011 on the reuse of Commission documents. Any copyright and/or sui generis right on the dataset is licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) licence. Reuse is allowed provided appropriate credit is given and any changes are indicated.\"). Changes made here: aggregated to 0.25° and divided by the area of each cell.",
+  "citation": "Schiavina, M., Freire, S., Carioli, A., and MacManus, K. (2023), GHS-POP R2023A: GHS population grid multitemporal (1975-2030), European Commission, Joint Research Centre (JRC), doi:10.2905/2FF68A52-5B5B-4A22-8F40-C41DA8332CFE. Method: Pesaresi, M., Schiavina, M., Politis, P., Freire, S., Krasnodębska, K., Uhl, J. H., Carioli, A., et al. (2024), Advances on the Global Human Settlement Layer by joint assessment of Earth Observation and population survey data, International Journal of Digital Earth 17(1), 2390454, doi:10.1080/17538947.2024.2390454; and European Commission, JRC (2023), GHSL Data Package 2023, Publications Office of the European Union, JRC133256, doi:10.2760/098587.",
+  "used_by": [
+    "data/products/population_grid.py",
+    "applications/earth-atlas"
+  ]
+}
