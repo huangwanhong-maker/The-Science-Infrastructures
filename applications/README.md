@@ -24,8 +24,8 @@ Every application says which of the three activities it serves:
 
 | Application | Serves | Draws on | Status |
 |---|---|---|---|
-| [Celestial Atlas](celestial-atlas/) | use, learning | metrology, astronomy, geodesy | draft |
-| [Earth Atlas](earth-atlas/) | use, learning | geography, meteorology, oceanography, geophysics, geodesy, astronomy, climate | draft |
+| [Celestial Atlas](celestial-atlas/) — [online](http://173.212.213.207:9200/) | use, learning | metrology, astronomy, geodesy | draft |
+| [Earth Atlas](earth-atlas/) — [online](http://173.212.213.207:9201/) | use, learning | geography, meteorology, oceanography, geophysics, geodesy, astronomy, climate | draft |
 | Orbital sandbox | learning | astronomy | planned |
 | Ephemeris calculator | use | metrology, astronomy | planned |
 | Map projections | learning | geography | planned |
@@ -44,6 +44,8 @@ Every application says which of the three activities it serves:
 | Air–sea exchange | learning | air-sea | planned |
 | Energy balance | learning | climate | planned |
 | Milankovitch cycles | learning | climate, astronomy | planned |
+
+The two atlases run online on the project's server (the links above), and on any computer with Git and Python in a few lines: the Quick Start of the [repository's README](../README.md#quick-start), or of each atlas's own.
 
 The planned applications in brief:
 

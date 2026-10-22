@@ -307,6 +307,7 @@ A domain directory contains:
   - Serve locally with Python's standard library. Each application's server mounts `domains/`, `foundations/` and `visualization/` beside its page, and the data cache at `/data/`; it reports the application's data recipe (`recipe.json`) at `/setup` and runs it on the page's request.
   - Test with Node (v22 is installed).
   - Each application has its own local server: the Celestial Atlas on port 8770, the Earth Atlas on 8790.
+  - A public instance runs on the user's server, `eu_region_server` (173.212.213.207): the Celestial Atlas on port 9200, the Earth Atlas on 9201, in the tmux session `science`, served with `--host 0.0.0.0 --sibling`. The READMEs link to it; keep the links current if it moves.
 - **Visual style:**
   - The Celestial Atlas uses Dusty Orchid (#CA8DBE) as its main colour, chosen by the user: plum nights, orchid accents and orchid-tinted paper for charts.
   - The Earth Atlas shares that palette for now (ADR 0014), with data in perceptually uniform colour maps (cmocean, and our own orchid map); the user may give it a colour of its own.
@@ -348,7 +349,7 @@ A domain directory contains:
 As of 2026-10-22:
 
 - **The structure of ADR 0026 is in place.** The first laboratory's history is joined to this repository, and the foundations are submodules under `foundations/`.
-- **The domains.** Eight domains have code: metrology, geodesy, astronomy, geophysics, geography, oceanography, meteorology and climate. Tides, navigation and air–sea are planned. All the code is provisional JavaScript, with 218 checks against published references, run in twelve suites. Every domain passes its checks alone.
+- **The domains.** Eight domains have code: metrology, geodesy, astronomy, geophysics, geography, oceanography, meteorology and climate. Tides, navigation and air–sea are planned. All the code is provisional JavaScript, with 229 checks against published references and closed-form answers, run in twelve suites. Every domain passes its checks alone.
 - **The Celestial Atlas** (`applications/celestial-atlas`, [ADR 0011](development/decisions/0011-first-application-celestial-atlas.md)) is a web application with five views:
   - the Solar System;
   - the stellar neighbourhood, from HYG or Gaia;

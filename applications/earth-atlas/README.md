@@ -61,17 +61,43 @@ The Earth Atlas shows the atmosphere, the ocean, the land and the people of the 
 
 ## 2. Running
 
-Quick start, from the repository root:
+**Try it online,** with nothing to install: **http://173.212.213.207:9201/** (the project's server; the Celestial Atlas is beside it at http://173.212.213.207:9200/).
+
+### 2.1 Quick Start
+
+You need [Git](https://git-scm.com/), [Python 3.12 or later](https://www.python.org/downloads/) and a current browser; nothing else. Paste the block for your system into a terminal, in the folder where you keep code. The first run downloads about 300 MB of public data and takes ten to thirty minutes, most of it waiting for data servers.
+
+Windows (PowerShell or Command Prompt):
 
 ```
-python -m venv .venv && .venv/Scripts/python -m pip install -r data/requirements.txt   # once: numpy and Pillow (.venv/bin on Unix)
-python data/acquisition/recipe.py applications/earth-atlas/recipe.json                # fetch the data and build the products
-python applications/earth-atlas/serve.py --open
+git clone --recurse-submodules https://github.com/huangwanhong-maker/The-Science-Infrastructures.git
+cd The-Science-Infrastructures
+python -m venv .venv
+.venv\Scripts\python -m pip install -r data\requirements.txt
+.venv\Scripts\python data\acquisition\recipe.py applications\earth-atlas\recipe.json
+.venv\Scripts\python applications\earth-atlas\serve.py --open
 ```
 
-Here `python` is that environment's interpreter; the server runs the recipe with the interpreter it was started with. The recipe ([recipe.json](recipe.json)) runs the commands below in order and skips what is already there; `--status` lists the steps. The page's Data panel shows the same list and fetches what is missing on a click, through the local server. The AI forecast at the end needs the model environment and is run apart.
+macOS and Linux:
 
-Step by step: from the repository root, fetch the data and build the products. This is about 300 MB of downloads; the THREDDS servers can take minutes per request.
+```
+git clone --recurse-submodules https://github.com/huangwanhong-maker/The-Science-Infrastructures.git
+cd The-Science-Infrastructures
+python3 -m venv .venv
+.venv/bin/python -m pip install -r data/requirements.txt
+.venv/bin/python data/acquisition/recipe.py applications/earth-atlas/recipe.json
+.venv/bin/python applications/earth-atlas/serve.py --open
+```
+
+The atlas opens at http://127.0.0.1:8790/. If the repository is already cloned, start at the third line; if `.venv` already exists, at the fifth.
+
+The recipe ([recipe.json](recipe.json)) fetches the datasets and builds the products in the order of §2.2, skips what is already there, and names the steps that failed at the end; `--status` lists them. If a step failed because a data server was down, open the page anyway: **Data**, at the top right, shows every step with its date and fetches the missing ones on a click, through the local server, now or later. The server runs the recipe with the interpreter it was started with. The AI forecast is run apart, in the model environment (below).
+
+On a server, `--host 0.0.0.0` serves other computers, `--sibling URL` says where the Celestial Atlas is so that the link to it works, and `--port` changes the port.
+
+### 2.2 Step by Step
+
+From the repository root, fetch the data and build the products. This is about 300 MB of downloads; the THREDDS servers can take minutes per request.
 
 ```
 python data/acquisition/fetch.py natural-earth-50m etopo-2022 gfs oisst ww3 usgs-earthquakes

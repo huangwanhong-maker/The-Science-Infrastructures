@@ -9,6 +9,53 @@ An integrative infrastructure for learning, using and researching all domains of
 </p>
 <p align="center"><i>The Earth Atlas and the Celestial Atlas, the first two applications: see the <a href="docs/gallery.md">gallery</a>.</i></p>
 
+## Quick Start
+
+**Online, with nothing to install.** Both applications run on the project's server:
+
+- **Earth Atlas:** http://173.212.213.207:9201/ — the atmosphere, the ocean, the land, the people and the solid Earth on one globe.
+- **Celestial Atlas:** http://173.212.213.207:9200/ — the Sun, the Moon, the planets, the stars and the galaxies, at any instant from 1849 to 2150.
+
+Each links to the other: a place on the Earth leads to its sky, and a sky to its weather.
+
+**On your own computer.** You need [Git](https://git-scm.com/), [Python 3.12 or later](https://www.python.org/downloads/) (on Windows, tick *Add python.exe to PATH* when installing) and a current browser. Nothing else: no Node, no build step, no account. Paste the block for your system into a terminal, in the folder where you keep code. The first run downloads about 450 MB of public data and takes ten to thirty minutes, most of it waiting for data servers.
+
+Windows (PowerShell or Command Prompt):
+
+```
+git clone --recurse-submodules https://github.com/huangwanhong-maker/The-Science-Infrastructures.git
+cd The-Science-Infrastructures
+python -m venv .venv
+.venv\Scripts\python -m pip install -r data\requirements.txt
+.venv\Scripts\python data\acquisition\recipe.py applications\earth-atlas\recipe.json
+.venv\Scripts\python data\acquisition\recipe.py applications\celestial-atlas\recipe.json
+.venv\Scripts\python applications\earth-atlas\serve.py --open
+```
+
+macOS and Linux:
+
+```
+git clone --recurse-submodules https://github.com/huangwanhong-maker/The-Science-Infrastructures.git
+cd The-Science-Infrastructures
+python3 -m venv .venv
+.venv/bin/python -m pip install -r data/requirements.txt
+.venv/bin/python data/acquisition/recipe.py applications/earth-atlas/recipe.json
+.venv/bin/python data/acquisition/recipe.py applications/celestial-atlas/recipe.json
+.venv/bin/python applications/earth-atlas/serve.py --open
+```
+
+The Earth Atlas opens in your browser at http://127.0.0.1:8790/. For the Celestial Atlas, run the last line with `applications/celestial-atlas/serve.py` in a second terminal; it opens at http://127.0.0.1:8770/, and the two link to each other.
+
+*If something goes wrong.*
+
+- **A data step failed** (a data server was down, or a network blocked it). Everything else still works: open the page, click **Data** at the top right, and fetch the missing steps there with one click, now or later. Running the recipe again does the same; it skips what is already there, and `--status` lists the steps.
+- **`python` is not found,** or Windows opens the Store: install Python from python.org with *Add python.exe to PATH*, open a new terminal, and start again at the third line.
+- **`foundations/` is empty:** the clone was made without submodules. Run `git submodule update --init`.
+- **The port is taken:** add `--port 8791` (or any free port) to the last line.
+- **Serving other computers:** add `--host 0.0.0.0`, and `--sibling URL` with the other atlas's address so that the links between them work. Each atlas's README has the details.
+
+The checks (`node development/tools/run-tests.mjs`) need Node 22, and nothing else does.
+
 ## Abstract
 
 **English.** This programme treats the sciences as one connected body of knowledge, to be learned, used and extended in theory and in practice. They share their foundations: mathematical structure (symmetry, algebra, geometry and topology), computation, physical law, and the logic of inference from data. They also meet in shared forms: fields on curved spaces, networks, sequences, populations and rates of change. The programme has three tiers. Foundation libraries hold mathematics, computation and physics. Each science is a domain: a library of its own objects and models, pure and tested, which runs on its own with only the domains beneath it. Applications and studies, organised by purpose, compose the domains they need. Each part can grow, change or be replaced without disturbing the others. The first domains are those of the Earth and the sky: metrology, geodesy, astronomy, geophysics, geography, oceanography and meteorology, with climate, tides, navigation and air–sea exchange as bridges between them.
@@ -117,7 +164,7 @@ Mathematics, logic, computation and statistics are foundations.
   - the plates and their motion, 20,000 GPS stations and 70,000 earthquake mechanisms;
   - the crust, and sections through subduction zones.
 
-The [index of applications](applications/README.md) lists those planned.
+Both run online on the project's server, the [Celestial Atlas](http://173.212.213.207:9200/) and the [Earth Atlas](http://173.212.213.207:9201/), and on your own computer in a few lines (Quick Start, above). The [index of applications](applications/README.md) lists those planned.
 
 ## 6. Organisation of the Repository
 
@@ -149,11 +196,11 @@ To run every check (the dependency rules, the suites of the foundations, domains
 node development/tools/run-tests.mjs
 ```
 
-To run an application: `python applications/earth-atlas/serve.py --open`, or `python applications/celestial-atlas/serve.py --open`. Their data come through the data library ([data/README.md](data/README.md)).
+To run an application, follow the Quick Start at the top of this page; each application's README has the details, and their data come through the data library ([data/README.md](data/README.md)).
 
 ## 7. Status
 
-**As of 2026-10-22.** Two applications work. Their science is the provisional JavaScript of eight domains, of physis and of the visualization layer, tested against published references in 218 checks. Each domain passes its checks on its own. There is no C++ yet. The next steps are in the [roadmap](development/roadmap.md):
+**As of 2026-10-22.** Two applications work, online and on any computer (Quick Start). Their science is the provisional JavaScript of eight domains, of physis and of the visualization layer, tested against published references and closed-form answers in 229 checks. Each domain passes its checks on its own. The Earth Atlas takes plug-ins: scripts for prediction, assimilation and analysis, loaded on request ([ADR 0027](development/decisions/0027-earth-atlas-plugins.md)). There is no C++ yet. The next steps are in the [roadmap](development/roadmap.md):
 
 - Phase 0, the toolchain and the build;
 - the choice of the next domains.
