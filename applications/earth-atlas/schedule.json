@@ -1,0 +1,64 @@
+{
+  "about": "When the Earth Atlas's data are fetched again: observations every hour, the forecasts every six hours (kept in the archive and scored), the daily products once a day. Times are UTC: a job falls due at every multiple of its period from 00:00 UTC, plus its offset. Run with data/acquisition/schedule.py; the steps are those of recipe.json. The forecasts are fetched at 05, 11, 17 and 23 UTC, about five hours after each GFS run's analysis time, when the run is published; the archive is taken before they are fetched (the previous runs) and after.",
+  "jobs": [
+    {
+      "name": "observations",
+      "every": "1h",
+      "offset_minutes": 10,
+      "enabled": true,
+      "timeout_minutes": 30,
+      "run": [
+        ["data/acquisition/recipe.py", "applications/earth-atlas/recipe.json", "metar", "observations-metar"],
+        ["data/acquisition/recipe.py", "applications/earth-atlas/recipe.json", "ndbc", "observations-ndbc"]
+      ]
+    },
+    {
+      "name": "forecasts",
+      "every": "6h",
+      "offset_minutes": 300,
+      "enabled": true,
+      "timeout_minutes": 90,
+      "run": [
+        ["data/products/archive.py", "--keep", "scored"],
+        ["data/acquisition/recipe.py", "applications/earth-atlas/recipe.json", "gfs", "fields-gfs"],
+        ["data/acquisition/recipe.py", "applications/earth-atlas/recipe.json", "gfs-levels", "fields-gfs-levels"],
+        ["data/acquisition/recipe.py", "applications/earth-atlas/recipe.json", "aigfs", "fields-aigfs"],
+        ["data/acquisition/recipe.py", "applications/earth-atlas/recipe.json", "aigefs", "fields-aigefs"],
+        ["data/acquisition/recipe.py", "applications/earth-atlas/recipe.json", "ww3", "fields-ww3"],
+        ["data/acquisition/recipe.py", "applications/earth-atlas/recipe.json", "ecmwf-ifs", "fields-ecmwf-ifs"],
+        ["data/acquisition/recipe.py", "applications/earth-atlas/recipe.json", "ecmwf-aifs", "fields-ecmwf-aifs"],
+        ["data/acquisition/recipe.py", "applications/earth-atlas/recipe.json", "ecmwf-ens", "fields-ecmwf-ens"],
+        ["data/acquisition/recipe.py", "applications/earth-atlas/recipe.json", "gdacs", "events-gdacs"],
+        ["data/acquisition/recipe.py", "applications/earth-atlas/recipe.json", "usgs-earthquakes", "events-earthquakes"],
+        ["data/products/archive.py", "--keep", "scored"],
+        ["data/products/verification.py"]
+      ]
+    },
+    {
+      "name": "daily",
+      "every": "1d",
+      "offset_minutes": 420,
+      "enabled": true,
+      "timeout_minutes": 90,
+      "run": [
+        ["data/acquisition/recipe.py", "applications/earth-atlas/recipe.json", "oisst", "fields-oisst"],
+        ["data/acquisition/recipe.py", "applications/earth-atlas/recipe.json", "gibs-daily", "imagery-true-colour"],
+        ["data/acquisition/recipe.py", "applications/earth-atlas/recipe.json", "ibtracs", "tracks-ibtracs"]
+      ]
+    },
+    {
+      "name": "pangu-weather",
+      "every": "12h",
+      "offset_minutes": 330,
+      "enabled": false,
+      "timeout_minutes": 120,
+      "about": "Pangu-Weather run here from the latest GFS analysis at 0.25 degrees, a week ahead (about 40 minutes on the CPU). It needs the model environment (.venv with data/products/requirements-models.txt): run the scheduler with that interpreter before enabling it. The weights are licensed CC BY-NC-SA 4.0, for learning and research only.",
+      "run": [
+        ["data/acquisition/fetch.py", "pangu-weather", "gfs-analysis-0p25"],
+        ["data/products/ai_forecast.py", "--source", "gfs-analysis-0p25", "--hours", "168"],
+        ["data/products/archive.py", "--products", "pangu-forecast", "--keep", "scored"],
+        ["data/products/verification.py"]
+      ]
+    }
+  ]
+}

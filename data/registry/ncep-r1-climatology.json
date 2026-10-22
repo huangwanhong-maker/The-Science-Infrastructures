@@ -1,0 +1,45 @@
+{
+  "id": "ncep-r1-climatology",
+  "kind": "opendap",
+  "domain": "meteorology",
+  "model": "NCEP/NCAR Reanalysis 1",
+  "title": "NCEP/NCAR Reanalysis 1: long-term monthly means of geopotential height, 1991–2020, at 17 pressure levels",
+  "provider": "NOAA Physical Sciences Laboratory (PSL), Boulder, Colorado, from the NCEP/NCAR Reanalysis 1 (NOAA NCEP and NSF NCAR); served by PSL's THREDDS Data Server",
+  "credit": "NCEP/NCAR Reanalysis 1, NOAA PSL",
+  "service": "https://psl.noaa.gov/thredds/dodsC/",
+  "datasets": [
+    {
+      "path": "Datasets/ncep.reanalysis.derived/pressure/hgt.mon.ltm.1991-2020.nc",
+      "variable": "hgt",
+      "file": "hgt.nc"
+    }
+  ],
+  "climatology": {
+    "period": "1991-01-01/2020-12-31",
+    "time": "month of the year, January to December, dated in the year 1 (hours since 1800-01-01)"
+  },
+  "parameters": {
+    "stride": {
+      "type": "int",
+      "default": 1,
+      "min": 1,
+      "max": 4,
+      "description": "take every stride-th point of the 2.5° grid"
+    }
+  },
+  "profiles": {
+    "ltm": {
+      "description": "The whole 2.5° grid, 144 × 73 points, 17 levels from 1000 to 10 hPa, 12 months (about 9 MB)",
+      "parameters": {}
+    }
+  },
+  "default_profile": "ltm",
+  "format": "netCDF classic, one file: hgt (time 12, level 17, lat 73, lon 144), float32, geopotential metres. Latitude from 90 to -90, longitude from 0 to 357.5 E. Each month is the mean over 1991–2020 of that month's monthly means of the reanalysis, analysed four times a day.",
+  "coverage": "Global, 2.5° grid; the normal year of 1991–2020",
+  "use": "The climatology against which data/products/verification.py forms anomalies of 500 hPa height for the anomaly correlation, interpolated linearly in time between the months' middles.",
+  "licence": "Public domain (US Government work); PSL asks that use be acknowledged: \"NCEP-NCAR Reanalysis 1 data provided by the NOAA PSL, Boulder, Colorado, USA, from their website at https://psl.noaa.gov\"",
+  "citation": "Kalnay, E., M. Kanamitsu, R. Kistler, W. Collins, D. Deaven, L. Gandin, M. Iredell, S. Saha, G. White, J. Woollen, Y. Zhu, M. Chelliah, W. Ebisuzaki, W. Higgins, J. Janowiak, K. C. Mo, C. Ropelewski, J. Wang, A. Leetmaa, R. Reynolds, R. Jenne and D. Joseph (1996), The NCEP/NCAR 40-Year Reanalysis Project, Bull. Amer. Meteor. Soc. 77, 437–471.",
+  "used_by": [
+    "data/products/verification.py"
+  ]
+}

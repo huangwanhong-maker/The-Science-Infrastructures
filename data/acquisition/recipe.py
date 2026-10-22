@@ -126,6 +126,12 @@ class Job:
         with self.lock:
             if self.thread and self.thread.is_alive():
                 raise RuntimeError("a run is already in progress")
+            # The schedule's lock (schedule.py): a scheduled job and a run from the page
+            # would both rewrite the index of products.
+            import schedule
+            self.schedule_lock = schedule.Lock()
+            if not self.schedule_lock.acquire(wait=False):
+                raise RuntimeError("a scheduled job is running; try again when it ends")
             self.lines = []
             self.state = {"state": "running", "started": time.time(), "finished": None, "failed": [],
                           "chosen": chosen}
@@ -150,6 +156,7 @@ class Job:
         finally:
             with self.lock:
                 self.state["finished"] = time.time()
+            self.schedule_lock.release()
 
 
 def main(argv: list[str]) -> int:
