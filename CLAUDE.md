@@ -266,7 +266,7 @@ A domain directory contains:
 
 - Record decisions that shape structure, conventions or tooling in `development/decisions/NNNN-slug.md`, using the template in the index.
 - Never rewrite a record. A new record supersedes or amends it, and the old record's status is updated to point to the new one. Paths in old records are as they were written; ADR 0026 maps them to the present.
-- Records accepted so far: 0001–0032. Records 0001–0024 were written in the first laboratory, which the infrastructure absorbed; 0025 founded this repository.
+- Records accepted so far: 0001–0033. Records 0001–0024 were written in the first laboratory, which the infrastructure absorbed; 0025 founded this repository.
 
 ### 6.4 Change Discipline
 
@@ -369,7 +369,7 @@ As of 2026-10-22:
   - **Cyclones and disasters.** Tropical cyclones are tracked in every forecast, beside GDACS's observed tracks; GDACS's alerts are a layer.
   - **The ocean beneath a place** comes from HYCOM, on demand ([ADR 0023](development/decisions/0023-ocean-column-and-data-on-demand.md)).
   - **The solid Earth** ([ADR 0024](development/decisions/0024-the-solid-earth.md)): plates and their motion, GPS velocities and daily records, Global CMT mechanisms, CRUST1.0 and sections.
-  - **Plug-ins** ([ADR 0027](development/decisions/0027-earth-atlas-plugins.md), [ADR 0029](development/decisions/0029-plugins-in-python-and-cpp.md)): scripts loaded on request that derive from `Diagnostic`, `ForecastModel`, `DataAssimilation` or `Trajectories`, run on the library and are shown through the layers; in JavaScript in the page, or in Python or C++ in the server, under one contract; all four kinds exist in each language ([ADR 0032](development/decisions/0032-cpp-plugin-classes-completed.md)), the classes in `api/python/science/plugins.py` and `api/cpp/plugin.hpp`. The examples in `applications/earth-atlas/plugins/` are the guide.
+  - **Plug-ins** ([ADR 0027](development/decisions/0027-earth-atlas-plugins.md), [ADR 0029](development/decisions/0029-plugins-in-python-and-cpp.md)): scripts loaded on request that derive from `Diagnostic`, `ForecastModel`, `DataAssimilation` or `Trajectories`, run on the library and are shown through the layers; in JavaScript in the page, or in Python or C++ in the server, under one contract; all four kinds exist in each language ([ADR 0033](development/decisions/0033-cpp-plugin-classes-completed.md)), the classes in `api/python/science/plugins.py` and `api/cpp/plugin.hpp`. The examples in `applications/earth-atlas/plugins/` are the guide.
   - **Imagery and relief.** Satellite imagery or relief forms the base ([ADR 0018](development/decisions/0018-fine-relief-at-close-range.md)).
   - **Climate:** Köppen–Geiger classes from 1901 to 2099, normals, climate diagrams, and our own classification ([ADR 0017](development/decisions/0017-climate-classes-and-normals.md)).
 - **`data/` is a general data library** ([ADR 0012](development/decisions/0012-selectable-parameterised-datasets.md), ADR 0014, ADR 0023):

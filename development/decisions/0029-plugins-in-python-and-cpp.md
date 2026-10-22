@@ -1,6 +1,6 @@
 # 0029. Plug-ins in Python and C++: the Same Contract, Run by the Server
 
-- **Status:** Accepted, provisionally: built at the user's request; open to revision on review. Amends [ADR 0027](0027-earth-atlas-plugins.md). Amended by [ADR 0030](0030-the-api-edge.md): the Python classes, the field products' reading and writing, and the hosting moved to `api/python/science`, the C++ classes to `api/cpp/plugin.hpp`; the Earth Atlas binds them.
+- **Status:** Accepted, provisionally: built at the user's request; open to revision on review. Amends [ADR 0027](0027-earth-atlas-plugins.md). Amended by [ADR 0030](0030-the-api-edge.md): the Python classes, the field products' reading and writing, and the hosting moved to `api/python/science`, the C++ classes to `api/cpp/plugin.hpp`; the Earth Atlas binds them. Amended by [ADR 0033](0033-cpp-plugin-classes-completed.md): the C++ classes completed.
 - **Date:** 2026-10-22
 - **Decided by:** the user asked that plug-ins be possible in Python and C++ as well as JavaScript. Claude chose the design below.
 

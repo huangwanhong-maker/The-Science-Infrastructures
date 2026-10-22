@@ -1,4 +1,4 @@
-# 0032. The C++ Plug-in Classes Completed
+# 0033. The C++ Plug-in Classes Completed
 
 - **Status:** Accepted, provisionally: built at the user's request; open to revision on review. Amends [ADR 0029](0029-plugins-in-python-and-cpp.md) §2.3 and §4.
 - **Date:** 2026-10-23
