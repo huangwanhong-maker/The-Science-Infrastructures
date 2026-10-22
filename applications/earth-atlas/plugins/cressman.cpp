@@ -64,8 +64,12 @@ struct Cressman : plugin::DataAssimilation {
       if (it == best.end() || std::abs(when - t) < it->second.first)
         best[key] = {std::abs(when - t), {set.number(r, lon), set.number(r, lat), y, plugin::NaN, key}};
     }
+    // Places on the sphere only: some reports carry a placeholder, such as (−99.99, −99.99).
     std::vector<plugin::Observation> out;
-    for (auto& [key, entry] : best) if (std::isfinite(entry.second.lon) && std::isfinite(entry.second.lat)) out.push_back(entry.second);
+    for (auto& [key, entry] : best) {
+      const plugin::Observation& o = entry.second;
+      if (std::abs(o.lat) <= 90 && o.lon >= -180 && o.lon <= 360) out.push_back(o);
+    }
     char text[200];
     std::snprintf(text, sizeof text, "%zu reports of %s within %g h", out.size(), stations.model.c_str(), params.number("window", 1.5));
     source = text;

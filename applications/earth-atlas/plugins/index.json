@@ -40,6 +40,27 @@
       "description": "The same diagnostic written in C++, compiled and run by the server; needs a C++ compiler on the serving computer."
     },
     {
+      "file": "plugins/advection.cpp",
+      "title": "advection by the wind (C++)",
+      "class": "ForecastModel",
+      "runtime": "cpp",
+      "description": "The temperature chosen carried by the wind chosen, by a semi-Lagrangian scheme on the sphere in a C++ program in the server, verified against the source's later times beside persistence; needs a C++ compiler on the serving computer (or g++ in WSL on Windows)."
+    },
+    {
+      "file": "plugins/parcels.cpp",
+      "title": "air parcels (C++)",
+      "class": "Trajectories",
+      "runtime": "cpp",
+      "description": "Parcels carried through the wind from a ring around the chosen place, or a lattice, by a Runge-Kutta step on the sphere in a C++ program in the server; needs a C++ compiler on the serving computer (or g++ in WSL on Windows)."
+    },
+    {
+      "file": "plugins/cressman.cpp",
+      "title": "successive correction (C++)",
+      "class": "DataAssimilation",
+      "runtime": "cpp",
+      "description": "The 2 m temperature analysed at the instant toward weather stations, buoys or your own sensors by Cressman's successive corrections, in a C++ program in the server; needs a C++ compiler on the serving computer (or g++ in WSL on Windows)."
+    },
+    {
       "file": "plugins/ndvi.py",
       "title": "vegetation from Sentinel-2 (NDVI)",
       "class": "Plugin",

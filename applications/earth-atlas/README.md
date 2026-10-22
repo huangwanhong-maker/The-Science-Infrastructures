@@ -330,7 +330,7 @@ Its own code:
 | `src/data/requests.js` | Asks the local server for data on demand, and follows the job |
 | `src/layers/` | The catalogue of layers and models; one module per kind of layer; imagery and detail; our models; the sketches of plug-ins |
 | `src/plugins/` | Plug-ins (ADR 0027): the classes a script derives from, the context it sees, and the host that loads and runs it |
-| `plugins/` | The built-in plug-ins, which are the examples, their index, and the guide to writing one; `plugins/cpp/plugin.hpp`, the classes in C++ |
+| `plugins/` | The built-in plug-ins, which are the examples, their index, and the guide to writing one; the C++ classes are the API's, `api/cpp/plugin.hpp` |
 | `py/` | Plug-ins run by the server (ADR 0029): the classes in Python, the reading and writing of field products, the host, and its check |
 | `src/workers/` | The integration of our models and the painting of the base map, off the page's main thread |
 | `src/render/` | The surface shader, lines, markers, labels, relief, colour maps, colours of classes, the stage |

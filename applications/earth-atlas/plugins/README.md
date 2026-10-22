@@ -67,7 +67,7 @@ Each class is named by what the algorithm is, and writes `run()` from smaller ho
 |---|---|---|
 | `Diagnostic` | A field computed from fields, at every time of the first need, on its grid | `outputs()`: the variables returned; `compute(inputs, params, index, context)`: `{ name: Float32Array }` for one time; `vectors()`, `show()` |
 | `ForecastModel` | A state advanced in time from an analysis, started at the input time at or before the instant shown, recorded every few hours, verified against the input's later times beside persistence (20–80° N) | `grid()`, `outputs()`, `initial(inputs, index, params, context)`, `advance(state, seconds, params)`, `record(state, params)`, `verify()`; the fields `dt`, `every` |
-| `DataAssimilation` | A background and observations to an analysis and its increment | `observations(inputs, index, params, context)`: `[{ lon, lat, value }]`; `analyse(background, grid, observations, params, context)`: the analysis; `markers()` |
+| `DataAssimilation` | A background and observations to an analysis and its increment | `observations(inputs, t, params, context)`: `[{ lon, lat, value }]` observed near `t`, the analysis's time (the instant shown, the background interpolated in time to it); `analyse(background, grid, observations, params, context)`: the analysis; `markers()` |
 | `Trajectories` | Parcels carried through a flow by a Runge–Kutta step on the sphere | `seeds(inputs, params, context)`: `[{ lon, lat, colour? }]`; `velocity(inputs, params)`: `(lon, lat, ms) -> [u, v]` or `null` |
 
 `Plugin` itself may be derived from for anything else, with `run()` written in full.
@@ -126,14 +126,17 @@ const [result] = await plugin.run({ wind: { product, names: ['u', 'v'], variable
 | [volcanic-ash.js](volcanic-ash.js) | `Plugin` | Ash parcels up an eruption column, carried by the wind of 10 m to 250 hPa and settling at Stokes' speed to the ground | Still air: landing at the vent after ∫ dz / w; a uniform wind: U t |
 | [ndvi.py](ndvi.py) | `Plugin`, Python | The vegetation index (NDVI) of the least cloudy Sentinel-2 Level-2A scene of the last days in a box around the chosen place, at 20 or 40 m, clouds and shadows masked by the scene classification; optionally the change since a year before. Reads Earth Search (STAC) and Cloud-Optimised GeoTIFFs by ranges | `data/tests/check_formats.py`: the grid, the interpolation, the reflectance rule, the note without a place |
 | [vorticity.cpp](vorticity.cpp) | `Diagnostic`, C++ | The same diagnostic in C++, compiled and run by the server (§9) | The same solid-body rotation, where a compiler exists |
+| [advection.cpp](advection.cpp) | `ForecastModel`, C++ | The temperature chosen (2 m, or any level) carried by the wind chosen through the source's times, by a semi-Lagrangian scheme on the sphere with cubic interpolation, clipped or not; verified by the host against the source's later times beside persistence | The cosine bell of Williamson et al. (1992) carried over the poles returns after a revolution of 12 days (l2 0.065 on 2°); a uniform field stays uniform |
+| [parcels.cpp](parcels.cpp) | `Trajectories`, C++ | Parcels from a ring around the chosen place, or a lattice, through the wind chosen; the paths, moving points, a marker and a label at the place, and a note of the distances | A parcel in a solid-body rotation keeps its latitude and turns by U t / a |
+| [cressman.cpp](cressman.cpp) | `DataAssimilation`, C++ | The 2 m temperature analysed at the instant toward station reports (METAR, buoys or our sensors) by Cressman's successive corrections; the increment, the observations, a table of the fit | One observation on a grid point is drawn exactly; the background is kept beyond the radius; reports outside the window are ignored |
 
 ## 9. The Same Contract in Python and C++
 
 <img src="../../../assets/gallery/earth-30-plugin-languages.jpg" align="right" width="300" alt="The Plug-ins section of the panel with the C++ and Python plug-ins loaded, each named with its language">
 
-A plug-in may be written in Python or C++ instead ([ADR 0029](../../../development/decisions/0029-plugins-in-python-and-cpp.md)). It then runs in the atlas's server rather than in the page, and the page shows it the same way, with the language named beside its title. The file must lie under this `plugins/` directory: the server runs nothing from elsewhere.
+A plug-in may be written in Python or C++ instead ([ADR 0029](../../../development/decisions/0029-plugins-in-python-and-cpp.md)). It then runs in the atlas's server rather than in the page, and the page shows it the same way, with the language named beside its title. The file must lie under this `plugins/` directory: the server runs nothing from elsewhere. The classes of both languages belong to no application: they are part of the API ([api/](../../../api/README.md)), which runs the same plug-ins at `/api/v1/plugins`.
 
-**Python.** The classes of [../py/plugins.py](../py/plugins.py) have the same names, hooks and results as the JavaScript ones; fields are numpy arrays `(nlat, nlon)` of float32 with NaN where there is no value, and times are datetimes in UTC. The script defines `create(api)`:
+**Python.** The classes of [api/python/science/plugins.py](../../../api/python/science/plugins.py) have the same names, hooks and results as the JavaScript ones; fields are numpy arrays `(nlat, nlon)` of float32 with NaN where there is no value, and times are datetimes in UTC. A need of kind `observations` (`{name, label, kind: "observations", variable, optional}`) is served by the library's observation sets that carry the variable, and arrives as `Observed(observations, name, model, variable)`, the set as the library holds it (`fields`, `rows`); an optional need left without a source arrives as `None`. `DataAssimilation` analyses at the instant shown, its background interpolated in time to it, and asks `observations(inputs, when, params, context)` for what was observed then. The script defines `create(api)`:
 
 ```python
 def create(api):
@@ -156,10 +159,10 @@ python applications/earth-atlas/py/host.py describe plugins/vorticity.py
 python applications/earth-atlas/py/host.py run plugins/vorticity.py "wind=gfs-levels-forecast|500 hPa"
 ```
 
-**C++.** A plug-in is a program built from [cpp/plugin.hpp](cpp/plugin.hpp), which gives the same `Diagnostic` and the main function; the server compiles it with the compiler at hand (`c++`, `g++` or `clang++`, C++20, standard library only) and runs it on files:
+**C++.** A plug-in is a program built from [api/cpp/plugin.hpp](../../../api/cpp/plugin.hpp), which gives the five classes, their loops and the main function, with only the standard library. It derives from a class, sets its identity, needs, parameters and outputs in its constructor, writes the hooks, and ends with `PLUGIN_MAIN`:
 
 ```cpp
-#include "cpp/plugin.hpp"
+#include "plugin.hpp"
 struct Vorticity : plugin::Diagnostic {
   Vorticity() { id = "vorticity-cpp"; title = "Vorticity and divergence (C++)";
     needs = {{"wind", "Wind", {"eastward_wind", "northward_wind"}, "", 0}};
@@ -171,12 +174,43 @@ struct Vorticity : plugin::Diagnostic {
 PLUGIN_MAIN(Vorticity)
 ```
 
-[vorticity.cpp](vorticity.cpp) is the whole of it. The contract on disk, should another language want it: the host writes a directory with `input.txt` (tab-separated lines: `time`, `pinned`, `param`, `need` with the grid, `times`, `data` naming a float32 file per variable, `ntimes × nlat × nlon`, NaN where missing) and runs the program with `--run <dir>`; the program writes `output.txt` (`field` lines naming a float32 file per output, `show` lines) beside it. `--describe` prints the plug-in's description as JSON. In C++ the classes stop at `Diagnostic` for now, and parameters are numbers.
+| Class | Set in the constructor | Hooks |
+|---|---|---|
+| `Plugin` | `id`, `title`, `description`, `domain`, `needs`, `parameters` | `run(inputs, params, context)`, returning `Results`: the general case |
+| `Diagnostic` | `outputs`, `vectors`, `show` | `compute(inputs, params, index)`: `{name: values}` on the first need's grid |
+| `ForecastModel<State>` | `dt`, `every`, `outputs`, `vectors`, `show`; `parameters` begin with `hours` | `grid()`, `initial(inputs, index, params, context)` returning a `State`, `advance(state, seconds, params)`, `record(state, params)`, `verify()` |
+| `DataAssimilation` | none | `observations(inputs, t, params, context)`, `t` the analysis's time in ms; `analyse(background, grid, observations, params, context)` |
+| `Trajectories` | `colour`; `parameters` begin with `hours` and `step` | `seeds(inputs, params, context)`, `velocity(inputs, params)` returning a `Flow` |
 
-**Checking.** `python applications/earth-atlas/py/check.py` runs the Python plug-in, a product's round trip through the files, and the C++ plug-in when a compiler exists; the atlas's suite runs it.
+The names and meanings are those of §3, with three differences of the language: the needs, outputs and what to show are members rather than methods; a forecast's state is a type, `ForecastModel<State>`; and `Diagnostic::compute` keeps its first signature, without the context, which is the member `context`.
+
+- **Inputs.** A run receives `Inputs` by need name. An `Input` holds a field's grid, its times (ISO 8601 and ms), its variables (`names`, and `variables` with standard name, units and long name), `slice(variable, index)`, and `sample(variable, ms, lon, lat)`, bilinear in space by the page's rule and linear in time. For a need of kind `observations`, made with `plugin::observed(name, label, variable, optional)`, `kind` is `"observations"` and `observations` holds the set's `fields` and `rows`, read by `column(name)`, `number(row, column)` and `time(row, column)`. An optional need left without a source is absent.
+- **Parameters.** `Params` holds the numbers, read with `params.number(name, fallback)`, and every value as text, read with `params.choice(name, fallback)`. `plugin::choice(name, label, default, {{value, label}, ...})` declares a parameter whose values are choices of text.
+- **Context and results.** The `Context` has `time` (ms, UTC), `pinned` (the place, or none) and `progress(fraction, text)`. `Results` hold one field product (`fields`: grid, times, outputs and values), `sketches` (polylines, markers, labels and moving points), `tables` and `notes`.
+- **Helpers.** Those of §6 are there too: `bilinear`, `time_bracket`, `index_at_or_before`, `sample_on_grid`, `lattice`, `wrap_longitude`, `parcel_step`, `parse_time` and `iso`.
+
+*What runs where.* The program runs what calls its hooks: the loops of the four classes, a forecast's steps and records (counted with rounding half to even, as Python's `round`), and the parcels' Runge–Kutta steps and their sketch. The host runs, in Python, what needs none of the hooks, so that one implementation serves every language:
+
+- a forecast's recorded fields are replayed through `plugins.ForecastModel`, which verifies them against the input's later times beside persistence (RMSE over 20–80° N, weighted by the cosine of latitude), tables the result and writes the `verification` block;
+- an analysis passes through `plugins.DataAssimilation`, which forms the background at the instant, the increment (a `difference`) and the sketch of the observations; `markers()` is therefore the host's default in C++.
+
+The contract on disk, should another language want it, is documented line by line at the head of `plugin.hpp`. The host writes a directory with `input.txt`, one float32 file per input variable and one tab-separated file per observation set, and runs the program with `--run <dir>`. The program writes `output.txt` and a float32 file per output beside it, and reports progress on standard output as `progress <fraction> <text>`. `--describe` prints the description as JSON, its `class` among it. Each line is tab-separated, its first cell naming its type:
+
+| File | Lines |
+|---|---|
+| `input.txt` | `time <ms>`; `pinned <lon> <lat>`; `param <name> <value>` (text); `need <name> <product> <model> <level> <ntimes> <lon0> <dlon> <nlon> <lat0> <dlat> <nlat> <periodic>`; `times <need> <ISO 8601> ...`; `data <need> <variable> <file> <standard_name> <units> <long_name>` (float32, `ntimes × nlat × nlon`, rows north to south, NaN where missing); `observations <need> <set> <title> <variable> <file>` (the rows, the first line the column names, an empty cell for none) |
+| `output.txt` | `class <name>`; `start <ms>`; `grid <lon0> <dlon> <nlon> <lat0> <dlat> <nlat> <periodic>`; `times <ISO 8601> ...`; `field <name> <long_name> <standard_name> <units> <level> <difference> <file>`; `vector <name> <u> <v> <units> <standard_name> <level>`; `show <surface\|flow\|lines> <name>`; `verify <output> <need> <label> <unit>`; `observation <lon> <lat> <value> <error> <id>`; `sketch <title>`, followed by its `polyline <colour> <width> <alpha> <dashed> <lon lat ...>`, `marker <lon> <lat> <colour> <size>`, `label <lon> <lat> <text>` and `moving <colour> <size> <ms ...> <lon lat ...>`; `table <title> <note> <column> ...`, followed by its `row <cell> ...`; `note <text>`; `error <text>` |
+
+Without `grid` and `times` lines, the fields lie on the first need's grid and at its times, as in the first form of the contract.
+
+**Compilers.** The server compiles a plug-in when its program is older than its source or the header, with `-std=c++20 -O2 -I api/cpp`, and keeps the program under `data/cache/plugins/bin/`. It uses the compiler at hand: `c++`, `g++` or `clang++`. On Windows without one, it uses `g++` in WSL, if WSL has it: the program is then a Linux one (`<name>.wsl`), run with `wsl -e`, and its paths are translated as `wslpath` gives them (`C:\…` as `/mnt/c/…`).
+
+*Caveat.* WSL starts its virtual machine on first use and stops it when idle, so a load after a quiet minute waits 5–10 s; the computation itself runs at native speed.
+
+**Checking.** `python applications/earth-atlas/py/check.py` runs the Python plug-in and a product's round trip through the files. It runs a Python `DataAssimilation` with a need of kind `observations` and an optional need, resolved from a library on disk. Where a compiler exists, natively or in WSL, it runs each C++ example through the file contract against its closed form (§8). The atlas's suite runs it.
 
 ## 10. Limits and Next Steps
 
 - A JavaScript plug-in runs in the page's thread; `breathe()` keeps the page alive but a long model is slow there. A plug-in may start its own worker, as the atlas's models do; or be written in Python or C++ and run in the server.
 - The two models the atlas runs itself (ADR 0015, 0019) are the pattern's other appearance; migrating them to `ForecastModel` plug-ins would delete their hand-written wiring.
-- `ForecastModel`, `DataAssimilation` and `Trajectories` in C++ are the next step of the file contract.
+- A C++ plug-in is one program per run, its inputs passed through files: for the library's products, tens of megabytes, a fraction of a second. A model run many times, or on fields too large for files, would want the shared library that ADR 0029 set aside.
