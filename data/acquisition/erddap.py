@@ -41,7 +41,9 @@ def _get(url: str, timeout: int = 120) -> bytes:
 
 def info(service: str, dataset: str) -> dict:
     """Axes and variables of a dataset, with their attributes."""
-    table = json.loads(_get(f"{service}/info/{dataset}/index.json"))["table"]
+    # A small, cached page: a server that cannot send it in a minute is down, and
+    # the fetcher should move on (each address of the host is tried in turn).
+    table = json.loads(_get(f"{service}/info/{dataset}/index.json", timeout=60))["table"]
     out = {"axes": {}, "variables": {}, "global": {}}
     for kind, name, attribute, _, value in table["rows"]:
         if kind == "dimension":
