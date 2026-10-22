@@ -87,7 +87,7 @@ Each class is named by what the algorithm is, and writes `run()` from smaller ho
 
 ## 5. The Context
 
-`context` is what a plug-in sees of the atlas while it runs: `time`, the instant shown in ms UTC; `pinned`, the chosen place as `[lon, lat]` or `null`; `fields()`, the metadata of every field product; `field(name)`; `geography()`; and `progress(fraction, text)`. The same view is made from files when a plug-in is checked without a page.
+`context` is what a plug-in sees of the atlas while it runs: `time`, the instant shown in ms UTC; `pinned`, the chosen place as `[lon, lat]` or `null`; `fields()`, the metadata of every field product; `field(name)`; `geography()`; `list(kind)`, the library's entries of a kind (`events`, `observations`, `tracks`, `regions`); `events(name)` and `observations(name)`, those sets; `library.regions(name)`, a regions product (its raster is read from `data/products/<file>`); and `progress(fraction, text)`. A need may also be of kind `observations` (`{name, label, kind: 'observations', variable, optional}`): the host offers the observation sets carrying that variable (stations, buoys, the user's sensors), and the plug-in receives the chosen set. A need marked `optional` may be left without a source; one marked `climatology` asks for monthly normals, which are otherwise not offered. The same view is made from files when a plug-in is checked without a page.
 
 ## 6. Helpers in `api`
 
@@ -116,6 +116,15 @@ const [result] = await plugin.run({ wind: { product, names: ['u', 'v'], variable
 | [optimal-interpolation.js](optimal-interpolation.js) | `DataAssimilation` | A background analysed toward a second model's values at a lattice of points; the increment, and the analysis among the models of the quantity | Exact observations are reproduced where they are, and the background kept far from them |
 | [barotropic.js](barotropic.js) | `ForecastModel` | The barotropic vorticity equation from the 500 hPa wind, the height in balance, verified against the source | A solid-body rotation is steady |
 | [vorticity.py](vorticity.py) | `Diagnostic`, Python | The same diagnostic in Python, run by the server on numpy (§9) | The same solid-body rotation, and a product's round trip through the files |
+| [exposure.js](exposure.js) | `Plugin` | People where the forecast's greatest 2 m temperature or 10 m wind exceeds a threshold: per cell, by country and by province (`regions` results), and a table of the fifteen countries most exposed | Synthetic countries under a hot and a windy forecast: every person in the right country and province |
+| [terrain.js](terrain.js) | `Plugin` | Slope and upstream area from the relief; the chosen place's watershed, main stem and way to the sea, as a sketch and a table | A cone's apex drains itself alone; the Murray at Murray Bridge, 1.04 million km² against 1.05 |
+| [fire-weather.js](fire-weather.js) | `Diagnostic`, over days | The Canadian Fire Weather Index System over the forecast days: FFMC, DMC, DC, ISI, BUI and FWI at local noon, the codes started from values set as parameters | Van Wagner and Pickett's (1985) test day at local noon at every longitude; 2.4 mm a day from the rate |
+| [heat.js](heat.js) | `Diagnostic`, over days | Daily maxima of the wet-bulb temperature (Stull 2011) and the NWS heat index, and the excess of the day's maximum over the month's normal (TerraClimate) | 30 °C at local noon gives Stull's and the NWS's values; 5 °C above a normal of 25 °C |
+| [heavy-rain.js](heavy-rain.js) | `Diagnostic` | The rain of the last 24 and 72 h from the precipitation rate, and as fractions of the month's normal | A constant rate: 8.64 and 25.92 mm; fractions of a 100 mm month |
+| [tsunami.js](tsunami.js) | `Plugin` | Tsunami travel times over the relief, from the chosen place or the latest shallow earthquake of M ≥ 6.5: hours with hourly contours, the source, arrivals near coastal places | Great-circle times over a uniform ocean; a continent passed round; the source taken from a catalogue; 1960 from Chile: Hilo 14.9 h, Sanriku 22.4 h |
+| [aftershocks.js](aftershocks.js) | `Plugin` | The chance of aftershocks of M ≥ 5, 6, 7 over the next day, week and month (Reasenberg and Jones 1989), and the zone of the rupture length (Wells and Coppersmith 1994) | The mainshock found; the chances as the domain gives them; the zone's circle |
+| [volcanic-ash.js](volcanic-ash.js) | `Plugin` | Ash parcels up an eruption column, carried by the wind of 10 m to 250 hPa and settling at Stokes' speed to the ground | Still air: landing at the vent after ∫ dz / w; a uniform wind: U t |
+| [ndvi.py](ndvi.py) | `Plugin`, Python | The vegetation index (NDVI) of the least cloudy Sentinel-2 Level-2A scene of the last days in a box around the chosen place, at 20 or 40 m, clouds and shadows masked by the scene classification; optionally the change since a year before. Reads Earth Search (STAC) and Cloud-Optimised GeoTIFFs by ranges | `data/tests/check_formats.py`: the grid, the interpolation, the reflectance rule, the note without a place |
 | [vorticity.cpp](vorticity.cpp) | `Diagnostic`, C++ | The same diagnostic in C++, compiled and run by the server (§9) | The same solid-body rotation, where a compiler exists |
 
 ## 9. The Same Contract in Python and C++
@@ -140,7 +149,7 @@ def create(api):
     return Vorticity()
 ```
 
-[vorticity.py](vorticity.py) is the whole of it. From the command line, in the environment of `data/requirements.txt`:
+[vorticity.py](vorticity.py) is the whole of it. A Python plug-in may also use the data library, as [ndvi.py](ndvi.py) does: it finds Sentinel-2 scenes through `data/acquisition/stac.py`, reads windows of their bands through `data/formats/tiff.py`, and joins tiles of different UTM zones by the transverse Mercator projection there. Such a plug-in touches the network; it says so in its description, and credits its data in a note ("Contains modified Copernicus Sentinel data 2026"). From the command line, in the environment of `data/requirements.txt`:
 
 ```
 python applications/earth-atlas/py/host.py describe plugins/vorticity.py

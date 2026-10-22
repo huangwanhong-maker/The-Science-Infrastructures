@@ -24,6 +24,10 @@ Plug-ins written in Python or C++ run here rather than in the page (py/host.py):
     POST /plugin-host/run                           {file, chosen, params, context} starts a job; returns {job}
     GET  /plugin-host/job/<id>                      the job's state, progress and results
 
+The API of the low layers (api/README.md) is mounted at /api/v1/, under this
+server's write policy and token: fields, observations and their stream, events,
+the domains' functions and the plug-ins, for programs in any language.
+
 Usage::
 
     python applications/earth-atlas/serve.py [--host 127.0.0.1] [--port 8790] [--open]
@@ -37,8 +41,11 @@ server sends the browser on from there.
 from __future__ import annotations
 
 import argparse
+import email.utils
+import gzip
 import http.server
 import json
+import os
 import sys
 import urllib.parse
 import webbrowser
@@ -56,6 +63,19 @@ MOUNTS = {
 JOBS = None          # the data library's jobs on demand, created at the first request
 SIBLING = None       # where the Celestial Atlas is served, when it is not beside this page
 RECIPE = None        # the job that runs the atlas's data recipe, created at the first request
+# Who may start fetches and builds (the data recipe): everyone on this computer;
+# on a public address, only the holder of the token, and no one without one.
+WRITES = {"allowed": True, "token": None}
+
+
+def write_refusal(handler) -> str | None:
+    """None when this request may write; else the reason it may not."""
+    if not WRITES["allowed"]:
+        return "this server is read-only: start it with --token to allow fetching with a token"
+    token = WRITES["token"]
+    if token and handler.headers.get("Authorization", "") != f"Bearer {token}":
+        return "fetching on this server needs its token"
+    return None
 
 
 def jobs():
@@ -76,6 +96,7 @@ def recipe_job():
     return RECIPE
 
 
+API = None           # the API of the low layers (api/service/handler.py), mounted at /api/ by main()
 PLUGINS = None       # the host of the plug-ins run here (py/host.py), created at the first request
 PLUGIN_JOBS = None   # its jobs
 
@@ -102,6 +123,29 @@ TYPES = {
 }
 
 
+# Large products travel compressed when the browser accepts it: a regions raster
+# of 13 MB becomes 87 kB. Each file is compressed once per version (its size and
+# time of change) and kept in memory, the oldest dropped beyond GZIP_LIMIT bytes.
+GZIPPED: dict = {}
+GZIP_LIMIT = 512 * 2 ** 20
+
+
+def gzipped(path: Path) -> bytes | None:
+    """The file compressed, or None when that saves too little to be worth it."""
+    st = path.stat()
+    hit = GZIPPED.get(path)
+    if hit and hit[0] == (st.st_mtime_ns, st.st_size):
+        return hit[1]
+    data = path.read_bytes()
+    packed = gzip.compress(data, 6)
+    if len(packed) > 0.8 * len(data):
+        packed = None
+    GZIPPED[path] = ((st.st_mtime_ns, st.st_size), packed)
+    while sum(len(v[1] or b"") for v in GZIPPED.values()) > GZIP_LIMIT and len(GZIPPED) > 1:
+        GZIPPED.pop(next(iter(GZIPPED)))
+    return packed
+
+
 class Handler(http.server.SimpleHTTPRequestHandler):
     extensions_map = {**http.server.SimpleHTTPRequestHandler.extensions_map, **TYPES}
 
@@ -115,6 +159,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         return str(target)
 
     def do_GET(self) -> None:
+        if API is not None and API.handle(self):        # /api/v1/...: the API of the low layers
+            return
         url = urllib.parse.urlsplit(self.path)
         if url.path == "/request" or url.path.startswith("/request/"):
             self.on_demand(url)
@@ -129,16 +175,53 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             self.send_response(302)
             self.send_header("Location", SIBLING + self.path[len("/celestial-atlas/"):])
             self.end_headers()
-        else:
+        elif not self.send_compressed():
             super().do_GET()
 
+    def send_compressed(self) -> bool:
+        """Sends a large .json or .bin product gzipped, if the browser accepts it;
+        answers 304 when it has the version already. False when not done here."""
+        if "gzip" not in self.headers.get("Accept-Encoding", ""):
+            return False
+        path = Path(self.translate_path(self.path))
+        if path.suffix not in (".json", ".bin") or not path.is_file() or path.stat().st_size < 256 * 1024:
+            return False
+        st = path.stat()
+        since = self.headers.get("If-Modified-Since")
+        if since:
+            try:
+                if email.utils.parsedate_to_datetime(since).timestamp() >= int(st.st_mtime):
+                    self.send_response(304)
+                    self.end_headers()
+                    return True
+            except (TypeError, ValueError, OverflowError):
+                pass
+        packed = gzipped(path)
+        if packed is None:
+            return False
+        self.send_response(200)
+        self.send_header("Content-Type", self.guess_type(str(path)))
+        self.send_header("Content-Encoding", "gzip")
+        self.send_header("Content-Length", str(len(packed)))
+        self.send_header("Last-Modified", self.date_time_string(st.st_mtime))
+        self.send_header("Vary", "Accept-Encoding")
+        self.end_headers()
+        self.wfile.write(packed)
+        return True
+
     def do_POST(self) -> None:
+        if API is not None and API.handle(self):
+            return
         url = urllib.parse.urlsplit(self.path)
         if url.path == "/setup/run":
             self.reply_json(*self.recipe_request(url))
         elif url.path == "/plugin-host/run":
             self.reply_json(*self.plugin_request(url, self.body()))
         else:
+            self.send_error(404)
+
+    def do_OPTIONS(self) -> None:
+        if API is None or not API.handle(self):           # the API's preflights; nothing else here answers OPTIONS
             self.send_error(404)
 
     def body(self) -> dict:
@@ -187,12 +270,17 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     def recipe_request(self, url) -> tuple[dict, int]:
         """The state of the data recipe (GET /setup), or a run of its missing
         steps, or of chosen steps again (POST /setup/run?steps=a,b&again=1)."""
+        refusal = write_refusal(self)
+        policy = {"writable": refusal is None, "writes": "token" if WRITES["token"] else ("open" if WRITES["allowed"] else "closed"),
+                  "refusal": refusal}
         try:
             if url.path == "/setup":
-                return recipe_job().view(), 200
+                return {**recipe_job().view(), **policy}, 200
+            if refusal:
+                return {"message": refusal, **policy}, 403
             query = dict(urllib.parse.parse_qsl(url.query))
             steps = [s for s in query.get("steps", "").split(",") if s] or None
-            return recipe_job().start(steps, again=query.get("again") == "1"), 200
+            return {**recipe_job().start(steps, again=query.get("again") == "1"), **policy}, 200
         except RuntimeError as error:          # a run is already in progress
             return {"message": str(error)}, 409
 
@@ -228,15 +316,28 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--port", type=int, default=8790)
     parser.add_argument("--sibling", metavar="URL",
                         help="where the Celestial Atlas is served when it is not beside this page")
+    parser.add_argument("--token", default=os.environ.get("SCIENCE_TOKEN"),
+                        help="the token that allows fetching through this server (default: $SCIENCE_TOKEN)")
+    parser.add_argument("--read-only", action="store_true", help="refuse every fetch and build requested through the server")
     parser.add_argument("--open", action="store_true", help="open the page in the default browser")
     args = parser.parse_args(argv)
-    global SIBLING
+    global SIBLING, API
     SIBLING = args.sibling.rstrip("/") + "/" if args.sibling else None
+    WRITES["token"] = args.token or None
+    # On a public address, writes need a token: secure by default.
+    WRITES["allowed"] = not args.read_only and (args.host in ("127.0.0.1", "localhost", "::1") or bool(args.token))
+    if not WRITES["allowed"] and not args.read_only:
+        print("Serving other computers without --token: fetching through the page is refused.", file=sys.stderr)
     if not (DATA / "products" / "geography-ne50m.json").exists():
         print("The geography product is missing. From the repository root, run:\n"
               "  python data/acquisition/fetch.py natural-earth-50m\n"
               "  python data/products/geography.py\n"
               "and see applications/earth-atlas/README.md for the other data.", file=sys.stderr)
+    # The API of the low layers at /api/v1/, under this server's write policy and token.
+    sys.path.insert(0, str(ROOT / "api" / "service"))
+    from handler import Api
+    API = Api(ROOT, allow_writes=WRITES["allowed"], token=WRITES["token"],
+              read_only_reason=None if WRITES["allowed"] else "this server accepts no writes: start it with --token")
     server = Server((args.host, args.port), Handler)
     url = f"http://127.0.0.1:{args.port}/"
     where = url if args.host == "127.0.0.1" else f"{url} and on {args.host}"

@@ -212,6 +212,16 @@ const { check, assert, skip, done } = suite();
   check('plug-in wind speed (the smallest): U cos φ at 45° N', Math.abs(speed.product.slice('speed', 0)[row45 + 10] - U * Math.cos(45 * DEG)), 1e-4, 'm/s');
 }
 
+// ---- more plug-ins: each tests/plugins-*.mjs exports checks(harness) ------------------------------
+{
+  const { readdirSync } = await import('node:fs');
+  const api = await import('../src/plugins/index.js');
+  for (const file of readdirSync(import.meta.dirname).filter((f) => /^plugins-.*\.mjs$/.test(f)).sort()) {
+    const module = await import(`./${file}`);
+    await module.checks({ check, assert, skip, PRODUCTS, api });
+  }
+}
+
 // ---- plug-ins the server runs (ADR 0029): Python, and C++ where a compiler is at hand -----------
 {
   const root = resolve(import.meta.dirname, '../../..');
@@ -225,8 +235,35 @@ const { check, assert, skip, done } = suite();
     if (report) {
       check('plug-ins in Python: vorticity of a solid-body rotation', report.python.zeta_error, 2e-8, '1/s');
       check('plug-ins in Python: a product written and read back, within half a quantum', report.round_trip.max_error - report.round_trip.half_quantum, 1e-9);
+      const o = report.observations;
+      assert('plug-ins in Python: a need of kind observations is served by the set, an optional need left without a source', o.ok, o.error || JSON.stringify({ served: o.served_by, optional: o.optional, time: o.time }));
+      if (o.ok) check('plug-ins in Python: DataAssimilation draws the observation, the background interpolated to the instant', o.drawn_error + o.background_error, 2 * o.quantum, 'K');
       if (report.cpp.skipped) skip(`plug-ins in C++: ${report.cpp.skipped}`);
-      else { assert('plug-ins in C++: compiled and run through the file contract', report.cpp.ok, report.cpp.error || ''); if (report.cpp.ok) check('plug-ins in C++: vorticity of a solid-body rotation', report.cpp.zeta_error, 2e-8, '1/s'); }
+      else {
+        const named = report.compiler ? ` (${report.compiler})` : '';
+        assert(`plug-ins in C++: compiled and run through the file contract${named}`, report.cpp.ok, report.cpp.error || '');
+        if (report.cpp.ok) check('plug-ins in C++: vorticity of a solid-body rotation', report.cpp.zeta_error, 2e-8, '1/s');
+        const a = report.cpp_advection;
+        assert('plug-ins in C++: ForecastModel, semi-Lagrangian advection (advection.cpp), verified by the host', a.ok, a.error || '');
+        if (a.cubic) {
+          check('plug-ins in C++: a cosine bell carried over the poles returns after a revolution (l2, cubic, 2°)', a.cubic.l2, 0.08);
+          check('plug-ins in C++: and, clipped, makes no undershoot', Math.min(0, a.clipped.least), 1e-3, 'K');
+          check('plug-ins in C++: a uniform field stays uniform', a.uniform_error, 1e-4, 'K');
+          check('plug-ins in C++: the verification block is the RMSE of the forecast against the later time', a.cubic.verification_error, 1e-6, 'K');
+        }
+        const p = report.cpp_parcels;
+        assert('plug-ins in C++: Trajectories (parcels.cpp), a sketch of paths, moving points, a marker, a label and a note', p.ok, p.error || '');
+        if (p.latitude_error !== undefined) {
+          check('plug-ins in C++: a parcel in a solid-body rotation keeps its latitude', p.latitude_error, 1e-6, '°');
+          check('plug-ins in C++: and turns by U t / a in a day', p.longitude_error, 0.01, '°');
+        }
+        const c = report.cpp_cressman;
+        assert('plug-ins in C++: DataAssimilation from an observation set (cressman.cpp), at the instant, its increment a difference', c.ok, c.error || '');
+        if (c.drawn_error !== undefined) {
+          check('plug-ins in C++: one observation on a grid point is drawn exactly by successive correction', c.drawn_error, 1e-3, 'K');
+          check('plug-ins in C++: the background is kept beyond the radius', c.beyond_increment, 1e-4, 'K');
+        }
+      }
     }
   } else {
     skip('plug-ins in Python and C++: no Python with numpy found');

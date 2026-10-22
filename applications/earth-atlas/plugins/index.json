@@ -1,17 +1,98 @@
 {
   "about": "The plug-ins the Earth Atlas offers to load (ADR 0027). Each file exports create(api); see README.md.",
   "plugins": [
-    {"file": "plugins/vorticity.js", "title": "vorticity and divergence", "class": "Diagnostic",
-     "description": "Relative vorticity and divergence of the wind, by centred differences on the sphere."},
-    {"file": "plugins/trajectories.js", "title": "air parcels", "class": "Trajectories",
-     "description": "Parcels carried through the wind from a ring around the chosen place, or a lattice over the globe."},
-    {"file": "plugins/optimal-interpolation.js", "title": "optimal interpolation", "class": "DataAssimilation",
-     "description": "A background analysed toward observations taken from a second model at a lattice of points."},
-    {"file": "plugins/barotropic.js", "title": "the barotropic model", "class": "ForecastModel",
-     "description": "The barotropic vorticity equation from the 500 hPa wind, verified against the source."},
-    {"file": "plugins/vorticity.py", "title": "vorticity and divergence (Python)", "class": "Diagnostic", "runtime": "python",
-     "description": "The same diagnostic written in Python, run by the server on numpy."},
-    {"file": "plugins/vorticity.cpp", "title": "vorticity and divergence (C++)", "class": "Diagnostic", "runtime": "cpp",
-     "description": "The same diagnostic written in C++, compiled and run by the server; needs a C++ compiler on the serving computer."}
+    {
+      "file": "plugins/vorticity.js",
+      "title": "vorticity and divergence",
+      "class": "Diagnostic",
+      "description": "Relative vorticity and divergence of the wind, by centred differences on the sphere."
+    },
+    {
+      "file": "plugins/trajectories.js",
+      "title": "air parcels",
+      "class": "Trajectories",
+      "description": "Parcels carried through the wind from a ring around the chosen place, or a lattice over the globe."
+    },
+    {
+      "file": "plugins/optimal-interpolation.js",
+      "title": "optimal interpolation",
+      "class": "DataAssimilation",
+      "description": "A background analysed toward observations: weather stations, buoys or your own sensors, or a second model at a lattice of points."
+    },
+    {
+      "file": "plugins/barotropic.js",
+      "title": "the barotropic model",
+      "class": "ForecastModel",
+      "description": "The barotropic vorticity equation from the 500 hPa wind, verified against the source."
+    },
+    {
+      "file": "plugins/vorticity.py",
+      "title": "vorticity and divergence (Python)",
+      "class": "Diagnostic",
+      "runtime": "python",
+      "description": "The same diagnostic written in Python, run by the server on numpy."
+    },
+    {
+      "file": "plugins/vorticity.cpp",
+      "title": "vorticity and divergence (C++)",
+      "class": "Diagnostic",
+      "runtime": "cpp",
+      "description": "The same diagnostic written in C++, compiled and run by the server; needs a C++ compiler on the serving computer."
+    },
+    {
+      "file": "plugins/ndvi.py",
+      "title": "vegetation from Sentinel-2 (NDVI)",
+      "class": "Plugin",
+      "runtime": "python",
+      "description": "The vegetation index of the least cloudy Sentinel-2 scene of the last days, at 20 or 40 m in a box around the chosen place; optionally its change since a year before. Needs a chosen place and the network."
+    },
+    {
+      "file": "plugins/exposure.js",
+      "title": "people exposed to heat or wind",
+      "class": "Plugin",
+      "description": "People where the forecast's greatest 2 m temperature, or 10 m wind, exceeds a threshold; by country and by province."
+    },
+    {
+      "file": "plugins/terrain.js",
+      "title": "terrain and water",
+      "class": "Plugin",
+      "description": "Slope and the area draining through each cell, from the relief; with a place chosen, its watershed, its main stem and its way to the sea."
+    },
+    {
+      "file": "plugins/fire-weather.js",
+      "title": "fire weather",
+      "class": "Diagnostic",
+      "description": "The Canadian Fire Weather Index System over the forecast days, from the weather at local noon and the rain of the day before. Not a warning service."
+    },
+    {
+      "file": "plugins/heat.js",
+      "title": "heat",
+      "class": "Diagnostic",
+      "description": "Daily maxima of the wet-bulb temperature and the heat index, and the excess of the day's maximum over the month's normal. Not a warning service."
+    },
+    {
+      "file": "plugins/heavy-rain.js",
+      "title": "heavy rain",
+      "class": "Diagnostic",
+      "description": "The rain of the last 24 and 72 hours from the precipitation rate, and as a fraction of the month's normal. Not a warning service."
+    },
+    {
+      "file": "plugins/tsunami.js",
+      "title": "tsunami travel times",
+      "class": "Plugin",
+      "description": "The first arrival of a tsunami's long wave over the bathymetry, from the chosen place or the latest large shallow earthquake. Not a warning service."
+    },
+    {
+      "file": "plugins/aftershocks.js",
+      "title": "aftershocks",
+      "class": "Plugin",
+      "description": "The chance of aftershocks of magnitude 5, 6 and 7 or more over the next day, week and month (Reasenberg and Jones 1989). Not a warning service."
+    },
+    {
+      "file": "plugins/volcanic-ash.js",
+      "title": "volcanic ash",
+      "class": "Plugin",
+      "description": "Ash parcels from an eruption column, carried by the forecast wind and settling to the ground. Not a warning service."
+    }
   ]
 }

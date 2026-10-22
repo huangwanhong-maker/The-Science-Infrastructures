@@ -17,4 +17,13 @@ export class Context {
 
   // The geography product (Natural Earth): coasts, countries, places.
   geography() { return this.library.geography(); }
+
+  // The library's index entries of a kind: 'fields', 'events', 'observations', 'tracks', 'regions', ...
+  list(kind) { return this.library.list(kind); }
+
+  // An event set by name (earthquakes, mechanisms, disasters): { fields, events: [[row]], window, source }.
+  events(name) { return this.library.eventSet(name); }
+
+  // An observation set by name (stations, buoys, sensors; data/README.md §4): { variables, fields, rows, window, source }.
+  observations(name) { return this.library.observationSet(name); }
 }

@@ -11,7 +11,7 @@ function tickText(v) {
   return Number.isInteger(v) ? String(v) : format(v, 2);
 }
 
-export function renderLegend(el, { surface, flow, lines, events, tracks, plates, stations, mechanisms }) {
+export function renderLegend(el, { surface, flow, lines, events, tracks, plates, stations, mechanisms, observations }) {
   const parts = [];
   if (surface && surface.kind === 'classes') {
     // One column per main class (A tropical, B arid, C temperate, D cold, E polar).
@@ -36,6 +36,15 @@ export function renderLegend(el, { surface, flow, lines, events, tracks, plates,
       <div class="ticks">${ticks}</div>
       ${surface.note ? `<div class="note">${esc(surface.note)}</div>` : ''}
       ${surface.offset ? `<div class="note offset">${esc(surface.offset)}</div>` : ''}
+    </div>`);
+  }
+  if (observations) {
+    const ticks = observations.ticks.map((t) => `<span style="left:${(t.at * 100).toFixed(2)}%">${esc(tickText(t.value))}</span>`).join('');
+    parts.push(`<div>
+      <div class="title"><span>${esc(observations.title)}</span><span class="unit">${esc(observations.unit)}</span></div>
+      <div class="bar dots"><span style="background:${observations.gradient}"></span></div>
+      <div class="ticks">${ticks}</div>
+      ${observations.note ? `<div class="note">${esc(observations.note)}</div>` : ''}
     </div>`);
   }
   if (flow || lines) {

@@ -15,6 +15,7 @@ import { SurfaceLayer } from './layers/surface.js';
 import { FlowLayer } from './layers/flow.js';
 import { LinesLayer } from './layers/lines.js';
 import { EventsLayer } from './layers/events.js';
+import { ObservationsLayer } from './layers/observations.js';
 import { TracksLayer } from './layers/tracks.js';
 import { PlatesLayer, MOTION_PRODUCT } from './layers/plates.js';
 import { StationsLayer } from './layers/stations.js';
@@ -49,7 +50,9 @@ import { climateDiagram } from './ui/climate.js';
 import { joinCountries, valueForYear, latestWellCoveredYear } from '../../../domains/geography/js/index.js';
 import { OceanBeneath } from './ui/ocean.js';
 import { setupPanel } from './ui/setup.js';
+import { renderScores } from './ui/scores.js';
 import { PluginHost } from './plugins/host.js';
+import { makeProduct } from './plugins/plugin.js';
 import { SketchLayer } from './layers/sketch.js';
 
 const $ = (id) => document.getElementById(id);
@@ -66,14 +69,15 @@ const state = {
   lang: 'en',
   time: Date.now(), live: true, playing: false,
   pinned: null,
+  obs: null, obsVariable: null,     // observations shown: a set of kind 'observations', and its variable
 };
 
-let library, catalogue, stage, base, surface, flow, lines, events, labels, timeline, geography, elevation, tracks;
+let library, catalogue, stage, base, surface, flow, lines, events, labels, timeline, geography, elevation, tracks, observations;
 let imagery, detail, ourModel, detailSource = null, ocean, plates, stations, series, mechanisms, crust = null, section, sectionLayer;
 let sketch, pluginHost, pluginPanelTimer = 0;   // plug-ins and their sketches (ADR 0027)
 const asked = new Requests();       // data requested on demand for the place card, other than the ocean's
 const ours = { input: null, running: null, progress: 0, runs: {}, start: null, against: '', error: '' };
-const MODEL_COLOURS = ['#CA8DBE', '#f6c47e', '#9fb6e8', '#8fd1b4', '#e8a0a0'];
+const MODEL_COLOURS = ['#CA8DBE', '#f6c47e', '#9fb6e8', '#8fd1b4', '#e8a0a0', '#b8a6e8', '#7fc4d6', '#e0c3a0'];
 const loaded = new Map();          // field products in memory, by name
 const classMaps = new Map();       // class products in memory, by name
 const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -111,6 +115,17 @@ function openData() {
 }
 $('data-link').addEventListener('click', openData);
 $('about').addEventListener('close', setup.stop);
+
+// The scorecard: the latest verification product, read when opened.
+$('scores-link').addEventListener('click', async () => {
+  $('scores').showModal();
+  const entry = library && library.list('verification')[0];
+  let verification = null;
+  if (entry) {
+    try { verification = await (await fetch(`data/products/${entry.file}`, { cache: 'no-store' })).json(); } catch (e) { console.error('scores', e); }
+  }
+  renderScores($('scores-body'), verification, (model) => MODEL_COLOURS[modelRank(model) % MODEL_COLOURS.length]);
+});
 
 async function start() {
   try {
@@ -153,11 +168,13 @@ async function start() {
   flow = new FlowLayer(stage, library);
   lines = new LinesLayer(stage, library);
   events = new EventsLayer(stage, library);
+  observations = new ObservationsLayer(stage, library);
   tracks = new TracksLayer(stage, library);
   sketch = new SketchLayer(stage);
   // Plug-ins: scripts loaded on request, run on the library, shown through the layers.
   pluginHost = new PluginHost(library, {
     publish: (product, show) => showComputedProduct(product, show),
+    regions: (result, show) => showRegions(result, show),
     sketches: (list) => { sketch.set(list); sketch.update(state.time, true); dirty.labels = true; },
     changed: () => renderPanel(),
     progress: () => { clearTimeout(pluginPanelTimer); pluginPanelTimer = setTimeout(renderPanel, 60); },
@@ -185,6 +202,7 @@ async function start() {
   await Promise.all([
     selectSurface(state.surface, false), selectFlow(state.flow, false),
     selectLines(state.lines, false), selectEvents(state.events, false), selectTracks(state.tracks, false),
+    selectObservations(state.obs, state.obsVariable, false),
   ]);
   await painting;
   progress(0.95);
@@ -204,7 +222,7 @@ async function start() {
   $('loading').hidden = true;
   // For inspection from the browser's console and for automated checks.
   window.atlas = { state, stage, base, surface, flow, lines, events, library, catalogue: () => catalogue, labels, imagery, detail, ours, runOurModel, ocean, plates,
-    plugins: pluginHost, sketch,
+    plugins: pluginHost, sketch, observations, selectObservations: (name, variable) => selectObservations(name, variable),
     select: { surface: (id) => selectSurface(id), compare: (id) => selectCompare(id), flow: (id) => selectFlow(id), lines: (id) => selectLines(id) } };
   requestAnimationFrame(loop);
   pluginHost.index();
@@ -269,6 +287,7 @@ function chooseDefaults() {
   }
   if (state.lines !== 'none' && !ids(catalogue.lines).includes(state.lines)) state.lines = 'none';
   if (state.events && !ids(catalogue.events).includes(state.events)) state.events = null;
+  if (state.obs && !library.list('observations').some((e) => e.name === state.obs)) state.obs = null;
   state.tracks = state.tracks.filter((id) => ids(catalogue.tracks).includes(id));
   const first = catalogue.surfaces.find((s) => s.kind === 'indicator');
   if (!state.indicator && first) state.indicator = first.id;
@@ -334,6 +353,31 @@ async function selectEvents(id, render = true) {
   afterChange(render);
 }
 
+// Observations: a set (stations, buoys, our sensors) and the variable that colours it.
+async function selectObservations(name, variable = null, render = true) {
+  state.obs = name || null;
+  try { await observations.select(state.obs, variable); } catch (e) { console.error('observations', e); state.obs = null; await observations.select(null); }
+  state.obsVariable = observations.variable;
+  followSensors();
+  afterChange(render);
+}
+
+// Our own sensors, followed in real time through the API's stream (api/README.md §2.4):
+// each reading posted is drawn as it arrives. Where the stream cannot be had, the
+// frame loop reads the set again every half minute.
+let sensorStream = null;
+function followSensors() {
+  if (sensorStream) { sensorStream.close(); sensorStream = null; }
+  if (!state.obs || !/^sensor-/.test(state.obs) || typeof EventSource === 'undefined') return;
+  const source = state.obs.slice('sensor-'.length);
+  sensorStream = new EventSource(`api/v1/observations/${encodeURIComponent(source)}/stream`);
+  sensorStream.addEventListener('readings', (e) => {
+    try { observations.addReadings(JSON.parse(e.data).readings || []); } catch (err) { console.error('sensor stream', err); }
+    dirty.legend = dirty.place = true;
+  });
+  sensorStream.onerror = () => { if (sensorStream && sensorStream.readyState === EventSource.CLOSED) sensorStream = null; };
+}
+
 function afterChange(render) {
   dirty = { labels: true, legend: true, place: true };
   if (render) { renderPanel(); updateTimeline(); }
@@ -353,6 +397,8 @@ function renderPanel() {
     plates: Boolean(plates && plates.plates),
     stations: library.list('stations').length > 0,
     mechanisms: library.list('events').some((e) => e.kind === 'mechanism'),
+    observations: library.list('observations').map((e) => ({ name: e.name, title: e.title, count: e.count, variables: e.variables || [] })),
+    obsVariables: observations && observations.data ? observations.data.variables : [],
     ai: [...library.fieldMeta.values()].filter((m) => m.verification && m.verification.start).map((m) => ({
       label: m.model, short: m.model.replace(/ \((ours|run here)\)$/, '').replace(/ hindcast$/, ''),
       start: Date.parse(m.verification.start), leads: m.verification.leads,
@@ -370,6 +416,8 @@ function renderPanel() {
     flow: (id) => selectFlow(id),
     lines: (id) => selectLines(id),
     events: (id) => selectEvents(id),
+    observations: (name) => selectObservations(name, state.obsVariable),
+    obsVariable: (v) => { observations.setVariable(v); state.obsVariable = observations.variable; afterChange(true); },
     track: (id, on) => selectTracks(on ? [...state.tracks, id] : state.tracks.filter((x) => x !== id)),
     plates: (on) => { state.plates = on; plates.show(on); dirty.labels = dirty.legend = true; remember(); },
     stations: async (on) => {
@@ -436,6 +484,7 @@ function setProjection(mode, initial = false) {
   if (flow.product) flow.reset();
   lines.update(state.time, true);
   events.update(state.time, true);
+  observations.update(state.time, true);
   tracks.rebuild();
   tracks.update(state.time, true);
   if (plates.built) plates.rebuild();
@@ -462,6 +511,7 @@ function timeDomain() {
   add(flow.product);
   add(lines.product);
   if (events.product) domains.push(events.window());
+  if (observations.data && observations.windowSpan()) domains.push(observations.windowSpan());
   if (tracks.sources.length && tracks.window()) domains.push(tracks.window());
   const now = Date.now();
   if (!domains.length) return { span: [now - DAY, now + DAY], steps: [], coverage: [] };
@@ -487,6 +537,7 @@ function setTime(t) {
   flow.update(t);
   lines.update(t);
   events.update(t);
+  observations.update(t);
   tracks.update(t);
   sketch.update(t);
   ocean.figure.setNow(t);
@@ -704,8 +755,18 @@ function placeCard() {
         const m = mean(surface.product, def.variables[0]) - mean(c.product, c.def.variables[0]);
         if (Number.isFinite(m)) rows.push([`Mean difference in ${label}`, `${format(toShown(m, surface.unit))} ${esc(surface.unit.unit)}`]);
       } else if (def.variables.length === 1) {
-        const m = mean(surface.product, def.variables[0]);
-        if (Number.isFinite(m)) rows.push([`Mean ${label}`, `${format(toShown(m, surface.unit))} ${esc(surface.unit.unit)}`]);
+        const v = surface.product.variables.get(def.variables[0]) || {};
+        if (/area:\s*sum/.test(v.cell_methods || '')) {
+          // A count per cell (people): the total, not a mean.
+          const s = surface.product.slice(def.variables[0], Math.max(0, surface.product.bracket(t, def.variables[0]).i0));
+          let total = 0;
+          for (let i = 0; i < s.length; i++) if (s[i] === s[i]) total += s[i];
+          rows.push([`Total ${label}`, `${format(total)}`]);
+        } else if (!/^regions-/.test(surface.product.meta.name)) {
+          // Values by region painted on cells: an area mean of them would mean nothing.
+          const m = mean(surface.product, def.variables[0]);
+          if (Number.isFinite(m)) rows.push([`Mean ${label}`, `${format(toShown(m, surface.unit))} ${esc(surface.unit.unit)}`]);
+        }
       }
     } else if (def && def.kind === 'indicator' && surface.product) {
       const w = surface.product.aggregates.WLD;
@@ -836,6 +897,7 @@ function placeCard() {
       add('geophysics', '', entry.error ? esc(entry.error) : `asking the Nevada Geodetic Laboratory… ${Math.round((Date.now() - entry.asked) / 1000)} s`, 'gloss');
     }
   }
+  for (const [term, html, kind] of observations.rows(lon, lat)) add('Observations', term, html, kind);
   for (const [term, html, kind] of plates.rows(lon, lat)) add('geophysics', term, html, kind);
   if (plates.plates && library.list('events').some((e) => e.kind === 'mechanism')) {
     add('geophysics', 'Through the Earth', '<button type="button" class="action" data-action="section">A section through here</button>');
@@ -844,7 +906,7 @@ function placeCard() {
   for (const [term, html, kind] of ocean.rows(lon, lat, t, seaFloorAt(lon, lat))) add('oceanography', term, html, kind);
   const palette = [...models].sort((a, b) => modelRank(a) - modelRank(b));
   for (const s2 of series) for (const l of s2.lines) l.colour = MODEL_COLOURS[palette.indexOf(l.model) % MODEL_COLOURS.length];
-  const order = ['meteorology', 'oceanography', 'climate', 'geography', 'geophysics'].map((d) => DOMAINS[d]);
+  const order = ['meteorology', 'Observations', 'oceanography', 'climate', 'geography', 'geophysics'].map((d) => DOMAINS[d] || d);
   const ordered = [...sections].sort((a, b) => (order.indexOf(a[0]) + 1 || 99) - (order.indexOf(b[0]) + 1 || 99));
   if (where.kind === 'country') {
     const rowsC = [];
@@ -977,8 +1039,10 @@ function legendData() {
       const p = surface.product, b = surface.shown || p.bracket(state.time);
       const credit = [p.meta.source && p.meta.source.credit, surface.compare && surface.compare.product.meta.source.credit].filter(Boolean).join(' · ');
       const when = p.times.length ? (b.offset ? formatShortUTC(b.shown) : 'interpolated in time') : '';
-      lg.note = [credit, p.times.length === 1 ? `daily mean, ${formatDay(p.times[0])}` : when].filter(Boolean).join(' · ');
-      if (b.offset && Math.abs(b.offset) > HOUR) lg.offset = `Data from ${formatOffset(b.offset)}`;
+      // One time: a day's mean for a library product (OISST), an instant for a scene or a plug-in's result.
+      const instant = p.meta.computed || /time:\s*point/.test((p.variables.get(def.variables[0]) || {}).cell_methods || '');
+      lg.note = [credit, p.times.length === 1 ? (instant ? formatShortUTC(p.times[0]) : `daily mean, ${formatDay(p.times[0])}`) : when].filter(Boolean).join(' · ');
+      if (b.offset && Math.abs(b.offset) > HOUR && !(p.times.length === 1 && instant)) lg.offset = `Data from ${formatOffset(b.offset)}`;
     } else {
       lg.title = `${def.label}, ${surface.year}`;
       lg.note = `${(surface.product.source && surface.product.source.credit) || 'World Bank'} · by country`;
@@ -1008,6 +1072,7 @@ function legendData() {
   if (state.plates && plates.plates) out.plates = plates.legend();
   if (state.stations && stations.product) out.stations = stations.legend();
   if (state.mechanisms && mechanisms.product) out.mechanisms = mechanisms.legend();
+  if (observations.data) out.observations = observations.legend();
   if (tracks.sources.length) {
     const keys = tracks.sources.flatMap((s) => (s.def.kind === 'official'
       ? [{ label: 'observed', colour: s.colour }, { label: 'official forecast', colour: s.colour, dashed: true }]
@@ -1147,6 +1212,40 @@ async function showComputedProduct(product, show = {}) {
   remember();
 }
 
+// A plug-in's values by region (country, province) become a field on the
+// regions' own grid, each cell taking its region's value, so that the surface,
+// the legend, the tooltip and "minus" serve them as any field. Returns the
+// outlines of the regions with a value, as a sketch.
+async function showRegions(result, show = true) {
+  const set = await library.regions(result.by);
+  const ids = new Uint16Array(await (await fetch(`data/products/${set.file}`)).arrayBuffer());
+  const byId = new Float32Array(set.regions.length + 1).fill(NaN);
+  for (const r of set.regions) {
+    const v = result.values[r.code] ?? result.values[r.id] ?? result.values[r.name];
+    if (Number.isFinite(v)) byId[r.id] = v;
+  }
+  const values = new Float32Array(ids.length);
+  for (let i = 0; i < ids.length; i++) values[i] = ids[i] ? byId[ids[i]] : NaN;
+  const positive = [...byId].filter((v) => v > 0);
+  const log = result.scale === 'log' && positive.length > 1;
+  const style = { colormap: result.colormap || 'matter', reverse: !result.colormap, scale: log ? 'log' : 'linear',
+    range: log ? [Math.min(...positive), Math.max(...positive)] : null };
+  const slug = String(result.title).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40);
+  const product = makeProduct({
+    name: `regions-${result.by}-${slug}`, title: result.title, model: result.model || 'Plug-in', domain: result.domain || 'geography',
+    grid: set.grid, times: [], source: { credit: `${result.title}, by ${set.title}` },
+    variables: [{ name: slug || 'value', long_name: result.title, units: result.units || '1', style, slices: [values] }],
+  });
+  if (show) await showComputedProduct(product, { surface: slug || 'value' });
+  else registerComputed(product);
+  const outlines = await (await fetch(`data/products/${set.outlines.file}`)).json();
+  const polylines = [];
+  outlines.runs.forEach(([first, count], k) => {
+    if (Number.isFinite(byId[outlines.region[k]])) polylines.push({ coords: outlines.coords.slice(2 * first, 2 * (first + count)), colour: '#f3e6ef', width: 0.8, alpha: 0.55 });
+  });
+  return { kind: 'sketch', title: `${set.title} with a value`, polylines, markers: [], labels: [], moving: [] };
+}
+
 let modelPanelTimer = 0;
 async function runOurModel(kind = 'barotropic') {
   if (ours.running) return;
@@ -1205,6 +1304,7 @@ function remember() {
     if (!state.lights) q.set('nl', '0');
     if (state.clouds) q.set('cl', '1');
     if (state.events) q.set('e', state.events);
+    if (state.obs) q.set('o', `${state.obs}:${state.obsVariable || ''}`);
     if (state.tracks.length) q.set('k', state.tracks.join(' '));
     if (state.plates) q.set('pb', '1');
     if (state.stations) q.set('gp', state.stationFrame);
@@ -1230,6 +1330,7 @@ function restore() {
     }
   }
   for (const [k, key] of [['s', 'surface'], ['f', 'flow'], ['l', 'lines'], ['e', 'events'], ['m', 'compare']]) if (q.get(k)) state[key] = q.get(k);
+  if (q.get('o')) { const [name, variable] = q.get('o').split(':'); state.obs = name; state.obsVariable = variable || null; }
   if (q.get('nl') === '0') state.lights = false;
   if (q.get('k')) state.tracks = q.get('k').split(' ').filter(Boolean);
   if (q.get('pb') === '1') state.plates = true;
@@ -1246,12 +1347,18 @@ function restore() {
 
 // ---- the frame loop ------------------------------------------------------------------
 
+let lastObservations = 0;
 let lastFrame = performance.now(), lastLive = 0, lastCoverage = 0, lastRevision = -1, lastDetailTarget = 0, stationsMoved = 0;
 function loop(now) {
   requestAnimationFrame(loop);
   const dt = Math.min(100, now - lastFrame);
   lastFrame = now;
   if (state.live && now - lastLive > 20000) { lastLive = now; setTime(Date.now()); }
+  // Our own sensors change while the page is open: read them again every half minute.
+  if (state.obs && /^sensor-/.test(state.obs) && !sensorStream && now - lastObservations > 30000) {
+    lastObservations = now;
+    observations.refresh().then(() => { dirty.legend = dirty.place = true; });
+  }
   if (state.playing) {
     const [a, b] = timeline.span;
     let t = state.time + ((b - a) / 45000) * dt;
@@ -1283,7 +1390,7 @@ function loop(now) {
   if ((detail.target || 0) !== lastDetailTarget) { lastDetailTarget = detail.target || 0; dirty.legend = true; }
   if (dirty.labels) { dirty.labels = false; flow.viewChanged(); updateLabels(); }
   const res = stage.resolution;
-  base.frame(res); flow.frame(res); lines.frame(res); events.frame(res); tracks.frame(res); plates.frame(res); stations.frame(res); mechanisms.frame(res);
+  base.frame(res); flow.frame(res); lines.frame(res); events.frame(res); observations.frame(res); tracks.frame(res); plates.frame(res); stations.frame(res); mechanisms.frame(res);
   sectionLayer.frame(res, 0);
   sketch.frame(res);
   stage.render();

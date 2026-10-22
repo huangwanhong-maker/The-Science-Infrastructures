@@ -23,7 +23,7 @@ The Earth Atlas shows the atmosphere, the ocean, the land and the people of the 
   - **tracks:** several sources at once, so that forecasts of one cyclone can be compared;
   - the **base map:** relief, satellite imagery, or plain; plus forecast clouds, lights at night, coasts, boundaries, rivers, the graticule with the tropics and polar circles, names, and day and night.
 - **Fields recognised by standard name and level.** A field with a known CF standard name is drawn in that quantity's style at its level, for example geopotential height at 500 hPa. A field with an unknown one is drawn in a style fitted to its own range.
-- **Models as a choice.** The same quantity from several models (GFS, NOAA's AI model AIGFS, the AIGEFS ensemble, Pangu-Weather run here, our own two) is one layer with a choice of model.
+- **Models as a choice.** The same quantity from several models (GFS, NOAA's AI model AIGFS, the AIGEFS ensemble, ECMWF's IFS and its AI model AIFS, Pangu-Weather run here, our own two) is one layer with a choice of model. The ECMWF ensemble's probabilities (heavy rain, strong gusts, warm and cold spells) are layers of their own.
   - Any two models can be shown as a difference.
   - The place card gives each model's value and draws their courses together, and links to the sky at that place and time in the Celestial Atlas.
   - Ensemble spread is a layer of its own.
@@ -53,6 +53,9 @@ The Earth Atlas shows the atmosphere, the ocean, the land and the people of the 
   - the shallow-water equations, started by a digital filter, which keep divergence and gravity waves and slow the longest waves.
 
   Both are verified against later analyses and against persistence, side by side.
+- **Observations.** Weather at about 5,000 aerodromes (METAR, the last 24 hours), buoys and coastal stations (NDBC), and our own sensors (`observation/sensors`), drawn as dots coloured by the variable chosen, each station's report nearest the time shown, and read in the place card. Best tracks of tropical cyclones come from IBTrACS.
+- **Hazards** (plug-ins): fire weather (the Canadian FWI System), heat (wet-bulb temperature, heat index, excess over the normal), heavy rain (24 and 72 h, and as a fraction of the month's normal), tsunami travel times, aftershock probabilities, and volcanic ash; and the people exposed to heat or wind, by country and province. These are models read from the forecasts and catalogues, not warnings. Their science is in meteorology (`fireweather.js`, `heat.js`, `settling.js`), oceanography (`tsunami.js`), geophysics (`aftershocks.js`) and geography (`zonal.js`, `hydrology.js`).
+- **Forecasts kept and scored.** Each run of each forecast is kept (`data/products/archive.py`) and scored once its weather has happened (`data/products/verification.py`): 500 hPa height against the GFS's analyses (RMSE and anomaly correlation), 2 m temperature and pressure against METAR and buoys, waves against buoys, and tropical cyclones against IBTrACS and GDACS (track and central pressure), each by lead time and beside persistence. **Scores**, in the header, draws them. A schedule (`schedule.json`, run by `data/acquisition/schedule.py`) fetches observations every hour and forecasts every six hours.
 - **Plug-ins** ([ADR 0027](../../development/decisions/0027-earth-atlas-plugins.md)). An algorithm written as a script and loaded on request: it derives from `Diagnostic`, `ForecastModel`, `DataAssimilation` or `Trajectories`, says which fields it needs, and returns products and sketches that the atlas draws like anything else. The built-in ones, in [plugins/](plugins/), are the examples: vorticity and divergence, air parcels, optimal interpolation, and the barotropic model run through the class. [plugins/README.md](plugins/README.md) is the guide to writing one.
 - **One instant, in UTC.**
   - Each layer shows its data nearest to that instant, and says which time it shows.
@@ -102,6 +105,7 @@ From the repository root, fetch the data and build the products. This is about 3
 ```
 python data/acquisition/fetch.py natural-earth-50m etopo-2022 gfs oisst ww3 usgs-earthquakes
 python data/acquisition/fetch.py gfs-levels aigfs aigefs                  # models aloft and the AI models
+python data/acquisition/fetch.py ecmwf-ifs ecmwf-aifs ecmwf-ens          # ECMWF's open forecasts (CC BY 4.0)
 python data/acquisition/fetch.py gibs-daily                               # yesterday's Earth from space
 python data/acquisition/fetch.py gibs-static --profile blue-marble
 python data/acquisition/fetch.py gibs-static --profile black-marble
@@ -110,6 +114,7 @@ python data/acquisition/fetch.py worldbank-indicators --profile population    # 
 python data/acquisition/fetch.py koppen-geiger terraclimate-normals        # climate classes and normals
 python data/products/geography.py
 for s in etopo-2022 gfs oisst ww3 gfs-levels aigfs aigefs terraclimate-normals; do python data/products/field_grid.py --source $s; done
+for s in ecmwf-ifs ecmwf-aifs ecmwf-ens; do python data/products/ecmwf_fields.py --source $s; done
 python data/products/class_raster.py --source koppen-geiger
 python data/products/imagery.py --source gibs-daily
 python data/products/imagery.py --source gibs-static --profile blue-marble
@@ -171,6 +176,12 @@ What to try with each:
 | Air parcels | `Trajectories` | Click a place first: the parcels start on a ring around it. Choose *GFS, 500 hPa*, run, then play the time and watch them cross the ocean. |
 | Optimal interpolation | `DataAssimilation` | Keep GFS as the background and AIGFS as the source of observations: the increment shows where the two models disagree. Then, under *Air temperature at 2 m*, choose the plug-in's analysis and "minus" GFS. |
 | The barotropic model | `ForecastModel` | T42 for 48 hours takes about ten seconds. Step the time forward to watch the flow evolve, and read its error beside persistence in the table. |
+| People exposed | `Plugin` | Keep GFS and GHSL; choose *Heat* (35 °C) or *Wind* (17 m/s) and run: the countries are painted by the people exposed, the table lists the fifteen most exposed, the provinces' totals are among the surfaces, and *People in the cell* shows the exposed cells. |
+| Terrain and water | `Plugin` | Click a river (the Amazon at Óbidos) and run: the rivers appear as the area draining through each cell, and the place's watershed, its main stem and its way to the sea are drawn; about 1.5 s on the 10′ grid. |
+| Fire weather, heat, heavy rain | `Diagnostic`, by day | Run with GFS or ECMWF: one map per forecast day. The fire-weather codes start from standard values on the first day (a spin-up the note states). |
+| Tsunami travel times | `Plugin` | Click a place at sea, or let it take the latest large shallow earthquake: hours with hourly contours, and the places reached; about 4 s. |
+| Aftershocks | `Plugin` | Click near a recent large earthquake: the chances of aftershocks over the next day, week and month, and the zone of the rupture. |
+| Volcanic ash | `Plugin` | Click a volcano (Sakurajima): ash parcels up the column, carried by the winds and settling; play the time to watch them. |
 
 From the browser's console, `atlas.plugins.load('plugins/vorticity.js')` and `atlas.plugins.run('vorticity')` do the same. The pictures are in [the gallery, §1.8](../../docs/gallery.md#18-plug-ins-algorithms-loaded-on-request); writing a plug-in is a page of JavaScript, explained in [plugins/README.md](plugins/README.md).
 
@@ -182,10 +193,17 @@ A plug-in may also be written in **Python** or **C++** ([ADR 0029](../../develop
 |---|---|---|---|
 | Coasts, countries, boundaries, lakes, rivers, ice, places, sea names | Natural Earth 1:50 m, v5.1.2 | `geography-ne50m` | Public domain |
 | Relief of land and sea floor | ETOPO 2022 (NOAA NCEI), 10′, or 5′ with `--profile fine` (the finest is used) | `fields-etopo-2022-medium`, `-fine` | Public domain |
+| People, 2025 | GHS-POP R2023A (European Commission JRC), 30″ summed to 0.25° | `fields-ghsl-population` | CC BY 4.0 |
+| Countries and provinces as regions | Natural Earth 1:50 m countries and 1:10 m states and provinces, on a grid of 0.1° | `regions-countries`, `regions-admin1` | Public domain |
 | Wind, temperature, pressure, precipitation, humidity | GFS (NOAA NCEP), via PacIOOS ERDDAP, 1°, every 6 h | `fields-gfs-forecast` | Public domain |
 | The atmosphere aloft (850, 500, 250 hPa); cloud, water vapour, CAPE | GFS, via Unidata THREDDS, 1°, every 6 h, three days back | `fields-gfs-levels-forecast` | Public domain |
 | An AI forecast: surface, 850, 500 and 250 hPa | AIGFS (NOAA NCEP and EPIC), via Unidata THREDDS, 1° | `fields-aigfs-forecast` | Public domain |
 | An AI ensemble: mean and spread | AIGEFS (NOAA), via Unidata THREDDS, 1° | `fields-aigefs-forecast` | Public domain |
+| The IFS and the AI model AIFS, five days ahead | ECMWF open data, 0.25° taken at 1° | `fields-ecmwf-ifs-forecast`, `fields-ecmwf-aifs-forecast` | CC BY 4.0; based on data and products of ECMWF |
+| The ensemble's probabilities | ECMWF open data (ENS) | `fields-ecmwf-ens-probabilities` | CC BY 4.0; based on data and products of ECMWF |
+| Weather at aerodromes, buoys | METAR (NOAA Aviation Weather Center), NDBC (NOAA) | `observations-metar`, `observations-ndbc` | Public domain |
+| Best tracks of tropical cyclones | IBTrACS v04r01 (NOAA NCEI; Knapp et al. 2010) | `tracks-ibtracs-active`, `tracks-ibtracs-last3years` | Public domain (WMO Res. 40 noted) |
+| Scores of the forecasts, by model and lead | Our verification against GFS analyses, METAR, NDBC, IBTrACS and GDACS; climatology from NCEP/NCAR R1 (NOAA PSL) | `verification-earth-atlas` | Public domain sources; "NCEP-NCAR Reanalysis 1 data provided by the NOAA PSL" |
 | Sea-surface temperature, anomaly, sea ice | OISST v2.1 (NOAA NCEI), via CoastWatch ERDDAP, 0.5°, daily | `fields-oisst-latest` | Public domain |
 | Waves: height, period, direction | WaveWatch III (NOAA NCEP), via PacIOOS ERDDAP, 1°, every 6 h | `fields-ww3-forecast` | Public domain |
 | The Earth from space, by day and by night | NASA GIBS: VIIRS true colour, Blue Marble, Black Marble, 8192 × 4096 | `imagery-*` | NASA, acknowledge |
@@ -226,6 +244,9 @@ The ERDDAP servers add: "The data may be used and redistributed for free but is 
 | Countries | Scanline rasterisation, even-odd rule, 4096 × 2048. Joins to indicators by stated keys. | `domains/geography/js/raster.js`, `domains/geography/js/join.js` |
 | Relief | Hypsometric tints, and Lambert shading from the north-west at 45°, exaggerated 14× for a 10′ grid and in proportion to the grid's spacing (7× on the 5′ grid), with the darkening limited; painted at 8192 × 4096 in a worker. At close range, on land, ASTER's fine shading replaces it; water is the uniform grey of the shading where a whole neighbourhood has it. | Imhof (1982); `src/render/relief.js`, `domains/geography/js/raster.js` |
 | Colour maps | cmocean (Thyng et al. 2016, MIT licence), and our own orchid map, with lightness rising evenly | `src/render/colormaps.js` |
+| Zonal statistics | Field and regions constant on their cells; overlaps of cells as R² Δλ Δ(sin φ), so means are exact integrals and counts are divided by shared area among the regions a cell meets; a coast finer than the regions' cells goes to the nearest region within 0.3° | `domains/geography/js/zonal.js`; [theory note](../../domains/geography/theory/zonal-statistics.md) |
+| Drainage | Outlets the seas (bodies at or below sea level of at least 100 000 km²); depressions filled by Priority-Flood+ε; D8 with great-circle distances; upstream area in topological order; watersheds by reverse search | Barnes et al. (2014), O'Callaghan and Mark (1984); `domains/geography/js/hydrology.js`; [theory note](../../domains/geography/theory/drainage-from-elevation.md) |
+| Hazards | The Canadian FWI System (Van Wagner 1987); wet-bulb temperature (Stull 2011) and the NWS heat index (Rothfusz 1990); tsunami first arrivals by the eikonal equation on a 32-neighbour stencil scaled by 1/cos φ (Wessel 2009); aftershocks by Reasenberg and Jones (1989); ash settling at Stokes' speed in the ICAO standard atmosphere | `domains/meteorology/js/fireweather.js`, `heat.js`, `settling.js`, `domains/oceanography/js/tsunami.js`, `domains/geophysics/js/aftershocks.js`; theory notes beside them |
 | Climate classes | Köppen–Geiger after Peel et al. (2007) and Beck et al. (2018): B first, summer the warmer half-year. Classes are read from the cell containing a place, never interpolated. Colours are the conventional ones, softened in OKLab. | `domains/climate/js/climate.js`, `src/render/classes.js`; [theory note](../../domains/climate/theory/koppen-geiger-classification.md) |
 | Climate diagram | Walter and Lieth (1960): 10 °C level with 20 mm; dry months (P ≤ 2T, Gaussen) dotted, humid hatched, above 100 mm a tenfold scale; frost months marked; from July south of the equator | `src/ui/climate.js` |
 | Conventions | Wind direction is where it blows from. Times in UTC. Values stored in their source units and converted only for display (vorticity in 10⁻⁵ s⁻¹). | `domains/meteorology/js/wind.js`, `visualization/js/units.js` |
@@ -270,6 +291,13 @@ Of the atlas's 151 checks, 16 are its own now; the others run with geodesy, astr
 | Column interpolation | f = a + bt + cz + dtz on unequal times and depths; nothing beneath the sea floor | 9 × 10⁻¹⁶ |
 | Plate velocities | EarthScope Plate Motion Calculator: NNR-MORVEL56 at four places; ITRF2020's model, the Pacific | 0.005 mm/yr; 0.003 mm/yr |
 | Plates | PB2002's 52 plates tile the sphere; NNR-MORVEL56 on them has no net rotation | Every cell, areas to 2 × 10⁻⁹; 0.0008°/Myr |
+| Population | GHSL Data Package 2023, Table 20: the world in 2025 | 8 191 988 536, exact; 0.01 % fewer as stored |
+| People by country | Japan's census of 2020 (126 146 099) | −3.3 % (the epoch is 2025) |
+| Drainage basins on ETOPO 10′ | WRI (2003), the Atlas of Canada, Guerrero et al. (1997) | Amazon, Río de la Plata, Mackenzie, St Lawrence, Murray–Darling within 5.2 % |
+| Fire Weather Index | Van Wagner and Pickett (1985), the standard test data, five days | All 30 values to 0.048 (published to 0.1) |
+| Wet-bulb temperature, heat index | Stull (2011): 20 °C and 50 % give 13.7 °C; the NWS chart | 13.70 °C; ten cells to 0.42 °F |
+| Tsunami travel times | A uniform ocean (great-circle distance over √(gh)); Chile 1960 at Hilo and Sanriku | Within 2.6 %; 14.9 h and 22.4 h against about 15 h and 22 h observed |
+| Aftershock probabilities | The closed-form integral of Reasenberg and Jones's rate against numerical integration | 5 × 10⁻¹⁴ |
 | Plate boundaries | Against Bird's classes and his relative motions: ridges and rifts open, trenches close, transforms slip in his sense | 99.7 %, 99.6 %, 99.4 % |
 | GPS | Stations in four stable plate interiors, relative to ITRF2020's model (median); P123's 20-year record against its MIDAS velocity | 0.3–0.6 mm/yr; 0.3 mm/yr |
 | Mechanisms | Double couples recovered; classes; eigenvalues; the equal-area projection; the nodal planes of all 70,451 Global CMT events against the catalogue's | 10⁻⁶ °; exact; 10⁻¹⁵; 10⁻¹⁵; 99 % within 0.76° |
@@ -315,6 +343,7 @@ Its own code:
 - Our models have one layer and no topography, moisture or heating. The barotropic model's long waves drift west too fast; the shallow-water model corrects much of that, but neither represents the growth of storms, which needs several levels (the next idea: a primitive-equation model).
 - Cyclone intensities are those of 1° fields, well above the true central pressures; Pangu-Weather underestimates intensity further, as its authors report. Tracks are the more trustworthy part.
 - The cyclone tracker has no warm-core test, so a strong monsoon depression may be counted.
+- Scores rest on few cases until the archive has grown: each score gives its count of cases and runs. The GFS is scored against its own analyses, ECMWF against the GFS's, which favours the GFS at short leads. Station temperatures are not corrected for the height of the station above the model's ground.
 - The ocean column needs the atlas's own server (`serve.py`), which asks the data library; HYCOM's analyses lag about two days, and a first request takes minutes.
 - PB2002 has no outlines for MORVEL's Capricorn, Lwandle, Macquarie and Sur plates; NNR-MORVEL56 is a geological average and differs from GPS by a millimetre or two a year; Global CMT centroids are less precise in depth than relocated hypocentres; CRUST1.0 averages 1° cells; Slab2, the USGS slab model, cannot be fetched by a script and is not shown.
 - The AI forecast starts from the GFS analysis, not the ERA5 it was trained on, and is verified against GFS analyses, which favours forecasts close to the GFS.

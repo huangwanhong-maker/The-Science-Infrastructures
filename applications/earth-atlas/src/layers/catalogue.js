@@ -25,6 +25,7 @@
 // a range per level where the quantity's values depend on the level.
 
 const QUANTITIES = [
+  { id: 'ndvi', match: (v) => v.name === 'ndvi' || /normali[sz]ed difference vegetation index/i.test(v.long_name || ''), label: 'Vegetation index (NDVI)', colormap: 'speed', range: [-0.2, 0.9] },
   { id: 'air-temperature', standard: 'air_temperature', label: 'Air temperature', colormap: 'thermal', range: [-35, 40], ranges: { '850 hPa': [-35, 30], '500 hPa': [-50, 0] } },
   { id: 'surface-temperature', standard: 'surface_temperature', label: 'Surface temperature', colormap: 'thermal', range: [-40, 50] },
   { id: 'pressure', standard: 'air_pressure_at_sea_level', label: 'Pressure at sea level', colormap: 'dense', reverse: true, range: [975, 1040] },
@@ -50,6 +51,26 @@ const QUANTITIES = [
   { id: 'swell-period', standard: 'sea_surface_swell_wave_period', label: 'Swell period', colormap: 'speed', reverse: true, range: [2, 18] },
   { id: 'wind-sea-period', standard: 'sea_surface_wind_wave_period', label: 'Wind-sea period', colormap: 'speed', reverse: true, range: [1, 12] },
   { id: 'elevation', standard: 'altitude', label: 'Elevation', base: true },
+  // Geography: people (GHS-POP), and from the terrain plug-in, slope and drainage.
+  { id: 'population-density', standard: 'population_density', label: 'Population density', colormap: 'matter', reverse: true, range: [1, 10000], scale: 'log', fade: 0.15 },
+  { id: 'population', standard: 'population', label: 'People in the cell', colormap: 'matter', reverse: true, range: [100, 10000000], scale: 'log', fade: 0.15 },
+  { id: 'slope', match: (v) => v.name === 'slope', label: 'Slope of the terrain', colormap: 'matter', reverse: true, range: [0, 0.06], scale: 'sqrt', percent: true },
+  { id: 'upstream-area', match: (v) => v.name === 'upstream_area', label: 'Area draining through the cell', colormap: 'ice', range: [1000, 3000000], scale: 'log', fade: 0.25 },
+  // Hazards computed by plug-ins: fire weather, heat, heavy rain, tsunami travel times.
+  { id: 'fire-weather-index', match: (v) => v.name === 'fire_weather_index', label: 'Fire Weather Index', colormap: 'matter', reverse: true, range: [0, 50], scale: 'sqrt', fade: 0.1 },
+  { id: 'initial-spread-index', match: (v) => v.name === 'initial_spread_index', label: 'Initial Spread Index', colormap: 'matter', reverse: true, range: [0, 25], scale: 'sqrt', fade: 0.1 },
+  { id: 'buildup-index', match: (v) => v.name === 'buildup_index', label: 'Buildup Index', colormap: 'matter', reverse: true, range: [0, 200], scale: 'sqrt', fade: 0.1 },
+  { id: 'fine-fuel-moisture-code', match: (v) => v.name === 'fine_fuel_moisture_code', label: 'Fine Fuel Moisture Code', colormap: 'matter', reverse: true, range: [60, 96] },
+  { id: 'duff-moisture-code', match: (v) => v.name === 'duff_moisture_code', label: 'Duff Moisture Code', colormap: 'matter', reverse: true, range: [0, 100], scale: 'sqrt' },
+  { id: 'drought-code', match: (v) => v.name === 'drought_code', label: 'Drought Code', colormap: 'matter', reverse: true, range: [0, 800] },
+  { id: 'wet-bulb', standard: 'wet_bulb_temperature', label: 'Wet-bulb temperature', colormap: 'thermal', range: [-10, 35] },
+  { id: 'heat-index', standard: 'heat_index_of_air_temperature', label: 'Heat index', colormap: 'thermal', range: [15, 55] },
+  { id: 'tmax-excess', match: (v) => v.name === 'tmax_excess', label: 'Daily maximum above the normal', colormap: 'balance', range: [-10, 10] },
+  { id: 'rain-24h', match: (v) => v.name === 'rain_24h', label: 'Precipitation in 24 hours', colormap: 'haline', range: [1, 200], scale: 'log', fade: 0.15 },
+  { id: 'rain-72h', match: (v) => v.name === 'rain_72h', label: 'Precipitation in 72 hours', colormap: 'haline', range: [1, 400], scale: 'log', fade: 0.15 },
+  { id: 'rain-24h-ratio', match: (v) => v.name === 'rain_24h_ratio', label: 'Rain in 24 hours, as a fraction of the month’s normal', colormap: 'rain', range: [0.02, 2], scale: 'log', fade: 0.15 },
+  { id: 'rain-72h-ratio', match: (v) => v.name === 'rain_72h_ratio', label: 'Rain in 72 hours, as a fraction of the month’s normal', colormap: 'rain', range: [0.05, 4], scale: 'log', fade: 0.15 },
+  { id: 'tsunami-travel-time', match: (v) => v.name === 'tsunami_travel_time', label: 'Tsunami travel time', colormap: 'matter', range: [0, 24] },
   // The crust (CRUST1.0): maps only; the place card draws the whole column.
   { id: 'moho', match: (v) => v.name === 'moho_depth', label: 'Depth of the Moho', colormap: 'deep', range: [0, 70], noProbe: true },
   { id: 'crust-thickness', match: (v) => v.name === 'crust_thickness', label: 'Thickness of the crust', colormap: 'matter', reverse: true, range: [0, 70], noProbe: true },
@@ -99,7 +120,7 @@ export const DOMAINS = {
 
 // Models in the order they are offered.
 const MODEL_ORDER = ['GFS', 'AIGFS', 'AIGEFS mean', 'Pangu-Weather (run here)', 'Pangu-Weather hindcast (run here)',
-  'Shallow water (ours)', 'Barotropic (ours)'];
+  'ECMWF IFS', 'ECMWF AIFS', 'ECMWF ENS', 'Shallow water (ours)', 'Barotropic (ours)'];
 export const modelRank = (m) => { const i = MODEL_ORDER.indexOf(m); return i < 0 ? MODEL_ORDER.length : i; };
 
 const isDirection = (v) => /direction/.test(v.standard_name || '') || v.units === 'degree';
@@ -201,6 +222,13 @@ export function buildCatalogue(library) {
       let style;
       if (spread) {
         style = { colormap: 'orchid', range: null, scale: 'linear', auto: [0, v.p98] };
+      } else if (v.units === '%' && !known) {
+        // A probability or a share in percent (an ensemble's probabilities): the whole scale, so that thresholds and models compare.
+        style = { colormap: 'matter', reverse: true, clip: [0, 0.9], range: [0, 100], scale: 'linear' };
+      } else if (v.style) {
+        // A style the product states for itself (a plug-in's output): its colours, scale and range.
+        style = { colormap: v.style.colormap || 'matter', reverse: v.style.reverse, clip: v.style.clip, range: v.style.range || null,
+          scale: v.style.scale || 'linear', auto: [v.p02, v.p98] };
       } else if (difference) {
         const size = Math.max(Math.abs(v.p02 || 0), Math.abs(v.p98 || 0)) || 1;      // a symmetric scale about zero
         style = { colormap: 'balance', range: null, scale: 'linear', auto: [-size, size] };
@@ -224,6 +252,11 @@ export function buildCatalogue(library) {
         const step = /250/.test(level) ? 120 : 60;
         lines.push({ id: `heights${slug(level)}@${name}`, key: `heights|${level}`, label: `Height contours${height(v)}`, model: shownModel, product: name, variable: v.name, step, base: 0, extrema: { radius: 10, prominence: 40, polarRows: 8, minAbsLat: 22 }, units: v.units, labelUnits: 'm' });
       }
+      // A variable that names its own contour interval, such as a plug-in's travel times, is offered as isolines.
+      if (v.contours) {
+        lines.push({ id: `contours-${v.name}${slug(level)}@${name}`, key: `contours:${qid}|${level}`, label: `Contours of ${label.charAt(0).toLowerCase()}${label.slice(1)}`,
+          model: shownModel, product: name, variable: v.name, step: v.contours.step, base: v.contours.base || 0, units: v.units, labelUnits: v.contours.labelUnits || v.units });
+      }
     }
   }
   for (const e of library.list('indicators')) {
@@ -232,7 +265,7 @@ export function buildCatalogue(library) {
       units: unit, title: e.title, style: { colormap: 'matter', reverse: true, clip: [0.04, 0.96] }, source: e.source });
   }
   for (const e of library.list('tracks')) {
-    tracks.push({ id: `tracks:${e.name}`, kind: 'official', label: 'Observed and official forecast', model: (e.source && e.source.credit) || e.title, product: e.name, source: e.source });
+    tracks.push({ id: `tracks:${e.name}`, kind: 'official', label: /^ibtracs/.test(e.name) ? `Best tracks, ${/last3years/.test(e.name) ? 'last three years' : 'active storms'} (IBTrACS)` : 'Observed and official forecast', model: (e.source && e.source.credit) || e.title, product: e.name, source: e.source });
   }
   for (const e of library.list('events')) {
     // Mechanisms have a layer of their own (src/layers/mechanisms.js).

@@ -228,13 +228,14 @@ export class ForecastModel extends Plugin {
   }
 }
 
-// A background field and observations to an analysis. The first need is the
-// background, taken at the input time at or before the atlas's instant.
+// A background field and observations to an analysis, at the atlas's instant
+// (within the background's span): the background is interpolated linearly in
+// time to it, and observe() is asked for what was observed then.
 // Override observations() and analyse(); the result is the analysis and its
 // increment as a product, with the observations sketched.
 export class DataAssimilation extends Plugin {
-  // [{ lon, lat, value, error? }]: what is observed, at time index `index` of the inputs.
-  async observations(inputs, index, params, context) { return []; } // eslint-disable-line no-unused-vars
+  // [{ lon, lat, value, error? }]: what is observed at time `t` (ms UTC), the analysis's time.
+  async observations(inputs, t, params, context) { return []; } // eslint-disable-line no-unused-vars
   // Float32Array: the analysis on the background's grid (NaN where the background is missing).
   async analyse(background, grid, observations, params, context) { return background; } // eslint-disable-line no-unused-vars
   // The markers drawn for the observations.
@@ -244,9 +245,12 @@ export class DataAssimilation extends Plugin {
 
   async run(inputs, params, context) {
     const first = inputs[this.needs()[0].name], product = first.product, name = first.names[0], v = first.variables[0];
-    const index = indexAtOrBefore(product.times, context.time), t = product.times[index];
-    const background = product.slice(name, index);
-    const observations = await this.observations(inputs, index, params, context);
+    const times = product.times;
+    const t = times.length ? Math.max(times[0], Math.min(times[times.length - 1], context.time)) : context.time;
+    const b = product.bracket(t, name), a0 = product.slice(name, Math.max(0, b.i0)), a1 = product.slice(name, Math.max(0, b.i1));
+    const background = new Float32Array(a0.length);
+    for (let i = 0; i < a0.length; i++) background[i] = b.w > 0 ? a0[i] + (a1[i] - a0[i]) * b.w : a0[i];
+    const observations = await this.observations(inputs, t, params, context);
     const innovations = observations.map((o) => o.value - product.sample(name, t, o.lon, o.lat));
     const analysis = await this.analyse(background, product.grid, observations, params, context);
     const increment = new Float32Array(analysis.length);

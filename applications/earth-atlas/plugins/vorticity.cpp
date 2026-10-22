@@ -1,13 +1,13 @@
 // Relative vorticity and divergence of the wind, in C++: the algorithm of
 // vorticity.js and vorticity.py, as a program the server compiles and runs
-// (plugins/cpp/plugin.hpp). Centred differences on the sphere,
+// (api/cpp/plugin.hpp). Centred differences on the sphere,
 //
 //   ζ = (1 / (a cos φ)) [ ∂v/∂λ − ∂(u cos φ)/∂φ ],    δ = (1 / (a cos φ)) [ ∂u/∂λ + ∂(v cos φ)/∂φ ],
 //
 // rows running north to south; the poles and, on a grid that does not wrap,
 // the edge columns are left without a value.
 
-#include "cpp/plugin.hpp"
+#include "plugin.hpp"
 
 struct Vorticity : plugin::Diagnostic {
   static constexpr double RADIUS = 6371008.8, DEG = 3.14159265358979323846 / 180;

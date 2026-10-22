@@ -47,7 +47,10 @@
       <button type="button" role="tab" data-projection="equal-earth">Equal Earth</button>
       <button type="button" role="tab" data-projection="equirectangular">Equirectangular</button>
     </nav>
-    <button type="button" class="link" id="data-link">Data</button>
+    <span class="header-links">
+      <button type="button" class="link" id="scores-link">Scores</button>
+      <button type="button" class="link" id="data-link">Data</button>
+    </span>
   </header>
 
   <main>
@@ -92,6 +95,15 @@
     </div>
     <canvas id="timeline" aria-label="Time"></canvas>
   </footer>
+
+  <dialog id="scores">
+    <form method="dialog" tabindex="-1" autofocus>
+      <h2>How the forecasts did</h2>
+      <p class="note">Each model's forecasts, kept as they were made, against what happened: analyses, station reports and the best tracks of cyclones.</p>
+      <div id="scores-body"></div>
+      <button class="link" value="close">Close</button>
+    </form>
+  </dialog>
 
   <dialog id="about">
     <form method="dialog" tabindex="-1" autofocus>

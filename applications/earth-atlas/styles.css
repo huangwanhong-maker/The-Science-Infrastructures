@@ -328,6 +328,26 @@ dialog .link { margin-top: 20px; }
   #credits { display: none; }
 }
 
+/* The header's links, and the scorecard */
+.header-links { display: flex; gap: 22px; }
+#scores { max-width: 760px; }
+.scores { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px 22px; margin-top: 10px; }
+.score h4 { font-weight: 500; font-size: 14px; margin: 0; }
+.score .note { margin: 2px 0 4px; }
+.score-chart { width: 100%; height: auto; display: block; }
+.score-chart .grid { stroke: var(--hair); stroke-width: 1; }
+.score-chart .line { fill: none; stroke-width: 1.6; }
+.score-chart .line.reference { stroke-width: 1.1; stroke-dasharray: 4 3; }
+.score-chart .ref { stroke: var(--text-faint); stroke-width: 1; stroke-dasharray: 2 3; }
+.score .keys i.reference { height: 0; border-top: 2px dashed currentColor; background: none !important; color: #9a8a96; }
+.score-chart text { fill: var(--text-faint); font: 10px var(--serif); }
+.score-chart .yt { text-anchor: end; }
+.score-chart .xt { text-anchor: middle; }
+.score-chart .xt.end { text-anchor: end; }
+.score .keys { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 12px; color: var(--text-dim); }
+.score .keys i { display: inline-block; width: 12px; height: 3px; border-radius: 1px; margin-right: 5px; vertical-align: middle; }
+.score-notes { font-size: 12.5px; color: var(--text-dim); padding-left: 18px; }
+
 /* Plug-ins in the panel, and the labels of their sketches */
 .plugins p { margin: 0 0 8px; font-size: 13.5px; color: var(--text-dim); }
 .plugin { border-top: 1px solid var(--hair); padding: 8px 0 4px; }
@@ -351,3 +371,5 @@ table.setup tr.done th, table.setup tr.done td { color: var(--text-dim); }
 table.setup tr.missing td:nth-child(2) { color: var(--accent); }
 .setup-log { max-height: 160px; overflow: auto; margin: 10px 0 0; padding: 8px 10px; font: 12px/1.45 ui-monospace, Menlo, Consolas, monospace;
   color: var(--text-dim); background: rgba(0, 0, 0, 0.18); border-radius: 3px; white-space: pre-wrap; }
+.setup-token { display: flex; gap: 10px; align-items: center; margin: 4px 0 10px; }
+.setup-token input { flex: 1; min-width: 0; }

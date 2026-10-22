@@ -167,6 +167,19 @@ export function buildPanel(el, catalogue, state, years, extra, on) {
     }
   }
 
+  // ---- observations: stations, buoys and our own sensors ----
+  if (extra.observations && extra.observations.length) {
+    html.push('<h3>Observations</h3>');
+    html.push(choice('observations', 'none', 'None', !state.obs));
+    for (const o of extra.observations) {
+      html.push(choice('observations', o.name, `${o.title}${o.count ? ` (${o.count})` : ''}`, state.obs === o.name));
+      if (state.obs === o.name && extra.obsVariables.length > 1) {
+        const options = extra.obsVariables.map((v) => `<option value="${esc(v.name)}"${v.name === state.obsVariable ? ' selected' : ''}>${esc((v.long_name || v.name).replace(/^./, (c) => c.toUpperCase()))}</option>`).join('');
+        html.push(`<label class="select" style="margin-left:26px"><span>Colour by</span><select data-obs-variable>${options}</select></label>`);
+      }
+    }
+  }
+
   // ---- our models ----
   if (extra.ours) {
     const ours = extra.ours;
@@ -228,6 +241,7 @@ export function buildPanel(el, catalogue, state, years, extra, on) {
         } else if (r.kind === 'note') html.push(`<p class="note">${esc(r.text)}</p>`);
       }
       for (const title of e.sketches) html.push(`<p class="note">Drawn: ${esc(title)}.</p>`);
+      for (const title of e.regions || []) html.push(`<p class="note">By region: ${esc(title)}, among the surfaces.</p>`);
       if (e.error) html.push(`<p class="note">${esc(e.error)}</p>`);
       html.push('</div>');
     }
@@ -267,6 +281,9 @@ export function buildPanel(el, catalogue, state, years, extra, on) {
   el.querySelectorAll('input[data-base]').forEach((i) => i.addEventListener('change', () => on.base(i.dataset.base, i.checked)));
   el.querySelectorAll('button[data-year]').forEach((b) => b.addEventListener('click', () => on.year(Number(b.dataset.year))));
   el.querySelectorAll('[data-run-model]').forEach((b) => b.addEventListener('click', () => on.runOurModel(b.dataset.runModel)));
+  el.querySelectorAll('input[name="observations"]').forEach((i) => i.addEventListener('change', () => on.observations(i.value === 'none' ? null : i.value)));
+  const obsVar = el.querySelector('select[data-obs-variable]');
+  if (obsVar) obsVar.addEventListener('change', () => on.obsVariable(obsVar.value));
   el.querySelectorAll('[data-plugin-load]').forEach((b) => b.addEventListener('click', () => on.pluginLoad(b.dataset.pluginLoad)));
   el.querySelectorAll('[data-plugin-unload]').forEach((b) => b.addEventListener('click', () => on.pluginUnload(b.dataset.pluginUnload)));
   el.querySelectorAll('[data-plugin-run]').forEach((b) => b.addEventListener('click', () => on.pluginRun(b.dataset.pluginRun)));

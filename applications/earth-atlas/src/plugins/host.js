@@ -88,14 +88,25 @@ export class PluginHost {
   }
 
   // The products that can serve each need: one candidate per product and level
-  // carrying every standard name asked, the plug-in's own output excepted.
+  // carrying every standard name asked, the plug-in's own output excepted. A need
+  // of kind 'observations' is served by the observation sets carrying its variable;
+  // an optional need may be left without a source.
   resolve(plugin) {
     return plugin.needs().map((need) => {
+      if (need.kind === 'observations') {
+        const candidates = this.library.list('observations')
+          .filter((e) => !need.variable || (e.variables || []).includes(need.variable))
+          .map((e) => ({ key: e.name, product: e.name, model: e.title, kind: 'observations' }));
+        if (need.optional) candidates.push({ key: '', model: 'none' });
+        return { ...need, candidates };
+      }
       const standards = need.standard_names || [need.standard_name];
       const candidates = [];
       for (const [name, meta] of this.library.fieldMeta) {
         if (name === plugin.productName || !meta.variables) continue;
         if (need.times && !(meta.times && meta.times.length >= need.times)) continue;
+        // A climatology (monthly normals) serves only a need that asks for one.
+        if (Boolean(meta.climatology) !== Boolean(need.climatology)) continue;
         // Levels as the catalogue reads them, stated or inferred from the name ('2 m' for GFS's tmp2m).
         const plain = meta.variables.filter((v) => !/realization/.test(v.cell_methods || ''));
         const levels = need.level ? [need.level] : [...new Set(plain.map((v) => levelOf(v)))];
@@ -109,6 +120,10 @@ export class PluginHost {
       }
       // The models in the panel's order, and within a model the levels from the ground up.
       candidates.sort((a, b) => a.rank - b.rank || a.model.localeCompare(b.model, undefined, { numeric: true }));
+      // Products of one model on different grids (the relief at 5′ and at 10′) are told apart by their spacing.
+      const repeated = new Set(candidates.map((c) => c.model).filter((m, i, all) => all.indexOf(m) !== i));
+      for (const c of candidates) if (repeated.has(c.model) && c.meta.grid) c.model = `${c.model} (${+(c.meta.grid.dlon * 60).toFixed(1)}′)`;
+      if (need.optional) candidates.push({ key: '', model: 'none' });
       return { ...need, candidates };
     });
   }
@@ -133,16 +148,18 @@ export class PluginHost {
       const inputs = {};
       for (const need of entry.needs) {
         const c = need.candidates.find((x) => x.key === entry.chosen[need.name]);
-        if (!c) throw new Error(`nothing in the library serves "${need.label || need.name}"`);
-        inputs[need.name] = { product: await this.library.field(c.product), names: c.names, variables: c.variables, meta: c.meta, model: c.model, level: c.level };
+        if (!c && !need.optional) throw new Error(`nothing in the library serves "${need.label || need.name}"`);
+        if (!c || c.key === '') { inputs[need.name] = null; continue; }
+        inputs[need.name] = c.kind === 'observations'
+          ? { observations: await this.library.observationSet(c.product), name: c.product, model: c.model, variable: need.variable }
+          : { product: await this.library.field(c.product), names: c.names, variables: c.variables, meta: c.meta, model: c.model, level: c.level };
       }
       const context = new Context(this.library, {
         time: this.hooks.time(), pinned: this.hooks.pinned(),
         progress: (fraction, text) => { entry.progress = fraction; entry.text = text || ''; this.hooks.progress(); },
       });
       entry.results = (await entry.plugin.run(inputs, { ...entry.params }, context)) || [];
-      for (const r of entry.results) if (r.kind === 'field') await this.hooks.publish(r.product, r.show || {});
-      this.hooks.sketches(this.sketches());
+      await this.publish(entry);
     } catch (error) {
       console.error(error);
       entry.error = `The plug-in could not run: ${error.message || error}`;
@@ -173,19 +190,31 @@ export class PluginHost {
           const bin = await (await fetch(r.url.replace(/[^/]+$/, meta.file), { cache: 'no-store' })).arrayBuffer();
           const product = new FieldProduct(meta, bin);
           results.push({ kind: 'field', product, show: r.show || {} });
-          await this.hooks.publish(product, r.show || {});
         } else {
           results.push(r);
         }
       }
       entry.results = results;
-      this.hooks.sketches(this.sketches());
+      await this.publish(entry);
     } catch (error) {
       console.error(error);
       entry.error = `The plug-in could not run: ${error.message || error}`;
     }
     entry.running = false;
     this.hooks.changed();
+  }
+
+  // A run's results handed on: fields to the catalogue, regions painted (the first
+  // shown; each drawn with its outlines), sketches to the sketch layer.
+  async publish(entry) {
+    for (const r of entry.results) if (r.kind === 'field') await this.hooks.publish(r.product, r.show || {});
+    let first = true;
+    for (const r of entry.results.filter((x) => x.kind === 'regions')) {
+      const outline = await this.hooks.regions(r, first);
+      if (outline && first) entry.results.push(outline);
+      first = false;
+    }
+    this.hooks.sketches(this.sketches());
   }
 
   // Every loaded plug-in's sketches, for the sketch layer.
@@ -202,6 +231,7 @@ export class PluginHost {
         needs: e.needs.map((n) => ({ name: n.name, label: n.label || n.name, chosen: e.chosen[n.name], candidates: n.candidates.map((c) => ({ key: c.key, model: c.model })) })),
         running: e.running, progress: e.progress, text: e.text, error: e.error,
         results: e.results.filter((r) => r.kind === 'table' || r.kind === 'note'),
+        regions: e.results.filter((r) => r.kind === 'regions').map((r) => r.title),
         sketches: e.results.filter((r) => r.kind === 'sketch').map((s) => s.title),
       })),
     };

@@ -149,4 +149,23 @@ export class Library {
     }
     return this.events.get(name);
   }
+
+  // Observations at places (stations, buoys, our own sensors), read again each
+  // time they are asked for, since they change while the page is open.
+  observationSet(name) {
+    const entry = this.list('observations').find((e) => e.name === name);
+    if (!entry) return Promise.reject(new Error(`no observations ${name}`));
+    return fetch(`${this.base}/${entry.file}`, { cache: 'no-store' }).then((r) => r.json());
+  }
+
+  // A set of regions (countries, provinces): ids rasterised on a grid, and names.
+  regions(name) {
+    if (!this.regionSets) this.regionSets = new Map();
+    if (!this.regionSets.has(name)) {
+      const entry = this.list('regions').find((e) => e.name === name);
+      if (!entry) return Promise.reject(new Error(`no regions ${name}`));
+      this.regionSets.set(name, json(`${this.base}/${entry.file}`));
+    }
+    return this.regionSets.get(name);
+  }
 }
