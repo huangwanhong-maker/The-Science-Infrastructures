@@ -49,6 +49,8 @@ import { climateDiagram } from './ui/climate.js';
 import { joinCountries, valueForYear, latestWellCoveredYear } from '../../../domains/geography/js/index.js';
 import { OceanBeneath } from './ui/ocean.js';
 import { setupPanel } from './ui/setup.js';
+import { PluginHost } from './plugins/host.js';
+import { SketchLayer } from './layers/sketch.js';
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -68,6 +70,7 @@ const state = {
 
 let library, catalogue, stage, base, surface, flow, lines, events, labels, timeline, geography, elevation, tracks;
 let imagery, detail, ourModel, detailSource = null, ocean, plates, stations, series, mechanisms, crust = null, section, sectionLayer;
+let sketch, pluginHost, pluginPanelTimer = 0;   // plug-ins and their sketches (ADR 0027)
 const asked = new Requests();       // data requested on demand for the place card, other than the ocean's
 const ours = { input: null, running: null, progress: 0, runs: {}, start: null, against: '', error: '' };
 const MODEL_COLOURS = ['#CA8DBE', '#f6c47e', '#9fb6e8', '#8fd1b4', '#e8a0a0'];
@@ -151,6 +154,16 @@ async function start() {
   lines = new LinesLayer(stage, library);
   events = new EventsLayer(stage, library);
   tracks = new TracksLayer(stage, library);
+  sketch = new SketchLayer(stage);
+  // Plug-ins: scripts loaded on request, run on the library, shown through the layers.
+  pluginHost = new PluginHost(library, {
+    publish: (product, show) => showComputedProduct(product, show),
+    sketches: (list) => { sketch.set(list); sketch.update(state.time, true); dirty.labels = true; },
+    changed: () => renderPanel(),
+    progress: () => { clearTimeout(pluginPanelTimer); pluginPanelTimer = setTimeout(renderPanel, 60); },
+    time: () => state.time,
+    pinned: () => state.pinned,
+  });
   labels = new Labels($('labels'));
   ocean = new OceanBeneath($('figure'), { onChange: () => { dirty.place = true; } });
   stations = new StationsLayer(stage, library, plates);
@@ -191,8 +204,10 @@ async function start() {
   $('loading').hidden = true;
   // For inspection from the browser's console and for automated checks.
   window.atlas = { state, stage, base, surface, flow, lines, events, library, catalogue: () => catalogue, labels, imagery, detail, ours, runOurModel, ocean, plates,
+    plugins: pluginHost, sketch,
     select: { surface: (id) => selectSurface(id), compare: (id) => selectCompare(id), flow: (id) => selectFlow(id), lines: (id) => selectLines(id) } };
   requestAnimationFrame(loop);
+  pluginHost.index();
 
   // The rest of the data, for the place card.
   library.crust().then((c) => { crust = c; dirty.place = true; }).catch((e) => console.error('crust', e));
@@ -333,6 +348,7 @@ function renderPanel() {
     lights: Boolean(imagery && imagery.entry('night-lights')),
     clouds: catalogue.clouds.length > 0,
     ours: ours.input ? ours : null,
+    plugins: pluginHost ? pluginHost.view() : null,
     modelColour,
     plates: Boolean(plates && plates.plates),
     stations: library.list('stations').length > 0,
@@ -346,6 +362,11 @@ function renderPanel() {
     surface: (id) => selectSurface(id),
     compare: (id) => selectCompare(id),
     runOurModel: (kind) => runOurModel(kind),
+    pluginLoad: (url) => pluginHost.load(url),
+    pluginUnload: (id) => pluginHost.unload(id),
+    pluginRun: (id) => pluginHost.run(id),
+    pluginNeed: (id, need, key) => pluginHost.choose(id, need, key),
+    pluginParameter: (id, name, value) => pluginHost.setParameter(id, name, value),
     flow: (id) => selectFlow(id),
     lines: (id) => selectLines(id),
     events: (id) => selectEvents(id),
@@ -419,6 +440,8 @@ function setProjection(mode, initial = false) {
   tracks.update(state.time, true);
   if (plates.built) plates.rebuild();
   drawSectionLine();
+  sketch.rebuild();
+  sketch.update(state.time, true);
   stations.stale = true;
   mechanisms.stale = true;
   dirty.labels = true;
@@ -465,6 +488,7 @@ function setTime(t) {
   lines.update(t);
   events.update(t);
   tracks.update(t);
+  sketch.update(t);
   ocean.figure.setNow(t);
   const sub = subsolarPoint(t);
   stage.material.uniforms.uSun.value.fromArray(toVector(sub.lon, sub.lat));
@@ -632,7 +656,7 @@ function valueAt(probe, product, lon, lat, t) {
 
 function probeUnit(probe) {
   const unit = displayUnit(probe.units);
-  return probe.spread ? { ...unit, b: 0 } : unit;
+  return probe.spread || probe.difference ? { ...unit, b: 0 } : unit;
 }
 
 function formatProbe(probe, r) {
@@ -1054,6 +1078,7 @@ function updateLabels() {
     const html = `${name}${c.pressures.length ? `<small>${c.pressures.join(' ')}</small>` : ''}`;
     if (html) items.push({ key: `tc${key}`, text: html, html, lon: c.at.lon, lat: c.at.lat, className: 'cyclone', font: '600 12px serif', size: 18, always: true });
   }
+  items.push(...sketch.labelItems());
   items.push(...plates.labelItems(stage.zoomLevel()));
   if (state.labels) items.push(...base.labelItems(stage.zoomLevel(), state.lang));
   labels.update(items, (lon, lat) => stage.screen(lon, lat), stage.width, stage.height);
@@ -1091,6 +1116,37 @@ function renderAbout() {
 
 // ---- our models ---------------------------------------------------------------------
 
+// A product made in the page, by a model of ours or a plug-in, joins the library
+// and the catalogue. Textures cached under its name are dropped: a second run
+// replaces the first.
+function registerComputed(product) {
+  const meta = product.meta;
+  library.fieldMeta.set(meta.name, meta);
+  library.fields.set(meta.name, Promise.resolve(product));
+  loaded.set(meta.name, product);
+  surface.textures.forget(meta.name);
+  catalogue = buildCatalogue(library);
+}
+
+// Registers a computed product and shows what `show` names, by variable or
+// vector name: { surface, flow, lines }. The time shown is kept within the product's span.
+async function showComputedProduct(product, show = {}) {
+  registerComputed(product);
+  const meta = product.meta, mine = (list) => list.filter((d) => d.product === meta.name);
+  const vector = show.flow ? (meta.vectors || []).find((v) => v.name === show.flow) : null;
+  const surf = show.surface ? mine(catalogue.surfaces).find((d) => d.variables && d.variables.length === 1 && d.variables[0] === show.surface) : null;
+  const fl = vector ? mine(catalogue.flows).find((d) => d.variables[0] === vector.u) : null;
+  const ln = show.lines ? mine(catalogue.lines).find((d) => d.variable === show.lines) : null;
+  state.live = false;
+  if (product.times.length) state.time = Math.max(product.times[0], Math.min(state.time, product.times[product.times.length - 1]));
+  await Promise.all([surf ? selectSurface(surf.id, false) : null, fl ? selectFlow(fl.id, false) : null, ln ? selectLines(ln.id, false) : null]);
+  setTime(state.time);
+  updatePlay();
+  renderPanel();
+  updateTimeline();
+  remember();
+}
+
 let modelPanelTimer = 0;
 async function runOurModel(kind = 'barotropic') {
   if (ours.running) return;
@@ -1105,12 +1161,7 @@ async function runOurModel(kind = 'barotropic') {
         modelPanelTimer = setTimeout(renderPanel, 60);
       },
     });
-    const meta = result.product.meta;
-    library.fieldMeta.set(meta.name, meta);
-    library.fields.set(meta.name, Promise.resolve(result.product));
-    loaded.set(meta.name, result.product);
-    surface.textures.forget(meta.name);
-    catalogue = buildCatalogue(library);
+    registerComputed(result.product);
     // Runs from another start are not comparable: they are forgotten.
     if (ours.start !== result.start) ours.runs = {};
     ours.runs[kind] = result.verification;
@@ -1234,6 +1285,7 @@ function loop(now) {
   const res = stage.resolution;
   base.frame(res); flow.frame(res); lines.frame(res); events.frame(res); tracks.frame(res); plates.frame(res); stations.frame(res); mechanisms.frame(res);
   sectionLayer.frame(res, 0);
+  sketch.frame(res);
   stage.render();
   if (dirty.legend) { dirty.legend = false; renderLegend($('legend'), legendData()); updateCredits(); }
   if (dirty.place && now - lastPlace > (state.playing ? 400 : 120)) {

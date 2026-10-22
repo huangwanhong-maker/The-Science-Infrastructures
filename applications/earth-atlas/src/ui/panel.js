@@ -197,6 +197,47 @@ export function buildPanel(el, catalogue, state, years, extra, on) {
     html.push('</div>');
   }
 
+  // ---- plug-ins ----
+  if (extra.plugins) {
+    const pl = extra.plugins;
+    html.push('<h3>Plug-ins</h3>');
+    html.push('<div class="plugins"><p>Algorithms written as scripts, loaded on request, run on the data shown and drawn like any product (<a class="link" href="plugins/README.md" target="_blank" rel="noopener">how to write one</a>).</p>');
+    for (const e of pl.loaded) {
+      html.push(`<div class="plugin"><div class="plugin-head"><strong>${esc(e.title)}</strong><button type="button" class="link" data-plugin-unload="${esc(e.id)}">unload</button></div>`);
+      if (e.description) html.push(`<p>${esc(e.description)}</p>`);
+      for (const n of e.needs) {
+        const options = n.candidates.length ? n.candidates.map((c) => `<option value="${esc(c.key)}"${c.key === n.chosen ? ' selected' : ''}>${esc(c.model)}</option>`).join('') : '<option value="">nothing in the library</option>';
+        html.push(`<label class="select"><span>${esc(n.label)}</span><select data-plugin-need="${esc(e.id)}" data-need="${esc(n.name)}">${options}</select></label>`);
+      }
+      for (const [name, p] of Object.entries(e.parameters)) {
+        const label = `${esc(p.label || name)}${p.unit ? ` (${esc(p.unit)})` : ''}`;
+        if (p.choices) {
+          html.push(`<label class="select"><span>${label}</span><select data-plugin-param="${esc(e.id)}" data-param="${esc(name)}">${p.choices.map(([v, l]) => `<option value="${esc(v)}"${String(v) === String(e.params[name]) ? ' selected' : ''}>${esc(l)}</option>`).join('')}</select></label>`);
+        } else {
+          const bounds = ['min', 'max', 'step'].filter((k) => p[k] !== undefined).map((k) => ` ${k}="${p[k]}"`).join('');
+          html.push(`<label class="select"><span>${label}</span><input type="number" data-plugin-param="${esc(e.id)}" data-param="${esc(name)}" value="${esc(e.params[name])}"${bounds}></label>`);
+        }
+      }
+      if (e.running) html.push(`<div class="progress ours-progress"><span style="width:${Math.round(e.progress * 100)}%"></span></div>${e.text ? `<p class="note">${esc(e.text)}</p>` : ''}`);
+      else html.push(`<div class="runs"><button type="button" class="run" data-plugin-run="${esc(e.id)}">Run</button></div>`);
+      for (const r of e.results) {
+        if (r.kind === 'table') {
+          html.push(`<p class="note">${esc(r.title)}</p><table class="verify"><thead><tr>${r.columns.map((c) => `<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${r.rows
+            .map((row) => `<tr>${row.map((c, i) => (i ? `<td>${esc(c)}</td>` : `<th>${esc(c)}</th>`)).join('')}</tr>`).join('')}</tbody></table>${r.note ? `<p class="note">${esc(r.note)}</p>` : ''}`);
+        } else if (r.kind === 'note') html.push(`<p class="note">${esc(r.text)}</p>`);
+      }
+      for (const title of e.sketches) html.push(`<p class="note">Drawn: ${esc(title)}.</p>`);
+      if (e.error) html.push(`<p class="note">${esc(e.error)}</p>`);
+      html.push('</div>');
+    }
+    const loadedUrls = new Set(pl.loaded.map((e) => e.url));
+    const offered = pl.available.filter((a) => !loadedUrls.has(a.file));
+    if (offered.length) html.push(`<div class="runs">${offered.map((a) => `<button type="button" class="run" data-plugin-load="${esc(a.file)}" title="${esc(a.description || '')}">Load ${esc(a.title)}</button>`).join('')}</div>`);
+    html.push('<form class="plugin-url" data-plugin-url><input type="url" placeholder="…or the URL of a script" aria-label="The URL of a plug-in script" required><button type="submit" class="link">Load</button></form>');
+    if (pl.error) html.push(`<p class="note">${esc(pl.error)}</p>`);
+    html.push('</div>');
+  }
+
   // ---- map ----
   html.push('<h3>Map</h3>');
   const styles = [['relief', 'Relief'], ...extra.imagery.map((e) => [e.name, e.name === 'true-colour' ? `Satellite, ${e.date ? e.date.slice(5).replace('-', '/') : 'day'}` : e.name === 'blue-marble' ? 'Blue Marble' : e.title]), ['plain', 'Plain']];
@@ -225,6 +266,13 @@ export function buildPanel(el, catalogue, state, years, extra, on) {
   el.querySelectorAll('input[data-base]').forEach((i) => i.addEventListener('change', () => on.base(i.dataset.base, i.checked)));
   el.querySelectorAll('button[data-year]').forEach((b) => b.addEventListener('click', () => on.year(Number(b.dataset.year))));
   el.querySelectorAll('[data-run-model]').forEach((b) => b.addEventListener('click', () => on.runOurModel(b.dataset.runModel)));
+  el.querySelectorAll('[data-plugin-load]').forEach((b) => b.addEventListener('click', () => on.pluginLoad(b.dataset.pluginLoad)));
+  el.querySelectorAll('[data-plugin-unload]').forEach((b) => b.addEventListener('click', () => on.pluginUnload(b.dataset.pluginUnload)));
+  el.querySelectorAll('[data-plugin-run]').forEach((b) => b.addEventListener('click', () => on.pluginRun(b.dataset.pluginRun)));
+  el.querySelectorAll('select[data-plugin-need]').forEach((s) => s.addEventListener('change', () => on.pluginNeed(s.dataset.pluginNeed, s.dataset.need, s.value)));
+  el.querySelectorAll('[data-plugin-param]').forEach((i) => i.addEventListener('change', () => on.pluginParameter(i.dataset.pluginParam, i.dataset.param, i.type === 'number' ? Number(i.value) : i.value)));
+  const urlForm = el.querySelector('form[data-plugin-url]');
+  if (urlForm) urlForm.addEventListener('submit', (e) => { e.preventDefault(); on.pluginLoad(urlForm.querySelector('input').value.trim()); });
   const ind = el.querySelector('#indicator');
   if (ind) ind.addEventListener('change', () => on.surface(ind.value));
   el.querySelector('#language').addEventListener('change', (e) => on.base('lang', e.target.value));

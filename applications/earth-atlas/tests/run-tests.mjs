@@ -17,6 +17,7 @@ import { areaMean } from '../../../foundations/physis/js/index.js';
 import { fillRings, featureAreaFraction } from '../../../domains/geography/js/index.js';
 import { omega, poleOf, velocityAt, subtract, acrossStep, azimuth } from '../../../domains/geophysics/js/index.js';
 import { koppenGrid, KOPPEN_CODES, meanTemperature } from '../../../domains/climate/js/index.js';
+import { rmsDifference } from '../../../domains/meteorology/js/index.js';
 
 const { check, assert, skip, done } = suite();
 
@@ -146,6 +147,64 @@ const { check, assert, skip, done } = suite();
   } else {
     skip('classes: classes-koppen-geiger-1991-2020 or fields-terraclimate-normals-medium missing');
   }
+}
+
+// ---- plug-ins (ADR 0027): the examples, run from synthetic fields -----------------------
+{
+  const api = await import('../src/plugins/index.js');
+  const context = (time, pinned = null) => ({ time, pinned, progress() {}, fields: () => [], field: () => null, geography: () => null });
+  const grid = { lon0: -180, dlon: 2.5, nlon: 144, lat0: 90, dlat: 2.5, nlat: 73, periodic: true };
+  const HOUR = 3600000, t0 = Date.UTC(2026, 9, 20), times = [t0, t0 + 48 * HOUR];
+  const U = 20, R = 6371008.8, DEG = Math.PI / 180;
+  const fieldOf = (fn) => {
+    const a = new Float32Array(grid.nlon * grid.nlat);
+    for (let r = 0; r < grid.nlat; r++) for (let c = 0; c < grid.nlon; c++) a[r * grid.nlon + c] = fn(grid.lon0 + c * grid.dlon, grid.lat0 - r * grid.dlat);
+    return a;
+  };
+  const input = (product, names, level = null) => ({ product, names, variables: names.map((n) => product.meta.variables.find((v) => v.name === n)), meta: product.meta, model: product.meta.title, level });
+  // A solid-body rotation, u = U cos φ, v = 0: its vorticity is 2 U sin φ / a, its divergence 0,
+  // and it is steady under the barotropic vorticity equation.
+  const zonal = api.makeProduct({ name: 'test-zonal', title: 'Solid-body rotation', grid, times, variables: [
+    { name: 'u', long_name: 'Eastward wind at 500 hPa', standard_name: 'eastward_wind', units: 'm s-1', level: '500 hPa', slices: times.map(() => fieldOf((lon, lat) => U * Math.cos(lat * DEG))) },
+    { name: 'v', long_name: 'Northward wind at 500 hPa', standard_name: 'northward_wind', units: 'm s-1', level: '500 hPa', slices: times.map(() => fieldOf(() => 0)) },
+  ] });
+  const wind = input(zonal, ['u', 'v'], '500 hPa');
+
+  const vorticity = (await import('../plugins/vorticity.js')).create(api);
+  const [vort] = await vorticity.run({ wind }, {}, context(t0));
+  const zeta = vort.product.slice('zeta', 0), delta = vort.product.slice('delta', 0), row45 = Math.round((grid.lat0 - 45) / grid.dlat) * grid.nlon;
+  check('plug-in vorticity: a solid-body rotation has ζ = 2 U sin φ / a at 45° N', Math.abs(zeta[row45 + 10] - (2 * U * Math.sin(45 * DEG)) / R), 2e-8, '1/s');
+  check('plug-in vorticity: and no divergence', Math.abs(delta[row45 + 10]), 1e-9, '1/s');
+  assert('plug-in vorticity: the product carries the input level and both variables', vort.product.meta.variables.every((v) => v.level === '500 hPa') && vort.product.has('delta'));
+
+  const parcels = (await import('../plugins/trajectories.js')).create(api);
+  const [paths] = await parcels.run({ wind }, { hours: 24, step: 1, count: 1, radius: 0 }, context(t0, [10, 40]));
+  const path = paths.polylines[0].coords, n = path.length / 2;
+  check('plug-in trajectories: a parcel in a solid-body rotation keeps its latitude', Math.abs(path[2 * n - 1] - 40), 1e-6, '°');
+  check('plug-in trajectories: and turns by U t / a in a day', Math.abs(path[2 * n - 2] - 10 - (U * 86400) / R / DEG), 0.01, '°');
+  assert('plug-in trajectories: the moving point starts at the seed', paths.moving[0].times[0] === t0 && Math.abs(paths.moving[0].coords[0] - 10) < 1e-9);
+
+  // Optimal interpolation with two observations at grid points, far apart, and σo → 0:
+  // the analysis takes each observation's value where it is, and is the background far from both.
+  const oi = (await import('../plugins/optimal-interpolation.js')).create(api);
+  class OnGrid extends oi.constructor { async observations() { return [{ lon: 0, lat: 40, value: 283 }, { lon: 90, lat: -20, value: 278 }]; } }
+  const background = api.makeProduct({ name: 'test-background', title: 'Background', grid, times: [t0], variables: [
+    { name: 'tmp2m', long_name: 'air temperature at 2m', standard_name: 'air_temperature', units: 'K', slices: [fieldOf(() => 280)] }] });
+  const bg = input(background, ['tmp2m'], '2 m');
+  const [analysis] = await new OnGrid().run({ background: bg, truth: bg }, { count: 2, length: 500, sigmaB: 2, sigmaO: 0.01 }, context(t0));
+  const an = analysis.product.slice('tmp2m', 0), inc = analysis.product.slice('tmp2m_increment', 0);
+  const cell = (lon, lat) => Math.round((grid.lat0 - lat) / grid.dlat) * grid.nlon + Math.round((lon - grid.lon0) / grid.dlon);
+  check('plug-in optimal interpolation: an exact observation is reproduced where it is', Math.abs(an[cell(0, 40)] - 283), 1e-3, 'K');
+  check('plug-in optimal interpolation: and the second too', Math.abs(an[cell(90, -20)] - 278), 1e-3, 'K');
+  check('plug-in optimal interpolation: the background is kept far from the observations', Math.abs(inc[cell(-150, -70)]), 1e-6, 'K');
+
+  const barotropic = (await import('../plugins/barotropic.js')).create(api);
+  const height = api.makeProduct({ name: 'test-height', title: 'Height', grid, times, variables: [
+    { name: 'z', long_name: 'Geopotential height at 500 hPa', standard_name: 'geopotential_height', units: 'm', level: '500 hPa', slices: times.map(() => fieldOf(() => 5500)) }] });
+  const [forecast] = await barotropic.run({ wind, height: input(height, ['z'], '500 hPa') }, { hours: 6, truncation: 21 }, context(t0));
+  const z0 = forecast.product.slice('z@500hPa', 0), z6 = forecast.product.slice('z@500hPa', 1);
+  check('plug-in barotropic: a solid-body rotation is steady (height change over 6 h)', rmsDifference(z0, z6, barotropic.grid()), 0.5, 'm');
+  assert('plug-in barotropic: two times recorded, as a model of height at 500 hPa', forecast.product.times.length === 2 && forecast.product.meta.variables[0].standard_name === 'geopotential_height');
 }
 
 done();

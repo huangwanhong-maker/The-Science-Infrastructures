@@ -53,6 +53,7 @@ The Earth Atlas shows the atmosphere, the ocean, the land and the people of the 
   - the shallow-water equations, started by a digital filter, which keep divergence and gravity waves and slow the longest waves.
 
   Both are verified against later analyses and against persistence, side by side.
+- **Plug-ins** ([ADR 0027](../../development/decisions/0027-earth-atlas-plugins.md)). An algorithm written as a script and loaded on request: it derives from `Diagnostic`, `ForecastModel`, `DataAssimilation` or `Trajectories`, says which fields it needs, and returns products and sketches that the atlas draws like anything else. The built-in ones, in [plugins/](plugins/), are the examples: vorticity and divergence, air parcels, optimal interpolation, and the barotropic model run through the class. [plugins/README.md](plugins/README.md) is the guide to writing one.
 - **One instant, in UTC.**
   - Each layer shows its data nearest to that instant, and says which time it shows.
   - When that time differs from the instant shown, the legend says by how much, for example "Data from 30 h before the time shown".
@@ -248,7 +249,9 @@ Its own code:
 | `src/data/fields.js` | Reads field and class products: decoding, climatological months, computed fields |
 | `src/data/products.js` | Reads products from the data library |
 | `src/data/requests.js` | Asks the local server for data on demand, and follows the job |
-| `src/layers/` | The catalogue of layers and models; one module per kind of layer; imagery and detail; our models |
+| `src/layers/` | The catalogue of layers and models; one module per kind of layer; imagery and detail; our models; the sketches of plug-ins |
+| `src/plugins/` | Plug-ins (ADR 0027): the classes a script derives from, the context it sees, and the host that loads and runs it |
+| `plugins/` | The built-in plug-ins, which are the examples, their index, and the guide to writing one |
 | `src/workers/` | The integration of our models and the painting of the base map, off the page's main thread |
 | `src/render/` | The surface shader, lines, markers, labels, relief, colour maps, colours of classes, the stage |
 | `src/ui/` | Panel, timeline, legend, place card, climate diagram, the ocean column's record |

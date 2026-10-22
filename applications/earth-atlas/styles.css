@@ -328,6 +328,17 @@ dialog .link { margin-top: 20px; }
   #credits { display: none; }
 }
 
+/* Plug-ins in the panel, and the labels of their sketches */
+.plugins p { margin: 0 0 8px; font-size: 13.5px; color: var(--text-dim); }
+.plugin { border-top: 1px solid var(--hair); padding: 8px 0 4px; }
+.plugin-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 4px; }
+.plugin-head strong { font-weight: 500; }
+.plugin label.select { margin: 3px 0; }
+.plugin input[type="number"] { width: 6em; }
+.plugin-url { display: flex; gap: 10px; align-items: center; margin-top: 8px; }
+.plugin-url input { flex: 1; min-width: 0; }
+.label.sketch { font: 12px var(--serif); color: #f6c47e; text-shadow: var(--halo); translate: 8px -50%; }
+
 /* The Data panel's account of the data on this computer */
 dialog h3 { font-weight: 500; font-size: 16px; margin: 22px 0 4px; }
 .setup-note { margin: 4px 0 8px; color: var(--text-dim); font-size: 14px; }

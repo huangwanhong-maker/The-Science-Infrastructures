@@ -113,7 +113,8 @@ function height(v) {
   return m ? ` at ${m[1]} m` : '';
 }
 
-const levelOf = (v) => v.level || height(v).replace(/^ at /, '');
+// A variable's level, stated or read from its name: '2 m', '500 hPa', or ''.
+export const levelOf = (v) => v.level || height(v).replace(/^ at /, '');
 const slug = (s) => (s ? `.${s.replace(/\s+/g, '')}` : '');
 const capital = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
@@ -190,21 +191,25 @@ export function buildCatalogue(library) {
         continue;
       }
       const spread = isSpread(v);
+      const difference = Boolean(v.difference);     // a difference of two quantities of its units, such as an analysis increment
       const qid = known ? known.id : v.name;
       const label = known ? `${known.label}${height(v)}${spread ? ', ensemble spread' : ''}` : capital(v.long_name || v.name);
       const shownModel = isMean(v) ? `${model} mean` : model;
-      if (!(known && known.noProbe)) probes.push({ kind: 'scalar', id: known && known.id, label, model: shownModel, product: name, variables: [v.name], units: v.units, domain, percent: known && known.percent, spread, key: `${qid}|${level}|${spread ? 'spread' : ''}` });
+      if (!(known && known.noProbe)) probes.push({ kind: 'scalar', id: known && known.id, label, model: shownModel, product: name, variables: [v.name], units: v.units, domain, percent: known && known.percent, spread, difference, key: `${qid}|${level}|${spread ? 'spread' : ''}` });
       if (known && known.base) continue;
       if (v.standard_name === 'cloud_area_fraction' && !spread) clouds.push({ product: name, variable: v.name, model });
       let style;
       if (spread) {
         style = { colormap: 'orchid', range: null, scale: 'linear', auto: [0, v.p98] };
+      } else if (difference) {
+        const size = Math.max(Math.abs(v.p02 || 0), Math.abs(v.p98 || 0)) || 1;      // a symmetric scale about zero
+        style = { colormap: 'balance', range: null, scale: 'linear', auto: [-size, size] };
       } else if (known) {
         style = { colormap: known.colormap, reverse: known.reverse, range: (known.ranges && known.ranges[level]) || known.range, scale: known.scale || 'linear', fade: known.fade };
       } else {
         style = { colormap: 'matter', reverse: true, clip: [0, 0.9], range: null, scale: 'linear', auto: [v.p02, v.p98] };
       }
-      surfaces.push({ id: `${qid}${slug(level)}${spread ? '-spread' : ''}@${name}`, key: `${qid}|${level}|${spread ? 'spread' : ''}`, kind: 'field', label, model: shownModel, product: name, variables: [v.name], domain, units: v.units, level, style, source: source(meta), percent: known && known.percent, spread });
+      surfaces.push({ id: `${qid}${slug(level)}${spread ? '-spread' : ''}@${name}`, key: `${qid}|${level}|${spread ? 'spread' : ''}`, kind: 'field', label, model: shownModel, product: name, variables: [v.name], domain, units: v.units, level, style, source: source(meta), percent: known && known.percent, spread, difference });
       if (spread) continue;
       if (v.standard_name === 'air_pressure_at_sea_level') {
         if (meta.times && meta.times.length > 4) {

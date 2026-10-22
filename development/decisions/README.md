@@ -39,6 +39,7 @@ Decisions that concern only one library are recorded in that library's own `deve
 | [0024](0024-the-solid-earth.md) | The solid Earth: plates, GPS, earthquake mechanisms, the crust and sections | Accepted, provisionally; geophysics a domain by 0026 |
 | [0025](0025-an-umbrella-of-laboratories.md) | An umbrella of laboratories for all the sciences (the umbrella's 0001) | Superseded in part by 0026 |
 | [0026](0026-domains-as-libraries.md) | Domains as libraries, and works that compose them | Accepted |
+| [0027](0027-earth-atlas-plugins.md) | Plug-ins of the Earth Atlas: algorithms loaded on request, shown through the layers | Accepted, provisionally |
 
 ## 2. Template
 

@@ -106,7 +106,7 @@ const sources = [
   ...domains.flatMap((d) => [...files(join(d.dir, 'js')), ...files(join(d.dir, 'tests'))]),
   ...files(join(ROOT, 'visualization', 'js')), ...files(join(ROOT, 'visualization', 'tests')),
   ...[...units.values()].filter((u) => u.kind === 'foundation').flatMap((u) => [...files(join(u.dir, 'js'))]),
-  ...[...units.values()].filter((u) => u.kind === 'application').flatMap((u) => [...files(join(u.dir, 'src')), ...files(join(u.dir, 'tests'))]),
+  ...[...units.values()].filter((u) => u.kind === 'application').flatMap((u) => [...files(join(u.dir, 'src')), ...files(join(u.dir, 'plugins')), ...files(join(u.dir, 'tests'))]),
 ];
 for (const file of sources) {
   fileCount++;

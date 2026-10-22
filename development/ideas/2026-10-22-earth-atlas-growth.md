@@ -11,7 +11,7 @@ Written while building the first version ([ADR 0014](../decisions/0014-earth-atl
 1. **The climate itself.** Register CMIP6 projections (ESGF) and ERA5 (Copernicus, with an account) as field products. Two things are then needed:
    - a timeline in years, beside the timeline in hours;
    - the comparison of two fields as a difference: a scenario against the historical period, or a forecast against an analysis.
-2. **True trajectories.** Integrate air or water parcels through the forecast's own time, rather than along the instantaneous field. Each trajectory starts at a chosen place; this is the Lagrangian view of a flow.
+2. **True trajectories.** Integrate air or water parcels through the forecast's own time, rather than along the instantaneous field. Each trajectory starts at a chosen place; this is the Lagrangian view of a flow. (Done as a plug-in, `applications/earth-atlas/plugins/trajectories.js`: [ADR 0027](../decisions/0027-earth-atlas-plugins.md).)
 3. **Ocean currents** (OSCAR, or CMEMS with an account) as a second vector field. They test that a new flow appears without changes to code.
 4. **Questions across fields**, the reason for one atlas:
    - Does the SST anomaly explain a precipitation anomaly?
