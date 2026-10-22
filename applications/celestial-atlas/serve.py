@@ -3,13 +3,14 @@
 The page is served from this directory; the code it shares, from the
 repository's ``domains/``, ``foundations/`` and ``visualization/`` under the
 same paths; and the data from the repository's cache (``data/cache/``)
-under ``/data/``. Only 127.0.0.1 is bound.
+under ``/data/``. Only 127.0.0.1 is bound unless ``--host`` says otherwise.
 
 Usage::
 
-    python applications/celestial-atlas/serve.py [--port 8770] [--open]
+    python applications/celestial-atlas/serve.py [--host 127.0.0.1] [--port 8770] [--open]
 
-then open http://127.0.0.1:8770/ in a browser.
+then open http://127.0.0.1:8770/ in a browser. On a server, ``--host 0.0.0.0``
+serves other computers too.
 """
 
 from __future__ import annotations
@@ -81,15 +82,17 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description="Serve the Celestial Atlas locally.")
+    parser.add_argument("--host", default="127.0.0.1", help="the address to bind; 0.0.0.0 for every interface")
     parser.add_argument("--port", type=int, default=8770)
     parser.add_argument("--open", action="store_true", help="open the page in the default browser")
     args = parser.parse_args(argv)
     if not (DATA / "jpl-de440s" / "de440s.bsp").exists():
         print("The data cache is empty. From the repository root, run:\n"
               "  python data/acquisition/fetch.py\n  python data/products/star_catalog.py", file=sys.stderr)
-    server = Server(("127.0.0.1", args.port), Handler)
+    server = Server((args.host, args.port), Handler)
     url = f"http://127.0.0.1:{args.port}/"
-    print(f"Celestial Atlas at {url}  (Ctrl+C to stop)", flush=True)
+    where = url if args.host == "127.0.0.1" else f"{url} and on {args.host}"
+    print(f"Celestial Atlas at {where}  (Ctrl+C to stop)", flush=True)
     if args.open:
         webbrowser.open(url)
     try:

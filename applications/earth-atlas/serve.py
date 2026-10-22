@@ -3,7 +3,7 @@
 The page is served from this directory; the code it shares, from the
 repository's ``domains/``, ``foundations/`` and ``visualization/`` under the
 same paths; and the data products from the repository's cache (``data/cache/``)
-under ``/data/``. Only 127.0.0.1 is bound.
+under ``/data/``. Only 127.0.0.1 is bound unless ``--host`` says otherwise.
 
 Data that cannot be fetched ahead of time, such as the ocean beneath a place
 the user has just chosen, are requested on demand through the data library
@@ -14,9 +14,10 @@ the user has just chosen, are requested on demand through the data library
 
 Usage::
 
-    python applications/earth-atlas/serve.py [--port 8790] [--open]
+    python applications/earth-atlas/serve.py [--host 127.0.0.1] [--port 8790] [--open]
 
-then open http://127.0.0.1:8790/ in a browser.
+then open http://127.0.0.1:8790/ in a browser. On a server, ``--host 0.0.0.0``
+serves other computers too.
 """
 
 from __future__ import annotations
@@ -121,6 +122,7 @@ class Server(http.server.ThreadingHTTPServer):
 
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description="Serve the Earth Atlas locally.")
+    parser.add_argument("--host", default="127.0.0.1", help="the address to bind; 0.0.0.0 for every interface")
     parser.add_argument("--port", type=int, default=8790)
     parser.add_argument("--open", action="store_true", help="open the page in the default browser")
     args = parser.parse_args(argv)
@@ -129,9 +131,10 @@ def main(argv: list[str]) -> int:
               "  python data/acquisition/fetch.py natural-earth-50m\n"
               "  python data/products/geography.py\n"
               "and see applications/earth-atlas/README.md for the other data.", file=sys.stderr)
-    server = Server(("127.0.0.1", args.port), Handler)
+    server = Server((args.host, args.port), Handler)
     url = f"http://127.0.0.1:{args.port}/"
-    print(f"Earth Atlas at {url}  (Ctrl+C to stop)", flush=True)
+    where = url if args.host == "127.0.0.1" else f"{url} and on {args.host}"
+    print(f"Earth Atlas at {where}  (Ctrl+C to stop)", flush=True)
     if args.open:
         webbrowser.open(url)
     try:
