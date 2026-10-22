@@ -17,6 +17,7 @@ Every application says which of the three activities it serves:
 - **One directory per application,** named for what it is, not for a field.
 - **Dependencies.** An application uses the domains, the foundations and the shared edges (`data/`, `visualization/`) only through their public interfaces. Its README names the domains it draws on.
 - **Its own server and tests.** Each web application has its own local server and port, and its own tests of what is particular to it; the checks of the science live with the domains.
+- **Its own data recipe.** `recipe.json` lists the datasets the application fetches and the products it builds, in order. `data/acquisition/recipe.py` runs it from the command line and is the quick start; the server reports it to the page at `/setup` and runs it on request, so that the page can fetch what is missing.
 - **Applications do not depend on one another.** Two applications may link to each other's views, as the two atlases do, but neither imports the other.
 
 ## 3. Index

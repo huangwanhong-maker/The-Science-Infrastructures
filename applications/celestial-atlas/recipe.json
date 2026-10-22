@@ -1,0 +1,42 @@
+{
+  "title": "The Celestial Atlas's data",
+  "about": "The datasets the atlas draws and the products built from them, in the order of applications/celestial-atlas/README.md §1. Run with data/acquisition/recipe.py, or from the page's Data panel. The Earth's day and night maps are shared with the Earth Atlas.",
+  "steps": [
+    {"id": "jpl-de440s", "title": "JPL DE440: the Sun, the Moon and the planets",
+     "run": ["data/acquisition/fetch.py", "jpl-de440s"], "done": "data/cache/jpl-de440s/**/retrieval.json"},
+    {"id": "hyg-v41", "title": "HYG v4.1: the stars",
+     "run": ["data/acquisition/fetch.py", "hyg-v41"], "done": "data/cache/hyg-v41/**/retrieval.json"},
+    {"id": "d3-celestial-constellations", "title": "Constellation figures and names",
+     "run": ["data/acquisition/fetch.py", "d3-celestial-constellations"], "done": "data/cache/d3-celestial-constellations/**/retrieval.json"},
+    {"id": "stars", "title": "The star catalogue, built from HYG",
+     "run": ["data/products/star_catalog.py"], "done": "data/cache/products/stars-v1.json"},
+
+    {"id": "gaia-dr3", "title": "Gaia DR3: the 200 000 brightest stars with good parallaxes",
+     "run": ["data/acquisition/fetch.py", "gaia-dr3", "--profile", "small"], "done": "data/cache/gaia-dr3/small/retrieval.json"},
+    {"id": "stars-gaia", "title": "The Gaia catalogue, built",
+     "run": ["data/products/star_catalog.py", "--source", "gaia-dr3", "--profile", "small"], "done": "data/cache/products/gaia-dr3-small.json"},
+
+    {"id": "ungc", "title": "Updated Nearby Galaxy Catalog: the Local Volume",
+     "run": ["data/acquisition/fetch.py", "ungc"], "done": "data/cache/ungc/**/retrieval.json"},
+    {"id": "galaxies-ungc", "title": "The Local Volume, built",
+     "run": ["data/products/galaxy_catalog.py", "--source", "ungc"], "done": "data/cache/products/galaxies-ungc.json"},
+    {"id": "tully-2mass-groups", "title": "Tully's galaxy groups from the 2MASS Redshift Survey",
+     "run": ["data/acquisition/fetch.py", "tully-2mass-groups"], "done": "data/cache/tully-2mass-groups/**/retrieval.json"},
+    {"id": "galaxies-2mrs-groups", "title": "The galaxy groups, built, with names from SIMBAD",
+     "run": ["data/products/galaxy_catalog.py", "--source", "tully-2mass-groups"], "done": "data/cache/products/galaxies-2mrs-groups.json"},
+
+    {"id": "solar-system-maps", "title": "Maps of the Sun, the Moon, the planets, Saturn's rings and the Milky Way",
+     "run": ["data/acquisition/fetch.py", "solar-system-maps"], "done": "data/cache/solar-system-maps/**/retrieval.json"},
+    {"id": "body-maps", "title": "The maps, prepared",
+     "run": ["data/products/body_maps.py"], "done": "data/cache/products/imagery-body-*.json"},
+
+    {"id": "gibs-static-blue-marble", "title": "Blue Marble: the Earth by day, without clouds",
+     "run": ["data/acquisition/fetch.py", "gibs-static", "--profile", "blue-marble"], "done": "data/cache/gibs-static/blue-marble/retrieval.json"},
+    {"id": "imagery-blue-marble", "title": "Blue Marble, prepared",
+     "run": ["data/products/imagery.py", "--source", "gibs-static", "--profile", "blue-marble"], "done": "data/cache/products/imagery-blue-marble.json"},
+    {"id": "gibs-static-black-marble", "title": "Black Marble: the Earth at night",
+     "run": ["data/acquisition/fetch.py", "gibs-static", "--profile", "black-marble"], "done": "data/cache/gibs-static/black-marble/retrieval.json"},
+    {"id": "imagery-night-lights", "title": "Black Marble, prepared",
+     "run": ["data/products/imagery.py", "--source", "gibs-static", "--profile", "black-marble"], "done": "data/cache/products/imagery-night-lights.json"}
+  ]
+}

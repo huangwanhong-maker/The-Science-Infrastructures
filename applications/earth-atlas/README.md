@@ -60,7 +60,16 @@ The Earth Atlas shows the atmosphere, the ocean, the land and the people of the 
 
 ## 2. Running
 
-From the repository root, fetch the data and build the products. This is about 300 MB of downloads; the THREDDS servers can take minutes per request.
+Quick start, from the repository root:
+
+```
+python data/acquisition/recipe.py applications/earth-atlas/recipe.json   # fetch the data and build the products
+python applications/earth-atlas/serve.py --open
+```
+
+The recipe ([recipe.json](recipe.json)) runs the commands below in order and skips what is already there; `--status` lists the steps. The page's Data panel shows the same list and fetches what is missing on a click, through the local server. The AI forecast at the end needs the model environment and is run apart.
+
+Step by step: from the repository root, fetch the data and build the products. This is about 300 MB of downloads; the THREDDS servers can take minutes per request.
 
 ```
 python data/acquisition/fetch.py natural-earth-50m etopo-2022 gfs oisst ww3 usgs-earthquakes

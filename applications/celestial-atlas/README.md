@@ -14,7 +14,14 @@ The Celestial Atlas shows the Sun, Moon, planets, stars and galaxies, at any ins
 
 ## 1. Running
 
-From the repository root:
+Quick start, from the repository root:
+
+```
+python data/acquisition/recipe.py applications/celestial-atlas/recipe.json   # fetch the data and build the products
+python applications/celestial-atlas/serve.py --open
+```
+
+The recipe ([recipe.json](recipe.json)) runs the commands below in order and skips what is already there; `--status` lists the steps. The page's Data panel shows the same list and fetches what is missing on a click, through the local server. Step by step:
 
 ```
 python data/acquisition/fetch.py                                    # DE440, HYG, constellations

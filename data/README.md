@@ -26,7 +26,7 @@ Data of different kinds are kept apart ([ADR 0014](../development/decisions/0014
 | Module | Scope | Status |
 |---|---|---|
 | [`registry/`](registry/) | One manifest per dataset: source, licence, checksum or query, parameters, profiles. The schema is in its README. | draft |
-| [`acquisition/`](acquisition/) | `fetch.py`: fixed files, catalogue queries, gridded subsets and web requests into `data/cache/`, with `retrieval.json`. `erddap.py`: a client for ERDDAP's griddap. `ncss.py`: a client for THREDDS's NetCDF Subset Service. `opendap.py`: a client for OPeNDAP (DAP2) servers, for strided grids or the column beneath a place. `remotezip.py`: members of zip archives on the web, by range requests. `on_demand.py`: requests made while an application waits (§3.1). | draft |
+| [`acquisition/`](acquisition/) | `fetch.py`: fixed files, catalogue queries, gridded subsets and web requests into `data/cache/`, with `retrieval.json`. `erddap.py`: a client for ERDDAP's griddap. `ncss.py`: a client for THREDDS's NetCDF Subset Service. `opendap.py`: a client for OPeNDAP (DAP2) servers, for strided grids or the column beneath a place. `remotezip.py`: members of zip archives on the web, by range requests. `on_demand.py`: requests made while an application waits (§3.1). `recipe.py`: an application's recipe, the datasets and products it needs, run in order from the command line or by the application's server (§3.2). | draft |
 | [`catalogs/`](catalogs/) | `tap.py`: a minimal client for the IVOA Table Access Protocol, used for ESA Gaia, CDS VizieR and SIMBAD | draft |
 | [`formats/`](formats/) | Readers and writers: netCDF classic (`netcdf3.py`). FITS, netCDF-4/HDF5 and Zarr are planned. | draft |
 | [`products/`](products/) | Derived artefacts, built reproducibly from registered datasets, and their index `index.json` (§4). `ai_forecast.py` runs an AI weather model to make one. | draft |
@@ -78,6 +78,16 @@ The same column from the command line:
 ```
 python data/acquisition/fetch.py hycom-column --set lat=32 --set lon=135
 python data/products/ocean_column.py --profile custom-<hash>
+```
+
+### 3.2 Recipes
+
+An application's data are a list of fetches and builds in a fixed order. The list is kept beside the application as `recipe.json` (for example [applications/earth-atlas/recipe.json](../applications/earth-atlas/recipe.json)), and `recipe.py` runs it: the steps not yet done, or chosen steps again, one at a time, since the product builders all rewrite `products/index.json`. The application's server reports the same list to its page at `/setup` and runs it on request, so that a page can fetch what it lacks.
+
+```
+python data/acquisition/recipe.py applications/earth-atlas/recipe.json            # the steps not yet done
+python data/acquisition/recipe.py applications/earth-atlas/recipe.json --status   # which steps are done
+python data/acquisition/recipe.py applications/earth-atlas/recipe.json gfs oisst  # chosen steps, again
 ```
 
 ## 4. Products

@@ -304,7 +304,7 @@ A domain directory contains:
 - **Web applications:**
   - Use ES modules without a build step.
   - Load three.js from jsDelivr, pinned to an exact version (0.170.0).
-  - Serve locally with Python's standard library. Each application's server mounts `domains/`, `foundations/` and `visualization/` beside its page, and the data cache at `/data/`.
+  - Serve locally with Python's standard library. Each application's server mounts `domains/`, `foundations/` and `visualization/` beside its page, and the data cache at `/data/`; it reports the application's data recipe (`recipe.json`) at `/setup` and runs it on the page's request.
   - Test with Node (v22 is installed).
   - Each application has its own local server: the Celestial Atlas on port 8770, the Earth Atlas on 8790.
 - **Visual style:**
