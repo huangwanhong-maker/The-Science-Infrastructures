@@ -120,6 +120,8 @@ const [result] = await plugin.run({ wind: { product, names: ['u', 'v'], variable
 
 ## 9. The Same Contract in Python and C++
 
+<img src="../../../assets/gallery/earth-30-plugin-languages.jpg" align="right" width="300" alt="The Plug-ins section of the panel with the C++ and Python plug-ins loaded, each named with its language">
+
 A plug-in may be written in Python or C++ instead ([ADR 0029](../../../development/decisions/0029-plugins-in-python-and-cpp.md)). It then runs in the atlas's server rather than in the page, and the page shows it the same way, with the language named beside its title. The file must lie under this `plugins/` directory: the server runs nothing from elsewhere.
 
 **Python.** The classes of [../py/plugins.py](../py/plugins.py) have the same names, hooks and results as the JavaScript ones; fields are numpy arrays `(nlat, nlon)` of float32 with NaN where there is no value, and times are datetimes in UTC. The script defines `create(api)`:

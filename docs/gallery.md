@@ -146,6 +146,13 @@ A plug-in is a script the atlas loads when asked, runs on the data it holds, and
 
 Each plug-in is checked without a page, in [the Earth Atlas's suite](../applications/earth-atlas/tests/run-tests.mjs), against an answer in closed form: the vorticity of a solid-body rotation, a parcel in such a rotation, an analysis that reproduces exact observations and leaves the far field alone, and a rotation the barotropic model keeps steady. How to use and write one is in [plugins/README.md](../applications/earth-atlas/plugins/README.md).
 
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/earth-30b-plugin-cpp.jpg"><img src="../assets/gallery/earth-30b-plugin-cpp.jpg" alt="Relative vorticity at 500 hPa computed by a C++ plug-in compiled and run by the server"></a><br><b>The same algorithm in C++,</b> on the project's server: the vorticity plug-in written as a program, compiled by the server with its own compiler, run on files behind one contract, and shown by the page exactly as the JavaScript one ([ADR 0029](../development/decisions/0029-plugins-in-python-and-cpp.md)). The three implementations, JavaScript, Python and C++, agree on a solid-body rotation to the last digit.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/earth-30-plugin-languages.jpg"><img src="../assets/gallery/earth-30-plugin-languages.jpg" alt="The Plug-ins section of the panel with the C++ and Python plug-ins loaded, each named with its language"></a><br><b>Three languages in one panel.</b> The C++ plug-in, run, and the Python one, loaded, each named with its language and where it runs; below them the JavaScript plug-ins still to load, and the field for a script's URL. The panel is the same whatever the language.</td>
+</tr>
+</table>
+
 ## 2. The Celestial Atlas
 
 The Sun, the Moon, the planets, the stars and the galaxies, at any instant from 1849 to 2150 or live. Positions come from JPL's DE440 ephemeris, read directly from its kernel.
