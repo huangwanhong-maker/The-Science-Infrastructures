@@ -63,11 +63,12 @@ The Earth Atlas shows the atmosphere, the ocean, the land and the people of the 
 Quick start, from the repository root:
 
 ```
-python data/acquisition/recipe.py applications/earth-atlas/recipe.json   # fetch the data and build the products
+python -m venv .venv && .venv/Scripts/python -m pip install -r data/requirements.txt   # once: numpy and Pillow (.venv/bin on Unix)
+python data/acquisition/recipe.py applications/earth-atlas/recipe.json                # fetch the data and build the products
 python applications/earth-atlas/serve.py --open
 ```
 
-The recipe ([recipe.json](recipe.json)) runs the commands below in order and skips what is already there; `--status` lists the steps. The page's Data panel shows the same list and fetches what is missing on a click, through the local server. The AI forecast at the end needs the model environment and is run apart.
+Here `python` is that environment's interpreter; the server runs the recipe with the interpreter it was started with. The recipe ([recipe.json](recipe.json)) runs the commands below in order and skips what is already there; `--status` lists the steps. The page's Data panel shows the same list and fetches what is missing on a click, through the local server. The AI forecast at the end needs the model environment and is run apart.
 
 Step by step: from the repository root, fetch the data and build the products. This is about 300 MB of downloads; the THREDDS servers can take minutes per request.
 

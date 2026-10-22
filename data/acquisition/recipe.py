@@ -159,7 +159,8 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--status", action="store_true", help="show which steps are done, and run nothing")
     parser.add_argument("--all", action="store_true", help="run every step, done or not")
     args = parser.parse_args(argv)
-    sys.stdout.reconfigure(errors="replace")     # consoles that cannot show ′, ° or CJK
+    # Consoles that cannot show ′, ° or CJK; and lines as they come when piped to a log.
+    sys.stdout.reconfigure(errors="replace", line_buffering=True)
 
     recipe = load(Path(args.recipe))
     ids = {step["id"] for step in recipe["steps"]}

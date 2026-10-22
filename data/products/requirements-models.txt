@@ -1,5 +1,5 @@
 # The model environment, for data/products/ai_forecast.py (ADR 0022).
-# The rest of the data library needs only the standard library and numpy.
+# The rest of the data library needs data/requirements.txt (numpy and Pillow).
 #
 #   python -m venv .venv
 #   .venv/Scripts/python -m pip install -r data/products/requirements-models.txt

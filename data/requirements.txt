@@ -1,0 +1,11 @@
+# The data library: fetching datasets and building products (data/README.md §3).
+# fetch.py needs only the standard library; the product builders need numpy, and
+# the imagery and class rasters need Pillow. The AI model needs more, from
+# data/products/requirements-models.txt (ADR 0022), in the same environment.
+#
+#   python -m venv .venv
+#   .venv/Scripts/python -m pip install -r data/requirements.txt      (.venv/bin/python on Unix)
+#
+# Licences: numpy BSD-3-Clause; Pillow MIT-CMU.
+numpy==2.3.5
+pillow==12.2.0

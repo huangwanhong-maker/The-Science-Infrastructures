@@ -321,7 +321,7 @@ A domain directory contains:
   - Datasets keep their own licences, and are fetched into `data/cache/`, never committed.
 - **Model environment.**
   - AI models run in `.venv` at the repository root (Python 3.12, not committed), with the packages pinned in `data/products/requirements-models.txt` (ADR 0022).
-  - The rest of the data library needs only the standard library and numpy.
+  - The rest of the data library needs the standard library, numpy and Pillow (`data/requirements.txt`).
   - Model weights under non-commercial licences (Pangu-Weather: CC BY-NC-SA 4.0) are fetched into the cache and never committed.
 - **Development machine** (as of 2026-10-22):
   - Windows 11; Intel i7-11370H; 32 GB of memory.

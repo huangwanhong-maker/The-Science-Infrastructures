@@ -1,10 +1,11 @@
 # data: Acquisition, Registry and Provenance
 
-*Status: draft.* An edge of the architecture. Written in Python first, using the standard library (with numpy in product builders), with C++ readers later where performance matters. Running an AI model needs more (onnxruntime and ecCodes), kept in a separate environment ([ADR 0022](../development/decisions/0022-ai-forecast-cyclones-and-disasters.md)):
+*Status: draft.* An edge of the architecture. Written in Python first, using the standard library, with numpy and Pillow in the product builders ([requirements.txt](requirements.txt)), and C++ readers later where performance matters. Running an AI model needs more (onnxruntime and ecCodes), listed in a second file for the same environment ([ADR 0022](../development/decisions/0022-ai-forecast-cyclones-and-disasters.md)):
 
 ```
 python -m venv .venv
-.venv/Scripts/python -m pip install -r data/products/requirements-models.txt
+.venv/Scripts/python -m pip install -r data/requirements.txt                    # fetching and building (.venv/bin/python on Unix)
+.venv/Scripts/python -m pip install -r data/products/requirements-models.txt    # and the AI model
 ```
 
 ## 1. Purpose
