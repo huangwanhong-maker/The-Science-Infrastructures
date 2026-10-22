@@ -1,9 +1,9 @@
-[submodule "lib/calx"]
-	path = lib/calx
+[submodule "calx"]
+	path = foundations/calx
 	url = https://github.com/huangwanhong-maker/calx.git
-[submodule "lib/morphe"]
-	path = lib/morphe
+[submodule "morphe"]
+	path = foundations/morphe
 	url = https://github.com/huangwanhong-maker/morphe.git
-[submodule "lib/physis"]
-	path = lib/physis
+[submodule "physis"]
+	path = foundations/physis
 	url = https://github.com/huangwanhong-maker/physis.git
