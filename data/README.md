@@ -1,6 +1,6 @@
 # data: Acquisition, Registry and Provenance
 
-*Status: draft.* An edge of the architecture. Written in Python first, using the standard library, with numpy and Pillow in the product builders ([requirements.txt](requirements.txt)), and C++ readers later where performance matters. Running an AI model needs more (onnxruntime and ecCodes), listed in a second file for the same environment ([ADR 0022](../development/decisions/0022-ai-forecast-cyclones-and-disasters.md)):
+*Status: draft.* An edge of the architecture. Written in Python first, using the standard library, with numpy, Pillow and ecCodes (for GRIB2) in the product builders ([requirements.txt](requirements.txt)), and C++ readers later where performance matters. Running an AI model needs more (onnxruntime and ecCodes), listed in a second file for the same environment ([ADR 0022](../development/decisions/0022-ai-forecast-cyclones-and-disasters.md)):
 
 ```
 python -m venv .venv
@@ -27,10 +27,10 @@ Data of different kinds are kept apart ([ADR 0014](../development/decisions/0014
 | Module | Scope | Status |
 |---|---|---|
 | [`registry/`](registry/) | One manifest per dataset: source, licence, checksum or query, parameters, profiles. The schema is in its README. | draft |
-| [`acquisition/`](acquisition/) | `fetch.py`: fixed files, catalogue queries, gridded subsets and web requests into `data/cache/`, with `retrieval.json`. `erddap.py`: a client for ERDDAP's griddap. `ncss.py`: a client for THREDDS's NetCDF Subset Service. `opendap.py`: a client for OPeNDAP (DAP2) servers, for strided grids or the column beneath a place. `remotezip.py`: members of zip archives on the web, by range requests. `on_demand.py`: requests made while an application waits (§3.1). `recipe.py`: an application's recipe, the datasets and products it needs, run in order from the command line or by the application's server (§3.2). | draft |
+| [`acquisition/`](acquisition/) | `fetch.py`: fixed files, catalogue queries, gridded subsets and web requests into `data/cache/`, with `retrieval.json`. `erddap.py`: a client for ERDDAP's griddap. `ncss.py`: a client for THREDDS's NetCDF Subset Service. `opendap.py`: a client for OPeNDAP (DAP2) servers, for strided grids or the column beneath a place. `remotezip.py`: members of zip archives on the web, by range requests. `on_demand.py`: requests made while an application waits (§3.1). `stac.py`: a minimal client of the STAC API (Item Search with geometry, time, query on properties, sort and paging), with Element 84's Earth Search over Sentinel-2 Level-2A; Copernicus Sentinel data are free, full and open, credited "Contains modified Copernicus Sentinel data <year>". `recipe.py`: an application's recipe, the datasets and products it needs, run in order from the command line or by the application's server (§3.2). `schedule.py`: an application's schedule (`schedule.json`), its recipe's steps and other scripts run again every hour, six hours or day, one job at a time (§3.4). | draft |
 | [`catalogs/`](catalogs/) | `tap.py`: a minimal client for the IVOA Table Access Protocol, used for ESA Gaia, CDS VizieR and SIMBAD | draft |
 | [`formats/`](formats/) | Readers and writers: netCDF classic (`netcdf3.py`). FITS, netCDF-4/HDF5 and Zarr are planned. | draft |
-| [`products/`](products/) | Derived artefacts, built reproducibly from registered datasets, and their index `index.json` (§4). `ai_forecast.py` runs an AI weather model to make one. | draft |
+| [`products/`](products/) | Derived artefacts, built reproducibly from registered datasets, and their index `index.json` (§4). `ai_forecast.py` runs an AI weather model to make one. `archive.py` keeps each run of each forecast product in `data/cache/archive/`; `verification.py` scores the kept runs against analyses, station reports and best tracks. `observation_set.py` builds observations from station networks, with a rolling window; our own sensors' products come from [`observation/sensors/`](../observation/sensors/). | draft |
 | `provenance` | Records of which data and which code produced each result. For now this is `retrieval.json` for each retrieval, and a `source` block in each product. | seed |
 
 ## 3. Usage
@@ -47,6 +47,8 @@ python data/acquisition/fetch.py worldbank-indicators --profile life-expectancy
 python data/products/star_catalog.py                             # build products (§4)
 python data/products/field_grid.py --source gfs
 python data/acquisition/fetch.py gfs-levels aigfs                # forecast models aloft (THREDDS)
+python data/acquisition/fetch.py ecmwf-ifs ecmwf-aifs ecmwf-ens    # ECMWF's open forecasts: GRIB2, by byte ranges
+python data/products/ecmwf_fields.py --source ecmwf-ifs           # decoded with ecCodes
 python data/products/imagery.py --source gibs-daily             # yesterday's Earth from space
 python data/products/body_maps.py                                # maps of the planets and the sky
 python data/acquisition/fetch.py koppen-geiger terraclimate-normals   # climate classes and normals
@@ -54,6 +56,14 @@ python data/products/class_raster.py --source koppen-geiger
 python data/products/field_grid.py --source terraclimate-normals
 python data/acquisition/fetch.py gdacs                           # disasters of the last month, and cyclone tracks
 python data/products/disaster_catalog.py
+python data/acquisition/fetch.py metar ndbc --refresh            # the latest weather reports of aerodromes and buoys
+python data/products/observation_set.py                          # as observations: a rolling window of 48 hours
+python data/acquisition/fetch.py ibtracs --refresh               # best tracks of the storms of the last week
+python data/acquisition/fetch.py ibtracs --profile last3years    # ... and of the last three years
+python data/products/ibtracs_tracks.py
+python data/acquisition/fetch.py ncep-r1-climatology            # the climatology of 500 hPa height, for the scores
+python data/products/archive.py --keep scored                   # keep the current run of every forecast
+python data/products/verification.py                             # score the runs kept
 python data/acquisition/fetch.py pangu-weather gfs-analysis-0p25 # an AI model's weights, and an analysis to start it
 .venv/Scripts/python data/products/ai_forecast.py --source gfs-analysis-0p25 --hours 168
 python data/acquisition/fetch.py pb2002 ngl-midas gcmt crust1          # the solid Earth
@@ -91,6 +101,20 @@ python data/acquisition/recipe.py applications/earth-atlas/recipe.json --status 
 python data/acquisition/recipe.py applications/earth-atlas/recipe.json gfs oisst  # chosen steps, again
 ```
 
+### 3.3 Our Own Sensors
+
+The user's own sensors (a home weather station, a tide pole, a logger) keep their readings in `data/cache/observations/`, one directory per source, through [observation/sensors](../observation/sensors/). Readings arrive by the API ([api/](../api/)), from files (`ingest.py`, which can follow a growing file), or from a simulated sensor (`simulate.py`). They are checked and converted to SI units on arrival. Each source becomes an observations product named `sensor-<source>`, which carries its stations' positions.
+
+### 3.4 Schedules
+
+A recipe says what an application needs; a schedule says when to fetch it again. `schedule.json`, beside the application, lists jobs: a name, a period (`every`: "1h", "6h", "1d"), an offset in minutes, a timeout, and commands run in order with the scheduler's interpreter, from the repository root. A job falls due at every multiple of its period from 00:00 UTC, plus its offset. Jobs never run together, since the builders share `products/index.json`: a lock file held through the operating system keeps them apart, and a job due while another runs waits; the application's server takes the same lock before it runs its recipe for the page. A failing command is logged and the job goes on. The state (last start, end, status, failed commands) is kept in `data/cache/schedule-state.json`. The Earth Atlas fetches observations hourly and forecasts at 05, 11, 17 and 23 UTC; it keeps each run in the archive and scores the runs kept.
+
+```
+python data/acquisition/schedule.py applications/earth-atlas/schedule.json              # run, waiting for each job's time
+python data/acquisition/schedule.py applications/earth-atlas/schedule.json --list       # jobs, last runs, next times
+python data/acquisition/schedule.py applications/earth-atlas/schedule.json --once forecasts
+```
+
 ## 4. Products
 
 Products are written to `data/cache/products/` and listed by kind in `index.json`, which applications read.
@@ -100,16 +124,19 @@ Products are written to `data/cache/products/` and listed by kind in `index.json
 | `stars` | `star_catalog.py` | Stars from HYG or Gaia: position, magnitude, colour, distance | `.bin` (float32 records) and `.json` |
 | `galaxies` | `galaxy_catalog.py` | Galaxies of the Local Volume (UNGC) and 2MRS groups, in supergalactic coordinates | `.json`, or `.bin` and `.json` |
 | `geography` | `geography.py` | The base map: countries (with several systems of codes and names in 26 languages), land, lakes, glaciers, ice shelves, sea names, coastlines, boundaries, rivers, places. No thematic values. | `.bin` (float32 longitude–latitude pairs) and `.json` (features referring to runs of pairs) |
-| `fields` | `field_grid.py`, `ai_forecast.py` | Variables on a regular longitude–latitude grid, over time: forecasts, analyses, relief, climate normals, our own AI forecasts, or our own netCDF files. A forecast that has been verified records its errors (`verification`). Rows run north to south; global grids start at 180° W; values in their source units. A climatology's times are the months of its period's middle year, and it records the period. | `.bin` (int16, a linear scale per variable) and `.json` (grid, times, CF metadata, statistics) |
+| `fields` | `field_grid.py`, `ai_forecast.py`, `ecmwf_fields.py`, `population_grid.py` | Variables on a regular longitude–latitude grid, over time: forecasts, analyses, relief, climate normals, our own AI forecasts, or our own netCDF files. A forecast that has been verified records its errors (`verification`). Rows run north to south; global grids start at 180° W; values in their source units. A climatology's times are the months of its period's middle year, and it records the period. | `.bin` (int16, a linear scale per variable) and `.json` (grid, times, CF metadata, statistics) |
 | `classes` | `class_raster.py` | A category per cell of a regular grid, such as climate classes, by period and scenario; the legend (code, name, the authors' colour) and the share of land in each class | `.bin` (uint8, 0 for no value) and `.json` |
 | `indicators` | `country_indicators.py` | A value per economy and year, keyed by World Bank codes with ISO alpha-2; aggregates kept apart | `.json` |
 | `events` | `event_catalog.py`, `disaster_catalog.py`, `mechanism_catalog.py` | Events at a place and an instant. Earthquakes (`earthquake`): time, longitude, latitude, depth, magnitude. Disasters (`disaster`): start and last update, a point, the kind (tropical cyclone, earthquake, flood, volcano, drought, wildfire), GDACS's alert level, severity, countries. Mechanisms (`mechanism`): the centroid, Mw, the six moment-tensor elements over M0, and the catalogue's nodal planes. | `.json` |
 | `plates` | `plate_model.py` | Tectonic plates: their outlines (rings of points) and the steps of their boundaries, each with its class, its left and right plate, the polarity of subduction and the source's own relative motion. Geometry only: the rotations are a model, kept with the code. | `.bin` (float32 longitude–latitude pairs) and `.json` |
 | `stations` | `station_velocities.py` | GPS stations: place, height, east, north and up velocity with uncertainties (mm/yr), first and last epoch, in a stated frame | `.json` |
+| `regions` | `regions.py` | Places named by a raster of ids on a grid of 0.1°: the countries (Natural Earth 1:50m; ISO 3166-1 alpha-3 with Natural Earth's fall-backs) and the first-order divisions (Natural Earth 1:10m; ISO 3166-2 where held by one division, else adm1_code); a cell belongs to the region containing its centre; each region's code, name, country, cells and area; outlines simplified for drawing (Ramer–Douglas–Peucker, 0.02°) | `.bin` (uint16, 0 for none), `.json`, and `-outlines.json` (polylines) |
+| `verification` | `verification.py`, from the runs kept by `archive.py`; cyclones found by `track_cyclones.mjs` | Scores of forecasts by model and lead (hours from the run's start). 500 hPa height: RMSE and centred anomaly correlation over 20–80° N and S against analyses (the GFS's first), with persistence. Station quantities: RMSE and bias against observations products (2 m temperature and sea-level pressure from METAR, wave height and sea-level pressure from NDBC). Tropical cyclones: track and central-pressure errors against IBTrACS, extended by GDACS. Each score names its truth, definition, count of cases, runs and window. | `.json` |
+| `observations` | `observation_set.py`, `observation/sensors/store.py` | Observations at places: one row per station and time (identifier, name, longitude, latitude, elevation, ISO 8601 time in UTC), with one column per variable in SI units, named by CF standard names and null where missing. Weather at aerodromes (`metar`, 24 hours) and buoys and coastal stations (`ndbc`, 48 hours) are kept as a rolling window, merged at each rebuild, once per station and time. Our own sensors appear as `sensor-<source>`. Values beyond the extremes ever observed are set to null as gross errors, and counted. | `.json` |
 | `series` | `station_series.py` | One station's daily positions, east, north and up (mm from the first day) with their sigmas. Made on demand, in `products/series/`, not listed in the index. | `.json` |
 | `crust` | `crust_model.py` | The layers of the crust on a grid: each layer's top, P and S speeds and density, as scaled 16-bit integers; with a field product of the Moho's depth and the crust's and sediments' thicknesses | `.bin` (int16) and `.json` |
 | `columns` | `ocean_column.py` | The ocean beneath a place: currents and temperature by depth and time, at a model's grid point, with its latest run and deepest level. Made on demand, kept in `products/columns/`, not listed in the index. | `.json` |
-| `tracks` | `disaster_catalog.py` | Moving things, as positions over time. Tropical cyclones (`cyclone`): positions every 6 or 12 hours, each marked observed or forecast by the responsible warning centre. | `.json` |
+| `tracks` | `disaster_catalog.py`, `ibtracs_tracks.py` | Moving things, as positions over time. Tropical cyclones (`cyclone`) from GDACS: positions every 6 or 12 hours, each marked observed or forecast by the responsible warning centre. Best tracks from IBTrACS (`ibtracs-active`, `ibtracs-last3years`): the agencies' own fixes, with central pressure (hPa), maximum sustained wind (m s-1) and the agency each comes from, since the agencies average the wind over different periods. | `.json` |
 | `imagery` | `imagery.py`, `body_maps.py` | Equirectangular images with a role. Shaded relief of the land (`relief-shading`), with its grey levels of water and flat land, for detail at close range. The Earth (`day`, `night-lights`): true colour of a day (gaps filled from the day before), the Blue Marble, the Black Marble, with the provider's service for detail. Other bodies (`body`), Saturn's rings (`rings`, a radial strip) and the whole sky in galactic coordinates (`sky`, its orientation checked against bright stars). | `.jpg` or `.png`, and `.json` |
 
 ## 5. Datasets
@@ -125,6 +152,8 @@ Products are written to `data/cache/products/` and listed by kind in `index.json
 | `ungc` | tap | Karachentsev et al. 2013, via CDS VizieR | Galaxies of the Local Volume, with tidal indices |
 | `tully-2mass-groups` | tap | Tully 2015 and Huchra et al. 2012, via CDS VizieR | Galaxy groups of the 2MASS Redshift Survey |
 | `natural-earth-50m` | files | Natural Earth, v5.1.2 | The base map of the Earth |
+| `natural-earth-10m-admin1` | files | Natural Earth, v5.1.2 | States, provinces and other first-order divisions, as regions |
+| `ghsl-population` | files (a member of a remote archive) | European Commission JRC, GHS-POP R2023A (Schiavina et al. 2023), CC BY 4.0 | The residential population of 2025 on a 30″ grid, summed to 0.25° |
 | `etopo-2022` | griddap | NOAA NCEI, via CoastWatch ERDDAP | Relief of land and sea floor, 15″ source grid |
 | `gfs` | griddap | NOAA NCEP, via PacIOOS ERDDAP | Weather: analyses and forecasts of wind, temperature, pressure, precipitation, humidity, radiation |
 | `oisst` | griddap | NOAA NCEI (OISST v2.1), via CoastWatch ERDDAP | Daily sea-surface temperature, anomaly and sea ice |
@@ -134,6 +163,9 @@ Products are written to `data/cache/products/` and listed by kind in `index.json
 | `gfs-levels` | ncss | NOAA NCEP, via Unidata THREDDS | GFS aloft (850, 500, 250 hPa) and over the column (cloud, water vapour, CAPE) |
 | `aigfs` | ncss | NOAA NCEP and EPIC, via Unidata THREDDS | NOAA's AI global forecast model, near the surface and aloft |
 | `aigefs` | ncss | NOAA NCEP and EPIC, via Unidata THREDDS | NOAA's AI ensemble: mean and spread |
+| `ecmwf-ifs` | ecmwf | ECMWF open data (CC BY 4.0) | The IFS medium-range forecast at 0.25°, near the surface and aloft, five days ahead |
+| `ecmwf-aifs` | ecmwf | ECMWF open data (CC BY 4.0); Lang et al. 2024 | ECMWF's AI model AIFS Single: the same fields, open for commercial use as well |
+| `ecmwf-ens` | ecmwf | ECMWF open data (CC BY 4.0) | The IFS ensemble's probabilities: 24 h precipitation of 10, 20, 50 mm; gusts of 10, 15, 25 m/s; 850 hPa temperature beyond one standard deviation from normal |
 | `gibs-daily` | http | NASA GIBS | Yesterday's Earth from VIIRS, true colour |
 | `gibs-static` | http | NASA GIBS | The Blue Marble by day, the Black Marble by night |
 | `gibs-relief` | http | NASA GIBS, from ASTER GDEM (METI and NASA) | Shaded relief of the land from 30 m elevations: a global preview, and detail at close range |
@@ -148,6 +180,10 @@ Products are written to `data/cache/products/` and listed by kind in `index.json
 | `ngl-midas` | http | Nevada Geodetic Laboratory | GPS velocities of about 22,000 stations (MIDAS), in IGS20 or a plate's frame |
 | `ngl-station` | http, on demand | Nevada Geodetic Laboratory | One GPS station's daily positions |
 | `gcmt` | http | Global CMT Project (LDEO) | The moment tensors of about 70,000 earthquakes since 1976 |
+| `ncep-r1-climatology` | opendap | NOAA PSL, from the NCEP/NCAR Reanalysis 1 (Kalnay et al. 1996) | Long-term monthly means of geopotential height, 1991–2020, 2.5°: the climatology of the anomaly correlation |
+| `metar` | http | NOAA Aviation Weather Center | The latest METAR or SPECI of about 5,000 aerodromes worldwide, with station names |
+| `ndbc` | http | NOAA National Data Buoy Center | The latest observations of about 850 buoys, coastal stations and platforms |
+| `ibtracs` | http | NOAA NCEI, IBTrACS v04r01 (Knapp et al. 2010) | Best tracks of tropical cyclones: the storms of the last week, and the last three years |
 | `crust1` | files | Laske et al. 2013 (IGPP, UC San Diego) | CRUST1.0: the crust's layers, speeds and densities on 1° cells |
 
 ### 5.2 Planned
@@ -161,7 +197,7 @@ Products are written to `data/cache/products/` and listed by kind in `index.json
 | CMIP6 climate projections | ESGF | Simulated climates, by scenario |
 | Ocean currents (OSCAR or CMEMS) | NASA / Copernicus | Surface currents, as a flow |
 | Landsat, Sentinel-2 | USGS / NASA, ESA | Remote sensing of the land surface |
-| OpenStreetMap, GHSL, WorldPop | OSM contributors, JRC, WorldPop | Settlement, land use, population on a grid |
+| OpenStreetMap, WorldPop; GHSL's built-up surfaces and settlement model (GHS-BUILT, GHS-SMOD) | OSM contributors, WorldPop, JRC | Settlement, land use |
 
 ## 6. Licences
 

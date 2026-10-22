@@ -12,12 +12,13 @@ Manifests are read by [`../acquisition/fetch.py`](../acquisition/fetch.py). It d
 
 | Kind | Meaning | Example |
 |---|---|---|
-| `files` | Fixed files, downloaded as they are, or taken from a zip archive on the web. Each file's SHA-256 is recorded in the manifest and verified on every retrieval. | `jpl-de440s`, `natural-earth-50m`, `solar-system-maps`, `koppen-geiger`, `pangu-weather`, `pb2002`, `crust1`, `templateflow-mni152`, `schaefer-2018`, `ebrains-julich-brain`, `allen-mouse-ccf` |
+| `files` | Fixed files, downloaded as they are, or taken from a zip archive on the web. Each file's SHA-256 is recorded in the manifest and verified on every retrieval. | `jpl-de440s`, `natural-earth-50m`, `solar-system-maps`, `koppen-geiger`, `pangu-weather`, `pb2002`, `crust1`, `ghsl-population`, `natural-earth-10m-admin1`, `templateflow-mni152`, `schaefer-2018`, `ebrains-julich-brain`, `allen-mouse-ccf` |
 | `tap` | A query to an astronomical archive through the IVOA Table Access Protocol | `gaia-dr3`, `ungc`, `tully-2mass-groups` |
 | `griddap` | A subset of a gridded dataset served by ERDDAP: which variables, which times, how fine a grid | `gfs`, `oisst`, `ww3`, `etopo-2022` |
-| `http` | One or more web requests built from URL templates, and optionally those the results link to | `worldbank-indicators`, `usgs-earthquakes`, `gibs-daily`, `gibs-static`, `gibs-relief`, `gfs-analysis-0p25`, `gdacs`, `ngl-midas`, `ngl-station`, `gcmt` |
+| `http` | One or more web requests built from URL templates, and optionally those the results link to | `worldbank-indicators`, `usgs-earthquakes`, `gibs-daily`, `gibs-static`, `gibs-relief`, `gfs-analysis-0p25`, `gdacs`, `ngl-midas`, `ngl-station`, `gcmt`, `metar`, `ndbc`, `ibtracs` |
 | `ncss` | Groups of variables of a forecast model's collection on a THREDDS server, by its NetCDF Subset Service: levels, times and grid spacing | `gfs-levels`, `aigfs`, `aigefs` |
-| `opendap` | One variable from each of several datasets on an OPeNDAP (DAP2) server, every n-th point of the grid, or the column beneath a place, saved as netCDF classic | `terraclimate-normals`, `hycom-column` |
+| `opendap` | One variable from each of several datasets on an OPeNDAP (DAP2) server, every n-th point of the grid, or the column beneath a place, saved as netCDF classic | `terraclimate-normals`, `hycom-column`, `ncep-r1-climatology` |
+| `ecmwf` | Fields of ECMWF's open forecasts, taken from the per-step GRIB2 files of the latest complete run by HTTP range requests, guided by each file's index | `ecmwf-ifs`, `ecmwf-aifs`, `ecmwf-ens` |
 
 All kinds except `files` declare parameters and profiles, so that a user chooses which part of a dataset to take and how much of it ([ADR 0012](../../development/decisions/0012-selectable-parameterised-datasets.md)).
 
@@ -26,7 +27,7 @@ All kinds except `files` declare parameters and profiles, so that a user chooses
 | Field | Meaning |
 |---|---|
 | `id` | Identifier; also the name of the cache folder |
-| `kind` | `files` (the default), `tap`, `griddap`, `http`, `ncss` or `opendap` |
+| `kind` | `files` (the default), `tap`, `griddap`, `http`, `ncss`, `opendap` or `ecmwf` |
 | `domain` | The field the data belong to: `astronomy`, `geography`, `oceanography`, `meteorology`, `geophysics`, `climate`, `neuroscience`. Applications group data by it. |
 | `title`, `provider` | What the dataset is and who produced it |
 | `credit` | A short attribution, shown on maps |
@@ -44,7 +45,7 @@ A file with a `member` is that member of the zip archive at `url`. The fetcher r
 
 ## 4. Parameters and Profiles
 
-These fields are shared by the parameterised kinds (`tap`, `griddap`, `http`, `ncss`, `opendap`).
+These fields are shared by the parameterised kinds (`tap`, `griddap`, `http`, `ncss`, `opendap`, `ecmwf`).
 
 | Field | Meaning |
 |---|---|
@@ -108,6 +109,8 @@ The resolved instants are recorded in the provenance.
 
 The names come from fetched content. A file name that would leave the dataset's folder, and a URL that is not HTTPS, are refused. A linked request that fails is skipped and the retrieval continues.
 
+A dataset whose files keep one URL while their content changes, such as the latest METARs or the storms of the last week, may have no parameters (`"parameters": {}`) and a single profile. A retrieval is then the same request every time, and is repeated only with `--refresh`, as the recipes' steps for such datasets do.
+
 ## 8. Fields of `ncss` Datasets
 
 | Field | Meaning |
@@ -132,7 +135,26 @@ The parameter `stride` takes every n-th point along the horizontal dimensions (`
 
 **Columns.** With a `column` block (`{lat, lon, depth, time, run}`: the names of the coordinates, `run` optional), the fetcher takes instead the column at the grid point nearest the parameters `lat` and `lon` (longitudes compared on the circle). It takes the depths down to `max_depth`, and the times from `start` to `end` on multiples of `step_hours` since 00:00 UTC; CF time units are read from the DAS. Times are requested in runs of at most four, `workers` requests at a time (default 4), and each variable is written as netCDF with dimensions (time, depth), times in seconds since 1970, and the grid point's coordinates as global attributes.
 
-## 10. Requests on Demand
+## 10. Fields of `ecmwf` Datasets
+
+ECMWF publishes each run of its open forecasts as one GRIB2 file per step, with an index beside it that gives each message's place in the file ([`../acquisition/ecmwf_open.py`](../acquisition/ecmwf_open.py)). A manifest of this kind takes some fields of the latest complete run, reading only their bytes.
+
+| Field | Meaning |
+|---|---|
+| `service`, `mirrors` | The root of the files (`https://data.ecmwf.int/forecasts`), and copies in the same layout, each `{service, dataset}`, `dataset` describing the copy (Amazon S3); the first server that answers serves the run |
+| `source` | `{model, resolution, stream, type}`: `ifs` or `aifs-single`; `0p25`; `oper` or `enfo`; `fc` or `ep` |
+| `cycles` | The hours (UTC) of the runs considered, such as `[0, 12]` |
+| `variables` | The fields: `param` (or a list of alternatives, the first in the index taken, as `["gh", "z"]`), `levtype` (`sfc`, `pl`), `levelist` (hPa), `window` (hours, for a quantity over a period ending at the step, indexed as `96-120`); and, for the product builder, `name`, `level`, `long_name`, `standard_name`, `units`, `cell_methods`, and `derive: "rate"` (a total accumulated from the start of the run, given as mean rates over each interval) |
+| `first_step`, `file_steps` | The first step (default 0); for products filed together, the steps that name their files (the ensemble's probabilities: `[240, 360]`) |
+
+The parameters are:
+- `cycle`, a time. The run taken is the latest at one of the `cycles`, at or before it, whose last file is published; an incomplete run is passed over.
+- `hours` and `step_hours`, which set the steps.
+- `stride`, applied when the product is built, since the files hold the whole grid.
+
+The fetcher merges adjacent messages into byte ranges and asks for them in one request (`multipart/byteranges`), or one at a time where a server answers single ranges only. It checks each message's framing, and writes one file of messages for each file of the run, with the index entries in the provenance. [`../products/ecmwf_fields.py`](../products/ecmwf_fields.py) decodes them with ecCodes into a field product.
+
+## 11. Requests on Demand
 
 A manifest may offer itself for requests made while an application waits:
 
@@ -145,13 +167,14 @@ A manifest may offer itself for requests made while an application waits:
 
 See `data/acquisition/on_demand.py` and [ADR 0023](../../development/decisions/0023-ocean-column-and-data-on-demand.md).
 
-## 11. Usage
+## 12. Usage
 
 ```
 python data/acquisition/fetch.py --list                               # datasets, parameters, profiles
 python data/acquisition/fetch.py gaia-dr3 --profile nearby
 python data/acquisition/fetch.py gaia-dr3 --set limit=50000 --set g_max=9.5
 python data/acquisition/fetch.py gfs --profile glance
+python data/acquisition/fetch.py ecmwf-ifs --profile glance                # ECMWF's open forecast, two days at 2°
 python data/acquisition/fetch.py oisst --set start=2026-01-01 --set end=2026-01-31
 python data/acquisition/fetch.py worldbank-indicators --set indicator=SP.POP.65UP.TO.ZS   # share aged 65 and over
 ```
