@@ -1,0 +1,89 @@
+{
+  "id": "oisst",
+  "kind": "griddap",
+  "domain": "oceanography",
+  "model": "OISST",
+  "title": "NOAA Optimum Interpolation SST v2.1: daily sea-surface temperature, its anomaly, and sea-ice concentration",
+  "provider": "NOAA National Centers for Environmental Information (Huang et al. 2021), preliminary (near-real-time) analyses, served by NOAA CoastWatch ERDDAP (ncdcOisst21NrtAgg_LonPM180)",
+  "credit": "OISST v2.1, NOAA NCEI",
+  "service": "https://coastwatch.pfeg.noaa.gov/erddap",
+  "dataset": "ncdcOisst21NrtAgg_LonPM180",
+  "variables": "{variables}",
+  "axes": [
+    {
+      "name": "time",
+      "from": "{start}",
+      "to": "{end}",
+      "step_hours": 24
+    },
+    {
+      "name": "zlev",
+      "from": 0,
+      "to": 0
+    },
+    {
+      "name": "latitude",
+      "from": -89.875,
+      "to": 89.875,
+      "stride": "{stride}"
+    },
+    {
+      "name": "longitude",
+      "from": -179.875,
+      "to": 179.875,
+      "stride": "{stride}"
+    }
+  ],
+  "file": "data.nc",
+  "parameters": {
+    "start": {
+      "type": "time",
+      "default": "last",
+      "description": "First day (UTC); 'last' is the latest analysis, about two days old"
+    },
+    "end": {
+      "type": "time",
+      "default": "last",
+      "description": "Last day (UTC)"
+    },
+    "stride": {
+      "type": "int",
+      "default": 2,
+      "min": 1,
+      "max": 8,
+      "description": "Take every n-th point of the 0.25° grid: 2 gives 0.5°"
+    },
+    "variables": {
+      "type": "str",
+      "default": "sst,anom,ice",
+      "description": "Comma-separated: sst, anom (anomaly from 1991–2020), ice (concentration), err"
+    }
+  },
+  "profiles": {
+    "latest": {
+      "description": "The latest day, 0.5° grid (3 MB)",
+      "parameters": {}
+    },
+    "month": {
+      "description": "The latest 30 days, 1° grid (25 MB)",
+      "parameters": {
+        "start": "last-29d",
+        "stride": 4
+      }
+    },
+    "detail": {
+      "description": "The latest day, 0.25° grid (12 MB)",
+      "parameters": {
+        "stride": 1
+      }
+    }
+  },
+  "default_profile": "latest",
+  "format": "netCDF classic; float32; degree_C; ice as a fraction; daily means stamped at 12:00 UTC; latitude ascending, longitude −180° to 180°",
+  "coverage": "Global ocean, 0.25° grid, daily from 2020-05 to about two days ago",
+  "licence": "US Government work, public domain; ERDDAP: \"The data may be used and redistributed for free but is not intended for legal use, since it may contain inaccuracies.\"",
+  "citation": "Huang, B., et al. (2021). Improvements of the Daily Optimum Interpolation Sea Surface Temperature (DOISST) Version 2.1. J. Climate 34, 2923–2939. doi:10.1175/JCLI-D-20-0166.1",
+  "used_by": [
+    "applications/geography/earth-atlas"
+  ]
+}

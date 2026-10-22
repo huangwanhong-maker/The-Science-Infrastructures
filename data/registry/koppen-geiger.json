@@ -1,0 +1,131 @@
+{
+  "id": "koppen-geiger",
+  "domain": "climate",
+  "title": "Köppen–Geiger climate classes, 1901–2099: four past periods, and two future periods under four emission scenarios",
+  "provider": "Beck et al. (2023), Princeton University, KAUST and others; archived on figshare (doi:10.6084/m9.figshare.21789074.v2)",
+  "credit": "Köppen–Geiger classes, Beck et al. 2023, CC BY 4.0",
+  "files": [
+    {
+      "url": "https://ndownloader.figshare.com/files/61012822",
+      "member": "legend.txt",
+      "file": "legend.txt",
+      "size": 2410,
+      "sha256": "2ede2ad270a036cc11c31705a2c1dbf0314a8cf011fc972cd4a9665e3339e5e5"
+    },
+    {
+      "url": "https://ndownloader.figshare.com/files/61012822",
+      "member": "1901_1930/koppen_geiger_0p1.tif",
+      "file": "koppen_geiger_0p1_1901_1930.tif",
+      "period": "1901-1930",
+      "scenario": null,
+      "size": 218718,
+      "sha256": "bb3c8b9bc27a1695620427f11ae586980dd64fc6f05dfe6dd87dd9fceb8d2f7f"
+    },
+    {
+      "url": "https://ndownloader.figshare.com/files/61012822",
+      "member": "1931_1960/koppen_geiger_0p1.tif",
+      "file": "koppen_geiger_0p1_1931_1960.tif",
+      "period": "1931-1960",
+      "scenario": null,
+      "size": 219882,
+      "sha256": "566c38840483ebb2b31d9c8ce56294a328eec78410b39dad528d4b3960e2b201"
+    },
+    {
+      "url": "https://ndownloader.figshare.com/files/61012822",
+      "member": "1961_1990/koppen_geiger_0p1.tif",
+      "file": "koppen_geiger_0p1_1961_1990.tif",
+      "period": "1961-1990",
+      "scenario": null,
+      "size": 217868,
+      "sha256": "0b4a5e41879efccf2e14e53c09f046d6ea048aa03ae232657143e8d1884db6b8"
+    },
+    {
+      "url": "https://ndownloader.figshare.com/files/61012822",
+      "member": "1991_2020/koppen_geiger_0p1.tif",
+      "file": "koppen_geiger_0p1_1991_2020.tif",
+      "period": "1991-2020",
+      "scenario": null,
+      "size": 216858,
+      "sha256": "59b749fe6711e72c720ff903044eb0efb4373524ee434740ed7384a0284c155b"
+    },
+    {
+      "url": "https://ndownloader.figshare.com/files/61012822",
+      "member": "2041_2070/ssp126/koppen_geiger_0p1.tif",
+      "file": "koppen_geiger_0p1_2041_2070_ssp126.tif",
+      "period": "2041-2070",
+      "scenario": "ssp126",
+      "size": 211610,
+      "sha256": "c2dd94f84b71dafe3fd85eeb8143f17fd0c0ab5ea742a04ab4ac8343d1e9a4ad"
+    },
+    {
+      "url": "https://ndownloader.figshare.com/files/61012822",
+      "member": "2041_2070/ssp245/koppen_geiger_0p1.tif",
+      "file": "koppen_geiger_0p1_2041_2070_ssp245.tif",
+      "period": "2041-2070",
+      "scenario": "ssp245",
+      "size": 211964,
+      "sha256": "0b0d85298d5621173847d41a9271d76e6c7d28e823ff7fb1ee48cb787734c112"
+    },
+    {
+      "url": "https://ndownloader.figshare.com/files/61012822",
+      "member": "2041_2070/ssp370/koppen_geiger_0p1.tif",
+      "file": "koppen_geiger_0p1_2041_2070_ssp370.tif",
+      "period": "2041-2070",
+      "scenario": "ssp370",
+      "size": 211755,
+      "sha256": "edff74a37fbd180f0160b062d782b2e499d27cca633eb1be1fa7d89d9cd1d1c2"
+    },
+    {
+      "url": "https://ndownloader.figshare.com/files/61012822",
+      "member": "2041_2070/ssp585/koppen_geiger_0p1.tif",
+      "file": "koppen_geiger_0p1_2041_2070_ssp585.tif",
+      "period": "2041-2070",
+      "scenario": "ssp585",
+      "size": 211486,
+      "sha256": "676ce7f72433039cdcaa4fe49a1cf4eb9e3e92f0fb997b9d764707fc789b4ff2"
+    },
+    {
+      "url": "https://ndownloader.figshare.com/files/61012822",
+      "member": "2071_2099/ssp126/koppen_geiger_0p1.tif",
+      "file": "koppen_geiger_0p1_2071_2099_ssp126.tif",
+      "period": "2071-2099",
+      "scenario": "ssp126",
+      "size": 211970,
+      "sha256": "3a947bfa10bfef90621ad955218bc98acaa49a2102242db459d7bb47a7399631"
+    },
+    {
+      "url": "https://ndownloader.figshare.com/files/61012822",
+      "member": "2071_2099/ssp245/koppen_geiger_0p1.tif",
+      "file": "koppen_geiger_0p1_2071_2099_ssp245.tif",
+      "period": "2071-2099",
+      "scenario": "ssp245",
+      "size": 211415,
+      "sha256": "004a4e9e54c75a17810ea7c12b4979da854fa8f7d04d7fdefd9fbd80b059203e"
+    },
+    {
+      "url": "https://ndownloader.figshare.com/files/61012822",
+      "member": "2071_2099/ssp370/koppen_geiger_0p1.tif",
+      "file": "koppen_geiger_0p1_2071_2099_ssp370.tif",
+      "period": "2071-2099",
+      "scenario": "ssp370",
+      "size": 211501,
+      "sha256": "e7665b6cb96fd2bfec73c2df52874808eb0c270ffd4fe2b8d391af7103af2941"
+    },
+    {
+      "url": "https://ndownloader.figshare.com/files/61012822",
+      "member": "2071_2099/ssp585/koppen_geiger_0p1.tif",
+      "file": "koppen_geiger_0p1_2071_2099_ssp585.tif",
+      "period": "2071-2099",
+      "scenario": "ssp585",
+      "size": 209722,
+      "sha256": "9b5591793695acb077bab4956013a57a74f1933aedd7dac6674ae68577766be4"
+    }
+  ],
+  "format": "GeoTIFF, 8-bit, 3600 × 1800 cells of 0.1°, from 180° W and 90° N (cell corners), WGS 84. Values 1 to 30 are the classes listed in legend.txt (Af to EF); 0 is no land. Past periods from observations; future periods are the mean of constrained CMIP6 projections under SSP1-2.6, SSP2-4.5, SSP3-7.0 and SSP5-8.5. Members of a 131 MB zip archive, read by range requests.",
+  "coverage": "Land surfaces of the whole Earth; periods 1901–1930, 1931–1960, 1961–1990, 1991–2020, 2041–2070 and 2071–2099",
+  "licence": "CC BY 4.0",
+  "citation": "Beck, H. E., T. R. McVicar, N. Vergopolan, A. Berg, N. J. Lutsko, A. Dufour, Z. Zeng, X. Jiang, A. I. J. M. van Dijk and D. G. Miralles (2023), High-resolution (1 km) Köppen-Geiger maps for 1901–2099 based on constrained CMIP6 projections, Scientific Data 10, 724.",
+  "used_by": [
+    "applications/geography/earth-atlas"
+  ]
+}

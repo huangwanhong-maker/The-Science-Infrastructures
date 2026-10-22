@@ -1,3 +1,9 @@
-[submodule "astronomy and geometry"]
-	path = astronomy and geometry
-	url = https://github.com/huangwanhong-maker/Integrative_Astronomy_Geography_Oceanography_Laboratory.git
+[submodule "lib/calx"]
+	path = lib/calx
+	url = https://github.com/huangwanhong-maker/calx.git
+[submodule "lib/morphe"]
+	path = lib/morphe
+	url = https://github.com/huangwanhong-maker/morphe.git
+[submodule "lib/physis"]
+	path = lib/physis
+	url = https://github.com/huangwanhong-maker/physis.git

@@ -1,0 +1,20 @@
+{
+  "id": "hyg-v41",
+  "title": "HYG Stellar Database, version 4.1",
+  "provider": "David Nash (astronexus), compiled from the Hipparcos, Yale Bright Star and Gliese catalogues",
+  "files": [
+    {
+      "url": "https://raw.githubusercontent.com/astronexus/HYG-Database/main/hyg/CURRENT/hygdata_v41.csv",
+      "file": "hygdata_v41.csv",
+      "size": 33932548,
+      "sha256": "d9f69fd86bbf90a4e4d52b4c5c53eacfa6dfc0bfdef85bfd94f095e0bebe4ebd"
+    }
+  ],
+  "format": "CSV; positions for epoch and equinox J2000; distances in parsecs; x, y, z in parsecs (equatorial)",
+  "coverage": "About 120 000 stars, essentially complete to visual magnitude 7.5",
+  "licence": "CC BY-SA 4.0",
+  "citation": "HYG Stellar Database v4.1, https://github.com/astronexus/HYG-Database",
+  "used_by": [
+    "applications/astronomy/celestial-atlas"
+  ]
+}

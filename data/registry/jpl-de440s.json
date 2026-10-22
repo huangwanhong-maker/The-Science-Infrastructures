@@ -1,0 +1,20 @@
+{
+  "id": "jpl-de440s",
+  "title": "JPL Planetary and Lunar Ephemeris DE440, short-span kernel",
+  "provider": "NASA Jet Propulsion Laboratory, distributed by NAIF",
+  "files": [
+    {
+      "url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp",
+      "file": "de440s.bsp",
+      "size": 32726016,
+      "sha256": "c1c7feeab882263fc493a9d5a5b2ddd71b54826cdf65d8d17a76126b260a49f2"
+    }
+  ],
+  "format": "SPICE SPK kernel (DAF, little-endian), type-2 Chebyshev segments; km and s past J2000 TDB; ICRF",
+  "coverage": "1849-12-26 to 2150-01-22 (TDB)",
+  "licence": "Freely distributed by NAIF; cite the reference below",
+  "citation": "Park, R. S., Folkner, W. M., Williams, J. G., & Boggs, D. H. (2021). The JPL Planetary and Lunar Ephemerides DE440 and DE441. The Astronomical Journal, 161(3), 105.",
+  "used_by": [
+    "applications/astronomy/celestial-atlas"
+  ]
+}

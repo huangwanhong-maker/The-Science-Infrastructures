@@ -1,3 +1,33 @@
+# Build outputs
+build/
+out/
+cmake-build-*/
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dll
+*.dylib
+*.exe
+*.pdb
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+dist/
+.pytest_cache/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Data caches: datasets are fetched through data/ and never committed
+data/cache/
+.cache/
+
 # Editors and operating systems
 .vs/
 .vscode/
@@ -6,9 +36,3 @@
 .DS_Store
 Thumbs.db
 desktop.ini
-
-# Python and build outputs, should any appear at this level
-__pycache__/
-*.py[cod]
-build/
-dist/

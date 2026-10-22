@@ -155,6 +155,6 @@ Laboratories may add conventions particular to their domains, such as the orient
 
 As of 2026-10-22:
 
-- This repository is founded, with the first laboratory as a submodule ([ADR 0001](development/decisions/0001-an-umbrella-of-laboratories.md)).
+- This repository is founded, with the first laboratory as a submodule ([ADR 0001](development/decisions/0025-an-umbrella-of-laboratories.md)).
 - The first laboratory has decision records 0001–0024. It has two web applications, the Celestial Atlas (66 checks) and the Earth Atlas (151 checks), and a general data library. It has no C++ code yet.
 - The shared libraries are scaffolded, inside the first laboratory.

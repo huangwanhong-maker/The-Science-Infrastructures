@@ -1,0 +1,23 @@
+{
+  "id": "crust1",
+  "domain": "geophysics",
+  "title": "CRUST1.0: the Earth's crust on a 1-degree grid, its water, ice, three layers of sediment and three of crystalline crust down to the Moho, with their P and S velocities and densities",
+  "provider": "G. Laske, G. Masters, Z. Ma and M. Pasyanos, Institute of Geophysics and Planetary Physics, University of California, San Diego",
+  "credit": "Crust: CRUST1.0 (Laske et al. 2013)",
+  "files": [
+    {
+      "url": "https://igppweb.ucsd.edu/~gabi/crust1/crust1.0.tar.gz",
+      "file": "crust1.0.tar.gz",
+      "size": 1155392,
+      "sha256": "0b41b46fc3e1a76debbbcb66ab407febaeee4dc3033db7a0a24d2bb7c7adfe3e"
+    }
+  ],
+  "format": "A tar.gz of four text files of 64,800 lines (1-degree cells from 89.5 N, 179.5 W, longitude the inner loop), nine values a line for the nine layers (water, ice, upper, middle and lower sediments, upper, middle and lower crystalline crust, and the mantle below the Moho): crust1.bnds, the top of each layer (km above sea level, negative below); crust1.vp and crust1.vs, velocities (km/s); crust1.rho, density (g/cm3).",
+  "coverage": "Global, 1-degree cells, averaged over each cell",
+  "licence": "No licence is stated; the model's page asks that it be cited (https://igppweb.ucsd.edu/~gabi/crust1.html). Fetched into the cache, not redistributed.",
+  "citation": "Laske, G., Masters, G., Ma, Z. and Pasyanos, M. (2013), Update on CRUST1.0: a 1-degree global model of Earth's crust, Geophys. Res. Abstracts 15, EGU2013-2658.",
+  "used_by": [
+    "data/products/crust_model.py",
+    "applications/geography/earth-atlas"
+  ]
+}

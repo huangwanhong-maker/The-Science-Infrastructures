@@ -1,0 +1,27 @@
+{
+  "id": "gcmt",
+  "kind": "http",
+  "domain": "geophysics",
+  "title": "Global CMT: the moment tensors of the world's earthquakes of magnitude about 5 and above since 1976, final solutions and this year's quick ones",
+  "provider": "The Global Centroid-Moment-Tensor Project (G. Ekström, M. Nettles), Lamont-Doherty Earth Observatory",
+  "credit": "Mechanisms: Global CMT Project",
+  "requests": [
+    {"url": "https://www.ldeo.columbia.edu/~gcmt/projects/CMT/catalog/jan76_{through}.ndk.gz", "file": "final.ndk.gz"},
+    {"url": "https://www.ldeo.columbia.edu/~gcmt/projects/CMT/catalog/NEW_QUICK/qcmt.ndk", "file": "quick.ndk"}
+  ],
+  "parameters": {
+    "through": {"type": "str", "default": "dec25", "pattern": "[a-z]{3}[0-9]{2}", "description": "the last month of the full catalogue file (jan76_<through>.ndk.gz), which the project extends about once a year"}
+  },
+  "profiles": {
+    "catalogue": {"description": "the full catalogue to December 2025 and the quick solutions of 2026", "parameters": {}}
+  },
+  "default_profile": "catalogue",
+  "format": "NDK: five 80-character lines per earthquake (https://www.ldeo.columbia.edu/~gcmt/projects/CMT/catalog/allorder.ndk_explained): the reference hypocentre, date, time and region; the event's name and the data used; the centroid's time shift, latitude, longitude and depth with their errors; an exponent and the six moment-tensor elements Mrr, Mtt, Mpp, Mrt, Mrp, Mtp in dyne-cm (r up, t south, p east) with their errors; the principal axes (eigenvalue, plunge, azimuth of T, N, P), the scalar moment, and the strike, dip and rake of both nodal planes.",
+  "coverage": "Global, 1976 to the present: about 60,000 earthquakes of moment magnitude about 5 and above",
+  "licence": "No licence is stated. The project asks that the catalogue be cited as Dziewonski, Chou and Woodhouse (1981) and Ekström, Nettles and Dziewonski (2012) (https://www.globalcmt.org/CMTcite.html).",
+  "citation": "Dziewonski, A. M., Chou, T.-A. and Woodhouse, J. H. (1981), Determination of earthquake source parameters from waveform data for studies of global and regional seismicity, J. Geophys. Res. 86, 2825-2852; Ekström, G., Nettles, M. and Dziewonski, A. M. (2012), The global CMT project 2004-2010: centroid-moment tensors for 13,017 earthquakes, Phys. Earth Planet. Inter. 200-201, 1-9.",
+  "used_by": [
+    "data/products/mechanism_catalog.py",
+    "applications/geography/earth-atlas"
+  ]
+}

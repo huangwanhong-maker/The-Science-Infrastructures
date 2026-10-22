@@ -1,0 +1,26 @@
+{
+  "id": "d3-celestial-constellations",
+  "title": "Constellation lines and names from d3-celestial",
+  "provider": "Olaf Frohn, d3-celestial",
+  "files": [
+    {
+      "url": "https://raw.githubusercontent.com/ofrohn/d3-celestial/master/data/constellations.lines.json",
+      "file": "constellations.lines.json",
+      "size": 27136,
+      "sha256": "294f66bef5d5cf50b1e17f16d2efa1d97a15131612c68dd935adef6e7373e13c"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/ofrohn/d3-celestial/master/data/constellations.json",
+      "file": "constellations.json",
+      "size": 50581,
+      "sha256": "ab4ae692027cbc042c0d6791a84456a65eb7c55656107fd00c58ff6e55d4d8b2"
+    }
+  ],
+  "format": "GeoJSON; longitude is right ascension in degrees (-180 to 180), latitude is declination; J2000",
+  "coverage": "The 88 IAU constellations, with names in many languages including Chinese and Japanese",
+  "licence": "BSD 3-Clause (Copyright (c) 2015, Olaf Frohn)",
+  "citation": "d3-celestial, https://github.com/ofrohn/d3-celestial",
+  "used_by": [
+    "applications/astronomy/celestial-atlas"
+  ]
+}

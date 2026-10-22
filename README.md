@@ -91,7 +91,7 @@ git clone --recurse-submodules https://github.com/huangwanhong-maker/The-Science
 
 **Founded on 2026-10-22.**
 
-- **This repository** holds the first laboratory as a submodule, and records the founding decision ([ADR 0001](development/decisions/0001-an-umbrella-of-laboratories.md)).
+- **This repository** holds the first laboratory as a submodule, and records the founding decision ([ADR 0001](development/decisions/0025-an-umbrella-of-laboratories.md)).
 - **The first laboratory** has two applications:
   - the Celestial Atlas, which shows the Sun, the planets, the stars and the galaxies at any instant from 1849 to 2150;
   - the Earth Atlas, which shows the atmosphere, the ocean, the land, its people and the solid Earth on one globe, with forecasts from an AI model the laboratory runs itself.

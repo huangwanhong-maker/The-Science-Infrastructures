@@ -1,0 +1,40 @@
+{
+  "id": "tully-2mass-groups",
+  "kind": "tap",
+  "title": "Galaxy groups of the 2MASS Redshift Survey (Tully 2015): galaxies with group membership",
+  "provider": "Tully (2015), from the 2MASS Redshift Survey of Huchra et al. (2012); served by CDS VizieR (J/AJ/149/171)",
+  "service": "https://tapvizier.cds.unistra.fr/TAPVizieR/tap",
+  "query": [
+    "SELECT TOP {limit} \"PGC\", \"_RA.icrs\", \"_DE.icrs\", \"SGLON\", \"SGLAT\", \"SGX\", \"SGY\", \"SGZ\", \"Dist\",",
+    "  \"MType\", \"Kmag\", \"logLKi\", \"Vcmba\", \"Nest\", \"Nmb\", \"PGC1\", \"GSGLON\", \"GSGLAT\",",
+    "  \"logLK\", \"Mlum\", \"Mvir\", \"sigV\", \"R2t\"",
+    "FROM \"J/AJ/149/171/table5\"",
+    "WHERE \"Dist\" <= {dist_max} AND \"Kmag\" <= {k_max}",
+    "ORDER BY \"Kmag\""
+  ],
+  "file": "result.csv",
+  "parameters": {
+    "limit": {
+      "type": "int", "default": 50000, "min": 1, "max": 50000,
+      "description": "Maximum number of galaxies; the brightest in Ks are taken first"
+    },
+    "dist_max": {
+      "type": "float", "default": 240.0, "min": 1.0, "max": 240.0,
+      "description": "Farthest distance, h^-1 Mpc (distances follow velocities with H0 = 100 h)"
+    },
+    "k_max": {
+      "type": "float", "default": 11.75, "min": 4.0, "max": 11.75,
+      "description": "Faintest 2MASS Ks magnitude (the survey limit is 11.75)"
+    }
+  },
+  "profiles": {
+    "all": { "description": "All 43 038 galaxies of the survey, in 25 475 groups", "parameters": {} },
+    "near": { "description": "Galaxies within 100 h^-1 Mpc", "parameters": { "dist_max": 100.0 } }
+  },
+  "default_profile": "all",
+  "format": "CSV; SGX, SGY, SGZ and Dist in h^-1 Mpc; Vcmba in km/s; Mlum and Mvir in 10^12 solar masses",
+  "coverage": "43 038 galaxies brighter than Ks = 11.75 over the whole sky except near the Galactic plane",
+  "licence": "Published catalogue (AJ 149, 171); cite the references; VizieR terms of use",
+  "citation": "Tully, R. B. (2015). Galaxy Groups: A 2MASS Catalog. AJ 149, 171. Huchra, J. P., et al. (2012). The 2MASS Redshift Survey. ApJS 199, 26.",
+  "used_by": ["applications/astronomy/celestial-atlas"]
+}

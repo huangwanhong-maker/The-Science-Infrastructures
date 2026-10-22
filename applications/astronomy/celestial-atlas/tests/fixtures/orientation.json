@@ -1,0 +1,406 @@
+{
+ "source": "JPL Horizons API: observer sub-longitude and sub-latitude (quantity 14) of each body, seen from the Earth's centre; planetodetic; Moon in MOON_ME.",
+ "retrieved_at": "2026-10-22",
+ "entries": [
+  {
+   "body": "sun",
+   "jd_tt": 2451545.0,
+   "lon_deg": 1.442974,
+   "lat_deg": -3.013704,
+   "west_positive": false,
+   "frame": "IAU_SUN"
+  },
+  {
+   "body": "sun",
+   "jd_tt": 2455000.25,
+   "lon_deg": 117.045932,
+   "lat_deg": 1.352826,
+   "west_positive": false,
+   "frame": "IAU_SUN"
+  },
+  {
+   "body": "sun",
+   "jd_tt": 2457388.5,
+   "lon_deg": 274.290827,
+   "lat_deg": -2.944744,
+   "west_positive": false,
+   "frame": "IAU_SUN"
+  },
+  {
+   "body": "sun",
+   "jd_tt": 2461335.5,
+   "lon_deg": 17.335044,
+   "lat_deg": 5.340725,
+   "west_positive": false,
+   "frame": "IAU_SUN"
+  },
+  {
+   "body": "sun",
+   "jd_tt": 2465000.75,
+   "lon_deg": 240.608013,
+   "lat_deg": 4.135445,
+   "west_positive": false,
+   "frame": "IAU_SUN"
+  },
+  {
+   "body": "mercury",
+   "jd_tt": 2451545.0,
+   "lon_deg": 247.690488,
+   "lat_deg": -3.868291,
+   "west_positive": true,
+   "frame": "IAU_MERCURY"
+  },
+  {
+   "body": "mercury",
+   "jd_tt": 2455000.25,
+   "lon_deg": 66.204989,
+   "lat_deg": 4.885374,
+   "west_positive": true,
+   "frame": "IAU_MERCURY"
+  },
+  {
+   "body": "mercury",
+   "jd_tt": 2457388.5,
+   "lon_deg": 90.894634,
+   "lat_deg": -5.892291,
+   "west_positive": true,
+   "frame": "IAU_MERCURY"
+  },
+  {
+   "body": "mercury",
+   "jd_tt": 2461335.5,
+   "lon_deg": 267.905936,
+   "lat_deg": 2.874566,
+   "west_positive": true,
+   "frame": "IAU_MERCURY"
+  },
+  {
+   "body": "mercury",
+   "jd_tt": 2465000.75,
+   "lon_deg": 89.44422,
+   "lat_deg": 0.610674,
+   "west_positive": true,
+   "frame": "IAU_MERCURY"
+  },
+  {
+   "body": "venus",
+   "jd_tt": 2451545.0,
+   "lon_deg": 258.808156,
+   "lat_deg": -1.008689,
+   "west_positive": false,
+   "frame": "IAU_VENUS"
+  },
+  {
+   "body": "venus",
+   "jd_tt": 2455000.25,
+   "lon_deg": 136.941307,
+   "lat_deg": 1.49983,
+   "west_positive": false,
+   "frame": "IAU_VENUS"
+  },
+  {
+   "body": "venus",
+   "jd_tt": 2457388.5,
+   "lon_deg": 275.452061,
+   "lat_deg": -0.940187,
+   "west_positive": false,
+   "frame": "IAU_VENUS"
+  },
+  {
+   "body": "venus",
+   "jd_tt": 2461335.5,
+   "lon_deg": 332.297282,
+   "lat_deg": 8.086461,
+   "west_positive": false,
+   "frame": "IAU_VENUS"
+  },
+  {
+   "body": "venus",
+   "jd_tt": 2465000.75,
+   "lon_deg": 338.394112,
+   "lat_deg": -0.513538,
+   "west_positive": false,
+   "frame": "IAU_VENUS"
+  },
+  {
+   "body": "moon",
+   "jd_tt": 2451545.0,
+   "lon_deg": 5.026658,
+   "lat_deg": -6.720906,
+   "west_positive": false,
+   "frame": "MOON_ME"
+  },
+  {
+   "body": "moon",
+   "jd_tt": 2455000.25,
+   "lon_deg": 352.403637,
+   "lat_deg": -6.583635,
+   "west_positive": false,
+   "frame": "MOON_ME"
+  },
+  {
+   "body": "moon",
+   "jd_tt": 2457388.5,
+   "lon_deg": 2.094865,
+   "lat_deg": -0.204246,
+   "west_positive": false,
+   "frame": "MOON_ME"
+  },
+  {
+   "body": "moon",
+   "jd_tt": 2461335.5,
+   "lon_deg": 354.172861,
+   "lat_deg": -0.928969,
+   "west_positive": false,
+   "frame": "MOON_ME"
+  },
+  {
+   "body": "moon",
+   "jd_tt": 2465000.75,
+   "lon_deg": 355.294115,
+   "lat_deg": 6.438162,
+   "west_positive": false,
+   "frame": "MOON_ME"
+  },
+  {
+   "body": "mars",
+   "jd_tt": 2451545.0,
+   "lon_deg": 69.283449,
+   "lat_deg": -23.259153,
+   "west_positive": true,
+   "frame": "IAU_MARS"
+  },
+  {
+   "body": "mars",
+   "jd_tt": 2455000.25,
+   "lon_deg": 289.048247,
+   "lat_deg": -16.411441,
+   "west_positive": true,
+   "frame": "IAU_MARS"
+  },
+  {
+   "body": "mars",
+   "jd_tt": 2457388.5,
+   "lon_deg": 61.555274,
+   "lat_deg": 20.261559,
+   "west_positive": true,
+   "frame": "IAU_MARS"
+  },
+  {
+   "body": "mars",
+   "jd_tt": 2461335.5,
+   "lon_deg": 193.239429,
+   "lat_deg": 19.087923,
+   "west_positive": true,
+   "frame": "IAU_MARS"
+  },
+  {
+   "body": "mars",
+   "jd_tt": 2465000.75,
+   "lon_deg": 298.025657,
+   "lat_deg": 21.417812,
+   "west_positive": true,
+   "frame": "IAU_MARS"
+  },
+  {
+   "body": "jupiter",
+   "jd_tt": 2451545.0,
+   "lon_deg": 54.748526,
+   "lat_deg": 3.308071,
+   "west_positive": true,
+   "frame": "IAU_JUPITER"
+  },
+  {
+   "body": "jupiter",
+   "jd_tt": 2455000.25,
+   "lon_deg": 233.339723,
+   "lat_deg": 0.516714,
+   "west_positive": true,
+   "frame": "IAU_JUPITER"
+  },
+  {
+   "body": "jupiter",
+   "jd_tt": 2457388.5,
+   "lon_deg": 82.043014,
+   "lat_deg": -2.077287,
+   "west_positive": true,
+   "frame": "IAU_JUPITER"
+  },
+  {
+   "body": "jupiter",
+   "jd_tt": 2461335.5,
+   "lon_deg": 274.892116,
+   "lat_deg": -0.085458,
+   "west_positive": true,
+   "frame": "IAU_JUPITER"
+  },
+  {
+   "body": "jupiter",
+   "jd_tt": 2465000.75,
+   "lon_deg": 31.18502,
+   "lat_deg": 3.110991,
+   "west_positive": true,
+   "frame": "IAU_JUPITER"
+  },
+  {
+   "body": "saturn",
+   "jd_tt": 2451545.0,
+   "lon_deg": 270.265364,
+   "lat_deg": -23.025475,
+   "west_positive": true,
+   "frame": "IAU_SATURN"
+  },
+  {
+   "body": "saturn",
+   "jd_tt": 2455000.25,
+   "lon_deg": 112.283198,
+   "lat_deg": -4.506756,
+   "west_positive": true,
+   "frame": "IAU_SATURN"
+  },
+  {
+   "body": "saturn",
+   "jd_tt": 2457388.5,
+   "lon_deg": 321.825379,
+   "lat_deg": 31.031107,
+   "west_positive": true,
+   "frame": "IAU_SATURN"
+  },
+  {
+   "body": "saturn",
+   "jd_tt": 2461335.5,
+   "lon_deg": 17.838563,
+   "lat_deg": -8.412671,
+   "west_positive": true,
+   "frame": "IAU_SATURN"
+  },
+  {
+   "body": "saturn",
+   "jd_tt": 2465000.75,
+   "lon_deg": 190.429902,
+   "lat_deg": -11.915089,
+   "west_positive": true,
+   "frame": "IAU_SATURN"
+  },
+  {
+   "body": "uranus",
+   "jd_tt": 2451545.0,
+   "lon_deg": 265.413928,
+   "lat_deg": -33.600916,
+   "west_positive": false,
+   "frame": "IAU_URANUS"
+  },
+  {
+   "body": "uranus",
+   "jd_tt": 2455000.25,
+   "lon_deg": 306.871132,
+   "lat_deg": 9.197875,
+   "west_positive": false,
+   "frame": "IAU_URANUS"
+  },
+  {
+   "body": "uranus",
+   "jd_tt": 2457388.5,
+   "lon_deg": 206.205318,
+   "lat_deg": 29.642152,
+   "west_positive": false,
+   "frame": "IAU_URANUS"
+  },
+  {
+   "body": "uranus",
+   "jd_tt": 2461335.5,
+   "lon_deg": 114.763549,
+   "lat_deg": 75.634078,
+   "west_positive": false,
+   "frame": "IAU_URANUS"
+  },
+  {
+   "body": "uranus",
+   "jd_tt": 2465000.75,
+   "lon_deg": 49.674964,
+   "lat_deg": 58.82132,
+   "west_positive": false,
+   "frame": "IAU_URANUS"
+  },
+  {
+   "body": "neptune",
+   "jd_tt": 2451545.0,
+   "lon_deg": 56.523656,
+   "lat_deg": -28.401363,
+   "west_positive": true,
+   "frame": "IAU_NEPTUNE"
+  },
+  {
+   "body": "neptune",
+   "jd_tt": 2455000.25,
+   "lon_deg": 328.42882,
+   "lat_deg": -28.667581,
+   "west_positive": true,
+   "frame": "IAU_NEPTUNE"
+  },
+  {
+   "body": "neptune",
+   "jd_tt": 2457388.5,
+   "lon_deg": 290.168806,
+   "lat_deg": -26.934087,
+   "west_positive": true,
+   "frame": "IAU_NEPTUNE"
+  },
+  {
+   "body": "neptune",
+   "jd_tt": 2461335.5,
+   "lon_deg": 267.944405,
+   "lat_deg": -19.755811,
+   "west_positive": true,
+   "frame": "IAU_NEPTUNE"
+  },
+  {
+   "body": "neptune",
+   "jd_tt": 2465000.75,
+   "lon_deg": 59.565656,
+   "lat_deg": -10.240054,
+   "west_positive": true,
+   "frame": "IAU_NEPTUNE"
+  },
+  {
+   "body": "pluto",
+   "jd_tt": 2451545.0,
+   "lon_deg": 231.454892,
+   "lat_deg": 26.286729,
+   "west_positive": false,
+   "frame": "IAU_PLUTO"
+  },
+  {
+   "body": "pluto",
+   "jd_tt": 2455000.25,
+   "lon_deg": 229.421857,
+   "lat_deg": 43.105599,
+   "west_positive": false,
+   "frame": "IAU_PLUTO"
+  },
+  {
+   "body": "pluto",
+   "jd_tt": 2457388.5,
+   "lon_deg": 247.579353,
+   "lat_deg": 51.969512,
+   "west_positive": false,
+   "frame": "IAU_PLUTO"
+  },
+  {
+   "body": "pluto",
+   "jd_tt": 2461335.5,
+   "lon_deg": 234.145993,
+   "lat_deg": 59.360028,
+   "west_positive": false,
+   "frame": "IAU_PLUTO"
+  },
+  {
+   "body": "pluto",
+   "jd_tt": 2465000.75,
+   "lon_deg": 260.45607,
+   "lat_deg": 58.456932,
+   "west_positive": false,
+   "frame": "IAU_PLUTO"
+  }
+ ]
+}

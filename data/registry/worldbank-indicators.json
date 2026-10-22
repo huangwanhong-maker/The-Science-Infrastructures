@@ -1,0 +1,115 @@
+{
+  "id": "worldbank-indicators",
+  "kind": "http",
+  "domain": "geography",
+  "title": "World Development Indicators: values for each economy and year",
+  "provider": "The World Bank, Indicators API v2",
+  "credit": "World Bank WDI, CC BY 4.0",
+  "requests": [
+    {
+      "url": "https://api.worldbank.org/v2/country/all/indicator/{indicator}?format=json&date={first_year}:{last_year}&per_page=20000",
+      "file": "values.json"
+    },
+    {
+      "url": "https://api.worldbank.org/v2/country?format=json&per_page=400",
+      "file": "economies.json"
+    }
+  ],
+  "parameters": {
+    "indicator": {
+      "type": "str",
+      "default": "SP.POP.TOTL",
+      "description": "Indicator code, as listed at data.worldbank.org/indicator"
+    },
+    "first_year": {
+      "type": "int",
+      "default": 2000,
+      "min": 1960,
+      "max": 2100,
+      "description": "First year"
+    },
+    "last_year": {
+      "type": "int",
+      "default": 2024,
+      "min": 1960,
+      "max": 2100,
+      "description": "Last year"
+    }
+  },
+  "profiles": {
+    "population": {
+      "description": "Population, total (SP.POP.TOTL)",
+      "parameters": {
+        "indicator": "SP.POP.TOTL"
+      }
+    },
+    "population-density": {
+      "description": "People per km² of land area (EN.POP.DNST)",
+      "parameters": {
+        "indicator": "EN.POP.DNST"
+      }
+    },
+    "gdp-per-capita": {
+      "description": "GDP per capita, current US$ (NY.GDP.PCAP.CD)",
+      "parameters": {
+        "indicator": "NY.GDP.PCAP.CD"
+      }
+    },
+    "life-expectancy": {
+      "description": "Life expectancy at birth, years (SP.DYN.LE00.IN)",
+      "parameters": {
+        "indicator": "SP.DYN.LE00.IN"
+      }
+    },
+    "fertility": {
+      "description": "Births per woman (SP.DYN.TFRT.IN)",
+      "parameters": {
+        "indicator": "SP.DYN.TFRT.IN"
+      }
+    },
+    "urban-share": {
+      "description": "Urban population, % of total (SP.URB.TOTL.IN.ZS)",
+      "parameters": {
+        "indicator": "SP.URB.TOTL.IN.ZS"
+      }
+    },
+    "forest-share": {
+      "description": "Forest area, % of land area (AG.LND.FRST.ZS)",
+      "parameters": {
+        "indicator": "AG.LND.FRST.ZS"
+      }
+    },
+    "electricity-access": {
+      "description": "Access to electricity, % of population (EG.ELC.ACCS.ZS)",
+      "parameters": {
+        "indicator": "EG.ELC.ACCS.ZS"
+      }
+    },
+    "co2-per-capita": {
+      "description": "CO₂ emissions excluding land use, t per person (EN.GHG.CO2.PC.CE.AR5)",
+      "parameters": {
+        "indicator": "EN.GHG.CO2.PC.CE.AR5"
+      }
+    },
+    "ghg-per-capita": {
+      "description": "All greenhouse gases excluding land use, t CO₂e per person (EN.GHG.ALL.PC.CE.AR5)",
+      "parameters": {
+        "indicator": "EN.GHG.ALL.PC.CE.AR5"
+      }
+    },
+    "gini": {
+      "description": "Gini index of income inequality (SI.POV.GINI); sparse",
+      "parameters": {
+        "indicator": "SI.POV.GINI"
+      }
+    }
+  },
+  "default_profile": "population",
+  "format": "JSON: [page metadata, rows]; each row gives countryiso3code, date (year) and value. Economies are keyed by the World Bank's three-letter codes, which are ISO 3166-1 alpha-3 except for a few (such as XKX, Kosovo); the list of economies marks regional and income aggregates.",
+  "coverage": "217 economies and 49 aggregates, by year",
+  "licence": "CC BY 4.0 (World Bank terms of use for datasets)",
+  "citation": "World Bank, World Development Indicators, https://data.worldbank.org (retrieved through the Indicators API v2).",
+  "used_by": [
+    "applications/geography/earth-atlas"
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "id": "gibs-static",
+  "kind": "http",
+  "domain": "geography",
+  "title": "The Earth seen from space without clouds, by day (Blue Marble) and by night (Black Marble)",
+  "provider": "NASA Global Imagery Browse Services (GIBS), Earth Science Data and Information System (ESDIS)",
+  "licence": "NASA imagery: no restrictions on use; acknowledge NASA GIBS and the data source (NASA Earthdata use policy)",
+  "used_by": [
+    "applications/geography/earth-atlas"
+  ],
+  "credit": "NASA GIBS, Blue Marble, Black Marble",
+  "requests": [
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&CRS=EPSG:4326&BBOX=-90,-180,90,180&FORMAT=image/jpeg&WIDTH={width}&HEIGHT={height}&LAYERS={layer}",
+      "file": "image.jpg"
+    }
+  ],
+  "parameters": {
+    "layer": {
+      "type": "str",
+      "default": "BlueMarble_NextGeneration",
+      "description": "GIBS layer without time, such as BlueMarble_NextGeneration, BlueMarble_ShadedRelief_Bathymetry or VIIRS_Black_Marble"
+    },
+    "width": {
+      "type": "int",
+      "default": 8192,
+      "min": 512,
+      "max": 16384,
+      "description": "Width of the image in pixels (360°)"
+    },
+    "height": {
+      "type": "int",
+      "default": 4096,
+      "min": 256,
+      "max": 8192,
+      "description": "Height of the image in pixels (180°)"
+    }
+  },
+  "profiles": {
+    "blue-marble": {
+      "description": "Blue Marble Next Generation: the land surface without clouds, with bathymetry, 8192 x 4096",
+      "parameters": {}
+    },
+    "black-marble": {
+      "description": "Black Marble (VIIRS, 2016): the lights of the Earth at night, 8192 x 4096",
+      "parameters": {
+        "layer": "VIIRS_Black_Marble"
+      }
+    }
+  },
+  "default_profile": "blue-marble",
+  "format": "JPEG, equirectangular (EPSG:4326), longitude -180 to 180, latitude 90 to -90",
+  "coverage": "Global; Blue Marble Next Generation (Stöckli et al. 2005), Black Marble 2016 (Román et al. 2018)",
+  "citation": "Stöckli, R., et al. (2005). The Blue Marble Next Generation, NASA Earth Observatory; Román, M. O., et al. (2018). NASA's Black Marble nighttime lights product suite. Remote Sens. Environ. 210, 113-143; imagery through NASA GIBS."
+}

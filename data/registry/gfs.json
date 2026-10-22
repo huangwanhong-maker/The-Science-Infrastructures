@@ -1,0 +1,104 @@
+{
+  "id": "gfs",
+  "kind": "griddap",
+  "domain": "meteorology",
+  "model": "GFS",
+  "title": "Global Forecast System (GFS): near-surface wind, temperature, pressure, precipitation and radiation, analyses and forecasts",
+  "provider": "NOAA National Centers for Environmental Prediction, aggregated as a best time series by PacIOOS ERDDAP (ncep_global)",
+  "credit": "GFS, NOAA NCEP, via PacIOOS",
+  "service": "https://pae-paha.pacioos.hawaii.edu/erddap",
+  "dataset": "ncep_global",
+  "variables": "{variables}",
+  "axes": [
+    {
+      "name": "time",
+      "from": "{start}",
+      "to": "{end}",
+      "step_hours": "{step_hours}"
+    },
+    {
+      "name": "latitude",
+      "from": 90,
+      "to": -90,
+      "stride": "{stride}"
+    },
+    {
+      "name": "longitude",
+      "from": 0,
+      "to": 359.5,
+      "stride": "{stride}"
+    }
+  ],
+  "file": "data.nc",
+  "parameters": {
+    "start": {
+      "type": "time",
+      "default": "now-1d",
+      "description": "First time (UTC); the dataset holds past analyses and the latest forecast"
+    },
+    "end": {
+      "type": "time",
+      "default": "now+5d",
+      "description": "Last time (UTC); forecasts reach about seven days ahead"
+    },
+    "step_hours": {
+      "type": "int",
+      "default": 6,
+      "min": 3,
+      "max": 24,
+      "description": "Hours between times: a multiple of 3"
+    },
+    "stride": {
+      "type": "int",
+      "default": 2,
+      "min": 1,
+      "max": 8,
+      "description": "Take every n-th point of the 0.5° grid: 2 gives 1°"
+    },
+    "variables": {
+      "type": "str",
+      "default": "ugrd10m,vgrd10m,tmp2m,prmslmsl,pratesfc,rh2m",
+      "description": "Comma-separated: ugrd10m, vgrd10m (wind at 10 m), tmp2m, tmpsfc, prmslmsl, pratesfc, rh2m, dswrfsfc, dlwrfsfc, uswrfsfc, ulwrfsfc"
+    }
+  },
+  "profiles": {
+    "forecast": {
+      "description": "Yesterday to five days ahead, every 6 h, 1° grid (about 40 MB)",
+      "parameters": {}
+    },
+    "glance": {
+      "description": "From now to two days ahead, every 12 h, 2° grid (about 2 MB)",
+      "parameters": {
+        "start": "now",
+        "end": "now+2d",
+        "step_hours": 12,
+        "stride": 4
+      }
+    },
+    "fine": {
+      "description": "From now to three days ahead, every 3 h, 0.5° grid (about 300 MB)",
+      "parameters": {
+        "start": "now",
+        "end": "now+3d",
+        "step_hours": 3,
+        "stride": 1
+      }
+    },
+    "radiation": {
+      "description": "Surface radiation budget, yesterday to two days ahead, every 3 h, 1° grid",
+      "parameters": {
+        "end": "now+2d",
+        "step_hours": 3,
+        "variables": "dswrfsfc,uswrfsfc,dlwrfsfc,ulwrfsfc,tmpsfc"
+      }
+    }
+  },
+  "default_profile": "forecast",
+  "format": "netCDF classic; float32; latitude descending from 90° to −90°, longitude 0° to 359.5°; SI units (m s-1, K, Pa, kg m-2 s-1, W m-2)",
+  "coverage": "Global, 0.5° grid, every 3 h, from 2022-12 to about seven days ahead",
+  "licence": "US Government work, public domain; ERDDAP: \"The data may be used and redistributed for free but is not intended for legal use, since it may contain inaccuracies.\"",
+  "citation": "NOAA National Centers for Environmental Prediction, Global Forecast System; served by the Pacific Islands Ocean Observing System (PacIOOS).",
+  "used_by": [
+    "applications/geography/earth-atlas"
+  ]
+}

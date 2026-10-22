@@ -1,0 +1,43 @@
+{
+  "id": "hycom-column",
+  "kind": "opendap",
+  "domain": "oceanography",
+  "model": "HYCOM ESPC-D-V02",
+  "title": "The ocean beneath a place: currents and temperature by depth, from the US Navy's global ocean model (HYCOM, ESPC-D-V02, 1/12 degree), analyses and forecast",
+  "provider": "US Navy Fleet Numerical Meteorology and Oceanography Center (ESPC-D-V02, HYCOM ocean component), through HYCOM.org's THREDDS server",
+  "credit": "HYCOM ESPC-D-V02 (US Navy, HYCOM.org)",
+  "service": "https://tds.hycom.org/thredds/dodsC",
+  "datasets": [
+    {"path": "FMRC_ESPC-D-V02_uv3z/FMRC_ESPC-D-V02_uv3z_best.ncd", "variable": "water_u", "file": "water_u.nc"},
+    {"path": "FMRC_ESPC-D-V02_uv3z/FMRC_ESPC-D-V02_uv3z_best.ncd", "variable": "water_v", "file": "water_v.nc"},
+    {"path": "FMRC_ESPC-D-V02_t3z/FMRC_ESPC-D-V02_t3z_best.ncd", "variable": "water_temp", "file": "water_temp.nc"}
+  ],
+  "column": {"lat": "lat", "lon": "lon", "depth": "depth", "time": "time", "run": "time_run"},
+  "workers": 4,
+  "parameters": {
+    "lat": {"type": "float", "default": 20.0, "min": -80.0, "max": 90.0, "description": "latitude of the place (degrees north); the nearest grid point is taken"},
+    "lon": {"type": "float", "default": 130.0, "min": -180.0, "max": 360.0, "description": "longitude of the place (degrees east)"},
+    "start": {"type": "time", "default": "now-2d", "description": "first time (UTC), moved down to a multiple of step_hours"},
+    "end": {"type": "time", "default": "now+4d", "description": "last time (UTC); the forecast reaches about a week ahead"},
+    "step_hours": {"type": "int", "default": 6, "min": 3, "max": 24, "description": "hours between the times taken (the model's step is 3 h)"},
+    "max_depth": {"type": "float", "default": 5000.0, "min": 10.0, "max": 5000.0, "description": "deepest level taken (m); the 40 levels reach 5000 m"}
+  },
+  "profiles": {
+    "kuroshio": {"description": "the Kuroshio south of Japan, as an example", "parameters": {"lat": 32.0, "lon": 135.0}}
+  },
+  "default_profile": "kuroshio",
+  "on_demand": {
+    "parameters": ["lat", "lon"],
+    "builder": "ocean_column",
+    "seconds": 240,
+    "description": "currents and temperature by depth beneath a chosen place, two days back and four ahead"
+  },
+  "format": "One netCDF classic file per variable, dimensions (time, depth): water_u and water_v, eastward and northward sea-water velocity (m s-1); water_temp, sea-water temperature (degC). Coordinates: time and run (the forecast reference time of each time), seconds since 1970-01-01 UTC; depth (m, positive down; 40 levels from 0 to 5000 m). Global attributes give the grid point's latitude and longitude. Below the sea floor values are missing.",
+  "coverage": "Global ocean from 80 S to 90 N on a 1/12 degree grid (0.08 degrees in longitude, 0.04 in latitude), 3-hourly; the best time series runs from about ten days back to seven days ahead",
+  "licence": "Approved for public release; distribution unlimited (DoD Distribution A), provided as is (https://www.hycom.org). HYCOM.org asks for this acknowledgement: funding for the development of HYCOM has been provided by the National Ocean Partnership Program and the Office of Naval Research; data assimilative products using HYCOM are funded by the U.S. Navy; computer time was made available by the DoD High Performance Computing Modernization Program; the output is publicly available at https://hycom.org.",
+  "citation": "Barton, N., Metzger, E. J., Reynolds, C. A., et al. (2021), The Navy's Earth System Prediction Capability: a new global coupled atmosphere-ocean-sea ice prediction system designed for daily to subseasonal forecasting, Earth and Space Science 8, e2020EA001199; data from HYCOM.org (ESPC-D-V02).",
+  "used_by": [
+    "data/products/ocean_column.py",
+    "applications/geography/earth-atlas"
+  ]
+}

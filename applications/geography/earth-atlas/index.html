@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Earth Atlas</title>
+  <meta name="description" content="The Earth's atmosphere, oceans, land and people on one globe: forecasts, analyses, relief, countries and events, each from its own dataset.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23e8c3dc'/%3E%3Cstop offset='1' stop-color='%23b979ab'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M16 4a12 12 0 0 1 0 24a5.5 12 0 0 0 0-24z' fill='%23b979ab' opacity='.55'/%3E%3Ccircle cx='16' cy='16' r='12' fill='none' stroke='url(%23g)' stroke-width='2.2'/%3E%3Cellipse cx='16' cy='16' rx='12' ry='4' fill='none' stroke='url(%23g)' stroke-width='1.4'/%3E%3Ccircle cx='26.5' cy='5.5' r='2.4' fill='%23f6c47e'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" media="print" onload="this.media='all'"
+        href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..600&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"
+      }
+    }
+  </script>
+  <script type="module" src="src/app.js"></script>
+</head>
+<body>
+  <!-- The mark: a globe, half in night, with the Sun beside it. -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="mark-gradient" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#e8c3dc"/>
+        <stop offset="1" stop-color="#b979ab"/>
+      </linearGradient>
+      <symbol id="mark" viewBox="0 0 32 32">
+        <path d="M16 4a12 12 0 0 1 0 24a5.5 12 0 0 0 0-24z" fill="#b979ab" opacity=".55"/>
+        <circle cx="16" cy="16" r="12" fill="none" stroke="url(#mark-gradient)" stroke-width="2"/>
+        <ellipse cx="16" cy="16" rx="12" ry="4" fill="none" stroke="url(#mark-gradient)" stroke-width="1.3"/>
+        <circle cx="26.5" cy="5.5" r="2.3" fill="#f6c47e"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <header class="top">
+    <div class="brand">
+      <svg class="mark" aria-hidden="true"><use href="#mark"/></svg>
+      <span>Earth Atlas</span>
+    </div>
+    <nav class="views" role="tablist" aria-label="Projection">
+      <button type="button" role="tab" data-projection="globe">Globe</button>
+      <button type="button" role="tab" data-projection="equal-earth">Equal Earth</button>
+      <button type="button" role="tab" data-projection="equirectangular">Equirectangular</button>
+    </nav>
+    <button type="button" class="link" id="data-link">Data</button>
+  </header>
+
+  <main>
+    <section id="stage">
+      <canvas id="gl"></canvas>
+      <div id="labels" class="label-layer"></div>
+      <div id="tooltip" hidden></div>
+      <div id="legend"></div>
+      <div id="credits"></div>
+      <div id="toast" role="status" hidden></div>
+      <section id="figure" class="figure" aria-label="The ocean beneath a place" hidden></section>
+      <section id="series" class="figure" aria-label="The daily positions of a GPS station" hidden></section>
+      <section id="section" class="figure" aria-label="A section through the Earth" hidden></section>
+      <div id="loading">
+        <div class="loading-inner">
+          <svg class="mark" aria-hidden="true"><use href="#mark"/></svg>
+          <p id="loading-text">Reading the map and the data…</p>
+          <div class="progress"><span id="loading-bar"></span></div>
+        </div>
+      </div>
+    </section>
+    <aside id="panel">
+      <section id="place" aria-live="polite"></section>
+      <section id="layers"></section>
+    </aside>
+  </main>
+
+  <footer class="timebar">
+    <div class="clock">
+      <div id="time-utc">—</div>
+      <div id="time-note"></div>
+    </div>
+    <div class="transport">
+      <button type="button" id="now" class="now">Now</button>
+      <button type="button" id="back" aria-label="Previous time">
+        <svg viewBox="0 0 24 24"><path d="M11.5 5.5v13L2.5 12zM21.5 5.5v13L12.5 12z"/></svg>
+      </button>
+      <button type="button" id="play" aria-label="Play"></button>
+      <button type="button" id="forward" aria-label="Next time">
+        <svg viewBox="0 0 24 24"><path d="M2.5 5.5v13l9-6.5zM12.5 5.5v13l9-6.5z"/></svg>
+      </button>
+    </div>
+    <canvas id="timeline" aria-label="Time"></canvas>
+  </footer>
+
+  <dialog id="about">
+    <form method="dialog" tabindex="-1" autofocus>
+      <h2>Data and method</h2>
+      <div id="about-body"></div>
+      <button class="link" value="close">Close</button>
+    </form>
+  </dialog>
+</body>
+</html>

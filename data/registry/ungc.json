@@ -1,0 +1,30 @@
+{
+  "id": "ungc",
+  "kind": "tap",
+  "title": "Updated Nearby Galaxy Catalog: galaxies of the Local Volume, with tidal indices",
+  "provider": "Karachentsev, Makarov and Kaisina (2013), served by CDS VizieR (J/AJ/145/101)",
+  "service": "https://tapvizier.cds.unistra.fr/TAPVizieR/tap",
+  "query": [
+    "SELECT \"Name\", \"RAJ2000\", \"DEJ2000\", \"Dist\", \"f_Dist\", \"KLum\", \"BMag\", \"TT\", \"Mcl\",",
+    "  \"HRV\", \"Vlg\", \"Ti1\", \"MD\", \"Ti5\", \"Tij\", \"M26\", \"MHI\", \"A26\"",
+    "FROM \"J/AJ/145/101/catalog\"",
+    "WHERE \"Dist\" <= {dist_max}"
+  ],
+  "file": "result.csv",
+  "parameters": {
+    "dist_max": {
+      "type": "float", "default": 30.0, "min": 0.1, "max": 30.0,
+      "description": "Farthest distance from the Milky Way, Mpc (the catalogue reaches 26 Mpc)"
+    }
+  },
+  "profiles": {
+    "all": { "description": "All 869 galaxies of the catalogue", "parameters": {} },
+    "local-group": { "description": "Galaxies within 1.5 Mpc: the Local Group and its surroundings", "parameters": { "dist_max": 1.5 } }
+  },
+  "default_profile": "all",
+  "format": "CSV; RAJ2000 and DEJ2000 in degrees; Dist in Mpc; KLum = log L_K (solar); Ti1 = tidal index; MD = main disturber",
+  "coverage": "869 galaxies, mostly within 11 Mpc",
+  "licence": "Published catalogue (AJ 145, 101); cite the reference; VizieR terms of use",
+  "citation": "Karachentsev, I. D., Makarov, D. I., & Kaisina, E. I. (2013). Updated Nearby Galaxy Catalog. AJ 145, 101.",
+  "used_by": ["applications/astronomy/celestial-atlas"]
+}

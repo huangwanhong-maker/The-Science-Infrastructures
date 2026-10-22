@@ -1,0 +1,71 @@
+{
+  "id": "etopo-2022",
+  "kind": "griddap",
+  "domain": "geography",
+  "model": "ETOPO 2022",
+  "title": "ETOPO 2022 global relief: land topography and ocean bathymetry, ice-sheet surface",
+  "provider": "NOAA National Centers for Environmental Information, served by NOAA CoastWatch ERDDAP (ETOPO_2022_v1_15s)",
+  "credit": "ETOPO 2022, NOAA NCEI",
+  "service": "https://coastwatch.pfeg.noaa.gov/erddap",
+  "dataset": "ETOPO_2022_v1_15s",
+  "variables": "z",
+  "attributes": {
+    "z": {
+      "units": "m",
+      "standard_name": "altitude",
+      "long_name": "Elevation of the surface (ice surface where there is ice) above the EGM2008 geoid"
+    }
+  },
+  "axes": [
+    {
+      "name": "latitude",
+      "from": -89.99791666666667,
+      "to": 89.99791666666667,
+      "stride": "{stride}"
+    },
+    {
+      "name": "longitude",
+      "from": -179.99791666666667,
+      "to": 179.99791666666667,
+      "stride": "{stride}"
+    }
+  ],
+  "file": "data.nc",
+  "parameters": {
+    "stride": {
+      "type": "int",
+      "default": 40,
+      "min": 4,
+      "max": 480,
+      "description": "Take every n-th point of the 15″ grid: 40 gives 10′ (about 18 km), 240 gives 1°"
+    }
+  },
+  "profiles": {
+    "coarse": {
+      "description": "1° grid, 360 × 180 points, 0.3 MB",
+      "parameters": {
+        "stride": 240
+      }
+    },
+    "medium": {
+      "description": "10′ grid, 2160 × 1080 points, 9 MB",
+      "parameters": {
+        "stride": 40
+      }
+    },
+    "fine": {
+      "description": "5′ grid, 4320 × 2160 points, 37 MB",
+      "parameters": {
+        "stride": 20
+      }
+    }
+  },
+  "default_profile": "medium",
+  "format": "netCDF classic; z in metres above the EGM2008 geoid, float32; cell-centred grid, latitude ascending, longitude −180 to 180",
+  "coverage": "Global, 15″ source grid",
+  "licence": "US Government work, public domain; ERDDAP: \"The data may be used and redistributed for free but is not intended for legal use, since it may contain inaccuracies.\"",
+  "citation": "NOAA National Centers for Environmental Information (2022). ETOPO 2022 15 Arc-Second Global Relief Model. doi:10.25921/fd45-gt74",
+  "used_by": [
+    "applications/geography/earth-atlas"
+  ]
+}

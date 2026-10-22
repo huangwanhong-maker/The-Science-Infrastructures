@@ -1,0 +1,57 @@
+{
+  "id": "gaia-dr3",
+  "kind": "tap",
+  "title": "Gaia Data Release 3: stars with good parallaxes, brightest first",
+  "provider": "European Space Agency, Gaia mission (DPAC); distances from Bailer-Jones et al. (2021)",
+  "service": "https://gea.esac.esa.int/tap-server/tap",
+  "query": [
+    "SELECT TOP {limit}",
+    "  g.source_id, g.ra, g.dec, g.parallax, g.parallax_over_error,",
+    "  g.phot_g_mean_mag, g.bp_rp, g.pmra, g.pmdec, d.r_med_geo",
+    "FROM gaiadr3.gaia_source AS g",
+    "LEFT OUTER JOIN external.gaiaedr3_distance AS d ON d.source_id = g.source_id",
+    "WHERE g.phot_g_mean_mag < {g_max}",
+    "  AND g.parallax > {parallax_min}",
+    "  AND g.parallax_over_error > {parallax_snr_min}",
+    "ORDER BY g.phot_g_mean_mag"
+  ],
+  "file": "result.csv",
+  "parameters": {
+    "limit": {
+      "type": "int", "default": 200000, "min": 1, "max": 3000000,
+      "description": "Maximum number of stars; the brightest are taken first"
+    },
+    "g_max": {
+      "type": "float", "default": 11.0, "min": 3.0, "max": 21.0,
+      "description": "Faintest Gaia G magnitude"
+    },
+    "parallax_min": {
+      "type": "float", "default": 0.0, "min": 0.0, "max": 1000.0,
+      "description": "Smallest parallax in mas; the farthest distance is 1000 / parallax_min pc"
+    },
+    "parallax_snr_min": {
+      "type": "float", "default": 5.0, "min": 0.0, "max": 1000.0,
+      "description": "Smallest parallax / error; 5 means distances good to about 20 per cent"
+    }
+  },
+  "profiles": {
+    "small": {
+      "description": "The 200 000 brightest stars with parallaxes better than 20 per cent",
+      "parameters": { "limit": 200000, "g_max": 11.0 }
+    },
+    "nearby": {
+      "description": "Stars within 100 pc with parallaxes better than 10 per cent, to the faintest Gaia magnitudes",
+      "parameters": { "limit": 500000, "g_max": 21.0, "parallax_min": 10.0, "parallax_snr_min": 10.0 }
+    },
+    "medium": {
+      "description": "The 1 000 000 brightest stars with parallaxes better than 20 per cent",
+      "parameters": { "limit": 1000000, "g_max": 13.0 }
+    }
+  },
+  "default_profile": "small",
+  "format": "CSV; positions for epoch J2016.0 (ICRS); parallax in mas; r_med_geo in pc",
+  "coverage": "Gaia DR3: about 1.8 billion sources, 1.5 billion with parallaxes",
+  "licence": "CC BY-SA 3.0 IGO (ESA Gaia data); acknowledge ESA Gaia and DPAC",
+  "citation": "Gaia Collaboration, Vallenari, A., et al. (2023). Gaia Data Release 3: Summary of the content and survey properties. A&A 674, A1. Distances: Bailer-Jones, C. A. L., et al. (2021). AJ 161, 147.",
+  "used_by": ["applications/astronomy/celestial-atlas"]
+}

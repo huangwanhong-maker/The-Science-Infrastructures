@@ -1,0 +1,52 @@
+{
+  "id": "gdacs",
+  "kind": "http",
+  "domain": "geophysics",
+  "title": "GDACS: disasters of the last month, with alert levels, and the tracks and forecast tracks of tropical cyclones",
+  "provider": "Global Disaster Alert and Coordination System (GDACS), a cooperation of the United Nations and the European Commission (Joint Research Centre)",
+  "credit": "GDACS (UN, EC JRC)",
+  "requests": [
+    {
+      "url": "https://www.gdacs.org/gdacsapi/api/events/geteventlist/SEARCH?eventlist=TC;EQ;FL;VO;DR;WF&fromDate={start:%Y-%m-%d}&toDate={end:%Y-%m-%d}&alertlevel=Green;Orange;Red",
+      "file": "events.json"
+    }
+  ],
+  "follow": [
+    {
+      "from": "events.json",
+      "items": "features",
+      "where": {
+        "properties.eventtype": "TC"
+      },
+      "url": "{properties[url][geometry]}",
+      "file": "tc-{properties[eventid]}-{properties[episodeid]}.json"
+    }
+  ],
+  "parameters": {
+    "start": {
+      "type": "time",
+      "default": "today-30d",
+      "description": "first day (UTC)"
+    },
+    "end": {
+      "type": "time",
+      "default": "today+1d",
+      "description": "last day (UTC)"
+    }
+  },
+  "profiles": {
+    "month": {
+      "description": "the last 30 days",
+      "parameters": {}
+    }
+  },
+  "default_profile": "month",
+  "format": "GeoJSON. events.json: one feature per event (eventtype TC tropical cyclone, EQ earthquake, FL flood, VO volcano, DR drought, WF wildfire), with its alert level (Green, Orange, Red), severity, countries, dates and a point. tc-<event>-<episode>.json: the track of a tropical cyclone as points labelled with their times (UTC); the points after the episode's last observation are the official forecast (from JTWC, NHC or other centres), with lines and cones of uncertainty.",
+  "coverage": "Global; the 100 most recent events of the period",
+  "licence": "No reuse licence is stated. GDACS's terms of use (https://www.gdacs.org/About/termofuse.aspx) provide the data 'as is'; notifications for earthquakes and tropical cyclones are automatic and not reviewed by experts, and do not replace official warnings from national authorities. Fetched into the cache, not redistributed, and credited to GDACS.",
+  "citation": "GDACS, Global Disaster Alert and Coordination System, https://www.gdacs.org/, retrieved through its API.",
+  "used_by": [
+    "data/products/disaster_catalog.py",
+    "applications/geography/earth-atlas"
+  ]
+}

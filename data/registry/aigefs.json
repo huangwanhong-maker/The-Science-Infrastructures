@@ -1,0 +1,111 @@
+{
+  "id": "aigefs",
+  "kind": "ncss",
+  "domain": "meteorology",
+  "model": "AIGEFS",
+  "title": "AIGEFS: NOAA's AI ensemble forecast, ensemble mean and spread",
+  "provider": "NOAA National Centers for Environmental Prediction and NOAA EPIC; AIGEFS 0.25° ensemble statistics, served by Unidata's THREDDS Data Server",
+  "credit": "AIGEFS (AI ensemble), NOAA NCEP, via Unidata THREDDS",
+  "service": "https://thredds.ucar.edu/thredds/ncss/grid",
+  "dataset": "grib/NCEP/AIGEFS/Global_0p25deg/Best",
+  "time_step_hours": 6,
+  "groups": [
+    {
+      "file": "msl.nc",
+      "variables": [
+        "Pressure_reduced_to_MSL_msl_unweightedMean",
+        "Pressure_reduced_to_MSL_msl_stdDev"
+      ]
+    },
+    {
+      "file": "2m.nc",
+      "level": "2 m",
+      "vertCoord": 2,
+      "variables": [
+        "Temperature_height_above_ground_unweightedMean",
+        "Temperature_height_above_ground_stdDev"
+      ]
+    },
+    {
+      "file": "500hPa.nc",
+      "level": "500 hPa",
+      "vertCoord": 50000,
+      "variables": [
+        "Geopotential_height_isobaric_unweightedMean",
+        "Geopotential_height_isobaric_stdDev"
+      ]
+    }
+  ],
+  "attributes": {
+    "Pressure_reduced_to_MSL_msl_unweightedMean": {
+      "standard_name": "air_pressure_at_sea_level",
+      "units": "Pa",
+      "cell_methods": "realization: mean"
+    },
+    "Pressure_reduced_to_MSL_msl_stdDev": {
+      "standard_name": "air_pressure_at_sea_level",
+      "units": "Pa",
+      "cell_methods": "realization: standard_deviation"
+    },
+    "Temperature_height_above_ground_unweightedMean": {
+      "standard_name": "air_temperature",
+      "units": "K",
+      "cell_methods": "realization: mean"
+    },
+    "Temperature_height_above_ground_stdDev": {
+      "standard_name": "air_temperature",
+      "units": "K",
+      "cell_methods": "realization: standard_deviation"
+    },
+    "Geopotential_height_isobaric_unweightedMean": {
+      "standard_name": "geopotential_height",
+      "units": "m",
+      "cell_methods": "realization: mean"
+    },
+    "Geopotential_height_isobaric_stdDev": {
+      "standard_name": "geopotential_height",
+      "units": "m",
+      "cell_methods": "realization: standard_deviation"
+    }
+  },
+  "parameters": {
+    "start": {
+      "type": "time",
+      "default": "now",
+      "description": "First time (UTC); the series holds past analyses and the latest forecast"
+    },
+    "end": {
+      "type": "time",
+      "default": "now+7d",
+      "description": "Last time (UTC)"
+    },
+    "step_hours": {
+      "type": "int",
+      "default": 6,
+      "min": 3,
+      "max": 24,
+      "description": "Hours between times: a multiple of the collection's step"
+    },
+    "stride": {
+      "type": "int",
+      "default": 4,
+      "min": 1,
+      "max": 16,
+      "description": "Take every n-th point of the 0.25° grid: 4 gives 1°"
+    }
+  },
+  "profiles": {
+    "forecast": {
+      "description": "Today to seven days ahead, every 6 h, 1° grid (about 30 MB)",
+      "parameters": {}
+    }
+  },
+  "default_profile": "forecast",
+  "format": "netCDF classic, one file per group; float32; SI units; the ensemble mean and standard deviation of its members",
+  "coverage": "Global, 0.25° grid, every 6 h to 16 days ahead",
+  "licence": "US Government work, public domain; distributed by Unidata's THREDDS Data Server (UCAR)",
+  "citation": "NOAA (2025). AI Global Ensemble Forecast System (AIGEFS); Unidata THREDDS Data Server (UCAR/NSF Unidata Program Center).",
+  "used_by": [
+    "applications/geography/earth-atlas"
+  ]
+}

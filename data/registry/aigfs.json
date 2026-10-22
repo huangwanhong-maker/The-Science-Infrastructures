@@ -1,0 +1,146 @@
+{
+  "id": "aigfs",
+  "kind": "ncss",
+  "domain": "meteorology",
+  "model": "AIGFS",
+  "title": "AIGFS: NOAA's AI global forecast model (EAGLE), near the surface and aloft",
+  "provider": "NOAA National Centers for Environmental Prediction and NOAA EPIC; AIGFS 0.25° best time series, served by Unidata's THREDDS Data Server",
+  "credit": "AIGFS (AI), NOAA NCEP, via Unidata THREDDS",
+  "service": "https://thredds.ucar.edu/thredds/ncss/grid",
+  "dataset": "grib/NCEP/AIGFS/Global_0p25deg/Best",
+  "time_step_hours": 6,
+  "groups": [
+    {
+      "file": "msl.nc",
+      "variables": [
+        "Pressure_reduced_to_MSL_msl"
+      ]
+    },
+    {
+      "file": "2m.nc",
+      "level": "2 m",
+      "vertCoord": 2,
+      "variables": [
+        "Temperature_height_above_ground"
+      ]
+    },
+    {
+      "file": "10m.nc",
+      "level": "10 m",
+      "vertCoord": 10,
+      "variables": [
+        "u-component_of_wind_height_above_ground",
+        "v-component_of_wind_height_above_ground"
+      ]
+    },
+    {
+      "file": "850hPa.nc",
+      "level": "850 hPa",
+      "vertCoord": 85000,
+      "variables": [
+        "Temperature_isobaric"
+      ]
+    },
+    {
+      "file": "500hPa.nc",
+      "level": "500 hPa",
+      "vertCoord": 50000,
+      "variables": [
+        "Geopotential_height_isobaric",
+        "u-component_of_wind_isobaric",
+        "v-component_of_wind_isobaric"
+      ]
+    },
+    {
+      "file": "250hPa.nc",
+      "level": "250 hPa",
+      "vertCoord": 25000,
+      "variables": [
+        "u-component_of_wind_isobaric",
+        "v-component_of_wind_isobaric"
+      ]
+    }
+  ],
+  "attributes": {
+    "Pressure_reduced_to_MSL_msl": {
+      "standard_name": "air_pressure_at_sea_level",
+      "units": "Pa"
+    },
+    "Temperature_height_above_ground": {
+      "standard_name": "air_temperature",
+      "units": "K"
+    },
+    "Temperature_isobaric": {
+      "standard_name": "air_temperature",
+      "units": "K"
+    },
+    "Geopotential_height_isobaric": {
+      "standard_name": "geopotential_height",
+      "units": "m"
+    },
+    "u-component_of_wind_height_above_ground": {
+      "standard_name": "eastward_wind",
+      "units": "m s-1"
+    },
+    "v-component_of_wind_height_above_ground": {
+      "standard_name": "northward_wind",
+      "units": "m s-1"
+    },
+    "u-component_of_wind_isobaric": {
+      "standard_name": "eastward_wind",
+      "units": "m s-1"
+    },
+    "v-component_of_wind_isobaric": {
+      "standard_name": "northward_wind",
+      "units": "m s-1"
+    }
+  },
+  "parameters": {
+    "start": {
+      "type": "time",
+      "default": "now-1d",
+      "description": "First time (UTC); the series holds past analyses and the latest forecast"
+    },
+    "end": {
+      "type": "time",
+      "default": "now+5d",
+      "description": "Last time (UTC)"
+    },
+    "step_hours": {
+      "type": "int",
+      "default": 6,
+      "min": 3,
+      "max": 24,
+      "description": "Hours between times: a multiple of the collection's step"
+    },
+    "stride": {
+      "type": "int",
+      "default": 4,
+      "min": 1,
+      "max": 16,
+      "description": "Take every n-th point of the 0.25° grid: 4 gives 1°"
+    }
+  },
+  "profiles": {
+    "forecast": {
+      "description": "Yesterday to five days ahead, every 6 h, 1° grid (about 60 MB)",
+      "parameters": {}
+    },
+    "fine": {
+      "description": "Today to three days ahead, every 6 h, 0.5° grid",
+      "parameters": {
+        "start": "now",
+        "end": "now+3d",
+        "stride": 2
+      }
+    }
+  },
+  "default_profile": "forecast",
+  "format": "netCDF classic, one file per group; float32; SI units",
+  "coverage": "Global, 0.25° grid, every 6 h to 16 days ahead",
+  "licence": "US Government work, public domain; distributed by Unidata's THREDDS Data Server (UCAR)",
+  "citation": "NOAA (2025). AI Global Forecast System (AIGFS), from the EAGLE project; Unidata THREDDS Data Server (UCAR/NSF Unidata Program Center).",
+  "used_by": [
+    "applications/geography/earth-atlas"
+  ]
+}

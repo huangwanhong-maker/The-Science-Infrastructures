@@ -1,0 +1,86 @@
+{
+  "id": "terraclimate-normals",
+  "kind": "opendap",
+  "domain": "climate",
+  "model": "TerraClimate",
+  "title": "TerraClimate climate normals, 1991–2020: monthly means of daily maximum and minimum temperature, and monthly precipitation",
+  "provider": "Climatology Lab, University of California, Merced (Abatzoglou et al. 2018), served by the THREDDS server of the Northwest Knowledge Network, University of Idaho",
+  "credit": "TerraClimate normals 1991–2020, Abatzoglou et al.",
+  "service": "http://thredds.northwestknowledge.net:8080/thredds/dodsC/",
+  "datasets": [
+    {
+      "path": "TERRACLIMATE_ALL/climatology/TerraClimate_19912020_tmax.nc",
+      "variable": "tmax",
+      "file": "tmax.nc"
+    },
+    {
+      "path": "TERRACLIMATE_ALL/climatology/TerraClimate_19912020_tmin.nc",
+      "variable": "tmin",
+      "file": "tmin.nc"
+    },
+    {
+      "path": "TERRACLIMATE_ALL/climatology/TerraClimate_19912020_ppt.nc",
+      "variable": "ppt",
+      "file": "ppt.nc"
+    }
+  ],
+  "climatology": {
+    "period": "1991-01-01/2020-12-31",
+    "time": "month of the year, 1 (January) to 12 (December)"
+  },
+  "attributes": {
+    "tmax": {
+      "standard_name": "air_temperature",
+      "long_name": "Daily maximum air temperature at 2 m",
+      "cell_methods": "time: maximum within days time: mean over days time: mean over years"
+    },
+    "tmin": {
+      "standard_name": "air_temperature",
+      "long_name": "Daily minimum air temperature at 2 m",
+      "cell_methods": "time: minimum within days time: mean over days time: mean over years"
+    },
+    "ppt": {
+      "standard_name": "precipitation_amount",
+      "long_name": "Precipitation in the month",
+      "units": "kg m-2",
+      "cell_methods": "time: sum within months time: mean over years"
+    }
+  },
+  "parameters": {
+    "stride": {
+      "type": "int",
+      "default": 8,
+      "min": 1,
+      "max": 96,
+      "description": "take every stride-th point of the 1/24° grid (8: a point every 1/3°)"
+    }
+  },
+  "profiles": {
+    "coarse": {
+      "description": "1/2° grid, 720 × 360 points; 19 MB product",
+      "parameters": {
+        "stride": 12
+      }
+    },
+    "medium": {
+      "description": "1/3° grid, 1080 × 540 points; 42 MB product",
+      "parameters": {
+        "stride": 8
+      }
+    },
+    "fine": {
+      "description": "1/6° grid, 2160 × 1080 points; 168 MB product",
+      "parameters": {
+        "stride": 4
+      }
+    }
+  },
+  "default_profile": "medium",
+  "format": "netCDF classic, one file per variable: 12 months × latitude × longitude, point samples of the 1/24° (about 4 km) grid, not area means. Temperatures in °C; precipitation in mm per month (1 mm is 1 kg m-2 of water). Ocean cells have no value. The source's time axis counts months of the year (1 to 12).",
+  "coverage": "Land surfaces of the whole Earth, including Antarctica; the normal year of 1991–2020",
+  "licence": "CC0 1.0, public domain (as stated in the Google Earth Engine catalogue entry for TerraClimate)",
+  "citation": "Abatzoglou, J. T., S. Z. Dobrowski, S. A. Parks and K. C. Hegewisch (2018), TerraClimate, a high-resolution global dataset of monthly climate and climatic water balance from 1958–2015, Scientific Data 5, 170191.",
+  "used_by": [
+    "applications/geography/earth-atlas"
+  ]
+}

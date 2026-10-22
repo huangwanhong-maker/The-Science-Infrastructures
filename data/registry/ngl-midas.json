@@ -1,0 +1,26 @@
+{
+  "id": "ngl-midas",
+  "kind": "http",
+  "domain": "geophysics",
+  "title": "GPS station velocities: east, north and up for some 22,000 continuous GNSS stations, by the MIDAS estimator, from the Nevada Geodetic Laboratory",
+  "provider": "Nevada Geodetic Laboratory, University of Nevada, Reno (G. Blewitt, W. C. Hammond, C. Kreemer)",
+  "credit": "GPS velocities: Nevada Geodetic Laboratory (MIDAS, IGS20)",
+  "requests": [
+    {"url": "https://geodesy.unr.edu/gps_timeseries/IGS20/midas/midas.{frame}.txt", "file": "midas.txt"}
+  ],
+  "parameters": {
+    "frame": {"type": "str", "default": "IGS", "pattern": "[A-Z]{2,4}", "description": "the frame: IGS (IGS20, aligned with ITRF2020), or a plate held fixed (NA, EU, PA, ...)"}
+  },
+  "profiles": {
+    "igs20": {"description": "velocities in the IGS20 frame", "parameters": {}}
+  },
+  "default_profile": "igs20",
+  "format": "Text, one station a line, 27 columns separated by spaces (midas.readme.txt): 1 station; 2 version; 3-4 first and last epoch (decimal year); 5 duration (years); 6-8 numbers of epochs and pairs; 9-11 east, north, up velocity (m/yr); 12-14 their uncertainties (m/yr); 15-17 offsets at the first epoch (m); 18-20 fractions of outliers; 21-23 standard deviations of the pairs' velocities; 24 number of steps; 25-27 latitude, longitude (degrees; longitudes from -360 to 0) and height (m).",
+  "coverage": "Global, wherever continuous GNSS stations have run for long enough; updated daily",
+  "licence": "No licence is stated; the data are supplied as is (https://geodesy.unr.edu/Disclaimer.php). The laboratory asks that its products be cited as Blewitt, Hammond and Kreemer (2018), and MIDAS as Blewitt et al. (2016); many stations have an original data citation of their own.",
+  "citation": "Blewitt, G., Hammond, W. C. and Kreemer, C. (2018), Harnessing the GPS data explosion for interdisciplinary science, Eos 99, doi:10.1029/2018EO104623; Blewitt, G., Kreemer, C., Hammond, W. C. and Gazeaux, J. (2016), MIDAS robust trend estimator for accurate GPS station velocities without step detection, J. Geophys. Res. Solid Earth 121, 2054-2068, doi:10.1002/2015JB012552.",
+  "used_by": [
+    "data/products/station_velocities.py",
+    "applications/geography/earth-atlas"
+  ]
+}

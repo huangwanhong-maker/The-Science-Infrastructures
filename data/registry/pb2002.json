@@ -1,0 +1,29 @@
+{
+  "id": "pb2002",
+  "domain": "geophysics",
+  "title": "PB2002: the outlines of 52 tectonic plates and the 5,819 steps of their boundaries, each with its class (spreading ridge, transform, subduction, ...) and the polarity of subduction",
+  "provider": "P. Bird (2003), as converted to GeoJSON by H. Ahlenius (Nordpil), from the GitHub repository fraxen/tectonicplates",
+  "credit": "Plate boundaries: Bird (2003), PB2002",
+  "files": [
+    {
+      "url": "https://raw.githubusercontent.com/fraxen/tectonicplates/339b0c56563c118307b1f4542703047f5f698fae/GeoJSON/PB2002_plates.json",
+      "file": "PB2002_plates.json",
+      "size": 327718,
+      "sha256": "922918f970baf7e645821a4a728b945dbb5eeac1337d71d087fba021bcc79e21"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/fraxen/tectonicplates/339b0c56563c118307b1f4542703047f5f698fae/original/PB2002_steps.dat.txt",
+      "file": "PB2002_steps.dat.txt",
+      "size": 564443,
+      "sha256": "513babb111c65cd275274e2edcb249085d00e007c79d8755e1b4b79f60806f37"
+    }
+  ],
+  "format": "PB2002_plates.json: GeoJSON, one (Multi)Polygon per plate (properties Code, PlateName), cut at the antimeridian, longitude and latitude in degrees. PB2002_steps.dat.txt: one line per digitisation step (Bird 2003, Table 2), fixed columns: boundary identifier XX?YY (XX the plate on the left travelling along the step, YY on the right; '/' the right-hand plate subducts under the left, '\\' the opposite, '-' no subduction), initial and final points, length, azimuth, Bird's relative velocity, elevation, sea-floor age, and the step class (OSR, OTF, OCB, CRB, CTF, CCB, SUB).",
+  "coverage": "Global: 52 plates, 229 boundary segments, 5,819 steps of mean length 44.7 km",
+  "licence": "Open Data Commons Attribution License 1.0, for the conversion (fraxen/tectonicplates); please credit Hugo Ahlenius, Nordpil and Peter Bird. The model is the electronic supplement of Bird (2003).",
+  "citation": "Bird, P. (2003), An updated digital model of plate boundaries, Geochem. Geophys. Geosyst. 4(3), 1027, doi:10.1029/2001GC000252.",
+  "used_by": [
+    "data/products/plate_model.py",
+    "applications/geography/earth-atlas"
+  ]
+}

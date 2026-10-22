@@ -1,0 +1,67 @@
+{
+  "id": "usgs-earthquakes",
+  "kind": "http",
+  "domain": "geophysics",
+  "title": "Earthquakes from the USGS ComCat catalogue: time, place, depth and magnitude",
+  "provider": "U.S. Geological Survey, Earthquake Hazards Program, FDSN event web service",
+  "credit": "USGS ComCat",
+  "requests": [
+    {
+      "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime={start:%Y-%m-%dT%H:%M:%S}&endtime={end:%Y-%m-%dT%H:%M:%S}&minmagnitude={min_magnitude}&orderby=time&limit={limit}",
+      "file": "events.geojson"
+    }
+  ],
+  "parameters": {
+    "start": {
+      "type": "time",
+      "default": "now-7d",
+      "description": "Earliest origin time (UTC)"
+    },
+    "end": {
+      "type": "time",
+      "default": "now+1h",
+      "description": "Latest origin time (UTC)"
+    },
+    "min_magnitude": {
+      "type": "float",
+      "default": 4.5,
+      "min": -1.0,
+      "max": 10.0,
+      "description": "Smallest magnitude"
+    },
+    "limit": {
+      "type": "int",
+      "default": 20000,
+      "min": 1,
+      "max": 20000,
+      "description": "Most events returned (the service allows 20 000)"
+    }
+  },
+  "profiles": {
+    "week": {
+      "description": "The past seven days, magnitude 4.5 and above",
+      "parameters": {}
+    },
+    "month": {
+      "description": "The past 30 days, magnitude 4.5 and above",
+      "parameters": {
+        "start": "now-30d"
+      }
+    },
+    "year": {
+      "description": "The past year, magnitude 6 and above",
+      "parameters": {
+        "start": "now-365d",
+        "min_magnitude": 6.0
+      }
+    }
+  },
+  "default_profile": "week",
+  "format": "GeoJSON; coordinates are longitude, latitude (degrees, WGS 84) and depth (km); time in milliseconds since 1970-01-01 UTC",
+  "coverage": "Global, from 1900 to the present; complete to magnitude 4.5 worldwide only in recent decades",
+  "licence": "US Government work, public domain",
+  "citation": "U.S. Geological Survey, Earthquake Hazards Program (2017). Advanced National Seismic System (ANSS) Comprehensive Catalog of Earthquake Events and Products. doi:10.5066/F7MS3QZH",
+  "used_by": [
+    "applications/geography/earth-atlas"
+  ]
+}

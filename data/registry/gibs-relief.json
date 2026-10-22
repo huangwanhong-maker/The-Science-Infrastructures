@@ -1,0 +1,49 @@
+{
+  "id": "gibs-relief",
+  "kind": "http",
+  "domain": "geography",
+  "title": "Shaded relief of the land from the ASTER global digital elevation model, for detail at close range",
+  "provider": "NASA Global Imagery Browse Services (GIBS), from the ASTER Global Digital Elevation Model (NASA and METI, Japan)",
+  "licence": "NASA imagery: no restrictions on use; acknowledge NASA GIBS and the data source (NASA Earthdata use policy). ASTER GDEM is a product of METI and NASA.",
+  "used_by": [
+    "applications/geography/earth-atlas"
+  ],
+  "credit": "NASA GIBS, ASTER GDEM (METI and NASA)",
+  "requests": [
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&CRS=EPSG:4326&BBOX=-90,-180,90,180&FORMAT=image/png&WIDTH={width}&HEIGHT={height}&LAYERS={layer}",
+      "file": "image.png"
+    }
+  ],
+  "parameters": {
+    "layer": {
+      "type": "str",
+      "default": "ASTER_GDEM_Greyscale_Shaded_Relief",
+      "description": "GIBS layer of grey shaded relief"
+    },
+    "width": {
+      "type": "int",
+      "default": 2048,
+      "min": 512,
+      "max": 16384,
+      "description": "Width of the global image in pixels (360°)"
+    },
+    "height": {
+      "type": "int",
+      "default": 1024,
+      "min": 256,
+      "max": 8192,
+      "description": "Height of the global image in pixels (180°)"
+    }
+  },
+  "profiles": {
+    "preview": {
+      "description": "A global image of 2048 x 1024; the detail comes from the service, region by region",
+      "parameters": {}
+    }
+  },
+  "default_profile": "preview",
+  "format": "PNG, grey, equirectangular (EPSG:4326). Flat land is a middle grey, lit from the north-west; water and areas without data are one uniform darker grey.",
+  "coverage": "Land between about 83° N and 83° S at 1 arc second (about 30 m), from ASTER stereo images of 2000-2013",
+  "citation": "NASA/METI/AIST/Japan Spacesystems and U.S./Japan ASTER Science Team (2019). ASTER Global Digital Elevation Model V003. NASA EOSDIS Land Processes DAAC; shaded relief through NASA GIBS."
+}

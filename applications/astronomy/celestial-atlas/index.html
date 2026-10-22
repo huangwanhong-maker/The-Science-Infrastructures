@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Celestial Atlas</title>
+  <meta name="description" content="The Sun, Moon, planets and stars from JPL DE440 and the HYG catalogue, at any instant or in real time.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23e8c3dc'/%3E%3Cstop offset='1' stop-color='%23b979ab'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='none' stroke='url(%23g)' stroke-width='2.2' stroke-linecap='round' transform='rotate(-20 15 18)'%3E%3Cellipse cx='15' cy='18' rx='13' ry='4.4'/%3E%3Ccircle cx='15' cy='18' r='6.4' fill='%2318121a'/%3E%3Cpath d='M2 18a13 4.4 0 0 0 26 0'/%3E%3C/g%3E%3Cpath d='M26 2.5l1 2.6 2.6 1-2.6 1-1 2.6-1-2.6-2.6-1 2.6-1z' fill='%23CA8DBE'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" media="print" onload="this.media='all'"
+        href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..600&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module" src="src/app.js"></script>
+</head>
+<body>
+  <!-- The mark: a ringed planet with a small four-pointed star. -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="mark-gradient" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#e8c3dc"/>
+        <stop offset="1" stop-color="#b979ab"/>
+      </linearGradient>
+      <symbol id="mark" viewBox="0 0 32 32">
+        <g fill="none" stroke="url(#mark-gradient)" stroke-width="2" stroke-linecap="round" transform="rotate(-20 15 18)">
+          <ellipse cx="15" cy="18" rx="13" ry="4.4"/>
+          <circle cx="15" cy="18" r="6.4" style="fill: var(--night)"/>
+          <path d="M2 18a13 4.4 0 0 0 26 0"/>
+        </g>
+        <path d="M26 2.5l1 2.6 2.6 1-2.6 1-1 2.6-1-2.6-2.6-1 2.6-1z" fill="#CA8DBE"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <header class="top">
+    <div class="brand">
+      <svg class="mark" aria-hidden="true"><use href="#mark"/></svg>
+      <span>Celestial Atlas</span>
+    </div>
+    <nav class="views" role="tablist" aria-label="Views">
+      <button type="button" role="tab" data-view="solar">Solar System</button>
+      <button type="button" role="tab" data-view="near">Neighbourhood</button>
+      <button type="button" role="tab" data-view="galaxies">Galaxies</button>
+      <button type="button" role="tab" data-view="sky">Sky Chart</button>
+      <button type="button" role="tab" data-view="orbits">Orbits</button>
+    </nav>
+    <button type="button" class="link" onclick="document.getElementById('about').showModal()">Data</button>
+  </header>
+
+  <main>
+    <section id="stage">
+      <canvas id="gl"></canvas>
+      <canvas id="chart" hidden></canvas>
+      <div id="toast" role="status" hidden></div>
+      <div id="loading">
+        <div class="loading-inner">
+          <svg class="mark" aria-hidden="true"><use href="#mark"/></svg>
+          <p id="loading-text">Reading the JPL ephemeris and the star catalogue…</p>
+          <div class="progress"><span id="loading-bar"></span></div>
+        </div>
+      </div>
+    </section>
+    <aside id="panel">
+      <section id="info" aria-live="polite"></section>
+      <section id="options"></section>
+    </aside>
+  </main>
+
+  <footer class="timebar">
+    <div class="clock">
+      <div id="time-utc">—</div>
+      <div id="time-local"></div>
+    </div>
+    <div class="transport">
+      <button type="button" id="now" class="now">Now</button>
+      <button type="button" id="slower" aria-label="Slower, or backwards">
+        <svg viewBox="0 0 24 24"><path d="M11.5 5.5v13L2.5 12zM21.5 5.5v13L12.5 12z"/></svg>
+      </button>
+      <button type="button" id="toggle" aria-label="Pause"></button>
+      <button type="button" id="faster" aria-label="Faster">
+        <svg viewBox="0 0 24 24"><path d="M2.5 5.5v13l9-6.5zM12.5 5.5v13l9-6.5z"/></svg>
+      </button>
+      <span id="rate" class="rate">live</span>
+    </div>
+    <label class="goto"><span>UTC</span><input id="date" type="datetime-local" step="1"></label>
+  </footer>
+
+  <dialog id="about">
+    <form method="dialog">
+      <h2>Data and method</h2>
+      <dl>
+        <dt>Sun, Moon and planets</dt>
+        <dd>JPL Planetary and Lunar Ephemeris DE440 (Park et al. 2021, <i>AJ</i> 161, 105), read directly from the SPK kernel distributed by NAIF. Valid 1849–2150.</dd>
+        <dt>Stars</dt>
+        <dd>HYG Stellar Database v4.1 (Hipparcos, Yale Bright Star and Gliese catalogues), CC BY-SA 4.0. Distances from Hipparcos parallaxes.</dd>
+        <dt>Constellations</dt>
+        <dd>Figures and names from d3-celestial by Olaf Frohn, BSD 3-Clause.</dd>
+        <dt>Maps of the bodies and the sky</dt>
+        <dd>Solar System Scope textures (INOVE), CC BY 4.0, from NASA, JPL and ESA mission data; the Earth from NASA's Blue Marble and Black Marble (NASA GIBS). Bodies are turned by the IAU rotation models (Archinal et al. 2018), which agree with JPL Horizons to within 0.011°.</dd>
+        <dt>Detail at close range</dt>
+        <dd>The Moon from the LRO WAC global mosaic (NASA/GSFC/Arizona State University), Mars from the Viking MDIM 2.1 colour mosaic (NASA/USGS), Mercury from the MESSENGER MDIS mosaic (NASA/JHUAPL/Carnegie Institution), as tiles from NASA's Moon, Mars and Mercury Trek.</dd>
+        <dt>Corrections</dt>
+        <dd>Light-time, precession (IAU 1976), topocentric parallax and refraction are applied. Aberration, nutation and light deflection are not; positions on the sky are good to well under an arcminute.</dd>
+        <dt>Time</dt>
+        <dd>UTC with leap seconds; TT and TDB for the ephemeris; UT1 taken equal to UTC. Before 1972, ΔT from Espenak and Meeus (2006).</dd>
+      </dl>
+      <button class="link" value="close">Close</button>
+    </form>
+  </dialog>
+</body>
+</html>

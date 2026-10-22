@@ -1,0 +1,32 @@
+{
+  "id": "ngl-station",
+  "kind": "http",
+  "domain": "geophysics",
+  "title": "The daily positions of one GPS station, east, north and up, from the Nevada Geodetic Laboratory",
+  "provider": "Nevada Geodetic Laboratory, University of Nevada, Reno",
+  "credit": "GPS positions: Nevada Geodetic Laboratory (IGS20)",
+  "requests": [
+    {"url": "https://geodesy.unr.edu/gps_timeseries/IGS20/tenv3/IGS20/{station}.tenv3", "file": "station.tenv3"}
+  ],
+  "parameters": {
+    "station": {"type": "str", "default": "P123", "pattern": "[A-Z0-9]{4}", "description": "the station's four-character name"}
+  },
+  "profiles": {
+    "p123": {"description": "station P123, New Mexico, as an example", "parameters": {}}
+  },
+  "default_profile": "p123",
+  "on_demand": {
+    "parameters": ["station"],
+    "builder": "station_series",
+    "seconds": 10,
+    "description": "the daily positions of a GPS station since it began"
+  },
+  "format": "tenv3 text (https://geodesy.unr.edu/gps_timeseries/readmes/README_tenv3.txt), one day a line: site, date, decimal year, MJD, GPS week and day, reference meridian; easting, northing and vertical position in metres as an integer and a fractional part each (graticule distance coordinates; Blewitt 2024); antenna height; east, north and up sigma (m); correlations; nominal latitude, longitude and height.",
+  "coverage": "One station, daily, from its first day",
+  "licence": "No licence is stated; the data are supplied as is. Cite Blewitt, Hammond and Kreemer (2018), and the station's own data citation where it has one.",
+  "citation": "Blewitt, G., Hammond, W. C. and Kreemer, C. (2018), Harnessing the GPS data explosion for interdisciplinary science, Eos 99, doi:10.1029/2018EO104623.",
+  "used_by": [
+    "data/products/station_series.py",
+    "applications/geography/earth-atlas"
+  ]
+}

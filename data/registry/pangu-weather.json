@@ -1,0 +1,31 @@
+{
+  "id": "pangu-weather",
+  "domain": "meteorology",
+  "model": "Pangu-Weather",
+  "title": "Pangu-Weather: trained parameters of a 3D Earth-specific transformer for global medium-range forecasting, 24-hour and 6-hour models",
+  "provider": "Huawei Cloud (Bi et al. 2023), ONNX files as distributed by ECMWF for its ai-models tool",
+  "credit": "Pangu-Weather, Bi et al. 2023, CC BY-NC-SA 4.0",
+  "files": [
+    {
+      "url": "https://get.ecmwf.int/repository/test-data/ai-models/pangu-weather/pangu_weather_24.onnx",
+      "file": "pangu_weather_24.onnx",
+      "lead_hours": 24,
+      "size": 1181711187,
+      "sha256": "613a5c140a1399abcaffb4dbce32af373a1f5f56c515704f5be61925bb9fdcfd"
+    },
+    {
+      "url": "https://get.ecmwf.int/repository/test-data/ai-models/pangu-weather/pangu_weather_6.onnx",
+      "file": "pangu_weather_6.onnx",
+      "lead_hours": 6,
+      "size": 1181711187,
+      "sha256": "8a4c022a7dd65fdc235757ba907574bc9a1fc0223a2ea4a4800961a52f475e97"
+    }
+  ],
+  "format": "ONNX. Inputs: 'input', float32 (5, 13, 721, 1440): geopotential (m2 s-2), specific humidity (kg kg-1), temperature (K), eastward and northward wind (m s-1) at 1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100 and 50 hPa; 'input_surface', float32 (4, 721, 1440): mean sea-level pressure (Pa), 10 m eastward and northward wind (m s-1), 2 m temperature (K). Grid: 0.25 degrees, latitude 90 to -90, longitude 0 to 359.75. Outputs: the same fields lead_hours later.",
+  "coverage": "Global; trained on ERA5 1979-2017",
+  "licence": "CC BY-NC-SA 4.0 for the trained parameters; commercial use is forbidden. The parameters are fetched into the cache and never committed.",
+  "citation": "Bi, K., Xie, L., Zhang, H., Chen, X., Gu, X. and Tian, Q. (2023), Accurate medium-range global weather forecasting with 3D neural networks, Nature 619, 533-538.",
+  "used_by": [
+    "data/products/ai_forecast.py"
+  ]
+}

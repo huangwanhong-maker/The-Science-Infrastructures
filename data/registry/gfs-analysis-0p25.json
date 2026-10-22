@@ -1,0 +1,37 @@
+{
+  "id": "gfs-analysis-0p25",
+  "kind": "http",
+  "domain": "meteorology",
+  "model": "GFS",
+  "title": "GFS analysis at 0.25 degrees: the atmosphere at 13 pressure levels and near the surface, to start a forecast model",
+  "provider": "NOAA National Centers for Environmental Prediction, through the NOMADS GRIB filter",
+  "credit": "GFS analysis, NOAA NCEP",
+  "requests": [
+    {
+      "url": "https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl?dir=%2Fgfs.{cycle:%Y%m%d}%2F{cycle:%H}%2Fatmos&file=gfs.t{cycle:%H}z.pgrb2.0p25.f000&var_HGT=on&var_SPFH=on&var_TMP=on&var_UGRD=on&var_VGRD=on&var_PRMSL=on&lev_1000_mb=on&lev_925_mb=on&lev_850_mb=on&lev_700_mb=on&lev_600_mb=on&lev_500_mb=on&lev_400_mb=on&lev_300_mb=on&lev_250_mb=on&lev_200_mb=on&lev_150_mb=on&lev_100_mb=on&lev_50_mb=on&lev_mean_sea_level=on&lev_2_m_above_ground=on&lev_10_m_above_ground=on",
+      "file": "analysis.grib2"
+    }
+  ],
+  "parameters": {
+    "cycle": {
+      "type": "time",
+      "default": "now-5h",
+      "align_hours": 6,
+      "description": "the analysis time (UTC), moved down to a cycle (00, 06, 12 or 18 UTC); NOMADS keeps the last ten days, and a cycle appears about 4 hours after its time"
+    }
+  },
+  "profiles": {
+    "latest": {
+      "description": "the latest cycle normally available",
+      "parameters": {}
+    }
+  },
+  "default_profile": "latest",
+  "format": "GRIB2, 70 messages: geopotential height (gpm), specific humidity (kg kg-1), temperature (K), eastward and northward wind (m s-1) at 1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100 and 50 hPa; pressure at mean sea level (Pa); temperature and specific humidity at 2 m; wind at 10 m. Grid 0.25 degrees, 1440 x 721, latitude 90 to -90, longitude 0 to 359.75. Complex packing with spatial differencing; read with ecCodes.",
+  "coverage": "Global, one instant",
+  "licence": "Public domain (US Government work); NOAA asks that NOMADS be used at no more than 120 requests a minute",
+  "citation": "NOAA NCEP (2026), Global Forecast System, analysis, through NOMADS (https://nomads.ncep.noaa.gov/).",
+  "used_by": [
+    "data/products/ai_forecast.py"
+  ]
+}

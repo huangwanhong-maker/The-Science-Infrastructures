@@ -1,0 +1,89 @@
+{
+  "id": "ww3",
+  "kind": "griddap",
+  "domain": "oceanography",
+  "model": "WaveWatch III",
+  "title": "WaveWatch III global wave model: significant wave height, peak period and direction, analyses and forecasts",
+  "provider": "NOAA National Centers for Environmental Prediction, aggregated by PacIOOS ERDDAP (ww3_global)",
+  "credit": "WaveWatch III, NOAA NCEP, via PacIOOS",
+  "service": "https://pae-paha.pacioos.hawaii.edu/erddap",
+  "dataset": "ww3_global",
+  "variables": "{variables}",
+  "axes": [
+    {
+      "name": "time",
+      "from": "{start}",
+      "to": "{end}",
+      "step_hours": "{step_hours}"
+    },
+    {
+      "name": "depth",
+      "from": 0,
+      "to": 0
+    },
+    {
+      "name": "latitude",
+      "from": -77.5,
+      "to": 77.5,
+      "stride": "{stride}"
+    },
+    {
+      "name": "longitude",
+      "from": 0,
+      "to": 359.5,
+      "stride": "{stride}"
+    }
+  ],
+  "file": "data.nc",
+  "parameters": {
+    "start": {
+      "type": "time",
+      "default": "now-1d",
+      "description": "First time (UTC)"
+    },
+    "end": {
+      "type": "time",
+      "default": "now+5d",
+      "description": "Last time (UTC); forecasts reach about six days ahead"
+    },
+    "step_hours": {
+      "type": "int",
+      "default": 6,
+      "min": 1,
+      "max": 24,
+      "description": "Hours between times"
+    },
+    "stride": {
+      "type": "int",
+      "default": 2,
+      "min": 1,
+      "max": 8,
+      "description": "Take every n-th point of the 0.5° grid: 2 gives 1°"
+    },
+    "variables": {
+      "type": "str",
+      "default": "Thgt,Tper,Tdir",
+      "description": "Comma-separated: Thgt, Tper, Tdir (all waves); shgt, sper, sdir (swell); whgt, wper, wdir (wind sea)"
+    }
+  },
+  "profiles": {
+    "forecast": {
+      "description": "Yesterday to five days ahead, every 6 h, 1° grid (about 15 MB)",
+      "parameters": {}
+    },
+    "swell": {
+      "description": "Swell and wind sea separately, same window",
+      "parameters": {
+        "variables": "shgt,sper,sdir,whgt,wper,wdir"
+      }
+    }
+  },
+  "default_profile": "forecast",
+  "format": "netCDF classic; float32; heights in metres, periods in seconds, directions in degrees clockwise from north, from which the waves come; latitude −77.5° to 77.5°",
+  "coverage": "Global ocean between 77.5° S and 77.5° N, 0.5° grid, hourly",
+  "licence": "US Government work, public domain; ERDDAP: \"The data may be used and redistributed for free but is not intended for legal use, since it may contain inaccuracies.\"",
+  "citation": "The WAVEWATCH III Development Group (2019). User manual and system documentation of WAVEWATCH III version 6.07. NOAA/NWS/NCEP/MMAB Technical Note 333; served by PacIOOS.",
+  "used_by": [
+    "applications/geography/earth-atlas"
+  ]
+}

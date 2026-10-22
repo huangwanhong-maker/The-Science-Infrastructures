@@ -1,6 +1,6 @@
-# 0001. An Umbrella of Laboratories for All the Sciences
+# 0025. An Umbrella of Laboratories for All the Sciences
 
-- **Status:** Accepted. The proposal of §2.4, to raise the shared libraries to this repository, awaits the user's agreement.
+- **Status:** Accepted. Written as the umbrella repository's 0001, and renumbered 0025 when the first laboratory's history was joined to it. The proposal of §2.4, to raise the shared libraries to this repository, awaits the user's agreement.
 - **Date:** 2026-10-22
 - **Decided by:** the user moved the Integrative Astronomy, Geography, Oceanography Laboratory into a folder named *The Science*. They asked that the folder become a repository for "an integrative laboratory, study, research and application infrastructure for all science domains", with the laboratory as a submodule. Claude wrote this record.
 

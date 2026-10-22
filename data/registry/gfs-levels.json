@@ -1,0 +1,135 @@
+{
+  "id": "gfs-levels",
+  "kind": "ncss",
+  "domain": "meteorology",
+  "model": "GFS",
+  "title": "Global Forecast System (GFS): the atmosphere aloft (850, 500 and 250 hPa) and over the whole column (cloud, water vapour, CAPE)",
+  "provider": "NOAA National Centers for Environmental Prediction; best time series of the 1° GFS, served by Unidata's THREDDS Data Server",
+  "credit": "GFS, NOAA NCEP, via Unidata THREDDS",
+  "service": "https://thredds.ucar.edu/thredds/ncss/grid",
+  "dataset": "grib/NCEP/GFS/Global_onedeg/Best",
+  "time_step_hours": 3,
+  "groups": [
+    {
+      "file": "column.nc",
+      "variables": [
+        "Total_cloud_cover_entire_atmosphere",
+        "Precipitable_water_entire_atmosphere_single_layer",
+        "Convective_available_potential_energy_surface"
+      ]
+    },
+    {
+      "file": "850hPa.nc",
+      "level": "850 hPa",
+      "vertCoord": 85000,
+      "variables": [
+        "Temperature_isobaric",
+        "u-component_of_wind_isobaric",
+        "v-component_of_wind_isobaric"
+      ]
+    },
+    {
+      "file": "500hPa.nc",
+      "level": "500 hPa",
+      "vertCoord": 50000,
+      "variables": [
+        "Geopotential_height_isobaric",
+        "u-component_of_wind_isobaric",
+        "v-component_of_wind_isobaric",
+        "Absolute_vorticity_isobaric"
+      ]
+    },
+    {
+      "file": "250hPa.nc",
+      "level": "250 hPa",
+      "vertCoord": 25000,
+      "variables": [
+        "u-component_of_wind_isobaric",
+        "v-component_of_wind_isobaric"
+      ]
+    }
+  ],
+  "attributes": {
+    "Total_cloud_cover_entire_atmosphere": {
+      "standard_name": "cloud_area_fraction",
+      "units": "%"
+    },
+    "Precipitable_water_entire_atmosphere_single_layer": {
+      "standard_name": "atmosphere_mass_content_of_water_vapor",
+      "units": "kg m-2"
+    },
+    "Convective_available_potential_energy_surface": {
+      "standard_name": "atmosphere_convective_available_potential_energy_wrt_surface",
+      "units": "J kg-1"
+    },
+    "Temperature_isobaric": {
+      "standard_name": "air_temperature",
+      "units": "K"
+    },
+    "Geopotential_height_isobaric": {
+      "standard_name": "geopotential_height",
+      "units": "m"
+    },
+    "Absolute_vorticity_isobaric": {
+      "standard_name": "atmosphere_absolute_vorticity",
+      "units": "s-1"
+    },
+    "u-component_of_wind_isobaric": {
+      "standard_name": "eastward_wind",
+      "units": "m s-1"
+    },
+    "v-component_of_wind_isobaric": {
+      "standard_name": "northward_wind",
+      "units": "m s-1"
+    }
+  },
+  "parameters": {
+    "start": {
+      "type": "time",
+      "default": "now-3d",
+      "description": "First time (UTC); the series holds past analyses and the latest forecast"
+    },
+    "end": {
+      "type": "time",
+      "default": "now+5d",
+      "description": "Last time (UTC)"
+    },
+    "step_hours": {
+      "type": "int",
+      "default": 6,
+      "min": 3,
+      "max": 24,
+      "description": "Hours between times: a multiple of the collection's step"
+    },
+    "stride": {
+      "type": "int",
+      "default": 1,
+      "min": 1,
+      "max": 8,
+      "description": "Take every n-th point of the 1° grid"
+    }
+  },
+  "profiles": {
+    "forecast": {
+      "description": "Three days back to five days ahead, every 6 h, 1° grid (about 100 MB); the past days allow forecasts to be verified",
+      "parameters": {}
+    },
+    "glance": {
+      "description": "Today to two days ahead, every 12 h, 2° grid (about 8 MB)",
+      "parameters": {
+        "start": "now",
+        "end": "now+2d",
+        "step_hours": 12,
+        "stride": 2
+      }
+    }
+  },
+  "default_profile": "forecast",
+  "format": "netCDF classic, one file per group; float32; levels in Pa; wind in m s-1, height in geopotential metres, temperature in K",
+  "coverage": "Global, 1° grid, every 3 h to 16 days ahead; the best time series reaches back about a month",
+  "licence": "US Government work, public domain; distributed by Unidata's THREDDS Data Server (UCAR)",
+  "citation": "NOAA National Centers for Environmental Prediction, Global Forecast System; Unidata THREDDS Data Server (UCAR/NSF Unidata Program Center).",
+  "used_by": [
+    "applications/geography/earth-atlas"
+  ]
+}

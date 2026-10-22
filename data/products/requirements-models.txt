@@ -1,0 +1,10 @@
+# The laboratory's model environment, for data/products/ai_forecast.py (ADR 0022).
+# The rest of the data library needs only the standard library and numpy.
+#
+#   python -m venv .venv
+#   .venv/Scripts/python -m pip install -r data/products/requirements-models.txt
+#
+# Licences: numpy BSD-3-Clause; onnxruntime MIT; eccodes (with the ecCodes library) Apache-2.0.
+numpy==2.3.5
+onnxruntime==1.31.0
+eccodes==2.50.0
