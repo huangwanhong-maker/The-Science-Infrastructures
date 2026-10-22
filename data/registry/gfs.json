@@ -8,6 +8,10 @@
   "credit": "GFS, NOAA NCEP, via PacIOOS",
   "service": "https://pae-paha.pacioos.hawaii.edu/erddap",
   "dataset": "ncep_global",
+  "mirrors": [
+    {"service": "https://upwell.pfeg.noaa.gov/erddap", "dataset": "NCEP_Global_Best"},
+    {"service": "https://coastwatch.pfeg.noaa.gov/erddap", "dataset": "NCEP_Global_Best"}
+  ],
   "variables": "{variables}",
   "axes": [
     {

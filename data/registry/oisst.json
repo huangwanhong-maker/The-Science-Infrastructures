@@ -8,6 +8,9 @@
   "credit": "OISST v2.1, NOAA NCEI",
   "service": "https://coastwatch.pfeg.noaa.gov/erddap",
   "dataset": "ncdcOisst21NrtAgg_LonPM180",
+  "mirrors": [
+    {"service": "https://upwell.pfeg.noaa.gov/erddap", "dataset": "ncdcOisst21NrtAgg_LonPM180"}
+  ],
   "variables": "{variables}",
   "axes": [
     {

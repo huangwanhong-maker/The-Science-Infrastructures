@@ -85,6 +85,7 @@ The resolved instants are recorded in the provenance.
 | Field | Meaning |
 |---|---|
 | `service`, `dataset` | The ERDDAP server (ending in `/erddap`) and the dataset identifier |
+| `mirrors` | Optional: other servers that carry the same data, each `{service, dataset}`, tried in order when the one before cannot serve the request. The retrieval records which served it. |
 | `variables` | Comma-separated variable names, or a `{parameter}` |
 | `axes` | The axes, in the dataset's order. Each is `{name, from, to, stride}`, with values in the axis's units. The time axis instead takes `{from, to, step_hours}`, with `time` parameters. A fixed axis (such as a depth of 0) has `from` equal to `to`. |
 | `attributes` | Attributes to add to variables whose source lacks them, such as `units` or `standard_name` |

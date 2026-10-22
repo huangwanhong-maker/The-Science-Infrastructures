@@ -334,16 +334,23 @@ def write_provenance(folder: Path, manifest: dict, tag: str, values: dict, resol
     }, indent=2) + "\n", encoding="utf-8")
 
 
-def griddap_request(manifest: dict, values: dict, present: dt.datetime) -> tuple[str, dict]:
-    """The request URL for a griddap dataset, and the resolved axes for provenance."""
-    service, dataset = manifest["service"], manifest["dataset"]
+def servers(manifest: dict) -> list[tuple[str, str]]:
+    """The dataset's server and identifier, then its mirrors: other servers that
+    carry the same data, perhaps under another identifier, tried in that order."""
+    return [(manifest["service"], manifest["dataset"])] + \
+        [(m["service"], m["dataset"]) for m in manifest.get("mirrors", [])]
+
+
+def griddap_request(manifest: dict, service: str, dataset: str, values: dict,
+                    present: dt.datetime) -> tuple[str, dict]:
+    """The request URL for a griddap dataset on one server, and the resolved axes for provenance."""
     meta = erddap.info(service, dataset)
     variables = [v.strip() for v in str(fill(manifest["variables"], values)).split(",") if v.strip()]
     unknown = [v for v in variables if v not in meta["variables"]]
     if unknown:
         raise erddap.ErddapError(f"unknown variable(s) {', '.join(unknown)}; "
                                  f"the dataset has {', '.join(meta['variables'])}")
-    axes, resolved = [], {"variables": variables}
+    axes, resolved = [], {"service": service, "dataset": dataset, "variables": variables}
     for spec in manifest["axes"]:
         spec = {k: fill(v, values) for k, v in spec.items()}
         if spec["name"] != "time":
@@ -373,14 +380,21 @@ def acquire_griddap(manifest: dict, profile: str | None, overrides: dict, refres
     name = manifest.get("file", "data.nc")
     print(f"  profile {tag}: " + ", ".join(f"{k}={v}" for k, v in values.items()))
     started = time.monotonic()
-    try:
-        url, resolved = griddap_request(manifest, values, dt.datetime.now(UTC))
-    except (erddap.ErddapError, urllib.error.URLError, OSError) as error:
+    # The first server that can answer serves the request; the retrieval records which did.
+    for service, dataset in servers(manifest):
+        try:
+            url, resolved = griddap_request(manifest, service, dataset, values, dt.datetime.now(UTC))
+            break
+        except (erddap.ErddapError, urllib.error.URLError, OSError) as error:
+            print(f"  {service} could not serve the request ({error})")
+    else:
         if (folder / name).exists():
-            print(f"  the service could not be reached ({error}); keeping the cached retrieval")
+            print("  keeping the cached retrieval")
             return True
-        print(f"  REQUEST FAILED: {error}")
+        print("  REQUEST FAILED: no server could serve it")
         return False
+    if (service, dataset) != servers(manifest)[0]:
+        print(f"  served by {service} as {dataset}")
     if "time" in resolved:
         t = resolved["time"]
         print(f"  times {t['first']} to {t['last']}: {t['count']} step(s) of {t['step_hours']} h")
@@ -665,6 +679,8 @@ def describe(manifest: dict) -> None:
         total = sum(f.get("size") or 0 for f in manifest["files"])
         print(f"{'':39s}{len(manifest['files'])} file(s), {total / 1e6:.1f} MB")
         return
+    if manifest.get("mirrors"):
+        print(f"{'':39s}mirrors: " + "; ".join(f"{m['dataset']} at {m['service']}" for m in manifest["mirrors"]))
     print(f"{'':39s}parameters:")
     for name, spec in manifest["parameters"].items():
         bounds = f" {spec.get('min')}..{spec.get('max')}" if "min" in spec else ""
