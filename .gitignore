@@ -1,0 +1,14 @@
+# Editors and operating systems
+.vs/
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Python and build outputs, should any appear at this level
+__pycache__/
+*.py[cod]
+build/
+dist/
