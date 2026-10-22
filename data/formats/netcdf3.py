@@ -263,7 +263,7 @@ def write(path: str | Path, dimensions: dict, variables: dict, attributes: dict 
     dim_names = list(dimensions)
     arrays = {}
     for name, (dims, data, _) in variables.items():
-        data = np.ascontiguousarray(data)
+        data = np.asarray(data, order="C")         # keeps a scalar a scalar (ascontiguousarray makes it 1-d)
         if data.dtype.name not in NC_TYPE_OF:
             raise NetCDFError(f"{name}: cannot write values of type {data.dtype}")
         if tuple(dimensions[d] for d in dims) != data.shape:
