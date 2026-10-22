@@ -10,7 +10,9 @@ Usage::
     python applications/celestial-atlas/serve.py [--host 127.0.0.1] [--port 8770] [--open]
 
 then open http://127.0.0.1:8770/ in a browser. On a server, ``--host 0.0.0.0``
-serves other computers too.
+serves other computers too, and ``--sibling URL`` says where the Earth Atlas
+is served: the page links to it as ``../earth-atlas/``, and the server sends
+the browser on from there.
 """
 
 from __future__ import annotations
@@ -31,6 +33,7 @@ MOUNTS = {
     "/foundations/": ROOT / "foundations",
     "/visualization/": ROOT / "visualization",
 }
+SIBLING = None       # where the Earth Atlas is served, when it is not beside this page
 
 # Explicit types: on Windows the registry may otherwise map .js to text/plain,
 # which browsers refuse for ES modules.
@@ -66,6 +69,16 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             return str(base / "__outside__")
         return str(target)
 
+    def do_GET(self) -> None:
+        # The page links to the Earth Atlas as ../earth-atlas/, keeping the place
+        # and instant in the fragment, which the browser carries over a redirect.
+        if SIBLING and self.path.startswith("/earth-atlas/"):
+            self.send_response(302)
+            self.send_header("Location", SIBLING + self.path[len("/earth-atlas/"):])
+            self.end_headers()
+            return
+        super().do_GET()
+
     def end_headers(self) -> None:
         # Fixed downloads (the ephemeris) are kept for a day; products, which
         # change when rebuilt, are checked again each time (a 304 if unchanged).
@@ -84,8 +97,12 @@ def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description="Serve the Celestial Atlas locally.")
     parser.add_argument("--host", default="127.0.0.1", help="the address to bind; 0.0.0.0 for every interface")
     parser.add_argument("--port", type=int, default=8770)
+    parser.add_argument("--sibling", metavar="URL",
+                        help="where the Earth Atlas is served when it is not beside this page")
     parser.add_argument("--open", action="store_true", help="open the page in the default browser")
     args = parser.parse_args(argv)
+    global SIBLING
+    SIBLING = args.sibling.rstrip("/") + "/" if args.sibling else None
     if not (DATA / "jpl-de440s" / "de440s.bsp").exists():
         print("The data cache is empty. From the repository root, run:\n"
               "  python data/acquisition/fetch.py\n  python data/products/star_catalog.py", file=sys.stderr)

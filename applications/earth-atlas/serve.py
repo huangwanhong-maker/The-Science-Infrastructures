@@ -17,7 +17,9 @@ Usage::
     python applications/earth-atlas/serve.py [--host 127.0.0.1] [--port 8790] [--open]
 
 then open http://127.0.0.1:8790/ in a browser. On a server, ``--host 0.0.0.0``
-serves other computers too.
+serves other computers too, and ``--sibling URL`` says where the Celestial
+Atlas is served: the page links to it as ``../celestial-atlas/``, and the
+server sends the browser on from there.
 """
 
 from __future__ import annotations
@@ -40,6 +42,7 @@ MOUNTS = {
     "/visualization/": ROOT / "visualization",
 }
 JOBS = None          # the data library's jobs on demand, created at the first request
+SIBLING = None       # where the Celestial Atlas is served, when it is not beside this page
 
 
 def jobs():
@@ -80,6 +83,13 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         url = urllib.parse.urlsplit(self.path)
         if url.path == "/request" or url.path.startswith("/request/"):
             self.on_demand(url)
+        elif SIBLING and url.path.startswith("/celestial-atlas/"):
+            # The page links to the Celestial Atlas as ../celestial-atlas/, keeping
+            # the place and instant in the fragment, which the browser carries over
+            # a redirect.
+            self.send_response(302)
+            self.send_header("Location", SIBLING + self.path[len("/celestial-atlas/"):])
+            self.end_headers()
         else:
             super().do_GET()
 
@@ -124,8 +134,12 @@ def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description="Serve the Earth Atlas locally.")
     parser.add_argument("--host", default="127.0.0.1", help="the address to bind; 0.0.0.0 for every interface")
     parser.add_argument("--port", type=int, default=8790)
+    parser.add_argument("--sibling", metavar="URL",
+                        help="where the Celestial Atlas is served when it is not beside this page")
     parser.add_argument("--open", action="store_true", help="open the page in the default browser")
     args = parser.parse_args(argv)
+    global SIBLING
+    SIBLING = args.sibling.rstrip("/") + "/" if args.sibling else None
     if not (DATA / "products" / "geography-ne50m.json").exists():
         print("The geography product is missing. From the repository root, run:\n"
               "  python data/acquisition/fetch.py natural-earth-50m\n"
