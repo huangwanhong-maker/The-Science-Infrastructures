@@ -1,6 +1,8 @@
-"""Plug-ins of the Earth Atlas written in Python (ADR 0029): the same classes
-as src/plugins/plugin.js, over numpy, run in the application's server rather
-than in the page. A script exports
+"""Plug-ins written in Python (ADR 0029): the same classes as the Earth Atlas's
+src/plugins/plugin.js, over numpy, run in a server (an application's, or the
+API's) rather than in a page. The classes belong to no application: the hosting
+of plug-ins is science/hosting.py, and an application binds it to its own
+plugins/ directory (applications/earth-atlas/py/host.py). A script exports
 
     def create(api):
         class Mine(api.Diagnostic): ...
@@ -26,7 +28,7 @@ import math
 
 import numpy as np
 
-from fields import Field, bilinear, iso, UTC
+from .fields import Field, bilinear, iso, UTC
 
 EARTH_RADIUS_M = 6371008.8
 DEG = math.pi / 180
@@ -153,8 +155,11 @@ class Plugin:
     parameters: dict = {}
 
     def needs(self) -> list[dict]:
-        """[{name, label, standard_name | standard_names: [u, v], level?, times?, distinct?}]; run() receives
-        inputs[name] = Input(product, names, variables, meta, model, level) from the source the user chose."""
+        """[{name, label, standard_name | standard_names: [u, v], level?, times?, distinct?, optional?}]; run() receives
+        inputs[name] = Input(product, names, variables, meta, model, level) from the source the user chose.
+        A need {name, label, kind: 'observations', variable, optional?} is served by the observation sets
+        carrying the variable, and received as Observed(observations, name, model, variable); an optional
+        need left without a source is received as None."""
         return []
 
     def run(self, inputs: dict, params: dict, context) -> list[dict]:
@@ -173,15 +178,32 @@ class Input:
         self.product, self.names, self.variables, self.meta, self.model, self.level = product, names, variables, meta, model, level
 
 
-class Context:
-    """What a plug-in sees: the instant shown, the chosen place, the library's fields, progress."""
+class Observed:
+    """The source chosen for a need of kind 'observations' ({name, label, kind: 'observations',
+    variable, optional?}): the observation set as the library holds it (schema observations/1:
+    {fields, rows, variables, window, source}), its name, its title as `model`, and the variable
+    asked for; as the page's host passes { observations, name, model, variable }."""
 
-    def __init__(self, time: dt.datetime, pinned=None, progress=None, fields=None, field=None):
+    def __init__(self, observations: dict, name: str, model: str, variable: str | None):
+        self.observations, self.name, self.model, self.variable = observations, name, model, variable
+
+
+class Context:
+    """What a plug-in sees: the instant shown, the chosen place, the library's
+    products (fields, and the index's entries, events and observations), progress.
+    The host fills the readers in from the products on disk; the page's context
+    (src/plugins/context.js) has the same members."""
+
+    def __init__(self, time: dt.datetime, pinned=None, progress=None, fields=None, field=None,
+                 listing=None, events=None, observations=None):
         self.time = time
         self.pinned = pinned
         self._progress = progress or (lambda fraction, text="": None)
         self._fields = fields or (lambda: [])
         self._field = field or (lambda name: None)
+        self._list = listing or (lambda kind: [])
+        self._events = events or (lambda name: None)
+        self._observations = observations or (lambda name: None)
 
     def progress(self, fraction: float, text: str = "") -> None:
         self._progress(fraction, text)
@@ -191,6 +213,19 @@ class Context:
 
     def field(self, name: str) -> Field | None:
         return self._field(name)
+
+    def list(self, kind: str) -> list[dict]:
+        """The library's index entries of a kind: 'fields', 'events', 'observations', 'tracks', 'regions', ..."""
+        return self._list(kind)
+
+    def events(self, name: str) -> dict | None:
+        """An event set by name (earthquakes, mechanisms, disasters): {fields, events: [[row]], window, source}."""
+        return self._events(name)
+
+    def observations(self, name: str) -> dict | None:
+        """An observation set by name (stations, buoys, sensors): {variables, fields, rows, window, source},
+        read again each time, since observations change while a server runs."""
+        return self._observations(name)
 
 
 class Diagnostic(Plugin):
@@ -322,11 +357,14 @@ class ForecastModel(Plugin):
 
 
 class DataAssimilation(Plugin):
-    """A background field and observations to an analysis. Override observations()
-    and analyse(); the result is the analysis and its increment, with the observations sketched."""
+    """A background field and observations to an analysis, at the instant shown
+    (clamped to the background's span), the background interpolated linearly in
+    time to it, so that hourly reports and a sensor's latest reading meet a
+    background of six-hourly times. Override observations() and analyse(); the
+    result is the analysis and its increment at that one time, with the observations sketched."""
 
-    def observations(self, inputs, index, params, context) -> list[dict]:
-        """[{lon, lat, value, error?}] at time index `index` of the inputs."""
+    def observations(self, inputs, when: dt.datetime, params, context) -> list[dict]:
+        """[{lon, lat, value, error?}] observed at `when`, the analysis's time (UTC)."""
         return []
 
     def analyse(self, background: np.ndarray, grid: dict, observations: list[dict], params: dict, context) -> np.ndarray:
@@ -339,13 +377,19 @@ class DataAssimilation(Plugin):
     def run(self, inputs, params, context):
         first = inputs[self.needs()[0]["name"]]
         product, name, v = first.product, first.names[0], first.variables[0]
-        index = product.index_at_or_before(context.time)
-        t = product.times[index] if product.times else context.time
-        background = product.slice(name, index)
-        observations = self.observations(inputs, index, params, context)
+        times = product.times
+        t = max(times[0], min(times[-1], context.time)) if times else context.time
+        i0, i1, w = product.bracket(t, name)
+        a0 = product.slice(name, max(0, i0))
+        if w > 0:      # in double precision, rounded once to float32, as the page interpolates
+            a1 = product.slice(name, max(0, i1))
+            background = (a0.astype(np.float64) + (a1.astype(np.float64) - a0) * w).astype(np.float32)
+        else:
+            background = a0
+        observations = self.observations(inputs, t, params, context)
         lons = np.array([o["lon"] for o in observations]) if observations else np.zeros(0)
         lats = np.array([o["lat"] for o in observations]) if observations else np.zeros(0)
-        innovations = np.array([o["value"] for o in observations]) - bilinear(background, product.grid, lons, lats) if observations else np.zeros(0)
+        innovations = np.array([o["value"] for o in observations]) - product.sample(name, t, lons, lats) if observations else np.zeros(0)
         analysis = np.asarray(self.analyse(background, product.grid, observations, params, context), dtype=np.float32)
         increment = analysis - background
         made = make_product(

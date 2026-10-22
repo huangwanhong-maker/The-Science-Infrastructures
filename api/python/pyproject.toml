@@ -1,0 +1,25 @@
+# The Python package of the API (api/README.md): `import science`.
+#   pip install -e api/python            the client and the library read without a server
+#   pip install -e "api/python[numpy]"   with numpy: grids as arrays, fields read locally, plug-ins
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "science-infrastructures"
+version = "0.1.0"
+description = "The Science Infrastructures from Python: the API's client, and the library read on this computer without a server"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Wanhong Huang" }]
+dependencies = []
+
+[project.optional-dependencies]
+numpy = ["numpy>=1.24"]
+
+[project.urls]
+Repository = "https://github.com/huangwanhong-maker/The-Science-Infrastructures"
+Documentation = "https://github.com/huangwanhong-maker/The-Science-Infrastructures/blob/main/api/README.md"
+
+[tool.setuptools]
+packages = ["science"]

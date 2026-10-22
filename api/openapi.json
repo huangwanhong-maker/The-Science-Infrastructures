@@ -1,0 +1,2904 @@
+{
+ "openapi": "3.1.0",
+ "info": {
+  "title": "The Science Infrastructures API",
+  "version": "0.1.0",
+  "summary": "The data library's products, the sensors' observations, the domains' algorithms and the servers' plug-ins, for programs in any language.",
+  "description": "Every endpoint is under /api/v1. Answers are JSON unless stated; errors are {\"error\": \"...\"} with the status that says why. Units are SI unless a product states its own; angles in degrees at this boundary; times UTC. See api/README.md.",
+  "license": {
+   "name": "MIT",
+   "identifier": "MIT"
+  }
+ },
+ "servers": [
+  {
+   "url": "http://127.0.0.1:8800/api/v1",
+   "description": "The standalone service (api/service/server.py)"
+  },
+  {
+   "url": "http://127.0.0.1:8790/api/v1",
+   "description": "The Earth Atlas's server, which mounts the API"
+  }
+ ],
+ "tags": [
+  {
+   "name": "service"
+  },
+  {
+   "name": "fields",
+   "description": "Variables on grids, over time"
+  },
+  {
+   "name": "observations",
+   "description": "Readings at places: stations, buoys, our own sensors; in real time"
+  },
+  {
+   "name": "products",
+   "description": "Events, tracks, regions and verification, as the data library writes them"
+  },
+  {
+   "name": "compute",
+   "description": "The bridge to the domains' and foundations' functions"
+  },
+  {
+   "name": "plug-ins",
+   "description": "The servers' plug-ins (ADR 0029) and their jobs"
+  }
+ ],
+ "paths": {
+  "/": {
+   "get": {
+    "operationId": "index",
+    "summary": "The version, the endpoints and the write policy",
+    "tags": [
+     "service"
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Index"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/openapi.json": {
+   "get": {
+    "operationId": "openapi",
+    "summary": "This description",
+    "tags": [
+     "service"
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/catalog": {
+   "get": {
+    "operationId": "catalog",
+    "summary": "The registry's datasets and the index of products",
+    "tags": [
+     "service"
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Catalog"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/fields": {
+   "get": {
+    "operationId": "fields",
+    "summary": "The field products",
+    "tags": [
+     "fields"
+    ],
+    "description": "Forecasts, analyses, relief, climate normals, and the products plug-ins have made (`computed: true`), as the index of products lists them.",
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "fields": {
+           "type": "array",
+           "items": {
+            "$ref": "#/components/schemas/FieldEntry"
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/fields/{name}": {
+   "get": {
+    "operationId": "field",
+    "summary": "A field's description: grid, times, variables",
+    "tags": [
+     "fields"
+    ],
+    "parameters": [
+     {
+      "name": "name",
+      "in": "path",
+      "required": true,
+      "description": "The field's name.",
+      "schema": {
+       "type": "string"
+      },
+      "example": "gfs-forecast"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Field"
+        }
+       }
+      }
+     },
+     "404": {
+      "$ref": "#/components/responses/Error"
+     },
+     "503": {
+      "$ref": "#/components/responses/Error"
+     }
+    }
+   }
+  },
+  "/fields/{name}/sample": {
+   "get": {
+    "operationId": "sample",
+    "summary": "Values at places and an instant",
+    "tags": [
+     "fields"
+    ],
+    "description": "Bilinear in space and linear in time, exactly as the Earth Atlas's page samples (foundations/physis/js/grid.js): the weights of the grid points with a value are renormalised when they carry at least half the total; else, and outside the grid, the value is null. Directions (a standard name with `direction`, or units `degree`) are interpolated through their unit vectors. Accuracy: half the variable's quantum, plus the error of linear interpolation.",
+    "parameters": [
+     {
+      "name": "name",
+      "in": "path",
+      "required": true,
+      "description": "The field's name.",
+      "schema": {
+       "type": "string"
+      },
+      "example": "gfs-forecast"
+     },
+     {
+      "name": "var",
+      "in": "query",
+      "required": true,
+      "description": "The variable's name, as the field's description lists it.",
+      "schema": {
+       "type": "string"
+      },
+      "example": "tmp2m"
+     },
+     {
+      "name": "lon",
+      "in": "query",
+      "required": true,
+      "description": "Longitudes in degrees east, comma-separated (one, or as many as `lat`).",
+      "schema": {
+       "type": "string"
+      },
+      "example": "139.69,-0.13"
+     },
+     {
+      "name": "lat",
+      "in": "query",
+      "required": true,
+      "description": "Latitudes in degrees north, comma-separated.",
+      "schema": {
+       "type": "string"
+      },
+      "example": "35.69,51.51"
+     },
+     {
+      "name": "time",
+      "in": "query",
+      "required": false,
+      "description": "An instant, UTC: ISO 8601 (an instant without an offset is UTC), `now`, or `now+6h` / `now-1d` (s, m, h, d). Default: now. The value is interpolated linearly between the two stored times around it, clamped to the product's span; a variable whose cell method is a mean, sum, maximum or minimum over time takes the nearest time, and a climatology the instant's month.",
+      "schema": {
+       "type": "string"
+      },
+      "example": "2026-10-23T06:00Z"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Sample"
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/Error"
+     },
+     "404": {
+      "$ref": "#/components/responses/Error"
+     },
+     "413": {
+      "$ref": "#/components/responses/Error"
+     },
+     "503": {
+      "$ref": "#/components/responses/Error"
+     }
+    }
+   },
+   "post": {
+    "operationId": "sampleMany",
+    "summary": "Values at many places (the body holds the places)",
+    "tags": [
+     "fields"
+    ],
+    "description": "As GET, for more places than a URL holds. It changes nothing, and is open to every caller.",
+    "parameters": [
+     {
+      "name": "name",
+      "in": "path",
+      "required": true,
+      "description": "The field's name.",
+      "schema": {
+       "type": "string"
+      },
+      "example": "gfs-forecast"
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "required": [
+         "var",
+         "lon",
+         "lat"
+        ],
+        "properties": {
+         "var": {
+          "type": "string"
+         },
+         "lon": {
+          "type": "array",
+          "items": {
+           "type": "number"
+          }
+         },
+         "lat": {
+          "type": "array",
+          "items": {
+           "type": "number"
+          }
+         },
+         "time": {
+          "type": "string"
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Sample"
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/Error"
+     },
+     "404": {
+      "$ref": "#/components/responses/Error"
+     },
+     "411": {
+      "$ref": "#/components/responses/Error"
+     },
+     "413": {
+      "$ref": "#/components/responses/Error"
+     },
+     "503": {
+      "$ref": "#/components/responses/Error"
+     }
+    }
+   }
+  },
+  "/fields/{name}/series": {
+   "get": {
+    "operationId": "series",
+    "summary": "The value at a place at every time of the product",
+    "tags": [
+     "fields"
+    ],
+    "parameters": [
+     {
+      "name": "name",
+      "in": "path",
+      "required": true,
+      "description": "The field's name.",
+      "schema": {
+       "type": "string"
+      },
+      "example": "gfs-forecast"
+     },
+     {
+      "name": "var",
+      "in": "query",
+      "required": true,
+      "description": "The variable's name, as the field's description lists it.",
+      "schema": {
+       "type": "string"
+      },
+      "example": "tmp2m"
+     },
+     {
+      "name": "lon",
+      "in": "query",
+      "required": true,
+      "description": "Longitude, degrees east.",
+      "schema": {
+       "type": "number"
+      },
+      "example": 139.69
+     },
+     {
+      "name": "lat",
+      "in": "query",
+      "required": true,
+      "description": "Latitude, degrees north.",
+      "schema": {
+       "type": "number"
+      },
+      "example": 35.69
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Series"
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/Error"
+     },
+     "404": {
+      "$ref": "#/components/responses/Error"
+     },
+     "503": {
+      "$ref": "#/components/responses/Error"
+     }
+    }
+   }
+  },
+  "/fields/{name}/grid": {
+   "get": {
+    "operationId": "grid",
+    "summary": "The grid at a time, or a box of it",
+    "tags": [
+     "fields"
+    ],
+    "description": "At a stored time when `time` is an integer index (negative counts from the end), or at an instant, between the two stored times around it. JSON answers at most 2 000 000 cells; `format=f32` answers the values as little-endian float32, row-major, rows north to south, NaN for no value, with the grid in the header `X-Grid` (JSON).",
+    "parameters": [
+     {
+      "name": "name",
+      "in": "path",
+      "required": true,
+      "description": "The field's name.",
+      "schema": {
+       "type": "string"
+      },
+      "example": "gfs-forecast"
+     },
+     {
+      "name": "var",
+      "in": "query",
+      "required": true,
+      "description": "The variable's name, as the field's description lists it.",
+      "schema": {
+       "type": "string"
+      },
+      "example": "tmp2m"
+     },
+     {
+      "name": "time",
+      "in": "query",
+      "required": false,
+      "description": "An index of the stored times, or an instant (as for sample). Default: now.",
+      "schema": {
+       "type": "string"
+      },
+      "example": "0"
+     },
+     {
+      "name": "bbox",
+      "in": "query",
+      "required": false,
+      "description": "A box `west,south,east,north` in degrees; west greater than east crosses the antimeridian (on a grid that goes round the Earth).",
+      "schema": {
+       "type": "string"
+      },
+      "example": "120,20,150,50"
+     },
+     {
+      "name": "stride",
+      "in": "query",
+      "required": false,
+      "description": "Every n-th point of the grid, in both directions (no averaging).",
+      "schema": {
+       "type": "integer",
+       "minimum": 1,
+       "default": 1
+      }
+     },
+     {
+      "name": "format",
+      "in": "query",
+      "required": false,
+      "description": "json or f32.",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "json",
+        "f32"
+       ],
+       "default": "json"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "The grid",
+      "headers": {
+       "X-Grid": {
+        "description": "With format=f32: the field, variable, units, time and grid, as JSON.",
+        "schema": {
+         "type": "string"
+        }
+       }
+      },
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Grid"
+        }
+       },
+       "application/octet-stream": {
+        "schema": {
+         "type": "string",
+         "format": "binary"
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/Error"
+     },
+     "404": {
+      "$ref": "#/components/responses/Error"
+     },
+     "413": {
+      "$ref": "#/components/responses/Error"
+     },
+     "503": {
+      "$ref": "#/components/responses/Error"
+     }
+    }
+   }
+  },
+  "/fields/{name}/export": {
+   "get": {
+    "operationId": "export",
+    "summary": "A file of the variable at a stored time",
+    "tags": [
+     "fields"
+    ],
+    "description": "Written by data/formats/export.py: GeoTIFF (`tif`), netCDF classic (`nc`), CSV or JSON, at the stored time nearest the instant (or at an index). 501 until that module exists on the computer.",
+    "parameters": [
+     {
+      "name": "name",
+      "in": "path",
+      "required": true,
+      "description": "The field's name.",
+      "schema": {
+       "type": "string"
+      },
+      "example": "gfs-forecast"
+     },
+     {
+      "name": "var",
+      "in": "query",
+      "required": true,
+      "description": "The variable's name, as the field's description lists it.",
+      "schema": {
+       "type": "string"
+      },
+      "example": "tmp2m"
+     },
+     {
+      "name": "time",
+      "in": "query",
+      "required": false,
+      "description": "An index, or an instant (the stored time nearest it), or `all` for every time (netCDF and JSON only).",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "format",
+      "in": "query",
+      "required": false,
+      "description": "The file's format.",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "tif",
+        "nc",
+        "csv",
+        "json"
+       ],
+       "default": "tif"
+      }
+     },
+     {
+      "name": "bbox",
+      "in": "query",
+      "required": false,
+      "description": "A box `west,south,east,north` in degrees; west greater than east crosses the antimeridian (on a grid that goes round the Earth).",
+      "schema": {
+       "type": "string"
+      },
+      "example": "120,20,150,50"
+     },
+     {
+      "name": "stride",
+      "in": "query",
+      "required": false,
+      "description": "Every n-th point of the grid, in both directions (no averaging).",
+      "schema": {
+       "type": "integer",
+       "minimum": 1,
+       "default": 1
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "The file, with Content-Disposition naming it",
+      "content": {
+       "application/octet-stream": {
+        "schema": {
+         "type": "string",
+         "format": "binary"
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/Error"
+     },
+     "404": {
+      "$ref": "#/components/responses/Error"
+     },
+     "501": {
+      "$ref": "#/components/responses/Error"
+     },
+     "503": {
+      "$ref": "#/components/responses/Error"
+     }
+    }
+   }
+  },
+  "/observations": {
+   "get": {
+    "operationId": "observations",
+    "summary": "The observation sets and the sensors' sources",
+    "tags": [
+     "observations"
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ObservationsIndex"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/observations/{source}": {
+   "get": {
+    "operationId": "observationsOf",
+    "summary": "A sensor source's readings, or an observation set's rows",
+    "tags": [
+     "observations"
+    ],
+    "description": "A source of the sensors' store (observation/sensors/store.py) answers its readings; an observations product (schema observations/1: METAR, NDBC, sensor-<source>) answers as it is written, its rows filtered.",
+    "parameters": [
+     {
+      "name": "source",
+      "in": "path",
+      "required": true,
+      "description": "A sensor source, or an observations product.",
+      "schema": {
+       "type": "string"
+      },
+      "example": "garden"
+     },
+     {
+      "name": "since",
+      "in": "query",
+      "required": false,
+      "description": "The earliest time, inclusive (ISO 8601, `now-1d`, ...).",
+      "schema": {
+       "type": "string"
+      },
+      "example": "now-1d"
+     },
+     {
+      "name": "until",
+      "in": "query",
+      "required": false,
+      "description": "The latest time, inclusive.",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "bbox",
+      "in": "query",
+      "required": false,
+      "description": "A box `west,south,east,north` in degrees; west greater than east crosses the antimeridian (on a grid that goes round the Earth).",
+      "schema": {
+       "type": "string"
+      },
+      "example": "120,20,150,50"
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "description": "At most this many rows: the latest.",
+      "schema": {
+       "type": "integer",
+       "minimum": 0
+      }
+     },
+     {
+      "name": "format",
+      "in": "query",
+      "required": false,
+      "description": "json (the product as written), or geojson: a FeatureCollection in WGS 84 (RFC 7946), written by data/formats/export.py (events and observations as points, tracks as lines cut at the antimeridian).",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "json",
+        "geojson"
+       ],
+       "default": "json"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "The readings or the set (GeoJSON for a set, when asked)",
+      "content": {
+       "application/json": {
+        "schema": {
+         "oneOf": [
+          {
+           "$ref": "#/components/schemas/SensorReadings"
+          },
+          {
+           "$ref": "#/components/schemas/ObservationSet"
+          }
+         ]
+        }
+       },
+       "application/geo+json": {
+        "schema": {
+         "type": "object"
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/Error"
+     },
+     "404": {
+      "$ref": "#/components/responses/Error"
+     },
+     "501": {
+      "$ref": "#/components/responses/Error"
+     },
+     "503": {
+      "$ref": "#/components/responses/Error"
+     }
+    }
+   },
+   "post": {
+    "operationId": "postObservations",
+    "summary": "Readings from a device (a write)",
+    "tags": [
+     "observations"
+    ],
+    "description": "Appends readings to a sensor source, defining it first when `define` is given. Each reading is checked by the store (variables, gross-error limits, place, time); the refused are listed with their reasons. Writes follow the service's policy: refused when read-only; with a token, only with `Authorization: Bearer <token>`; without one, refused to a page of another origin.",
+    "security": [
+     {},
+     {
+      "bearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "source",
+      "in": "path",
+      "required": true,
+      "description": "The source's name: lowercase letters, digits and single hyphens.",
+      "schema": {
+       "type": "string"
+      },
+      "example": "garden"
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "oneOf": [
+         {
+          "type": "object",
+          "properties": {
+           "readings": {
+            "type": "array",
+            "items": {
+             "$ref": "#/components/schemas/Reading"
+            }
+           },
+           "define": {
+            "$ref": "#/components/schemas/Define"
+           }
+          }
+         },
+         {
+          "type": "array",
+          "items": {
+           "$ref": "#/components/schemas/Reading"
+          }
+         }
+        ]
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Posted"
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/Error"
+     },
+     "401": {
+      "$ref": "#/components/responses/Error"
+     },
+     "403": {
+      "$ref": "#/components/responses/Error"
+     },
+     "404": {
+      "$ref": "#/components/responses/Error"
+     },
+     "411": {
+      "$ref": "#/components/responses/Error"
+     },
+     "413": {
+      "$ref": "#/components/responses/Error"
+     },
+     "503": {
+      "$ref": "#/components/responses/Error"
+     }
+    }
+   }
+  },
+  "/observations/{source}/stream": {
+   "get": {
+    "operationId": "streamOf",
+    "summary": "A source's new readings as they arrive (Server-Sent Events)",
+    "tags": [
+     "observations"
+    ],
+    "description": "`text/event-stream`: each event is `event: readings`, an `id`, and `data` as JSON {source, readings}; a comment line is a heartbeat, every 15 s. A client that reconnects with `Last-Event-ID` receives the events it missed, of the last 1000.",
+    "parameters": [
+     {
+      "name": "source",
+      "in": "path",
+      "required": true,
+      "description": "The sensor source.",
+      "schema": {
+       "type": "string"
+      },
+      "example": "garden"
+     },
+     {
+      "name": "Last-Event-ID",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string"
+      },
+      "description": "The id of the last event received."
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "The stream",
+      "content": {
+       "text/event-stream": {
+        "schema": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "503": {
+      "$ref": "#/components/responses/Error"
+     }
+    }
+   }
+  },
+  "/stream": {
+   "get": {
+    "operationId": "stream",
+    "summary": "Every source's new readings as they arrive (Server-Sent Events)",
+    "tags": [
+     "observations"
+    ],
+    "parameters": [
+     {
+      "name": "Last-Event-ID",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "The stream",
+      "content": {
+       "text/event-stream": {
+        "schema": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "503": {
+      "$ref": "#/components/responses/Error"
+     }
+    }
+   }
+  },
+  "/compute": {
+   "get": {
+    "operationId": "units",
+    "summary": "The domains and foundations whose functions can be called",
+    "tags": [
+     "compute"
+    ],
+    "description": "Each unit's exported functions (with their parameters as written, and the comment above each), constants and classes (classes are listed, not callable).",
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "units": {
+           "type": "array",
+           "items": {
+            "$ref": "#/components/schemas/Unit"
+           }
+          },
+          "call": {
+           "type": "string"
+          },
+          "limit_seconds": {
+           "type": "number"
+          }
+         }
+        }
+       }
+      }
+     },
+     "503": {
+      "$ref": "#/components/responses/Error"
+     }
+    }
+   }
+  },
+  "/compute/{unit}": {
+   "get": {
+    "operationId": "unit",
+    "summary": "One unit's functions, constants and modules",
+    "tags": [
+     "compute"
+    ],
+    "parameters": [
+     {
+      "name": "unit",
+      "in": "path",
+      "required": true,
+      "description": "A domain or a foundation.",
+      "schema": {
+       "type": "string"
+      },
+      "example": "astronomy"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Unit"
+        }
+       }
+      }
+     },
+     "404": {
+      "$ref": "#/components/responses/Error"
+     },
+     "503": {
+      "$ref": "#/components/responses/Error"
+     }
+    }
+   }
+  },
+  "/compute/{unit}/{function}": {
+   "post": {
+    "operationId": "compute",
+    "summary": "A pure exported function, called with JSON arguments",
+    "tags": [
+     "compute"
+    ],
+    "description": "Runs in a persistent Node worker over the unit's public interface (js/index.js); nothing is evaluated. `{\"$typed\": \"Float64Array\", \"values\": [...]}` makes a typed array. Results come as JSON: typed arrays as lists, NaN and infinities as null. A call has a time limit (10 s by default), after which its worker is replaced (504). The units are pure, so a call changes nothing: it is open to every caller.",
+    "parameters": [
+     {
+      "name": "unit",
+      "in": "path",
+      "required": true,
+      "description": "A domain or a foundation.",
+      "schema": {
+       "type": "string"
+      },
+      "example": "astronomy"
+     },
+     {
+      "name": "function",
+      "in": "path",
+      "required": true,
+      "description": "An exported function.",
+      "schema": {
+       "type": "string"
+      },
+      "example": "sunPosition"
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "oneOf": [
+         {
+          "type": "object",
+          "properties": {
+           "args": {
+            "type": "array"
+           }
+          }
+         },
+         {
+          "type": "array"
+         }
+        ]
+       },
+       "example": {
+        "args": [
+         2460000.5
+        ]
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "unit": {
+           "type": "string"
+          },
+          "function": {
+           "type": "string"
+          },
+          "result": {},
+          "seconds": {
+           "type": "number"
+          }
+         }
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/Error"
+     },
+     "404": {
+      "$ref": "#/components/responses/Error"
+     },
+     "422": {
+      "$ref": "#/components/responses/Error"
+     },
+     "503": {
+      "$ref": "#/components/responses/Error"
+     },
+     "504": {
+      "$ref": "#/components/responses/Error"
+     }
+    }
+   }
+  },
+  "/plugins": {
+   "get": {
+    "operationId": "plugins",
+    "summary": "The plug-ins the service runs, by application",
+    "tags": [
+     "plug-ins"
+    ],
+    "description": "Python and C++ files under each application's plugins/ directory (ADR 0029).",
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "applications": {
+           "type": "object",
+           "additionalProperties": {
+            "type": "array",
+            "items": {
+             "type": "object",
+             "properties": {
+              "file": {
+               "type": "string"
+              },
+              "runtime": {
+               "type": "string",
+               "enum": [
+                "python",
+                "cpp"
+               ]
+              },
+              "unavailable": {
+               "type": "string"
+              }
+             }
+            }
+           }
+          },
+          "runs": {
+           "type": "string"
+          }
+         }
+        }
+       }
+      }
+     },
+     "503": {
+      "$ref": "#/components/responses/Error"
+     }
+    }
+   }
+  },
+  "/plugins/describe": {
+   "get": {
+    "operationId": "describePlugin",
+    "summary": "A plug-in's identity, parameters and needs, with the sources that serve each",
+    "tags": [
+     "plug-ins"
+    ],
+    "parameters": [
+     {
+      "name": "app",
+      "in": "query",
+      "required": true,
+      "description": "The application.",
+      "schema": {
+       "type": "string"
+      },
+      "example": "earth-atlas"
+     },
+     {
+      "name": "file",
+      "in": "query",
+      "required": true,
+      "description": "The plug-in's file, under the application's directory.",
+      "schema": {
+       "type": "string"
+      },
+      "example": "plugins/vorticity.py"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PluginDescription"
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/Error"
+     },
+     "404": {
+      "$ref": "#/components/responses/Error"
+     },
+     "503": {
+      "$ref": "#/components/responses/Error"
+     }
+    }
+   }
+  },
+  "/plugins/run": {
+   "post": {
+    "operationId": "runPlugin",
+    "summary": "A run of a plug-in; returns its job",
+    "tags": [
+     "plug-ins"
+    ],
+    "description": "One run at a time, in a process of its own, stopped at a time limit (600 s by default). A run computes and writes only its own products (data/cache/plugins/<id>/), which then appear among the fields; it is open to every caller. `chosen` names the source of each need ({need: \"product|level\"}); needs not named take the described default.",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "required": [
+         "app",
+         "file"
+        ],
+        "properties": {
+         "app": {
+          "type": "string"
+         },
+         "file": {
+          "type": "string"
+         },
+         "chosen": {
+          "type": "object"
+         },
+         "params": {
+          "type": "object"
+         },
+         "context": {
+          "type": "object",
+          "properties": {
+           "time": {
+            "description": "ms since 1970, or ISO 8601"
+           },
+           "pinned": {
+            "type": "array",
+            "items": {
+             "type": "number"
+            }
+           }
+          }
+         }
+        }
+       },
+       "example": {
+        "app": "earth-atlas",
+        "file": "plugins/vorticity.py"
+       }
+      }
+     }
+    },
+    "responses": {
+     "202": {
+      "description": "The job, started",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Job"
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/Error"
+     },
+     "404": {
+      "$ref": "#/components/responses/Error"
+     },
+     "409": {
+      "$ref": "#/components/responses/Error"
+     },
+     "503": {
+      "$ref": "#/components/responses/Error"
+     }
+    }
+   }
+  },
+  "/jobs/{id}": {
+   "get": {
+    "operationId": "job",
+    "summary": "A job's state, progress and results",
+    "tags": [
+     "plug-ins"
+    ],
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "description": "The job's id.",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Job"
+        }
+       }
+      }
+     },
+     "404": {
+      "$ref": "#/components/responses/Error"
+     }
+    }
+   }
+  },
+  "/events": {
+   "get": {
+    "operationId": "events",
+    "summary": "The event sets, as the index lists them",
+    "tags": [
+     "products"
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "events": {
+           "type": "array",
+           "items": {
+            "type": "object"
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/events/{name}": {
+   "get": {
+    "operationId": "eventsOf",
+    "summary": "A event set, as written by the data library",
+    "tags": [
+     "products"
+    ],
+    "parameters": [
+     {
+      "name": "name",
+      "in": "path",
+      "required": true,
+      "description": "The product's name, as the index lists it.",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "since",
+      "in": "query",
+      "required": false,
+      "description": "The earliest time, inclusive (ISO 8601, `now-1d`, ...).",
+      "schema": {
+       "type": "string"
+      },
+      "example": "now-1d"
+     },
+     {
+      "name": "until",
+      "in": "query",
+      "required": false,
+      "description": "The latest time, inclusive.",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "bbox",
+      "in": "query",
+      "required": false,
+      "description": "A box `west,south,east,north` in degrees; west greater than east crosses the antimeridian (on a grid that goes round the Earth).",
+      "schema": {
+       "type": "string"
+      },
+      "example": "120,20,150,50"
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "description": "At most this many rows: the latest.",
+      "schema": {
+       "type": "integer",
+       "minimum": 0
+      }
+     },
+     {
+      "name": "format",
+      "in": "query",
+      "required": false,
+      "description": "json (the product as written), or geojson: a FeatureCollection in WGS 84 (RFC 7946), written by data/formats/export.py (events and observations as points, tracks as lines cut at the antimeridian).",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "json",
+        "geojson"
+       ],
+       "default": "json"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/EventSet"
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/Error"
+     },
+     "404": {
+      "$ref": "#/components/responses/Error"
+     }
+    }
+   }
+  },
+  "/tracks": {
+   "get": {
+    "operationId": "tracks",
+    "summary": "The track sets, as the index lists them",
+    "tags": [
+     "products"
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "tracks": {
+           "type": "array",
+           "items": {
+            "type": "object"
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/tracks/{name}": {
+   "get": {
+    "operationId": "tracksOf",
+    "summary": "A track set, as written by the data library",
+    "tags": [
+     "products"
+    ],
+    "parameters": [
+     {
+      "name": "name",
+      "in": "path",
+      "required": true,
+      "description": "The product's name, as the index lists it.",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "format",
+      "in": "query",
+      "required": false,
+      "description": "json (the product as written), or geojson: a FeatureCollection in WGS 84 (RFC 7946), written by data/formats/export.py (events and observations as points, tracks as lines cut at the antimeridian).",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "json",
+        "geojson"
+       ],
+       "default": "json"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/TrackSet"
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/Error"
+     },
+     "404": {
+      "$ref": "#/components/responses/Error"
+     }
+    }
+   }
+  },
+  "/regions": {
+   "get": {
+    "operationId": "regions",
+    "summary": "The region sets, as the index lists them",
+    "tags": [
+     "products"
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "regions": {
+           "type": "array",
+           "items": {
+            "type": "object"
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/regions/{name}": {
+   "get": {
+    "operationId": "regionsOf",
+    "summary": "A region set, as written by the data library",
+    "tags": [
+     "products"
+    ],
+    "parameters": [
+     {
+      "name": "name",
+      "in": "path",
+      "required": true,
+      "description": "The product's name, as the index lists it.",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/RegionSet"
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/Error"
+     },
+     "404": {
+      "$ref": "#/components/responses/Error"
+     }
+    }
+   }
+  },
+  "/verification": {
+   "get": {
+    "operationId": "verification",
+    "summary": "The verification sets, as the index lists them",
+    "tags": [
+     "products"
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "verification": {
+           "type": "array",
+           "items": {
+            "type": "object"
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/verification/{name}": {
+   "get": {
+    "operationId": "verificationOf",
+    "summary": "A verification set, as written by the data library",
+    "tags": [
+     "products"
+    ],
+    "parameters": [
+     {
+      "name": "name",
+      "in": "path",
+      "required": true,
+      "description": "The product's name, as the index lists it.",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Verification"
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/Error"
+     },
+     "404": {
+      "$ref": "#/components/responses/Error"
+     }
+    }
+   }
+  },
+  "/regions/{name}/at": {
+   "get": {
+    "operationId": "regionsAt",
+    "summary": "The region at each place",
+    "tags": [
+     "products"
+    ],
+    "description": "The region whose raster cell contains each place (rounded to the nearest cell centre), or null.",
+    "parameters": [
+     {
+      "name": "name",
+      "in": "path",
+      "required": true,
+      "description": "The set of regions.",
+      "schema": {
+       "type": "string"
+      },
+      "example": "countries"
+     },
+     {
+      "name": "lon",
+      "in": "query",
+      "required": true,
+      "description": "Longitudes, comma-separated.",
+      "schema": {
+       "type": "string"
+      },
+      "example": "139.69"
+     },
+     {
+      "name": "lat",
+      "in": "query",
+      "required": true,
+      "description": "Latitudes, comma-separated.",
+      "schema": {
+       "type": "string"
+      },
+      "example": "35.69"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "regions": {
+           "type": "string"
+          },
+          "lon": {
+           "type": "array",
+           "items": {
+            "type": "number"
+           }
+          },
+          "lat": {
+           "type": "array",
+           "items": {
+            "type": "number"
+           }
+          },
+          "at": {
+           "type": "array",
+           "items": {
+            "type": [
+             "object",
+             "null"
+            ]
+           }
+          }
+         }
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/Error"
+     },
+     "404": {
+      "$ref": "#/components/responses/Error"
+     },
+     "413": {
+      "$ref": "#/components/responses/Error"
+     },
+     "503": {
+      "$ref": "#/components/responses/Error"
+     }
+    }
+   }
+  }
+ },
+ "components": {
+  "schemas": {
+   "Error": {
+    "type": "object",
+    "required": [
+     "error"
+    ],
+    "properties": {
+     "error": {
+      "type": "string",
+      "description": "What went wrong, in a sentence."
+     }
+    }
+   },
+   "Index": {
+    "type": "object",
+    "properties": {
+     "name": {
+      "type": "string"
+     },
+     "version": {
+      "type": "string"
+     },
+     "api": {
+      "type": "string",
+      "const": "v1"
+     },
+     "base": {
+      "type": "string"
+     },
+     "documentation": {
+      "type": "string"
+     },
+     "time": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "endpoints": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "method": {
+         "type": "string"
+        },
+        "path": {
+         "type": "string"
+        },
+        "summary": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "writes": {
+      "$ref": "#/components/schemas/WritePolicy"
+     },
+     "compute": {
+      "type": "object",
+      "properties": {
+       "available": {
+        "type": "boolean"
+       },
+       "reason": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      }
+     },
+     "sensors": {
+      "type": "object",
+      "properties": {
+       "available": {
+        "type": "boolean"
+       }
+      }
+     }
+    }
+   },
+   "WritePolicy": {
+    "type": "object",
+    "properties": {
+     "policy": {
+      "type": "string",
+      "enum": [
+       "open",
+       "token",
+       "closed"
+      ],
+      "description": "open: writes from this computer; token: writes with the token; closed: none."
+     },
+     "writable": {
+      "type": "boolean",
+      "description": "Whether this request, as made, could write."
+     },
+     "reason": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "writes": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "open": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      },
+      "description": "POST endpoints that compute and are open to every caller."
+     }
+    }
+   },
+   "Catalog": {
+    "type": "object",
+    "properties": {
+     "datasets": {
+      "type": "array",
+      "items": {
+       "$ref": "#/components/schemas/Dataset"
+      }
+     },
+     "products": {
+      "type": "object",
+      "description": "The index of products (data/cache/products/index.json): a list of entries per kind.",
+      "additionalProperties": {
+       "type": "array",
+       "items": {
+        "type": "object"
+       }
+      }
+     }
+    }
+   },
+   "Dataset": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "kind": {
+      "type": "string",
+      "enum": [
+       "files",
+       "tap",
+       "griddap",
+       "http",
+       "ncss",
+       "opendap"
+      ]
+     },
+     "title": {
+      "type": "string"
+     },
+     "domain": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "model": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "provider": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "credit": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "licence": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "citation": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "parameters": {
+      "type": "object",
+      "additionalProperties": {
+       "type": "object",
+       "properties": {
+        "type": {
+         "type": "string"
+        },
+        "default": {},
+        "min": {
+         "type": "number"
+        },
+        "max": {
+         "type": "number"
+        },
+        "description": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "profiles": {
+      "type": "object",
+      "additionalProperties": {
+       "type": [
+        "string",
+        "null"
+       ]
+      }
+     },
+     "default_profile": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "on_demand": {
+      "type": [
+       "array",
+       "null"
+      ],
+      "items": {
+       "type": "string"
+      },
+      "description": "The parameters a request on demand may set."
+     }
+    }
+   },
+   "GridSpec": {
+    "type": "object",
+    "description": "A regular longitude-latitude grid: column c at lon0 + c dlon, row r at lat0 - r dlat (rows north to south), degrees, WGS 84.",
+    "required": [
+     "lon0",
+     "dlon",
+     "nlon",
+     "lat0",
+     "dlat",
+     "nlat"
+    ],
+    "properties": {
+     "lon0": {
+      "type": "number"
+     },
+     "dlon": {
+      "type": "number"
+     },
+     "nlon": {
+      "type": "integer"
+     },
+     "lat0": {
+      "type": "number"
+     },
+     "dlat": {
+      "type": "number"
+     },
+     "nlat": {
+      "type": "integer"
+     },
+     "periodic": {
+      "type": "boolean"
+     },
+     "crs": {
+      "type": "string"
+     },
+     "order": {
+      "type": "string"
+     }
+    }
+   },
+   "Variable": {
+    "type": "object",
+    "properties": {
+     "name": {
+      "type": "string"
+     },
+     "long_name": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "standard_name": {
+      "type": [
+       "string",
+       "null"
+      ],
+      "description": "CF standard name"
+     },
+     "units": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "level": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "cell_methods": {
+      "type": "string"
+     },
+     "quantum": {
+      "type": "number",
+      "description": "The step of the stored codes: values are exact to half of it."
+     },
+     "min": {
+      "type": [
+       "number",
+       "null"
+      ]
+     },
+     "max": {
+      "type": [
+       "number",
+       "null"
+      ]
+     },
+     "p02": {
+      "type": [
+       "number",
+       "null"
+      ]
+     },
+     "p98": {
+      "type": [
+       "number",
+       "null"
+      ]
+     },
+     "coverage": {
+      "type": "number"
+     }
+    }
+   },
+   "FieldEntry": {
+    "type": "object",
+    "properties": {
+     "name": {
+      "type": "string"
+     },
+     "title": {
+      "type": "string"
+     },
+     "domain": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "model": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "computed": {
+      "type": "boolean"
+     },
+     "variables": {
+      "type": "array",
+      "items": {
+       "$ref": "#/components/schemas/Variable"
+      }
+     },
+     "times": {
+      "type": "object",
+      "properties": {
+       "count": {
+        "type": "integer"
+       },
+       "first": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "last": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      }
+     },
+     "grid": {
+      "type": "object"
+     },
+     "source": {
+      "type": "object"
+     }
+    }
+   },
+   "Field": {
+    "type": "object",
+    "properties": {
+     "schema": {
+      "type": "string",
+      "const": "field-grid/1"
+     },
+     "name": {
+      "type": "string"
+     },
+     "title": {
+      "type": "string"
+     },
+     "domain": {
+      "type": "string"
+     },
+     "model": {
+      "type": "string"
+     },
+     "grid": {
+      "$ref": "#/components/schemas/GridSpec"
+     },
+     "times": {
+      "type": "array",
+      "items": {
+       "type": "string",
+       "format": "date-time"
+      }
+     },
+     "time_scale": {
+      "type": "string",
+      "const": "UTC"
+     },
+     "variables": {
+      "type": "array",
+      "items": {
+       "$ref": "#/components/schemas/Variable"
+      }
+     },
+     "vectors": {
+      "type": "array",
+      "items": {
+       "type": "object"
+      }
+     },
+     "climatology": {
+      "type": "object"
+     },
+     "verification": {
+      "type": "object"
+     },
+     "source": {
+      "type": "object",
+      "description": "Provenance: dataset, provider, credit, licence, citation, retrieved_at"
+     }
+    }
+   },
+   "Sample": {
+    "type": "object",
+    "properties": {
+     "field": {
+      "type": "string"
+     },
+     "variable": {
+      "type": "string"
+     },
+     "units": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "interpolation": {
+      "type": "string",
+      "enum": [
+       "bilinear",
+       "direction"
+      ]
+     },
+     "requested": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "time": {
+      "type": [
+       "string",
+       "null"
+      ],
+      "description": "The instant the values are for."
+     },
+     "times": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      },
+      "description": "The stored times used."
+     },
+     "weight": {
+      "type": "number",
+      "description": "The weight of the later stored time."
+     },
+     "lon": {
+      "type": "array",
+      "items": {
+       "type": "number"
+      }
+     },
+     "lat": {
+      "type": "array",
+      "items": {
+       "type": "number"
+      }
+     },
+     "values": {
+      "type": "array",
+      "items": {
+       "type": [
+        "number",
+        "null"
+       ]
+      }
+     }
+    }
+   },
+   "Series": {
+    "type": "object",
+    "properties": {
+     "field": {
+      "type": "string"
+     },
+     "variable": {
+      "type": "string"
+     },
+     "units": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "lon": {
+      "type": "number"
+     },
+     "lat": {
+      "type": "number"
+     },
+     "times": {
+      "type": "array",
+      "items": {
+       "type": [
+        "string",
+        "null"
+       ]
+      }
+     },
+     "values": {
+      "type": "array",
+      "items": {
+       "type": [
+        "number",
+        "null"
+       ]
+      }
+     }
+    }
+   },
+   "Grid": {
+    "type": "object",
+    "properties": {
+     "field": {
+      "type": "string"
+     },
+     "variable": {
+      "type": "string"
+     },
+     "units": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "time": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "grid": {
+      "$ref": "#/components/schemas/GridSpec"
+     },
+     "values": {
+      "type": "array",
+      "items": {
+       "type": "array",
+       "items": {
+        "type": [
+         "number",
+         "null"
+        ]
+       }
+      },
+      "description": "Rows north to south."
+     }
+    }
+   },
+   "Reading": {
+    "type": "object",
+    "required": [
+     "station",
+     "time",
+     "values"
+    ],
+    "properties": {
+     "station": {
+      "type": "string"
+     },
+     "lon": {
+      "type": "number"
+     },
+     "lat": {
+      "type": "number"
+     },
+     "elevation": {
+      "type": [
+       "number",
+       "null"
+      ]
+     },
+     "time": {
+      "description": "ISO 8601 (UTC without an offset) or ms since 1970",
+      "type": [
+       "string",
+       "number"
+      ]
+     },
+     "values": {
+      "type": "object",
+      "additionalProperties": {
+       "type": [
+        "number",
+        "null"
+       ]
+      }
+     },
+     "received": {
+      "type": "string"
+     }
+    }
+   },
+   "Define": {
+    "type": "object",
+    "required": [
+     "variables"
+    ],
+    "properties": {
+     "title": {
+      "type": "string"
+     },
+     "variables": {
+      "type": "array",
+      "items": {
+       "oneOf": [
+        {
+         "type": "string",
+         "description": "name:units[:long name]"
+        },
+        {
+         "type": "object",
+         "properties": {
+          "name": {
+           "type": "string"
+          },
+          "units": {
+           "type": "string"
+          },
+          "long_name": {
+           "type": "string"
+          }
+         }
+        }
+       ]
+      }
+     },
+     "stations": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string"
+        },
+        "name": {
+         "type": "string"
+        },
+        "lon": {
+         "type": "number"
+        },
+        "lat": {
+         "type": "number"
+        },
+        "elevation": {
+         "type": "number"
+        }
+       }
+      }
+     }
+    }
+   },
+   "Posted": {
+    "type": "object",
+    "properties": {
+     "source": {
+      "type": "string"
+     },
+     "accepted": {
+      "type": "integer"
+     },
+     "defined": {
+      "type": "boolean"
+     },
+     "rejected": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "index": {
+         "type": "integer"
+        },
+        "reason": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   },
+   "SensorReadings": {
+    "type": "object",
+    "properties": {
+     "source": {
+      "type": "string"
+     },
+     "kind": {
+      "const": "sensor"
+     },
+     "readings": {
+      "type": "array",
+      "items": {
+       "$ref": "#/components/schemas/Reading"
+      }
+     }
+    }
+   },
+   "ObservationSet": {
+    "type": "object",
+    "description": "An observations product (schema observations/1), as data/products/observation_set.py writes it.",
+    "properties": {
+     "schema": {
+      "const": "observations/1"
+     },
+     "name": {
+      "type": "string"
+     },
+     "variables": {
+      "type": "array",
+      "items": {
+       "type": "object"
+      }
+     },
+     "fields": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "rows": {
+      "type": "array"
+     },
+     "window": {
+      "type": "object"
+     },
+     "count": {
+      "type": "integer"
+     },
+     "of": {
+      "type": "integer"
+     },
+     "source": {
+      "type": "object"
+     }
+    }
+   },
+   "ObservationsIndex": {
+    "type": "object",
+    "properties": {
+     "products": {
+      "type": "array",
+      "items": {
+       "type": "object"
+      }
+     },
+     "sensors": {
+      "type": "array",
+      "items": {
+       "type": "object"
+      }
+     },
+     "streams": {
+      "type": "object"
+     },
+     "sensors_available": {
+      "type": "boolean"
+     }
+    }
+   },
+   "EventSet": {
+    "type": "object",
+    "description": "Schema events/1 (data/products/event_catalog.py, disaster_catalog.py, mechanism_catalog.py): rows in the order of `fields`, times in ms UTC.",
+    "properties": {
+     "schema": {
+      "const": "events/1"
+     },
+     "name": {
+      "type": "string"
+     },
+     "kind": {
+      "type": "string"
+     },
+     "fields": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "units": {
+      "type": "object"
+     },
+     "events": {
+      "type": "array",
+      "items": {
+       "type": "array"
+      }
+     },
+     "window": {
+      "type": "object"
+     },
+     "count": {
+      "type": "integer"
+     },
+     "of": {
+      "type": "integer"
+     },
+     "source": {
+      "type": "object"
+     }
+    }
+   },
+   "TrackSet": {
+    "type": "object",
+    "description": "Schema tracks/1 (data/products/disaster_catalog.py): tracks with points [time_ms, lon, lat, observed].",
+    "properties": {
+     "schema": {
+      "const": "tracks/1"
+     },
+     "name": {
+      "type": "string"
+     },
+     "kind": {
+      "type": "string"
+     },
+     "fields": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "tracks": {
+      "type": "array",
+      "items": {
+       "type": "object"
+      }
+     },
+     "source": {
+      "type": "object"
+     }
+    }
+   },
+   "RegionSet": {
+    "type": "object",
+    "description": "Schema regions/1: regions rasterised on a grid (the raster itself is not served; see /regions/{name}/at).",
+    "properties": {
+     "schema": {
+      "const": "regions/1"
+     },
+     "name": {
+      "type": "string"
+     },
+     "grid": {
+      "$ref": "#/components/schemas/GridSpec"
+     },
+     "regions": {
+      "type": "array",
+      "items": {
+       "type": "object"
+      }
+     }
+    }
+   },
+   "Verification": {
+    "type": "object",
+    "description": "Schema verification/1: scores of forecasts against analyses and observations.",
+    "properties": {
+     "schema": {
+      "const": "verification/1"
+     },
+     "name": {
+      "type": "string"
+     },
+     "scores": {
+      "type": "array",
+      "items": {
+       "type": "object"
+      }
+     }
+    }
+   },
+   "Unit": {
+    "type": "object",
+    "properties": {
+     "unit": {
+      "type": "string"
+     },
+     "kind": {
+      "type": "string",
+      "enum": [
+       "domain",
+       "foundation"
+      ]
+     },
+     "modules": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "module": {
+         "type": "string"
+        },
+        "description": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "functions": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "name": {
+         "type": "string"
+        },
+        "parameters": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "module": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "doc": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "constants": {
+      "type": "object"
+     },
+     "classes": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "error": {
+      "type": "string"
+     }
+    }
+   },
+   "PluginDescription": {
+    "type": "object",
+    "properties": {
+     "app": {
+      "type": "string"
+     },
+     "file": {
+      "type": "string"
+     },
+     "id": {
+      "type": "string"
+     },
+     "title": {
+      "type": "string"
+     },
+     "description": {
+      "type": "string"
+     },
+     "runtime": {
+      "type": "string",
+      "enum": [
+       "python",
+       "cpp"
+      ]
+     },
+     "parameters": {
+      "type": "object"
+     },
+     "needs": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "name": {
+         "type": "string"
+        },
+        "label": {
+         "type": "string"
+        },
+        "chosen": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "candidates": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "properties": {
+           "key": {
+            "type": "string"
+           },
+           "model": {
+            "type": "string"
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "Job": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "app": {
+      "type": "string"
+     },
+     "file": {
+      "type": "string"
+     },
+     "state": {
+      "type": "string",
+      "enum": [
+       "starting",
+       "running",
+       "done",
+       "failed"
+      ]
+     },
+     "progress": {
+      "type": "number"
+     },
+     "text": {
+      "type": "string"
+     },
+     "message": {
+      "type": "string"
+     },
+     "started": {
+      "type": "number",
+      "description": "Unix time, s"
+     },
+     "finished": {
+      "type": [
+       "number",
+       "null"
+      ]
+     },
+     "limit_seconds": {
+      "type": "number"
+     },
+     "results": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "description": "A field ({kind: field, url, field, api, show}), a sketch, a table or a note."
+      }
+     }
+    }
+   }
+  },
+  "responses": {
+   "Error": {
+    "description": "An error: 400 a bad request, 401 a missing token, 403 a refused write, 404 nothing there, 405 a method the path does not answer, 409 a run already running, 411/413 a body without length or too large, 422 a function that failed, 501 not written yet, 503 what this computer cannot do, 504 a call past its limit.",
+    "content": {
+     "application/json": {
+      "schema": {
+       "$ref": "#/components/schemas/Error"
+      }
+     }
+    }
+   }
+  },
+  "securitySchemes": {
+   "bearer": {
+    "type": "http",
+    "scheme": "bearer",
+    "description": "The service's token, for writes when it has one."
+   }
+  }
+ }
+}
