@@ -4,7 +4,21 @@
 
 A plug-in is a script that the Earth Atlas loads when asked, runs on the data it holds, and shows on the Earth. It derives from one of the atlas's classes, says which fields it needs, and returns data, which the atlas draws like anything else. Nothing is loaded without a click, and a loaded script runs with the page's authority: read a script before loading it, as any code.
 
-## 1. The Contract
+## 1. Using a Plug-in
+
+<img src="../../../assets/gallery/earth-29-plugin-panel.jpg" align="right" width="300" alt="The Plug-ins section of the panel, with the barotropic model loaded and its verification table">
+
+In the Earth Atlas, in the panel on the right, scroll to **Plug-ins**.
+
+1. **Load** a plug-in: click *Load vorticity and divergence*, *Load air parcels*, *Load optimal interpolation* or *Load the barotropic model*; or paste the URL of any plug-in script into the field below them (for example `plugins/wind-speed.js`) and click *Load*.
+2. The plug-in appears with a **source** for each field it needs (every model in the library that carries that field is offered, such as *GFS, 500 hPa*) and its **parameters**. Change them, or keep the defaults.
+3. Click **Run**. A progress bar shows the work; the page stays usable.
+4. Read the result. A *field* joins the catalogue as a model of its quantity and is selected for you: it sits beside GFS and the others under that quantity in the panel, where it can be differenced with "minus", and a click on the map reads its value. A *sketch* is drawn on the globe. *Tables* and *notes* appear under the plug-in. Move the time to see a forecast evolve or parcels travel.
+5. **Run** again after changing a parameter or a source: the new result replaces the old. **Unload** removes the plug-in and its sketches.
+
+From the browser's console, `atlas.plugins.load('plugins/vorticity.js')`, `atlas.plugins.run('vorticity')` and `atlas.plugins.view()` do the same. The four built-in plug-ins at work are in [the gallery, §1.8](../../../docs/gallery.md#18-plug-ins-algorithms-loaded-on-request).
+
+## 2. The Contract
 
 A plug-in is an ES module with one export:
 
@@ -17,7 +31,27 @@ export function create(api) {
 
 `api` is [src/plugins/index.js](../src/plugins/index.js): the classes, the result makers and a few numerical helpers. A script written against it needs no import of the atlas; it may import the domains and foundations by URL for the science it uses, as the examples here do with relative paths.
 
-## 2. The Classes
+The smallest complete plug-in is [wind-speed.js](wind-speed.js), a page long, to be read first: it names itself, says it needs a wind, declares one output, and computes it time by time. Everything else is the base class's.
+
+```js
+export function create(api) {
+  class WindSpeed extends api.Diagnostic {
+    id = 'wind-speed';
+    title = 'Wind speed';
+    needs() { return [{ name: 'wind', label: 'Wind', standard_names: ['eastward_wind', 'northward_wind'] }]; }
+    outputs() { return [{ name: 'speed', long_name: 'Wind speed', standard_name: 'wind_speed', units: 'm s-1' }]; }
+    compute(inputs, params, index) {
+      const { product, names: [u, v] } = inputs.wind;
+      const a = product.slice(u, index), b = product.slice(v, index), speed = new Float32Array(a.length);
+      for (let i = 0; i < a.length; i++) speed[i] = Math.hypot(a[i], b[i]);
+      return { speed };
+    }
+  }
+  return new WindSpeed();
+}
+```
+
+## 3. The Classes
 
 Each class is named by what the algorithm is, and writes `run()` from smaller hooks that a subclass overrides. All of them share:
 
@@ -38,7 +72,7 @@ Each class is named by what the algorithm is, and writes `run()` from smaller ho
 
 `Plugin` itself may be derived from for anything else, with `run()` written in full.
 
-## 3. Results
+## 4. Results
 
 `run()` returns a list of results made by the makers in `api`. They are data; the atlas does the drawing.
 
@@ -51,17 +85,13 @@ Each class is named by what the algorithm is, and writes `run()` from smaller ho
 
 `makeProduct({ name, title, model, domain, grid, times, variables, vectors, source, verification })` builds a product from `variables: [{ name, long_name, standard_name, units, level?, slices: [Float32Array per time] }]`; `grid` is `{ lon0, dlon, nlon, lat0, dlat, nlat, periodic }` with rows north to south, values row-major, `NaN` where missing. The catalogue recognises standard names and levels, so a product with `geopotential_height` at `500 hPa` joins the height maps of the forecast models. A variable that is a difference of two quantities of its units, such as an analysis increment in kelvin, carries `difference: true`: it is then drawn on a symmetric diverging scale, and the offset of its units (kelvin to degrees Celsius) is not applied.
 
-## 4. The Context
+## 5. The Context
 
 `context` is what a plug-in sees of the atlas while it runs: `time`, the instant shown in ms UTC; `pinned`, the chosen place as `[lon, lat]` or `null`; `fields()`, the metadata of every field product; `field(name)`; `geography()`; and `progress(fraction, text)`. The same view is made from files when a plug-in is checked without a page.
 
-## 5. Helpers in `api`
+## 6. Helpers in `api`
 
-`sampleOnGrid(product, name, index, grid)` samples a variable onto another grid; `indexAtOrBefore(times, ms)`; `lattice(n)` spreads `n` points evenly over the sphere; `parcelStep(flow, lon, lat, ms, dt)` is one Runge–Kutta step on the sphere; `iso(ms)`.
-
-## 6. Loading
-
-The panel's Plug-ins section lists the built-in plug-ins of [index.json](index.json) to load with a click, and takes the URL of any other script. A loaded plug-in shows its sources (one choice per need), its parameters, a Run button, its progress, its tables and the titles of its sketches; unload removes its sketches. From the console, `atlas.plugins.load('plugins/vorticity.js')` and `atlas.plugins.run('vorticity')` do the same.
+`sampleOnGrid(product, name, index, grid)` samples a variable onto another grid; `indexAtOrBefore(times, ms)`; `lattice(n)` spreads `n` points evenly over the sphere; `parcelStep(flow, lon, lat, ms, dt)` is one Runge–Kutta step on the sphere; `iso(ms)`. The built-in plug-ins offered by the panel are those of [index.json](index.json); a script anywhere else is loaded by its URL.
 
 ## 7. Checking Without a Page
 
@@ -80,6 +110,7 @@ const [result] = await plugin.run({ wind: { product, names: ['u', 'v'], variable
 
 | File | Class | Shows | Checked by |
 |---|---|---|---|
+| [wind-speed.js](wind-speed.js) | `Diagnostic` | The speed of the wind chosen: the smallest plug-in, to be read first; loaded by URL | A solid-body rotation: U cos φ |
 | [vorticity.js](vorticity.js) | `Diagnostic` | Relative vorticity and divergence of the wind at the level chosen, by centred differences | A solid-body rotation: ζ = 2U sin φ / a, δ = 0 |
 | [trajectories.js](trajectories.js) | `Trajectories` | Parcels from a ring around the chosen place, or a lattice, through the forecast wind; the paths, and the parcels moving with the time shown | A parcel in a solid-body rotation keeps its latitude and turns by U t / a |
 | [optimal-interpolation.js](optimal-interpolation.js) | `DataAssimilation` | A background analysed toward a second model's values at a lattice of points; the increment, and the analysis among the models of the quantity | Exact observations are reproduced where they are, and the background kept far from them |

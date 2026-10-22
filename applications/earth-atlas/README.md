@@ -151,6 +151,29 @@ The page also loads three.js from jsDelivr and Source Serif 4 from Google Fonts.
   It then appears in the atlas.
 - **Sharing a view.** The address bar keeps the view, the layers, the comparison, the time and the chosen place, so a link reproduces a map.
 
+### 2.3 Using the Plug-ins
+
+<img src="../../assets/gallery/earth-29-plugin-panel.jpg" align="right" width="300" alt="The Plug-ins section of the panel, with the barotropic model loaded and its verification table">
+
+Plug-ins are algorithms written as scripts, loaded when you ask, run on the data the atlas holds, and drawn like anything else ([ADR 0027](../../development/decisions/0027-earth-atlas-plugins.md)). Four come built in. In the panel on the right, scroll to **Plug-ins**:
+
+1. **Load** one: *vorticity and divergence*, *air parcels*, *optimal interpolation* or *the barotropic model*. Or paste the URL of any plug-in script into the field below them (try `plugins/wind-speed.js`, the smallest) and click *Load*.
+2. The plug-in appears with a **source** for each field it needs (the models in the library that carry it, such as *GFS, 500 hPa*) and its **parameters**. Change them or keep the defaults.
+3. Click **Run**. A progress bar shows the work; the page stays usable.
+4. Read the result. A field joins the catalogue as a model of its quantity and is selected for you: it sits beside GFS and the others under that quantity, can be differenced with "minus", and a click on the map reads its value. A sketch is drawn on the globe. Tables and notes appear under the plug-in. Move the time to see a forecast evolve or parcels travel.
+5. **Run** again after a change; **unload** removes the plug-in and its sketches.
+
+What to try with each:
+
+| Plug-in | Class | Try |
+|---|---|---|
+| Vorticity and divergence | `Diagnostic` | Choose *GFS, 500 hPa*, and the 500 hPa wind under *Motion*: the jet's paired bands of vorticity, and a cyclone's knot. |
+| Air parcels | `Trajectories` | Click a place first: the parcels start on a ring around it. Choose *GFS, 500 hPa*, run, then play the time and watch them cross the ocean. |
+| Optimal interpolation | `DataAssimilation` | Keep GFS as the background and AIGFS as the source of observations: the increment shows where the two models disagree. Then, under *Air temperature at 2 m*, choose the plug-in's analysis and "minus" GFS. |
+| The barotropic model | `ForecastModel` | T42 for 48 hours takes about ten seconds. Step the time forward to watch the flow evolve, and read its error beside persistence in the table. |
+
+From the browser's console, `atlas.plugins.load('plugins/vorticity.js')` and `atlas.plugins.run('vorticity')` do the same. The pictures are in [the gallery, §1.8](../../docs/gallery.md#18-plug-ins-algorithms-loaded-on-request); writing a plug-in is a page of JavaScript, explained in [plugins/README.md](plugins/README.md).
+
 ## 3. Data
 
 | Data | Source | Product | Licence |

@@ -205,6 +205,10 @@ const { check, assert, skip, done } = suite();
   const z0 = forecast.product.slice('z@500hPa', 0), z6 = forecast.product.slice('z@500hPa', 1);
   check('plug-in barotropic: a solid-body rotation is steady (height change over 6 h)', rmsDifference(z0, z6, barotropic.grid()), 0.5, 'm');
   assert('plug-in barotropic: two times recorded, as a model of height at 500 hPa', forecast.product.times.length === 2 && forecast.product.meta.variables[0].standard_name === 'geopotential_height');
+
+  const smallest = (await import('../plugins/wind-speed.js')).create(api);
+  const [speed] = await smallest.run({ wind }, {}, context(t0));
+  check('plug-in wind speed (the smallest): U cos φ at 45° N', Math.abs(speed.product.slice('speed', 0)[row45 + 10] - U * Math.cos(45 * DEG)), 1e-4, 'm/s');
 }
 
 done();
