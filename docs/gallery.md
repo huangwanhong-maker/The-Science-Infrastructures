@@ -1,11 +1,11 @@
 # Gallery
 
-*Status: draft, 2026-10-22.*
+*Status: draft, 2026-10-23.*
 
 These are screenshots of the infrastructure's three applications, taken on 22 October 2026 from their local servers, with the data of that day.
 
 - Both are web applications without a build step.
-- Their science is the provisional JavaScript of the domains they draw on, tested against published references and closed-form answers in 229 checks.
+- Their science is the provisional JavaScript of the domains they draw on, tested against published references and closed-form answers in 380 checks.
 - Each caption says what is shown, where the data come from, and how the picture is made.
 
 Click an image to see it at full size. To run the applications yourself, see the READMEs of the [Earth Atlas](../applications/earth-atlas/README.md), the [Celestial Atlas](../applications/celestial-atlas/README.md) and the [Brain Atlas](../applications/brain-atlas/README.md).

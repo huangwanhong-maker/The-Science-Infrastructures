@@ -259,7 +259,7 @@ The science the atlas shows is checked with the domains it draws on, with physis
 node development/tools/run-tests.mjs
 ```
 
-Of the atlas's 151 checks, 16 are its own now; the others run with geodesy, astronomy, geography, meteorology, oceanography, geophysics, climate, physis and the visualization layer. The checks on real data need the products; without them they are skipped.
+The atlas's own suite has 88 checks, its plug-ins' among them. The 297 checks of the science beneath it run with geodesy, astronomy, geography, meteorology, oceanography, geophysics, climate, physis and the visualization layer, and its data and the API have suites of their own (290 and 216 checks). The checks on real data need the products; without them they are skipped.
 
 | Quantity | Reference | Agreement |
 |---|---|---|
