@@ -13,7 +13,7 @@ This file can be revised: when a decision recorded here changes, update this fil
 This is an integrative programme to learn, use and research all domains of science, in theory and in practice, as one connected body of knowledge.
 
 - **Three tiers** ([ADR 0026](development/decisions/0026-domains-as-libraries.md)):
-  - **Foundations:** calx (computation and numerical methods), morphe (mathematical structures and their equivalences), physis (geometry and theoretical physics), and a planned library for inference. They hold laws and methods that name no object in nature.
+  - **Foundations:** calx (computation and numerical methods), morphe (mathematical structures and their equivalences), physis (geometry and theoretical physics), and two planned libraries: one for inference, one for the methods of the quantitative social sciences (measurement, surveys, causal inference, networks, games and social choice, agent-based models). They hold laws and methods that name no object in nature.
   - **Domains:** one library per science, holding its objects and their models. A domain is a field or a bridge between fields.
   - **Works:** applications, research and notebooks, organised by purpose, each composing the domains it needs.
 - **Shared edges** touch the world for every work: data, visualization, observation, and the API through which other programs reach the infrastructure (ADR 0030).
@@ -26,7 +26,7 @@ This is an integrative programme to learn, use and research all domains of scien
   - **Geodesy** supports the other Earth sciences.
   - **Geophysics** is the solid Earth: plate motion, earthquakes and the crust ([ADR 0024](development/decisions/0024-the-solid-earth.md)).
 - **Neuroscience** is the first domain beyond the Earth and the sky ([ADR 0028](development/decisions/0028-neuroscience-and-the-brain-atlas.md)): the brain's reference spaces, parcellations and maps, and the head with its electrodes, drawn by the Brain Atlas. It is a repository of its own, attached as a submodule.
-- **Further domains** join the same order as the work reaches them: chemistry, the life sciences, health, the social sciences, engineering.
+- **Further domains** join the same order as the work reaches them. Every science is meant to join, the social sciences and the humanities included; the README's §4 maps them by branch. The next five, in order: spiking neural networks (a module of neuroscience), computational linguistics, genomics, molecular science, and drug discovery (a bridge over genomics and molecular science).
 - **No laboratories.** The word is retired as the name of what we are. A themed grouping of works, if ever needed, is a *programme*: a README and a roadmap, owning no code. Do not use "laboratory" for any part of the infrastructure; proper names (the Nevada Geodetic Laboratory) and the decision records keep it.
 
 Every artefact serves one of three activities, and says which:
@@ -311,7 +311,7 @@ A domain directory contains:
   - Serve locally with Python's standard library. Each application's server mounts `domains/`, `foundations/` and `visualization/` beside its page, and the data cache at `/data/`; it reports the application's data recipe (`recipe.json`) at `/setup` and runs it on the page's request.
   - Test with Node (v22 is installed).
   - Each application has its own local server: the Celestial Atlas on port 8770, the Earth Atlas on 8790, the Brain Atlas on 8810.
-  - A public instance runs on the user's server, `eu_region_server` (173.212.213.207): the Celestial Atlas on port 9200, the Earth Atlas on 9201, in the tmux session `science`, served with `--host 0.0.0.0 --sibling`. The READMEs link to it; keep the links current if it moves.
+  - A public instance runs on the user's server, `eu_region_server` (173.212.213.207): the Celestial Atlas on port 9200, the Earth Atlas on 9201, in the tmux session `science`, served with `--host 0.0.0.0 --sibling`; the Brain Atlas on 9202, in the window `brain-atlas`, served with `--host 0.0.0.0` after its recipe. The READMEs link to it; keep the links current if it moves.
 - **Visual style:**
   - The Celestial Atlas uses Dusty Orchid (#CA8DBE) as its main colour, chosen by the user: plum nights, orchid accents and orchid-tinted paper for charts.
   - The Earth Atlas shares that palette for now (ADR 0014), with data in perceptually uniform colour maps (cmocean, and our own orchid map); the user may give it a colour of its own.
@@ -338,14 +338,14 @@ A domain directory contains:
 
 1. **The C++ namespaces of the domains**, and of the infrastructure as a whole.
 2. **C++ toolchain** on Windows (MSVC, clang/LLVM or WSL), together with the build and packaging tools.
-3. **The inference foundation:** its name and its first module.
+3. **The inference foundation:** its name and its first module; and the foundation for the quantitative social sciences: its name, and its boundary with the inference foundation.
 4. **Automatic differentiation** in calx, which would be built as an IR transformation.
 5. **Precision policy details** (calx).
 6. **Notes format.** Markdown with LaTeX (the current default), Jupyter or Quarto; LaTeX for papers.
 7. **Languages of the documents.** English, with abstracts in Chinese and Japanese as in the README, or more.
 8. **Licence for prose.** MIT covers software; notes may suit CC BY 4.0.
 9. **First renderer technology** for the scene model.
-10. **The next domains,** to be discussed now that the structure is settled.
+10. **The next domains:** the order is set (README §4.2: spiking neural networks, computational linguistics, genomics, molecular science, drug discovery); each is placed in the order, with its repository (here or its own), when its work begins.
 11. **The first laboratory's repository on GitHub:** archive it with a pointer here, or leave it.
 
 ## 9. Current State

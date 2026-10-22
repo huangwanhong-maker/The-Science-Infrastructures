@@ -23,12 +23,13 @@ An integrative infrastructure for learning, using and researching all domains of
 
 ## Quick Start
 
-**Online, with nothing to install.** Both applications run on the project's server:
+**Online, with nothing to install.** The three applications run on the project's server:
 
 - **Earth Atlas:** http://173.212.213.207:9201/ — the atmosphere, the ocean, the land, the people and the solid Earth on one globe.
+- **Brain Atlas:** http://173.212.213.207:9202/ — the human brain in the round, every part with its anatomy; sections, atlases, data, the head and its electrodes, and the mouse brain.
 - **Celestial Atlas:** http://173.212.213.207:9200/ — the Sun, the Moon, the planets, the stars and the galaxies, at any instant from 1849 to 2150.
 
-Each links to the other: a place on the Earth leads to its sky, and a sky to its weather.
+The Earth and Celestial Atlases link to each other: a place on the Earth leads to its sky, and a sky to its weather.
 
 **On your own computer.** You need [Git](https://git-scm.com/), [Python 3.12 or later](https://www.python.org/downloads/) (on Windows, tick *Add python.exe to PATH* when installing) and a current browser. Nothing else: no Node, no build step, no account. Paste the block for your system into a terminal, in the folder where you keep code. The first run downloads about 450 MB of public data and takes ten to thirty minutes, most of it waiting for data servers.
 
@@ -134,7 +135,7 @@ The programme will grow over decades and change direction as it learns. Its gove
 | Works | Applications and studies, organised by purpose, each composing domains | `applications/`, `research/`, `notebooks/` |
 | Shared edges | Data (registry, acquisition, products, requests on demand), visualization, observation and sensors, and the API for other programs | `data/`, `visualization/`, `observation/`, `api/` |
 | Domains | One library per science, pure and tested; fields, and bridges between them | `domains/` |
-| Foundations | [calx](https://github.com/huangwanhong-maker/calx) (computation), [morphe](https://github.com/huangwanhong-maker/morphe) (mathematical structures), [physis](https://github.com/huangwanhong-maker/physis) (geometry and physics); inference planned | `foundations/` (submodules) |
+| Foundations | [calx](https://github.com/huangwanhong-maker/calx) (computation), [morphe](https://github.com/huangwanhong-maker/morphe) (mathematical structures), [physis](https://github.com/huangwanhong-maker/physis) (geometry and physics); inference, and the quantitative social sciences, planned (§4.3) | `foundations/` (submodules) |
 
 The domains are ordered by what each may depend on:
 
@@ -151,6 +152,10 @@ Dependencies point down. No foundation depends on a domain; no domain depends on
 
 ## 4. Domains
 
+Every science is meant to become a domain here: a library of its own objects and models, placed in the order by what it may depend on, tested against published references, and drawn by the works that need it. The sciences are taken in the broad sense of the German *Wissenschaft*, with the social sciences and the humanities among them, for they too measure, model and infer, and they share structures with the rest (§1.1): a language is a grammar, a chronology is a reference frame, a market is a network, a melody is a signal.
+
+### 4.1 The Domains Built
+
 | Domain | Kind | Scope | Status |
 |---|---|---|---|
 | [metrology](domains/metrology/) | field | Time scales, reference frames, Earth orientation | draft |
@@ -164,15 +169,127 @@ Dependencies point down. No foundation depends on a domain; no domain depends on
 | [tides](domains/tides/), [navigation](domains/navigation/), [air-sea](domains/air-sea/) | bridges | Tides; celestial navigation and routes; exchange at the sea surface | planned |
 | [neuroscience](domains/neuroscience/) | field | The brain: reference spaces, parcellations and maps; the head and its electrodes (a repository of its own, as a submodule) | draft |
 
-Further domains join the same order as the work reaches them. As a map of intent, not commitments:
+### 4.2 The Next Domains
 
-- chemistry and materials;
-- molecular and cell biology, genomics, ecology and evolution;
-- health and medicine;
-- demography, economics, linguistics and cognition;
-- engineering.
+The next five, in this order, each reusing what the one before made. *Status: planned.*
 
-Mathematics, logic, computation and statistics are foundations.
+| # | Domain or module | Kind and place | What it builds on | Its first content |
+|---|---|---|---|---|
+| 1 | **Spiking neural networks**, a module of [neuroscience](domains/neuroscience/) | module of a field, height 0 | The neuroscience domain and the Brain Atlas: neurons placed in its structures, activity shown on its surfaces | Leaky integrate-and-fire neurons, synapses and their delays, network simulation, spike-timing-dependent plasticity |
+| 2 | **Computational linguistics** (`linguistics`) | field, height 0 | morphe's formal structures: languages, automata, grammars | Automata, context-free grammars, parsing, grammar inference; syntax, semantics and generative representations |
+| 3 | **Genomics** (`genomics`) | field, height 0 | The sequence, grammar, graph and inference algorithms of the two before | Sequence alignment, k-mers, genome assembly on de Bruijn graphs, variant analysis |
+| 4 | **Molecular science** (`molecular-science`) | field, height 0 | physis's chemistry and thermodynamics; graphs | Atoms, molecules, proteins and their interactions: molecular graphs, conformers, reaction networks and their dynamics |
+| 5 | **Drug discovery** (`drug-discovery`) | bridge, height 1, over genomics and molecular science | Genomics, molecular science, molecular biology and pharmacology | Evidence joining targets and compounds, molecular properties, pharmacological models |
+
+```
+height 1   drug-discovery ─► genomics, molecular-science
+height 0   linguistics · genomics · molecular-science · neuroscience (+ snn)
+```
+
+### 4.3 A Foundation for the Quantitative Social Sciences
+
+Beside calx, morphe, physis and the planned inference foundation, a fifth foundation is planned for the methods that the social sciences share and that name no object in nature. *Status: planned; its name and its boundary with the inference foundation are open decisions.*
+
+- **Measurement:** scales and indices, reliability and validity, item response theory.
+- **Samples and surveys:** designs, weights, estimation for populations.
+- **Causal inference:** potential outcomes, directed acyclic graphs, matching, instruments, differences in differences, regression discontinuity.
+- **Panels and time:** panel models, event histories, durations.
+- **Networks:** centrality, communities, diffusion on graphs.
+- **Strategy and choice:** games and their equilibria, social choice and voting, mechanism design.
+- **Simulation:** agent-based models of many interacting people.
+
+### 4.4 The Map of the Sciences
+
+A map of intent, not of commitments: each science that may join, by branch, with the structures through which it meets the rest. Each joins the order when the work reaches it. *Status of every row: planned,* except where a built domain already covers part of it.
+
+**The formal sciences** are foundations, not domains: mathematics in morphe; computation and numerical methods in calx; geometry and the laws of physics in physis; statistics and inference in the planned inference foundation; the quantitative methods of the social sciences in the foundation of §4.3. Logic, the theory of computation and information theory belong with morphe and calx.
+
+**The physical sciences.**
+
+| Domain | Scope | Meets |
+|---|---|---|
+| Condensed matter and materials | Crystals, defects, electronic and mechanical properties | Space groups and their representations; band structure by Fourier analysis |
+| Particle and nuclear physics | Particles, decays, nuclear structure and reactions | Lie groups and their representations; scattering; radioactive dating for geology and archaeology |
+| Optics and photonics | Light in media, instruments, spectra | Fourier optics; the telescopes of astronomy; remote sensing |
+| Plasma physics | Ionised gases, the Sun's corona, the ionosphere | Fluid equations shared with meteorology; space weather |
+| Chemistry | Physical, inorganic, organic and analytical chemistry, beyond molecular science (§4.2) | Thermodynamics and kinetics; reaction networks; spectra |
+
+**The Earth and planetary sciences**, beyond the domains built.
+
+| Domain | Scope | Meets |
+|---|---|---|
+| Cryosphere | Ice sheets, glaciers, sea ice, permafrost | Climate, oceanography, geophysics (isostasy) |
+| Hydrology | Rivers, groundwater, the water balance of catchments | Meteorology's precipitation; graphs of drainage; geography |
+| Soil science | Soils, their formation and their carbon | Climate classes; chemistry; ecology |
+| Volcanology | Eruptions, magma, volcanic hazards | Geophysics; the atmosphere's aerosols |
+| Planetary science | The planets and moons as worlds: surfaces, interiors, atmospheres | Astronomy's ephemerides and rotation models; geophysics; meteorology |
+| Space weather | The Sun's activity and the Earth's magnetosphere | Plasma physics; geophysics (the magnetic field); navigation (satellite positioning) |
+
+**The life sciences**, with neuroscience built (§4.1) and genomics next (§4.2).
+
+| Domain | Scope | Meets |
+|---|---|---|
+| Molecular and cell biology | Genes, proteins, pathways, the cell | Genomics; molecular science; reaction networks |
+| Structural biology | The shapes of proteins and nucleic acids | Molecular science; the rotation group; inference from diffraction and microscopy |
+| Developmental biology | How an embryo forms | Reaction–diffusion equations; growth on surfaces |
+| Physiology | Organs and their regulation | Control and dynamical systems; neuroscience |
+| Microbiology and immunology | Microbes, infection, immune responses | Genomics; population dynamics; epidemiology |
+| Ecology | Populations, communities, ecosystems | Networks (food webs); the climate; geography |
+| Evolution | Phylogeny, selection, population genetics | Trees and their inference; genomics; stochastic processes |
+| Botany and zoology | Plants and animals, their forms and distributions | Geography's biomes; evolution |
+
+**The health sciences.**
+
+| Domain | Scope | Meets |
+|---|---|---|
+| Anatomy and medical imaging | The body's structures, as images and as models | The Brain Atlas's methods: templates, segmentations, surfaces |
+| Epidemiology and public health | Disease in populations, its causes and its spread | Causal inference (§4.3); compartmental models; geography |
+| Pharmacology | Drugs in the body: kinetics and effects | Drug discovery (§4.2); compartmental models |
+| Clinical medicine and nutrition | Diagnosis, treatment, diet | Inference under uncertainty; the life sciences |
+
+**The cognitive and behavioural sciences.**
+
+| Domain | Scope | Meets |
+|---|---|---|
+| Psychology | Perception, learning, memory, emotion, personality | Measurement (§4.3); neuroscience |
+| Cognitive science | Minds as systems that compute | Neuroscience; linguistics; learning theory |
+| Linguistics | Beyond computational linguistics (§4.2): phonetics, typology, historical linguistics | Signals and spectra; trees of descent shared with evolution |
+
+**The social sciences**, on the foundation of §4.3.
+
+| Domain | Scope | Meets |
+|---|---|---|
+| Demography | Births, deaths, migration, populations by age | Geography's population grids; survival analysis; projections |
+| Economics | Production, markets, money, growth, inequality | Games and equilibria; time series; networks of trade |
+| Sociology | Groups, institutions, social networks, stratification | Networks; measurement; agent-based models |
+| Political science | States, elections, conflict, policy | Social choice and voting; causal inference; geography's divisions |
+| Anthropology | Cultures, kinship, human variation | Kinship as graphs and algebras; genomics |
+| Human geography and urban studies | Cities, mobility, land use | Geography (built); networks; remote sensing |
+| Education | Learning and teaching, assessment | Item response theory; the learning activity of the infrastructure itself |
+| Law | Legal systems, rules and their reasoning | Formal logic; networks of citation |
+
+**The humanities.**
+
+| Domain | Scope | Meets |
+|---|---|---|
+| History and chronology | Events, sources and their dating | Calendars and time scales (metrology); astronomical dating of eclipses; inference from sources |
+| Archaeology | Material remains of the past | Radiocarbon and dendrochronology (the climate's archives); geophysical survey; geography |
+| Philology and literature | Texts, their transmission and their style | Grammars and sequences (linguistics); stemmata as trees; stylometry |
+| Philosophy | Knowledge, reasoning, ethics, the philosophy of each science | Logic and formal semantics (morphe) |
+| Musicology | Music, its scales, harmony and performance | Groups of pitch classes; spectra and acoustics |
+| Art history and visual culture | Images, their colours, techniques and dating | Colour science; image analysis; spectra of pigments |
+| Religious studies and classics | Traditions, their texts and their calendars | Philology; chronology |
+
+**Engineering and technology.**
+
+| Domain | Scope | Meets |
+|---|---|---|
+| Computing and artificial intelligence | Learning machines, their theory and their use | calx; the inference foundation; neuroscience's networks |
+| Electrical and electronic engineering | Circuits, signals, power systems | Signals and networks; control |
+| Mechanical, civil and aerospace engineering | Structures, machines, flight | physis's continuum mechanics; navigation |
+| Chemical and materials engineering | Processes and materials at scale | Molecular science; thermodynamics |
+| Energy systems | Generation, storage, grids | Meteorology (wind and sun); networks; economics |
+| Control and robotics | Systems that sense and act | Dynamical systems; inference; navigation |
 
 ## 5. Applications
 
@@ -226,7 +343,7 @@ To run an application, follow the Quick Start at the top of this page; each appl
 **As of 2026-10-22.** Three applications work, two of them online, all on any computer (Quick Start). Their science is the provisional JavaScript of nine domains, of physis and of the visualization layer, tested against published references and closed-form answers in 380 checks. Each domain passes its checks on its own. Neuroscience, the first domain beyond the Earth and the sky, is a repository of its own attached as a submodule, with the Brain Atlas drawing it ([ADR 0028](development/decisions/0028-neuroscience-and-the-brain-atlas.md)). The Earth Atlas takes plug-ins: scripts for prediction, assimilation and analysis, loaded on request ([ADR 0027](development/decisions/0027-earth-atlas-plugins.md)). There is no C++ yet. The next steps are in the [roadmap](development/roadmap.md):
 
 - Phase 0, the toolchain and the build;
-- the choice of the next domains.
+- the next domains, in the order of §4.2: spiking neural networks, computational linguistics, genomics, molecular science, drug discovery; and the foundation for the quantitative social sciences (§4.3).
 
 ## 8. License
 

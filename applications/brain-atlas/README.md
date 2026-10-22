@@ -33,7 +33,7 @@ python applications/brain-atlas/serve.py --open
 
 `recipe.py ... --status` says which steps are done; the steps are the commands of §3's datasets and the anatomy product.
 
-The page is at http://127.0.0.1:8810/. The address bar keeps the mode, the chosen structure, the cortex's style and colouring, the cut and the view, so that a link reproduces a view.
+The page is at http://127.0.0.1:8810/. A public instance runs at http://173.212.213.207:9202/. The address bar keeps the mode, the chosen structure, the cortex's style and colouring, the cut and the view, so that a link reproduces a view.
 
 - **In the round:** drag to turn, scroll to approach, right-drag to move. Click a part to read it; double-click to fly to it.
 - **In the sections:** click or drag to set the point, scroll to step through the slices (shift: five at a time); click a section's name to make it the main one.
