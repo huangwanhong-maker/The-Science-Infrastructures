@@ -29,6 +29,8 @@ const suites = [
   ...readdirSync(join(ROOT, 'foundations')).map((f) => join(ROOT, 'foundations', f, 'js/tests/run-tests.mjs')),
   ...ordered.map((d) => join(ROOT, 'domains', d, 'tests/run-tests.mjs')),
   join(ROOT, 'visualization/tests/run-tests.mjs'),
+  join(ROOT, 'data/tests/run-tests.mjs'),
+  join(ROOT, 'api/tests/run-tests.mjs'),
   ...readdirSync(join(ROOT, 'applications')).map((a) => join(ROOT, 'applications', a, 'tests/run-tests.mjs')),
 ].filter(existsSync);
 

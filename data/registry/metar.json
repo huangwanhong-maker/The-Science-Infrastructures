@@ -1,0 +1,25 @@
+{
+  "id": "metar",
+  "kind": "http",
+  "domain": "meteorology",
+  "title": "METAR: the latest routine and special weather reports of about 5,000 aerodromes worldwide",
+  "provider": "NOAA National Weather Service, Aviation Weather Center (AWC), from reports exchanged over the WMO Global Telecommunication System",
+  "credit": "METAR: NOAA Aviation Weather Center",
+  "requests": [
+    {"url": "https://aviationweather.gov/data/cache/metars.cache.csv.gz", "file": "metars.cache.csv.gz"},
+    {"url": "https://aviationweather.gov/data/cache/stations.cache.json.gz", "file": "stations.cache.json.gz"}
+  ],
+  "parameters": {},
+  "profiles": {
+    "latest": {"description": "each station's latest report, as the AWC's cache holds it (renewed every minute); fetch with --refresh to take a newer one", "parameters": {}}
+  },
+  "default_profile": "latest",
+  "format": "metars.cache.csv.gz: gzipped CSV, one row per station, its latest METAR or SPECI of the last hour or two. Columns include raw_text (the coded report, WMO FM 15 / FM 16), station_id (ICAO), observation_time (ISO 8601, UTC), latitude and longitude (degrees, WGS 84), temp_c and dewpoint_c (degrees Celsius; tenths from the remarks' T group where reported, else whole degrees), wind_dir_degrees (true; 0 for calm or variable), wind_speed_kt and wind_gust_kt (knots, converted by the AWC from reports in m/s), visibility_statute_mi ('10+' and '6+' for at least 10 and 6 miles), altim_in_hg (the altimeter setting QNH, inches of mercury), sea_level_pressure_mb (the remarks' SLP group, North American stations only), precip_in (the P group: precipitation since the last hourly report, US stations; 0.005 for a trace), elevation_m. Some column names repeat (sky_cover, cloud_base_ft_agl). stations.cache.json.gz: gzipped JSON, one object per station: id, icaoId, wmoId, site (its name), lat, lon, elev (m), state, country.",
+  "coverage": "Global, over land and islands; aerodromes report hourly or half-hourly, and the cache keeps only each station's latest report. Coverage is dense over North America, Europe and East Asia, sparse over Africa and the oceans.",
+  "licence": "US Government work, in the public domain: information on NWS web pages 'is in the public domain, unless specifically noted otherwise, and may be used without charge for any lawful purpose' (https://www.weather.gov/disclaimer). The reports are made by national weather services and exchanged under WMO Resolution 40 as essential data. The AWC asks users of its data API to keep requests limited in scope and frequency and to send a custom User-Agent (https://aviationweather.gov/data/api/); the cache files are what it recommends for all reports.",
+  "citation": "NOAA National Weather Service Aviation Weather Center, METAR data cache, https://aviationweather.gov/data/cache/ (retrieved on the date of retrieval.json). Code forms: WMO (2019), Manual on Codes, WMO-No. 306, Volume I.1, FM 15 METAR and FM 16 SPECI.",
+  "used_by": [
+    "data/products/observation_set.py",
+    "applications/earth-atlas"
+  ]
+}

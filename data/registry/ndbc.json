@@ -1,0 +1,25 @@
+{
+  "id": "ndbc",
+  "kind": "http",
+  "domain": "oceanography",
+  "title": "NDBC: the latest observations of about 850 moored and drifting buoys, coastal stations and platforms",
+  "provider": "NOAA National Data Buoy Center (NDBC), with partners' stations relayed over the WMO Global Telecommunication System (among them the Korea Meteorological Administration, the UK Met Office and Météo-France)",
+  "credit": "Buoys: NOAA National Data Buoy Center",
+  "requests": [
+    {"url": "https://www.ndbc.noaa.gov/data/latest_obs/latest_obs.txt", "file": "latest_obs.txt"},
+    {"url": "https://www.ndbc.noaa.gov/data/stations/station_table.txt", "file": "station_table.txt"}
+  ],
+  "parameters": {},
+  "profiles": {
+    "latest": {"description": "each station's latest observation of the last few hours, renewed every five minutes or so; fetch with --refresh to take a newer one", "parameters": {}}
+  },
+  "default_profile": "latest",
+  "format": "latest_obs.txt: text, two header lines (names and units), then one line per station with blank-separated columns: STN, LAT, LON (degrees), YYYY MM DD hh mm (UTC), WDIR (degrees true, the direction the wind comes from), WSPD (m/s, an 8-minute mean on buoys, 2 minutes on land), GST (m/s, peak 5 or 8 s gust), WVHT (m, significant wave height, the mean of the highest third over 20 minutes), DPD (s, dominant wave period), APD (s, average period), MWD (degrees true, direction the dominant waves come from), PRES (hPa, at sea level; reduced for C-MAN and Great Lakes stations), PTDY (hPa, three-hour tendency), ATMP, WTMP (the sea surface, at the hull's waterline on buoys), DEWP (degrees Celsius), VIS (nautical miles; buoys report only 0 to 1.6), TIDE (ft above MLLW). 'MM' marks a missing value. Definitions: https://www.ndbc.noaa.gov/faq/measdes.shtml. station_table.txt: '|'-separated: STATION_ID, OWNER, TTYPE (the platform, such as '3-meter discus buoy'), HULL, NAME, PAYLOAD, LOCATION, TIMEZONE, FORECAST, NOTE.",
+  "coverage": "Mostly the coastal and open waters of the United States, the Great Lakes and the tropical Pacific (TAO/TRITON), with partners' buoys of Korea, the British Isles and France; sensor heights differ between hulls (air temperature and wind at about 3 to 5 m above the sea on buoys).",
+  "licence": "US Government work, in the public domain (NOAA). Partners' observations are relayed by NDBC as WMO Resolution 40 essential data; credit the operating agency where a station's page names one.",
+  "citation": "NOAA National Data Buoy Center, latest observations, https://www.ndbc.noaa.gov/data/latest_obs/ (retrieved on the date of retrieval.json); measurement definitions at https://www.ndbc.noaa.gov/faq/measdes.shtml.",
+  "used_by": [
+    "data/products/observation_set.py",
+    "applications/earth-atlas"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "id": "ibtracs",
+  "kind": "http",
+  "domain": "meteorology",
+  "title": "IBTrACS v04r01: the best tracks of tropical cyclones, merged from the warning centres of every basin",
+  "provider": "NOAA National Centers for Environmental Information (NCEI), International Best Track Archive for Climate Stewardship, from the WMO Regional Specialized Meteorological Centres and Tropical Cyclone Warning Centres and other agencies",
+  "credit": "Tracks: IBTrACS (NOAA NCEI)",
+  "requests": [
+    {"url": "https://www.ncei.noaa.gov/data/international-best-track-archive-for-climate-stewardship-ibtracs/v04r01/access/csv/ibtracs.{subset}.list.v04r01.csv", "file": "ibtracs.csv"}
+  ],
+  "parameters": {
+    "subset": {"type": "str", "default": "ACTIVE", "pattern": "ACTIVE|last3years|since1980|NA|SA|EP|WP|SP|SI|NI",
+               "description": "which file: ACTIVE (storms of the last 7 days, 0.2 MB), last3years (11.6 MB), since1980 (over 100 MB), or one basin's whole record"}
+  },
+  "profiles": {
+    "active": {"description": "the storms active in the last 7 days, with provisional (real-time) tracks; renewed about three times a week, so fetch with --refresh", "parameters": {}},
+    "last3years": {"description": "every storm of the last three years, for verifying forecasts against best tracks", "parameters": {"subset": "last3years"}}
+  },
+  "default_profile": "active",
+  "format": "CSV, two header lines (names, then units), one row per storm and time: SID (the storm's identifier), SEASON, NUMBER, BASIN (NA, SA, EP, WP, SP, SI, NI), SUBBASIN, NAME, ISO_TIME (UTC; most points every 3 h, of which the agencies' own are usually every 6 h), NATURE (TS tropical, ET extratropical, SS subtropical, DS disturbance, MX mixed, NR not reported), LAT, LON (degrees), WMO_WIND (kt) and WMO_PRES (mb) from the WMO agency responsible for the basin (WMO_AGENCY), with no adjustment for its averaging period, TRACK_TYPE (main, spur, PROVISIONAL, PROVISIONAL_spur), DIST2LAND, LANDFALL (km), IFLAG (14 characters, one per source: O original, P position interpolated, I intensity interpolated, V some variables interpolated, _ missing), then each agency's own columns: USA_* (NHC, CPHC or JTWC; 1-minute winds), TOKYO_* (10-minute), CMA_* (2-minute), HKO_*, KMA_*, NEWDELHI_* (3-minute), REUNION_*, BOM_*, NADI_*, WELLINGTON_* (10-minute), and historical sets. Blank cells are missing. Column definitions: https://www.ncei.noaa.gov/sites/default/files/2021-07/IBTrACS_v04_column_documentation.pdf.",
+  "coverage": "Global, every basin. ACTIVE: storms of the last 7 days; last3years: the last three seasons. Recent storms are provisional (from TC Vitals and similar real-time sources) until the agencies' reanalysis, usually within two years.",
+  "licence": "No licence is named. NCEI distributes IBTrACS under the data policy of the World Data Center for Meteorology, full and open access; the RSMCs have agreed that their tracks be distributed for tropical cyclone research, and NCEI refers commercial users to WMO Resolution 40. Cite the dataset and Knapp et al. (2010).",
+  "citation": "Gahtan, J., Knapp, K. R., Schreck, C. J., Diamond, H. J., Kossin, J. P. and Kruk, M. C. (2024), International Best Track Archive for Climate Stewardship (IBTrACS) Project, Version 4r01, NOAA National Centers for Environmental Information, doi:10.25921/82ty-9e16. Knapp, K. R., Kruk, M. C., Levinson, D. H., Diamond, H. J. and Neumann, C. J. (2010), The International Best Track Archive for Climate Stewardship (IBTrACS): unifying tropical cyclone best track data, Bulletin of the American Meteorological Society 91, 363-376, doi:10.1175/2009BAMS2755.1.",
+  "used_by": [
+    "data/products/ibtracs_tracks.py",
+    "applications/earth-atlas"
+  ]
+}
