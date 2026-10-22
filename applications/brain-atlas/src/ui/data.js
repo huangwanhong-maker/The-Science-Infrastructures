@@ -67,10 +67,13 @@ export function channelValues(text, names) {
 }
 
 // A scale for values: [low, high] from the data, symmetric about zero for a diverging map.
+// With many values, the 2nd and 98th percentiles, so that a few outliers do not wash out
+// the rest (they take the colours of the ends).
 export function valueRange(values, { diverging = false } = {}) {
-  const v = [...values].filter(Number.isFinite);
+  const v = [...values].filter(Number.isFinite).sort((a, b) => a - b);
   if (!v.length) return [0, 1];
-  let lo = Math.min(...v), hi = Math.max(...v);
+  const q = (f) => v[Math.min(v.length - 1, Math.max(0, Math.round(f * (v.length - 1))))];
+  let lo = v.length >= 20 ? q(0.02) : v[0], hi = v.length >= 20 ? q(0.98) : v[v.length - 1];
   if (diverging) { const m = Math.max(Math.abs(lo), Math.abs(hi)) || 1; lo = -m; hi = m; }
   if (hi === lo) { hi = lo + 1; }
   return [lo, hi];

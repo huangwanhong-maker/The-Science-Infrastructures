@@ -1,0 +1,35 @@
+{
+  "id": "mial-thalamic-nuclei",
+  "domain": "neuroscience",
+  "title": "The thalamic nuclei of 67 healthy adults from diffusion MRI (MIAL67): seven nuclei or groups a hemisphere, on the MNI 152 ICBM 2009c asymmetric template at 1 mm",
+  "provider": "E. Najdenovska, Y. Aleman-Gomez, M. Bach Cuadra and colleagues (CHUV and EPFL, Lausanne), served by TemplateFlow",
+  "credit": "Thalamic nuclei: Najdenovska et al. (2018)",
+  "files": [
+    {
+      "url": "https://templateflow.s3.amazonaws.com/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_res-01_atlas-MIAL67ThalamicNuclei_dseg.nii.gz",
+      "file": "tpl-MNI152NLin2009cAsym_res-01_atlas-MIAL67ThalamicNuclei_dseg.nii.gz",
+      "size": 45949,
+      "sha256": "d3be50ff04dc8e5d2355ee965a1b942354d8e5371428d081f85328eb8c27b6dd"
+    },
+    {
+      "url": "https://templateflow.s3.amazonaws.com/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_atlas-MIAL67ThalamicNuclei_dseg.tsv",
+      "file": "tpl-MNI152NLin2009cAsym_atlas-MIAL67ThalamicNuclei_dseg.tsv",
+      "size": 610,
+      "sha256": "34e007a61472ffd69965c984bd3e53bf54405892a2a71ca78d17d4861250e2ca"
+    },
+    {
+      "url": "https://templateflow.s3.amazonaws.com/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_atlas-MIAL67ThalamicNuclei_dseg.json",
+      "file": "tpl-MNI152NLin2009cAsym_atlas-MIAL67ThalamicNuclei_dseg.json",
+      "size": 680,
+      "sha256": "394dad29cbf6f39e16c14c2de9f70941ebfec0a75f4cc9927a7dfecb409d241c"
+    }
+  ],
+  "format": "NIfTI-1, gzipped, uint8 label values 1-7 (left) and 8-14 (right): pulvinar, ventral anterior, mediodorsal, lateral posterior-ventral posterior group, pulvinar-medial-centrolateral group, ventrolateral, ventral posterior-ventrolateral group; a table of names and colours, and the atlas's metadata.",
+  "coverage": "The thalamus of both hemispheres",
+  "licence": "CC BY 4.0 (the atlas's metadata in TemplateFlow).",
+  "citation": "Najdenovska, E. et al. (2018), In-vivo probabilistic atlas of human thalamic nuclei based on diffusion-weighted magnetic resonance imaging, Scientific Data 5, 180270, doi:10.1038/sdata.2018.270.",
+  "used_by": [
+    "data/products/brain_anatomy.py",
+    "applications/brain-atlas"
+  ]
+}

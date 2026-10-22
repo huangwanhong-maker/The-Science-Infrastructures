@@ -1,0 +1,23 @@
+{
+  "id": "harvard-oxford",
+  "domain": "neuroscience",
+  "title": "The Harvard-Oxford cortical atlas, lateralised: 48 cortical areas a hemisphere (gyri, poles, opercula and divisions) at 25 % probability, on the MNI 152 ICBM 2009c asymmetric template at 1 mm",
+  "provider": "Harvard Center for Morphometric Analysis, distributed with FSL (Oxford); resampled to the 2009c template and served by TemplateFlow",
+  "credit": "Gyri: Harvard-Oxford cortical atlas (Makris et al. 2006; Desikan et al. 2006)",
+  "files": [
+    {
+      "url": "https://templateflow.s3.amazonaws.com/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_res-01_atlas-HOCPAL_desc-th25_dseg.nii.gz",
+      "file": "tpl-MNI152NLin2009cAsym_res-01_atlas-HOCPAL_desc-th25_dseg.nii.gz",
+      "size": 279888,
+      "sha256": "fdb9f0785e31f8258367cc9586d3698fbb69550dee6fdffc6451efddefe1f250"
+    }
+  ],
+  "format": "NIfTI-1, gzipped, uint8 label values 1-96 on the 1 mm grid of the 2009c template: value v is FSL's lateralised index v - 1, so that odd values are left and even right, in the order of FSL's HarvardOxford-Cortical-Lateralized.xml (frontal pole, insular cortex, superior frontal gyrus, ... occipital pole). The names are transcribed in domains/neuroscience/js/brain.js and checked by their centroids.",
+  "coverage": "The cerebral cortex of both hemispheres",
+  "licence": "The FSL licence (free for non-commercial use; https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Licence), as distributed with FSL and by TemplateFlow. Fetched into the cache, not redistributed.",
+  "citation": "Makris, N. et al. (2006), Decreased volume of left and total anterior insular lobule in schizophrenia, Schizophr. Res. 83, 155-171; Frazier, J. A. et al. (2005), Am. J. Psychiatry 162, 1256-1265; Desikan, R. S. et al. (2006), NeuroImage 31, 968-980; Goldstein, J. M. et al. (2007), Biol. Psychiatry 61, 935-945.",
+  "used_by": [
+    "data/products/brain_anatomy.py",
+    "applications/brain-atlas"
+  ]
+}

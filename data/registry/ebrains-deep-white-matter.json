@@ -1,0 +1,23 @@
+{
+  "id": "ebrains-deep-white-matter",
+  "domain": "neuroscience",
+  "title": "The deep white-matter fibre bundles of the human brain (version 2018): the maximum probability map of the long association, projection and commissural bundles found by clustering the tractography of 78 subjects, in the MNI 152 ICBM 2009c asymmetric space",
+  "provider": "P. Guevara, J.-F. Mangin and colleagues (NeuroSpin, CEA), through EBRAINS, the research infrastructure of the Human Brain Project",
+  "credit": "Fibre bundles: atlas of deep white matter bundles (Guevara et al. 2012), EBRAINS",
+  "files": [
+    {
+      "url": "https://data-proxy.ebrains.eu/api/v1/buckets/p22717-hbp-d000339_DeepWhiteMatterBundles_DWM_pub/version2018/mpm_dwm/long-bundles_maxprob.nii.gz",
+      "file": "long-bundles_maxprob.nii.gz",
+      "size": 80192,
+      "sha256": "7045d6dc815b4608975397da2d445e1d33f4b6ae20f368aa921e00cfc86cfaaf"
+    }
+  ],
+  "format": "NIfTI-1, gzipped, uint8 labels on the 1 mm grid of the 2009c template: 1-21 left and 31-51 right bundles as the EBRAINS configuration (siibra-configurations, maps/mni152-dwm-labelled.json) names them; in the maximum probability map 22 of them are present (the arcuate fasciculus by its direct, anterior and posterior segments, the long, short and temporal cingulate fibres, the corticospinal tract, the fornix, the inferior fronto-occipital, inferior longitudinal and uncinate fasciculi, on each side).",
+  "coverage": "The deep white matter of both hemispheres",
+  "licence": "Creative Commons Attribution Non Commercial Share Alike 4.0 International, as the EBRAINS Knowledge Graph states for the datasets of the atlas (doi:10.25493/MBH3-5H0). Fetched into the cache, not redistributed.",
+  "citation": "Guevara, P., Duclap, D., Poupon, C., Marrakchi-Kacem, L., Fillard, P., Le Bihan, D., Leboyer, M., Houenou, J. and Mangin, J.-F. (2012), Automatic fiber bundle segmentation in massive tractography datasets using a multi-subject bundle atlas, NeuroImage 61, 1083-1099, doi:10.1016/j.neuroimage.2012.02.071.",
+  "used_by": [
+    "data/products/brain_anatomy.py",
+    "applications/brain-atlas"
+  ]
+}

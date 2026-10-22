@@ -1,0 +1,29 @@
+{
+  "id": "massp-2",
+  "domain": "neuroscience",
+  "title": "MASSP 2.0: 63 subcortical structures of the human brain (nuclei of the basal ganglia, thalamus, midbrain and brainstem, hippocampal subfields, commissures, fornix, internal capsule, claustrum) as a parcellation of the MNI 152 ICBM 2009c asymmetric template at 1 mm",
+  "provider": "P.-L. Bazin, A. Alkemade, B. U. Forstmann and colleagues (University of Amsterdam), from 7 T quantitative MRI of the AHEAD database; resampled to the 2009c template and served by TemplateFlow",
+  "credit": "Subcortical nuclei: MASSP 2.0 (Bazin et al. 2020, 2025)",
+  "files": [
+    {
+      "url": "https://templateflow.s3.amazonaws.com/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_res-01_atlas-MASSP20_dseg.nii.gz",
+      "file": "tpl-MNI152NLin2009cAsym_res-01_atlas-MASSP20_dseg.nii.gz",
+      "size": 73686,
+      "sha256": "cacd6e263bab6a42483afc1887b175c0d49b1174b2388e23ef553ab38006d8e3"
+    },
+    {
+      "url": "https://templateflow.s3.amazonaws.com/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_res-01_atlas-MASSP20_dseg.tsv",
+      "file": "tpl-MNI152NLin2009cAsym_res-01_atlas-MASSP20_dseg.tsv",
+      "size": 1526,
+      "sha256": "bedfe29cd1afd171aeffa9c87e8c87f5fbae51fa67f180018cb5baa319c7930c"
+    }
+  ],
+  "format": "NIfTI-1, gzipped, float32 label values 1-63 on the 1 mm grid of the 2009c template (193 x 229 x 193 from (-96, -132, -78) mm), 0 elsewhere; a table of index and name, odd values the left structures and even the right where a structure is paired, single values for midline structures (third and fourth ventricles, fornix, commissures, raphe nuclei).",
+  "coverage": "The subcortex: basal ganglia, thalamus and its geniculate nuclei, epithalamus, midbrain and pontine nuclei, the hippocampus by subfield, the amygdala, the ventricles, the claustrum, and the major subcortical fibre structures",
+  "licence": "CC BY 4.0 (the MASSP 2.0 atlases on the UvA/AUAS figshare, doi:10.21942/uva.27291579).",
+  "citation": "Bazin, P.-L., Alkemade, A., Mulder, M. J., Henry, A. G. and Forstmann, B. U. (2020), Multi-contrast anatomical subcortical structures parcellation, eLife 9, e59430, doi:10.7554/eLife.59430. Bazin, P.-L., Groot, J. M., Miletic, S., Groenewegen, H. J., Trutti, A. C., Mulder, M. J., Forstmann, B. U. and Alkemade, A. (2025), Automated parcellation and atlasing of the human subcortex with ultra-high resolution quantitative MRI, Imaging Neuroscience 3, doi:10.1162/imag_a_00560.",
+  "used_by": [
+    "data/products/brain_anatomy.py",
+    "applications/brain-atlas"
+  ]
+}

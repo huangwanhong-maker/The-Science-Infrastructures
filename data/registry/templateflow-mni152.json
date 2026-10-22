@@ -1,7 +1,7 @@
 {
   "id": "templateflow-mni152",
   "domain": "neuroscience",
-  "title": "The MNI 152 templates of the human brain, from TemplateFlow: the ICBM 2009c nonlinear asymmetric average (the reference space of the EBRAINS atlas) at 1 mm, skull-stripped, with its brain mask and the whole head, and at 2 mm; and FSL's 6th-generation average at 2 mm",
+  "title": "The MNI 152 templates of the human brain, from TemplateFlow: the ICBM 2009c nonlinear asymmetric average (the reference space of the EBRAINS atlas) at 1 mm, skull-stripped, with its brain and head masks, the whole head, its tissue probability maps (grey matter, white matter, cerebrospinal fluid) and FreeSurfer's segmentation of it (aseg); at 2 mm; and FSL's 6th-generation average at 2 mm",
   "provider": "TemplateFlow (Ciric, Markiewicz, Esteban et al.), serving the templates of the McConnell Brain Imaging Centre, Montreal Neurological Institute (Fonov et al. 2011) and of FSL",
   "credit": "Template: MNI 152 ICBM 2009c (Fonov et al. 2011), via TemplateFlow",
   "files": [
@@ -52,14 +52,45 @@
       "file": "tpl-MNI152NLin2009cAsym_LICENSE.txt",
       "size": 682,
       "sha256": "46e280fe1a24c6f37feef2445ed288435e0ad063504a06030b206b12fdd2629d"
+    },
+    {
+      "url": "https://templateflow.s3.amazonaws.com/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_res-01_label-GM_probseg.nii.gz",
+      "file": "tpl-MNI152NLin2009cAsym_res-01_label-GM_probseg.nii.gz",
+      "size": 7566494,
+      "sha256": "662b18e83dddc554b19c621d9750af3454b54d4e103df03633eacced3884805a"
+    },
+    {
+      "url": "https://templateflow.s3.amazonaws.com/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_res-01_label-WM_probseg.nii.gz",
+      "file": "tpl-MNI152NLin2009cAsym_res-01_label-WM_probseg.nii.gz",
+      "size": 6911720,
+      "sha256": "b2f80e29f5a1ef55325215d1716ef611f5b1a3cd97b4a49ef4e9564e9564e945"
+    },
+    {
+      "url": "https://templateflow.s3.amazonaws.com/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_res-01_label-CSF_probseg.nii.gz",
+      "file": "tpl-MNI152NLin2009cAsym_res-01_label-CSF_probseg.nii.gz",
+      "size": 5494321,
+      "sha256": "8a74e36b067a3fb670f6785b94479cc3df4d219a3f72d69d57aef332e4947048"
+    },
+    {
+      "url": "https://templateflow.s3.amazonaws.com/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_res-01_seg-aseg_dseg.nii.gz",
+      "file": "tpl-MNI152NLin2009cAsym_res-01_seg-aseg_dseg.nii.gz",
+      "size": 484957,
+      "sha256": "0bb033414fbbd6df626d063b73801a14c71fb33b83204585f2aa1fbb4aef60dd"
+    },
+    {
+      "url": "https://templateflow.s3.amazonaws.com/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_res-01_desc-head_mask.nii.gz",
+      "file": "tpl-MNI152NLin2009cAsym_res-01_desc-head_mask.nii.gz",
+      "size": 975697,
+      "sha256": "6cb777105a509891f5878fbaa0512d8a948eecbece375c08414fec966cffdaa2"
     }
   ],
-  "format": "NIfTI-1, gzipped, int16 T1-weighted intensities and uint8 masks, RAS with the sform and qform equal. MNI152NLin2009cAsym at 1 mm: 193 x 229 x 193 voxels, the first centred at (-96, -132, -78) mm; at 2 mm: 97 x 115 x 97 from (-96.5, -132.5, -78.5). MNI152NLin6Asym at 2 mm: 91 x 109 x 91 from (-90, -126, -72). The domain's neuroscience/js/nifti.js reads them; template_description.json lists every resolution's grid.",
+  "format": "NIfTI-1, gzipped, int16 T1-weighted intensities and uint8 masks, RAS with the sform and qform equal. MNI152NLin2009cAsym at 1 mm: 193 x 229 x 193 voxels, the first centred at (-96, -132, -78) mm; at 2 mm: 97 x 115 x 97 from (-96.5, -132.5, -78.5). MNI152NLin6Asym at 2 mm: 91 x 109 x 91 from (-90, -126, -72). The domain's neuroscience/js/nifti.js reads them; template_description.json lists every resolution's grid. The tissue maps (label-GM, label-WM, label-CSF) are float32 probabilities on the 1 mm grid; seg-aseg is FreeSurfer's aseg segmentation of the template (int16, FreeSurfer's label values, added to TemplateFlow in 2025); desc-head is the mask of the whole head.",
   "coverage": "The whole head (T1w) or the brain (desc-brain), in MNI space",
   "licence": "Copyright (C) 1993-2004 Louis Collins, McConnell Brain Imaging Centre, Montreal Neurological Institute, McGill University. Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies (the LICENSE file fetched beside the data).",
   "citation": "Fonov, V., Evans, A. C., Botteron, K., Almli, C. R., McKinstry, R. C. and Collins, D. L. (2011), Unbiased average age-appropriate atlases for pediatric studies, NeuroImage 54(1), 313-327, doi:10.1016/j.neuroimage.2010.07.033. Ciric, R. et al. (2022), TemplateFlow: FAIR-sharing of multi-scale, multi-species brain models, Nature Methods 19, 1568-1571.",
   "used_by": [
     "domains/neuroscience (spaces.js, checks against the headers)",
+    "data/products/brain_anatomy.py",
     "applications/brain-atlas"
   ]
 }
