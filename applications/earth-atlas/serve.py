@@ -12,6 +12,12 @@ the user has just chosen, are requested on demand through the data library
     /request?dataset=<id>&<parameter>=<value>...   starts a request, or finds it; returns the job as JSON
     /request/<job id>                                the job's state; when done, the product's path under /data/
 
+The atlas's data recipe (``recipe.json``: the datasets fetched and the products
+built, in order) is reported to the page and run on its request:
+
+    GET  /setup                          each step and whether it is done; a run in progress
+    POST /setup/run[?steps=a,b&again=1]  run the missing steps, or the chosen ones again
+
 Usage::
 
     python applications/earth-atlas/serve.py [--host 127.0.0.1] [--port 8790] [--open]
@@ -43,6 +49,7 @@ MOUNTS = {
 }
 JOBS = None          # the data library's jobs on demand, created at the first request
 SIBLING = None       # where the Celestial Atlas is served, when it is not beside this page
+RECIPE = None        # the job that runs the atlas's data recipe, created at the first request
 
 
 def jobs():
@@ -52,6 +59,15 @@ def jobs():
         import on_demand
         JOBS = on_demand.Jobs()
     return JOBS
+
+
+def recipe_job():
+    global RECIPE
+    if RECIPE is None:
+        sys.path.insert(0, str(ROOT / "data" / "acquisition"))
+        import recipe
+        RECIPE = recipe.Job(APP / "recipe.json", ROOT)
+    return RECIPE
 
 # Explicit types: on Windows the registry may otherwise map .js to text/plain,
 # which browsers refuse for ES modules.
@@ -83,6 +99,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         url = urllib.parse.urlsplit(self.path)
         if url.path == "/request" or url.path.startswith("/request/"):
             self.on_demand(url)
+        elif url.path == "/setup":
+            self.reply_json(*self.recipe_request(url))
         elif SIBLING and url.path.startswith("/celestial-atlas/"):
             # The page links to the Celestial Atlas as ../celestial-atlas/, keeping
             # the place and instant in the fragment, which the browser carries over
@@ -92,6 +110,13 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             self.end_headers()
         else:
             super().do_GET()
+
+    def do_POST(self) -> None:
+        url = urllib.parse.urlsplit(self.path)
+        if url.path == "/setup/run":
+            self.reply_json(*self.recipe_request(url))
+        else:
+            self.send_error(404)
 
     def on_demand(self, url) -> None:
         try:
@@ -105,6 +130,21 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             body, code = {"state": "failed", "message": f"requests on demand need numpy: {error}"}, 503
         except ValueError as error:          # RequestError: a refused request
             body, code = {"state": "failed", "message": str(error)}, 400
+        self.reply_json(body, code)
+
+    def recipe_request(self, url) -> tuple[dict, int]:
+        """The state of the data recipe (GET /setup), or a run of its missing
+        steps, or of chosen steps again (POST /setup/run?steps=a,b&again=1)."""
+        try:
+            if url.path == "/setup":
+                return recipe_job().view(), 200
+            query = dict(urllib.parse.parse_qsl(url.query))
+            steps = [s for s in query.get("steps", "").split(",") if s] or None
+            return recipe_job().start(steps, again=query.get("again") == "1"), 200
+        except RuntimeError as error:          # a run is already in progress
+            return {"message": str(error)}, 409
+
+    def reply_json(self, body: dict, code: int) -> None:
         data = json.dumps(body, ensure_ascii=False).encode("utf-8")
         self.send_response(code)
         self.send_header("Content-Type", "application/json; charset=utf-8")

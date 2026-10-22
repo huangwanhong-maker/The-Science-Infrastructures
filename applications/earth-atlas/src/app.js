@@ -48,6 +48,7 @@ import { koppen, koppenGrid, meanTemperature } from '../../../domains/climate/js
 import { climateDiagram } from './ui/climate.js';
 import { joinCountries, valueForYear, latestWellCoveredYear } from '../../../domains/geography/js/index.js';
 import { OceanBeneath } from './ui/ocean.js';
+import { setupPanel } from './ui/setup.js';
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -88,15 +89,25 @@ function progress(fraction, text) {
 function fail(html) {
   const el = $('loading');
   el.classList.add('failed');
-  $('loading-text').innerHTML = html;
+  $('loading-text').innerHTML = `${html}<br><br>Or <button type="button" class="link" id="fail-data">fetch and build them from this page</button>.`;
+  $('fail-data').addEventListener('click', openData);
 }
 
 const MISSING_DATA = `The data products are not built yet. From the repository root, run:<br><br>
-<code>python data/acquisition/fetch.py natural-earth-50m etopo-2022 gfs oisst ww3</code><br>
-<code>python data/products/geography.py</code><br>
-<code>python data/products/field_grid.py --source etopo-2022</code><br>
-<code>python data/products/field_grid.py --source gfs</code><br><br>
-and see the README for the other datasets.`;
+<code>python data/acquisition/recipe.py applications/earth-atlas/recipe.json</code><br><br>
+which fetches the datasets and builds the products in order; see the README.`;
+
+// The Data panel: the sources and method, and the data on this computer. It is
+// wired here, before the atlas starts, so that it works when the data are missing.
+const setup = setupPanel($('setup'));
+function openData() {
+  try { renderAbout(); } catch { $('about-body').innerHTML = ''; }    // before the atlas has started, there is nothing to describe
+  setup.refresh();
+  $('about').showModal();
+  $('about').scrollTop = 0;
+}
+$('data-link').addEventListener('click', openData);
+$('about').addEventListener('close', setup.stop);
 
 async function start() {
   try {
@@ -500,11 +511,6 @@ function bind() {
     updatePlay();
   });
   updatePlay();
-  $('data-link').addEventListener('click', () => {
-    renderAbout();
-    $('about').showModal();
-    $('about').scrollTop = 0;
-  });
   $('place').addEventListener('click', (e) => {
     if (e.target.closest('[data-action="unpin"]')) { state.pinned = null; dirty.place = dirty.labels = true; remember(); }
     if (e.target.closest('[data-action="ocean-column"]') && state.pinned) ocean.ask(state.pinned[0], state.pinned[1]);

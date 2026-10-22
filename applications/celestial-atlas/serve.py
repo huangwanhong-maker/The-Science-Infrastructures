@@ -5,6 +5,12 @@ repository's ``domains/``, ``foundations/`` and ``visualization/`` under the
 same paths; and the data from the repository's cache (``data/cache/``)
 under ``/data/``. Only 127.0.0.1 is bound unless ``--host`` says otherwise.
 
+The atlas's data recipe (``recipe.json``: the datasets fetched and the products
+built, in order) is reported to the page and run on its request:
+
+    GET  /setup                          each step and whether it is done; a run in progress
+    POST /setup/run[?steps=a,b&again=1]  run the missing steps, or the chosen ones again
+
 Usage::
 
     python applications/celestial-atlas/serve.py [--host 127.0.0.1] [--port 8770] [--open]
@@ -19,6 +25,7 @@ from __future__ import annotations
 
 import argparse
 import http.server
+import json
 import sys
 import urllib.parse
 import webbrowser
@@ -34,6 +41,16 @@ MOUNTS = {
     "/visualization/": ROOT / "visualization",
 }
 SIBLING = None       # where the Earth Atlas is served, when it is not beside this page
+RECIPE = None        # the job that runs the atlas's data recipe, created at the first request
+
+
+def recipe_job():
+    global RECIPE
+    if RECIPE is None:
+        sys.path.insert(0, str(ROOT / "data" / "acquisition"))
+        import recipe
+        RECIPE = recipe.Job(APP / "recipe.json", ROOT)
+    return RECIPE
 
 # Explicit types: on Windows the registry may otherwise map .js to text/plain,
 # which browsers refuse for ES modules.
@@ -70,14 +87,44 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         return str(target)
 
     def do_GET(self) -> None:
+        url = urllib.parse.urlsplit(self.path)
+        if url.path == "/setup":
+            self.reply_json(*self.recipe_request(url))
         # The page links to the Earth Atlas as ../earth-atlas/, keeping the place
         # and instant in the fragment, which the browser carries over a redirect.
-        if SIBLING and self.path.startswith("/earth-atlas/"):
+        elif SIBLING and url.path.startswith("/earth-atlas/"):
             self.send_response(302)
             self.send_header("Location", SIBLING + self.path[len("/earth-atlas/"):])
             self.end_headers()
-            return
-        super().do_GET()
+        else:
+            super().do_GET()
+
+    def do_POST(self) -> None:
+        url = urllib.parse.urlsplit(self.path)
+        if url.path == "/setup/run":
+            self.reply_json(*self.recipe_request(url))
+        else:
+            self.send_error(404)
+
+    def recipe_request(self, url) -> tuple[dict, int]:
+        """The state of the data recipe (GET /setup), or a run of its missing
+        steps, or of chosen steps again (POST /setup/run?steps=a,b&again=1)."""
+        try:
+            if url.path == "/setup":
+                return recipe_job().view(), 200
+            query = dict(urllib.parse.parse_qsl(url.query))
+            steps = [s for s in query.get("steps", "").split(",") if s] or None
+            return recipe_job().start(steps, again=query.get("again") == "1"), 200
+        except RuntimeError as error:          # a run is already in progress
+            return {"message": str(error)}, 409
+
+    def reply_json(self, body: dict, code: int) -> None:
+        data = json.dumps(body, ensure_ascii=False).encode("utf-8")
+        self.send_response(code)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Content-Length", str(len(data)))
+        self.end_headers()
+        self.wfile.write(data)
 
     def end_headers(self) -> None:
         # Fixed downloads (the ephemeris) are kept for a day; products, which

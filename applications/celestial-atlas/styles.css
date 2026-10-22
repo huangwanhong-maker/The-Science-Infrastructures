@@ -173,3 +173,15 @@ dialog .link { margin-top: 20px; }
 #info .action { padding: 4px 14px; border-radius: 14px; color: var(--text); border: 1px solid transparent;
   background: linear-gradient(var(--night-2, #241b27), var(--night-2, #241b27)) padding-box, var(--accent-gradient) border-box; }
 #info .action:hover { color: #fff; }
+
+/* The Data panel's account of the data on this computer */
+dialog h3 { font-weight: 500; font-size: 16px; margin: 22px 0 4px; }
+.setup-note { margin: 4px 0 8px; color: var(--text-dim); font-size: 14px; }
+table.setup { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.setup th, table.setup td { padding: 4px 2px; text-align: left; font-weight: 400; vertical-align: top; }
+table.setup td:last-child { text-align: right; }
+table.setup tr + tr { border-top: 1px solid var(--hair); }
+table.setup tr.done th, table.setup tr.done td { color: var(--text-dim); }
+table.setup tr.missing td:nth-child(2) { color: var(--accent); }
+.setup-log { max-height: 160px; overflow: auto; margin: 10px 0 0; padding: 8px 10px; font: 12px/1.45 ui-monospace, Menlo, Consolas, monospace;
+  color: var(--text-dim); background: rgba(0, 0, 0, 0.18); border-radius: 3px; white-space: pre-wrap; }

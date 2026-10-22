@@ -52,7 +52,7 @@
       <button type="button" role="tab" data-view="sky">Sky Chart</button>
       <button type="button" role="tab" data-view="orbits">Orbits</button>
     </nav>
-    <button type="button" class="link" onclick="document.getElementById('about').showModal()">Data</button>
+    <button type="button" class="link" id="data-link">Data</button>
   </header>
 
   <main>
@@ -112,6 +112,7 @@
         <dt>Time</dt>
         <dd>UTC with leap seconds; TT and TDB for the ephemeris; UT1 taken equal to UTC. Before 1972, ΔT from Espenak and Meeus (2006).</dd>
       </dl>
+      <section id="setup" aria-live="polite"></section>
       <button class="link" value="close">Close</button>
     </form>
   </dialog>

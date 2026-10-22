@@ -20,6 +20,7 @@ import { OrbitDiagramView } from './views/orbit-diagram.js';
 import { GalaxiesView } from './views/galaxies.js';
 import { HubbleDiagram, MassLightDiagram, HUBBLE_CONSTANT } from './views/galaxy-diagrams.js';
 import { listGalaxyCatalogues, loadGalaxies } from './data/catalog.js';
+import { setupPanel } from './setup.js';
 
 const DATA = 'data';
 const STORAGE_KEY = 'celestial-atlas/v1';
@@ -974,10 +975,18 @@ async function main() {
   requestAnimationFrame(frame);
 }
 
+// The Data panel: the sources and method, and the data on this computer.
+const setup = setupPanel($('#setup'));
+const openData = () => { setup.refresh(); $('#about').showModal(); };
+$('#data-link').addEventListener('click', openData);
+$('#about').addEventListener('close', setup.stop);
+
 main().catch((error) => {
   console.error(error);
   $('#loading-text').innerHTML = `<strong>The atlas could not start.</strong><br>${esc(error.message)}<br><br>`
     + 'Fetch the data from the repository root with<br>'
-    + '<code>python data/acquisition/fetch.py</code><br><code>python data/products/star_catalog.py</code>';
+    + '<code>python data/acquisition/recipe.py applications/celestial-atlas/recipe.json</code><br>'
+    + 'or <button type="button" class="link" id="fail-data">fetch and build them from this page</button>.';
   $('#loading').classList.add('failed');
+  $('#fail-data').addEventListener('click', openData);
 });
