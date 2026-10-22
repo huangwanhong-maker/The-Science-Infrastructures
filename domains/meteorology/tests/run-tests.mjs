@@ -1,6 +1,8 @@
 // Checks of the meteorology domain: the wind; the barotropic vorticity model
 // against the Rossby-Haurwitz wave; the shallow-water model against Williamson
-// et al. (1992) and Lamb (1932); tropical cyclones found in constructed fields.
+// et al. (1992) and Lamb (1932); tropical cyclones found in constructed fields;
+// the Fire Weather Index System against its standard test data; the wet-bulb
+// temperature and the heat index; the standard atmosphere and settling parcels.
 // Run from the repository root:  node domains/meteorology/tests/run-tests.mjs
 
 import { suite, seeded } from '../../../development/tools/checks.mjs';
@@ -9,6 +11,11 @@ import {
   lanczosWeights, detect, stitch, arcDeg, positionAt,
 } from '../js/index.js';
 import { SphericalHarmonics } from '../../../foundations/physis/js/index.js';
+import {
+  STANDARD_START, fireWeatherDay, fineFuelMoistureCode, dcDayLength, dmcDayLength, localNoon, accumulated, forecastNoonDays,
+  wetBulbStull, withinStullRange, heatIndexF, sampledMaximum, forecastLocalDays, localDay,
+  standardAtmosphere, pressureAltitude, stokesSettling, windAtHeight, settlingPath,
+} from '../js/index.js';
 
 const { check, assert, done } = suite();
 
@@ -195,6 +202,118 @@ const { check, assert, done } = suite();
   // Positions between the stored times, across the date line.
   const q = positionAt([{ t: 0, lon: 179, lat: 10, pa: 100000 }, { t: 6, lon: -179, lat: 12, pa: 99000 }], 3);
   check('cyclones: positions interpolate across the date line', Math.abs(Math.abs(q.lon) - 180) + Math.abs(q.lat - 11) + Math.abs(q.pa - 99500) / 100, 1e-9);
+}
+
+// ---- fire weather ----------------------------------------------------------------------
+{
+  // The standard test data of Van Wagner and Pickett (1985), Forestry Technical Report 33
+  // (also the first rows of the cffdrs package's test_fwi): from FFMC 85, DMC 6, DC 15 on
+  // April 13, at 46° N; weather (T °C, RH %, wind km/h, rain mm) and the published
+  // FFMC, DMC, DC, ISI, BUI, FWI, rounded to 0.1.
+  const rows = [
+    [17, 42, 25, 0, 87.7, 8.5, 19.0, 10.9, 8.5, 10.1],
+    [20, 21, 25, 2.4, 86.2, 10.4, 23.6, 8.8, 10.4, 9.3],
+    [8.5, 40, 17, 0, 87.0, 11.8, 26.1, 6.5, 11.7, 7.6],
+    [6.5, 25, 6, 0, 88.8, 13.2, 28.2, 4.9, 13.1, 6.2],
+    [13, 34, 24, 0, 89.1, 15.4, 31.5, 12.6, 15.3, 14.8],
+  ];
+  let codes = STANDARD_START, worst = 0, first = null;
+  for (const [T, H, W, rain, ...published] of rows) {
+    codes = fireWeatherDay(codes, { T, H, W, rain }, 4, 46);
+    const ours = [codes.ffmc, codes.dmc, codes.dc, codes.isi, codes.bui, codes.fwi];
+    first = first || ours;
+    worst = Math.max(worst, ...ours.map((x, k) => Math.abs(x - published[k])));
+  }
+  check('fire weather: the first day of the standard test data (FFMC 87.7, DMC 8.5, DC 19.0, ISI 10.9, BUI 8.5, FWI 10.1)',
+    Math.max(...first.map((x, k) => Math.abs(x - rows[0][4 + k]))), 0.05);
+  check('fire weather: all six codes on five days, rain on the second, to the published rounding', worst, 0.05);
+  // Equations (1) and (10), moisture content from FFMC and back: (10) inverts exactly to
+  // m = 147.2 (101.05 - F) / (59.5 + F), since 59.5 × 250 / 147.2 = 101.05, which (1) rounds to 101.
+  const m = (F) => (147.2 * (101 - F)) / (59.5 + F), F = (mc) => (59.5 * (250 - mc)) / (147.2 + mc);
+  check('fire weather: the FFMC scale and moisture content are inverse to 0.05 (eq. 1 and 10)', Math.max(...[0, 30, 85, 101].map((x) => Math.abs(F(m(x)) - x))), 0.055);
+  // Without rain or wind, the fine fuel approaches its equilibrium moisture: a day of 30 °C and 10 %
+  // raises a moist FFMC toward its ceiling, a day of 5 °C and 95 % lowers a dry one.
+  assert('fire weather: dry air raises the FFMC, humid air lowers it', fineFuelMoistureCode(70, 30, 10, 0, 0) > 85 && fineFuelMoistureCode(92, 5, 95, 0, 0) < 92);
+  // The southern band's DC adjustment is the northern one six months on; the DMC's day length is 9 h at the equator.
+  assert('fire weather: day-length factors of the southern hemisphere are the northern ones six months on',
+    [...Array(12).keys()].every((k) => dcDayLength(k + 1, -45) === dcDayLength(((k + 6) % 12) + 1, 45)) && dmcDayLength(7, 0) === 9 && dmcDayLength(4, 46) === 12.8);
+  // Local noon, and the rain of a day from a rate sampled every 6 hours.
+  const H = 3600000, t0 = Date.UTC(2026, 9, 20, 18), times = [...Array(24).keys()].map((k) => t0 + 6 * k * H);
+  check('daily weather: local mean noon at 90° E is 06:00 UTC', (localNoon(Date.UTC(2026, 9, 22), 90) - Date.UTC(2026, 9, 22, 6)) / H, 1e-12, 'h');
+  const day = accumulated(times, () => 1e-3, Date.UTC(2026, 9, 21, 12), Date.UTC(2026, 9, 22, 12));
+  check('daily weather: 1 g m-2 s-1 for 24 h is 86.4 mm', Math.abs(day.amount - 86.4) + Math.abs(day.covered - 86400), 1e-9, 'mm');
+  const part = accumulated(times, (k) => (k === 2 ? 2e-3 : 0), Date.UTC(2026, 9, 21, 3), Date.UTC(2026, 9, 21, 9));
+  check('daily weather: a window over half of a 6 h interval takes half of its rain', Math.abs(part.amount - 2e-3 * 3 * 3600), 1e-9, 'mm');
+  const days = forecastNoonDays(times).map((d) => new Date(d).toISOString().slice(5, 10));
+  assert('daily weather: a forecast from 20 Oct 18 UTC to 26 Oct 12 UTC has whole fire-weather days 22-25 Oct', days.join(' ') === '10-22 10-23 10-24 10-25', days.join(' '));
+}
+
+// ---- heat ----------------------------------------------------------------------------------
+{
+  check('heat: Stull (2011) wet-bulb temperature at 20 °C and 50 %, 13.7 °C', wetBulbStull(20, 50) - 13.7, 0.05, '°C');
+  // Against the isobaric wet-bulb temperature at 1013.25 hPa, found here from the balance
+  // c_p (T - Tw) = L (r_s(Tw) - r) with Bolton's (1980) saturation pressure: Stull states
+  // errors of -1 to +0.65 °C against his own reference; against this one they reach 1.2 °C.
+  const es = (t) => 611.2 * Math.exp((17.67 * t) / (t + 243.5));
+  const isobaric = (t, rh) => {
+    const p = 101325, e = (rh / 100) * es(t), r = (0.622 * e) / (p - e);
+    let lo = -60, hi = t;
+    for (let i = 0; i < 80; i++) {
+      const w = (lo + hi) / 2, rs = (0.622 * es(w)) / (p - es(w));
+      if ((1005.7 + 1875 * r) * (t - w) - (2.501e6 - 2370 * w) * (rs - r) > 0) lo = w; else hi = w;
+    }
+    return (lo + hi) / 2;
+  };
+  let worst = 0, sum = 0, n = 0, above = 0;
+  for (let t = -20; t <= 50; t += 2) {
+    for (let rh = 5; rh <= 99; rh += 2) {
+      if (!withinStullRange(t, rh) || (t < 0 && rh < 40)) continue;              // not both cold and dry
+      const d = wetBulbStull(t, rh) - isobaric(t, rh);
+      worst = Math.max(worst, Math.abs(d)); sum += Math.abs(d); n++;
+      if (wetBulbStull(t, rh) > t + 0.05) above++;
+    }
+  }
+  check('heat: Stull against an isobaric psychrometric solution over his range (worst)', worst, 1.25, '°C');
+  check('heat: and on average', sum / n, 0.4, '°C');
+  assert('heat: the wet-bulb temperature does not exceed the temperature', above === 0, `${above} cases`);
+  // The NWS heat index chart (weather.gov), whole °F, at cells away from the adjustments for
+  // very dry and very humid air: [T °F, RH %, chart].
+  const chart = [[80, 40, 80], [90, 40, 91], [100, 40, 109], [110, 40, 136], [90, 50, 95], [100, 50, 118], [96, 60, 116], [100, 65, 136], [88, 80, 106], [90, 90, 122]];
+  check('heat: the NWS heat index against its chart at ten cells, to the chart’s rounding', Math.max(...chart.map(([T, RH, v]) => Math.abs(heatIndexF(T, RH) - v))), 0.5, '°F');
+  check('heat: below 80 °F the simple formula: 70 °F at 50 % is 69.7 °F', heatIndexF(70, 50) - 0.5 * (70 + 61 + 1.2 * 2 + 4.7), 1e-12, '°F');
+  // Daily maxima over the local solar day.
+  const H = 3600000, t0 = Date.UTC(2026, 9, 20, 18), times = [...Array(24).keys()].map((k) => t0 + 6 * k * H);
+  const [a, b] = localDay(Date.UTC(2026, 9, 23), 135);
+  check('heat: the local day at 135° E runs from 15:00 UTC the day before', (Date.UTC(2026, 9, 23) - a) / H - 9 + (b - a) / H - 24, 1e-12, 'h');
+  assert('heat: the greatest sample within a day', sampledMaximum(times, (k) => Math.sin(k), a, b) === Math.max(...times.map((t, k) => (t >= a && t < b ? Math.sin(k) : -9))));
+  const days = forecastLocalDays(times).map((d) => new Date(d).toISOString().slice(5, 10));
+  assert('heat: the same forecast has whole local days 22-25 Oct at every longitude', days.join(' ') === '10-22 10-23 10-24 10-25', days.join(' '));
+}
+
+// ---- settling particles ---------------------------------------------------------------------
+{
+  // ICAO (1993): 1.225 kg m-3 and 1.7894e-5 Pa s at sea level; 22 632 Pa and 216.65 K at 11 km.
+  const s0 = standardAtmosphere(0), s11 = standardAtmosphere(11000);
+  check('settling: the standard atmosphere at sea level (density, viscosity)', Math.abs(s0.rho - 1.225) / 1.225 + Math.abs(s0.mu - 1.7894e-5) / 1.7894e-5, 1e-4);
+  check('settling: and at 11 km (pressure)', Math.abs(s11.p - 22632) / 22632 + Math.abs(s11.T - 216.65), 1e-4);
+  check('settling: pressure altitudes of 850, 500 and 250 hPa (1457, 5574, 10 363 m)',
+    Math.max(Math.abs(pressureAltitude(85000) - 1457.3), Math.abs(pressureAltitude(50000) - 5574.4), Math.abs(pressureAltitude(25000) - 10362.9)), 0.2, 'm');
+  // By hand: (2500 - 1.225) kg m-3 × 9.80665 m s-2 × (30 µm)² / (18 × 1.7894e-5 Pa s) = 0.06847 m/s.
+  const w0 = stokesSettling(30e-6, 2500, 0);
+  check('settling: Stokes velocity of a 30 µm grain of 2500 kg m-3 at sea level, 0.06847 m/s', w0.w - 0.06847, 1e-5, 'm/s');
+  assert('settling: its Reynolds number, 0.14, is at the edge of Stokes’ law', Math.abs(w0.reynolds - 0.1406) < 1e-3, w0.reynolds.toFixed(4));
+  // A parcel in still air falls at w and stays put; in a uniform wind along the equator it
+  // moves U t, and lands where its height meets the ground.
+  const settle = (z) => stokesSettling(30e-6, 2500, z).w;
+  const still = settlingPath({ lon: 10, lat: 45, z: 5000, t: 0 }, () => [0, 0], settle, { dt: 600, steps: 2000 });
+  let expected = 0;
+  for (let z = 5000; z > 0; z -= 1) expected += 1 / settle(z - 0.5);                // the time to fall 5 km, s
+  check('settling: in still air a parcel lands where it started', Math.hypot(still.landed.lon - 10, still.landed.lat - 45), 1e-12, '°');
+  check('settling: after the time ∫ dz / w(z) (relative)', (still.landed.t / 1000 - expected) / expected, 1e-4);
+  const U = 10, windy = settlingPath({ lon: 0, lat: 0, z: 9000, t: 0 }, () => [U, 0], () => 0, { dt: 1800, steps: 48 });
+  const n = windy.times.length - 1;
+  check('settling: in a uniform wind along the equator, the displacement is U t', (windy.coords[2 * n] * Math.PI * 6371008.8) / 180 - U * 86400, 1e-6, 'm');
+  check('settling: winds between levels are linear in height', Math.abs(windAtHeight(3000, [{ z: 10, u: 2, v: 0 }, { z: 5010, u: 12, v: -5 }])[0] - 7.98) + Math.abs(windAtHeight(9e4, [{ z: 10, u: 2, v: 0 }, { z: 5010, u: 12, v: -5 }])[1] + 5), 1e-12);
 }
 
 done();

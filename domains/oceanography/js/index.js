@@ -3,3 +3,4 @@
 
 export * from './ocean.js'; // the ocean column beneath a place: inertial period, mixed layer
 export * from './waves.js'; // the propagation of ocean waves
+export * from './tsunami.js'; // tsunami travel times over the bathymetry

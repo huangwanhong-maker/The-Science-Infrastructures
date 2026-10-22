@@ -5,3 +5,4 @@ export * from './plates.js';  // the motion of rigid tectonic plates (NNR-MORVEL
 export * from './moment.js';  // earthquake mechanisms from moment tensors
 export * from './crust.js';   // the crust beneath a place (CRUST1.0)
 export * from './section.js'; // sections through the Earth along great circles
+export * from './aftershocks.js'; // aftershock rates and probabilities (Reasenberg and Jones 1989)

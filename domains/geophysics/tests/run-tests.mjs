@@ -1,7 +1,8 @@
 // Checks of the geophysics domain: the motion of the plates against the
 // EarthScope plate calculator; GPS velocities relative to their plates;
 // earthquake mechanisms against double couples and the Global CMT catalogue;
-// the crust (CRUST1.0); and sections along great circles.
+// the crust (CRUST1.0); sections along great circles; and aftershock rates
+// and probabilities (Reasenberg and Jones 1989).
 // Run from the repository root:  node domains/geophysics/tests/run-tests.mjs
 // The checks on real data need the products of data/products/; they are
 // skipped, and say so, when a product is missing. The checks of the plates'
@@ -16,6 +17,7 @@ import {
   itrfVelocityAt, mechanism, tensorNED, eigenSymmetric, radiation, fromEqualArea, toEqualArea, planeDifference,
   cellIndex, column as crustColumn, travel, relativeTo, sectionLine, R_KM,
 } from '../js/index.js';
+import { GENERIC_CALIFORNIA, aftershockRate, expectedAftershocks, aftershockProbability, subsurfaceRuptureLengthKm } from '../js/index.js';
 
 const { check, assert, skip, done } = suite();
 const random = seeded(20261022);
@@ -191,6 +193,40 @@ const random = seeded(20261022);
   } else {
     skip('crust: crust-crust1 missing');
   }
+}
+
+// ---- aftershocks ---------------------------------------------------------------------------
+{
+  // The closed-form count against the rate integrated numerically (Simpson's rule on a
+  // logarithmic variable, t + c = e^s, where the integrand is smooth).
+  const simpson = (t1, t2, M, Mm, params) => {
+    const { c } = params, a = Math.log(t1 + c), b = Math.log(t2 + c), n = 2000, h = (b - a) / n;
+    let sum = 0;
+    for (let k = 0; k <= n; k++) {
+      const s = a + k * h, w = k === 0 || k === n ? 1 : k % 2 ? 4 : 2;
+      sum += w * aftershockRate(Math.exp(s) - c, M, Mm, params) * Math.exp(s);
+    }
+    return (sum * h) / 3;
+  };
+  let worst = 0;
+  for (const [t1, t2, M, Mm] of [[0, 1, 5, 6.5], [0.5, 7.5, 6, 7.7], [10, 40, 5, 7], [0, 365, 4, 6]]) {
+    for (const params of [GENERIC_CALIFORNIA, { ...GENERIC_CALIFORNIA, p: 1 }, { a: -2.2, b: 1.0, p: 0.9, c: 0.02 }]) {
+      worst = Math.max(worst, Math.abs(expectedAftershocks(t1, t2, M, Mm, params) / simpson(t1, t2, M, Mm, params) - 1));
+    }
+  }
+  check('aftershocks: the closed-form count against numerical integration (p < 1, = 1, > 1)', worst, 1e-9);
+  // Gutenberg-Richter scaling: a unit of magnitude more divides the count by 10^b.
+  check('aftershocks: one unit of magnitude more, 10^-0.91 as many', expectedAftershocks(0, 7, 6, 7) / expectedAftershocks(0, 7, 5, 7) - 10 ** -0.91, 1e-12);
+  // The probability of an M ≥ 5 aftershock of an M 7 over the next day falls with time since the mainshock.
+  const later = [0, 1, 3, 7, 30, 100].map((t) => aftershockProbability(t, t + 1, 5, 7));
+  assert('aftershocks: probabilities over the next day decrease with time since the mainshock', later.every((x, k) => !k || x < later[k - 1]),
+    later.map((x) => x.toFixed(3)).join(', '));
+  assert('aftershocks: and a week holds more than a day, a month more than a week', aftershockProbability(1, 2, 6, 7) < aftershockProbability(1, 8, 6, 7) && aftershockProbability(1, 8, 6, 7) < aftershockProbability(1, 31, 6, 7));
+  // By hand: 10^(-1.67 + 0.91 × 2) [0.05^-0.08 - 1.05^-0.08] / 0.08 = 1.412538 × 0.274711 / 0.08 = 4.8505
+  // aftershocks of M ≥ 5 in the first day after an M 7, so P = 1 - e^-4.8505 = 0.9922.
+  check('aftershocks: the expected count of M ≥ 5 in the first day after an M 7 (by hand, 4.8505)', expectedAftershocks(0, 1, 5, 7) - 4.8505, 5e-5);
+  // Wells and Coppersmith (1994), Table 2A, subsurface rupture length, all slip types: M 7 → 10^1.69 = 49.0 km.
+  check('aftershocks: the subsurface rupture length of an M 7 is 49.0 km', subsurfaceRuptureLengthKm(7) - 48.98, 0.01, 'km');
 }
 
 done();
