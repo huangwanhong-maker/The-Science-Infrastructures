@@ -331,7 +331,7 @@ A domain directory contains:
 - **Development machine** (as of 2026-10-22):
   - Windows 11; Intel i7-11370H; 32 GB of memory.
   - NVIDIA RTX 3050 Ti Laptop GPU (4 GB, CUDA 12.9) and Intel Iris Xe.
-  - Python 3.12, Node 22, Julia and WSL are installed. There is no C++ compiler or CMake on the Windows side.
+  - Python 3.12, Node 22, Julia and WSL are installed. There is no C++ compiler or CMake on the Windows side; WSL has g++ 11.5, make, Python 3.12 with numpy and Node 18.19, and its networking is mirrored. The C and C++ checks (the API's clients, the C++ plug-ins) build with WSL's g++ when no native compiler is found.
   - The repository's path, `The Science`, contains a space, so quote paths.
 
 ## 8. Open Decisions
@@ -369,7 +369,7 @@ As of 2026-10-22:
   - **Cyclones and disasters.** Tropical cyclones are tracked in every forecast, beside GDACS's observed tracks; GDACS's alerts are a layer.
   - **The ocean beneath a place** comes from HYCOM, on demand ([ADR 0023](development/decisions/0023-ocean-column-and-data-on-demand.md)).
   - **The solid Earth** ([ADR 0024](development/decisions/0024-the-solid-earth.md)): plates and their motion, GPS velocities and daily records, Global CMT mechanisms, CRUST1.0 and sections.
-  - **Plug-ins** ([ADR 0027](development/decisions/0027-earth-atlas-plugins.md), [ADR 0029](development/decisions/0029-plugins-in-python-and-cpp.md)): scripts loaded on request that derive from `Diagnostic`, `ForecastModel`, `DataAssimilation` or `Trajectories`, run on the library and are shown through the layers; in JavaScript in the page, or in Python or C++ in the server, under one contract. The examples in `applications/earth-atlas/plugins/` are the guide.
+  - **Plug-ins** ([ADR 0027](development/decisions/0027-earth-atlas-plugins.md), [ADR 0029](development/decisions/0029-plugins-in-python-and-cpp.md)): scripts loaded on request that derive from `Diagnostic`, `ForecastModel`, `DataAssimilation` or `Trajectories`, run on the library and are shown through the layers; in JavaScript in the page, or in Python or C++ in the server, under one contract; all four kinds exist in each language ([ADR 0032](development/decisions/0032-cpp-plugin-classes-completed.md)), the classes in `api/python/science/plugins.py` and `api/cpp/plugin.hpp`. The examples in `applications/earth-atlas/plugins/` are the guide.
   - **Imagery and relief.** Satellite imagery or relief forms the base ([ADR 0018](development/decisions/0018-fine-relief-at-close-range.md)).
   - **Climate:** Köppen–Geiger classes from 1901 to 2099, normals, climate diagrams, and our own classification ([ADR 0017](development/decisions/0017-climate-classes-and-normals.md)).
 - **`data/` is a general data library** ([ADR 0012](development/decisions/0012-selectable-parameterised-datasets.md), ADR 0014, ADR 0023):

@@ -448,7 +448,9 @@ def merge(previous: list[list], rows: list[list], start: str, end: str) -> list[
     [start, end] (ISO texts in one format, compared as text), by station then time."""
     kept = {}
     for row in previous + rows:
-        if start <= row[5] <= end:
+        # A row without a true position (a fill value kept by an earlier build) is left out.
+        placed = row[3] is not None and row[2] is not None and -90 <= row[3] <= 90 and -180 <= row[2] <= 360
+        if placed and start <= row[5] <= end:
             kept[(row[0], row[5])] = row
     return [kept[k] for k in sorted(kept)]
 
