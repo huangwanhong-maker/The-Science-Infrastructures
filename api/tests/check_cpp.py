@@ -85,7 +85,7 @@ def main(argv: list[str]) -> int:
                          "result": api.compute("astronomy", "sunAltAz", 139.69, 35.69, sub)})
         out["compute"] = computed
     except science.ApiError as error:
-        out["compute_error"] = str(error)
+        out["compute_error"] = str(error).splitlines()[0][:300]       # the first line: a worker's error may carry its stack
 
     events = [e["name"] for e in api.events()]
     if events:

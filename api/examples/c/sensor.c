@@ -62,7 +62,8 @@ static double read_sensor(const char *w1) {
     }
     /* No sensor: a daily cycle peaking in the afternoon (local solar time at 139.69 E), and some noise. */
     double hours = fmod(time(NULL) / 3600.0 + 139.69 / 15.0, 24.0);
-    return 17.0 + 5.0 * sin((hours - 9.0) / 24.0 * 2.0 * acos(-1.0)) + 0.4 * (rand() / (double)RAND_MAX - 0.5);
+    double made_up = 17.0 + 5.0 * sin((hours - 9.0) / 24.0 * 2.0 * acos(-1.0)) + 0.4 * (rand() / (double)RAND_MAX - 0.5);
+    return round(made_up * 100) / 100; /* to the hundredth, as a probe reads */
 }
 
 static void utc_now(char *out, size_t size) {

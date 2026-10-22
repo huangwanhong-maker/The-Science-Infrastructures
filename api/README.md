@@ -139,7 +139,68 @@ More in [examples/curl.md](examples/curl.md).
 
 ### 3.5 C and C++
 
-*Being written.* A client in C, usable from C++, over the same endpoints, with its examples.
+A client in C++17, header-only ([cpp/science.hpp](cpp/science.hpp), with its JSON in [cpp/science/json.hpp](cpp/science/json.hpp) and its HTTP in [cpp/science/http.hpp](cpp/science/http.hpp)), and a C interface over it ([c/science.h](c/science.h), [c/science.cpp](c/science.cpp)), on the standard library and the system's sockets alone: so that a model, a research code or a sensor's program on a small Linux computer reads fields and observations, posts readings, follows the stream and calls the domains' functions. The C++ has the surface of the Python client in C++'s spelling; the C has the calls a program in C, or any language that calls C, most needs.
+
+**Building.** The C++ needs no build: include the header.
+
+```
+g++ -std=c++17 -I api/cpp mine.cpp -o mine                    # add -pthread for threads of its own; -lws2_32 on Windows
+make -C api                                                   # api/build/: libscience.a, libscience.so, the examples
+cc -std=c99 -I api/c mine.c api/build/libscience.a -lstdc++ -lm -o mine
+```
+
+The [Makefile](Makefile) is GNU make's (`CXX=clang++ CC=clang`, `CXXSTD=c++20` and `BUILD=` choose otherwise); a C program links the library with the C++ runtime, as above, or links with `c++`.
+
+```cpp
+#include "science.hpp"
+science::Client api("http://127.0.0.1:8800");                     // or $SCIENCE_API_URL; the token from $SCIENCE_API_TOKEN
+science::Field gfs = api.field("gfs-forecast");
+double kelvin = gfs.sample("tmp2m", 139.69, 35.69, "now+1d");       // NaN where there is no value
+science::Grid g = gfs.grid("tmp2m", "0", science::Box{120, 20, 150, 50});    // float32, rows north to south
+science::Json sun = api.call("astronomy", "sunPosition", 2460000.5);
+api.stream("garden", [](const science::Event& e) { std::puts(e.readings.dump().c_str()); return true; });
+```
+
+| C++ | What it is |
+|---|---|
+| `Client(url, token, timeout)` | a service: `info()`, `catalog()`, `fields()`, `field(name)`, `observations(source, since, until, bbox, limit)`, `post_observations(source, readings, define)`, `stream(source, on_event, options)`, `events(name, ...)`, `tracks`, `regions`, `verification`, `units`, `compute(unit, function, args)` with the arguments as a JSON array, `call(unit, function, args...)` with them as they are, `plugins()`, `describe_plugin`, `job`, `run_plugin(app, file, chosen, params, wait)`; `get`, `post` and `request` for any path |
+| `Field` | a field: `sample(var, lons, lats, time)` → `std::vector<double>`, or one place → `double`; `series(var, lon, lat)` → `Series {times, values, units}`; `grid(var, time, bbox, stride)` → `Grid {lon0, dlon, nlon, lat0, dlat, nlat, values}`, read as float32 (`format=f32`, described by `X-Grid`); `download(...)` and `export_to(path, var, time, format)` |
+| `Json` | the value type: `Json::parse`, `dump()`, `j["key"]`, `j[i]`, `as_number()` (null as NaN), `as_string()`, `as_array()`, `Json::object({...})`, `Json::array({...})` |
+| `ApiError` | an error: `status` (0 when no answer came), `message`, `url`, and for a failed run its `job` |
+| `Reading`, `Event`, `StreamOptions`, `Box`, `utc_now()`, `unix_seconds(iso)` | a reading to post; an event of the stream; how a stream reconnects; a box (west, south, east, north); instants |
+
+| C | What it does |
+|---|---|
+| `science_connect(url, token, timeout)`, `science_close` | a client; no request is made until the first call, so it may be made before the network is up |
+| `science_sample`, `science_series`, `science_grid_read`, `science_grid_free` | values into the caller's buffer; a series (times as Unix seconds) and a grid allocated for the caller |
+| `science_define`, `science_post_reading`, `science_post` | writes: a source defined, one reading, or a body of JSON text |
+| `science_stream(client, source, last_id, callback, user)` | the stream: the callback receives each event's id, source and readings as JSON text, and NULLs at each heartbeat; it returns 0 to stop |
+| `science_compute(client, unit, function, args, &result)` | a call, with JSON text in and out |
+| `science_get`, `science_info` | any GET, as JSON text |
+| `science_json_number`, `science_json_numbers`, `science_json_text`, `science_json_length` | reading an answer by a path of keys and indices (`"0.values.air_temperature"`), so that C needs no JSON library |
+| `science_last_error()`, `science_last_status()`, `science_free` | every call returns `SCIENCE_OK` or a code (argument, unreachable, HTTP, answer, refused, failed); the message and the HTTP status are kept per thread, as `errno` is |
+
+Examples, each built by `make -C api` as `api/build/cpp-<name>` and `api/build/c-<name>`:
+
+| C++ | C | Shows |
+|---|---|---|
+| [forecast.cpp](examples/cpp/forecast.cpp) | [forecast.c](examples/c/forecast.c) | GFS's temperature (and in C++ the wind, its direction by the meteorology domain) at a place at every time |
+| [sensor.cpp](examples/cpp/sensor.cpp) | [sensor.c](examples/c/sensor.c) | a sensor posting readings in a loop; the C one is the template for a device running Linux |
+| [stream.cpp](examples/cpp/stream.cpp) | [stream.c](examples/c/stream.c) | the stream followed, each reading printed as it arrives |
+| [sun.cpp](examples/cpp/sun.cpp) | [sun.c](examples/c/sun.c) | where the Sun stands now: `julianDate`, `sunPosition`, `subsolarPoint`, `sunAltAz` and `daylight` of the astronomy domain, the result of one call an argument of the next |
+| [grid_mean.cpp](examples/cpp/grid_mean.cpp) | [grid_mean.c](examples/c/grid_mean.c) | a grid as float32 and its mean, over the points and over the area (weights cos φ) |
+
+**A device that posts readings.** A Raspberry Pi, or any small computer running Linux, builds the library and the examples itself (`sudo apt install build-essential`, then `make -C api`), and runs [sensor.c](examples/c/sensor.c) or a program grown from it: `c-sensor --url http://<the service>:8800 --token <its token> --w1 /sys/bus/w1/devices/28-…/temperature` reads a DS18B20 probe on the 1-Wire bus every minute and posts it. The service it posts to is started for other computers with `--host 0.0.0.0 --token <a long random string>` (§2.5). The program defines its source once, waits for its clock to be set (the store refuses times before 1990 or a quarter of an hour ahead), keeps up to 1024 readings while the service is away and sends them, with their own times, when it returns; a reading the store refuses (`SCIENCE_ERROR_REFUSED`) is reported with its reason and not sent again, and a wrong token stops it. Its comment shows the systemd unit that starts it with the device.
+
+*Limits.*
+
+- **Plain HTTP only.** The client brings no TLS library. Across a network that is not trusted, put the service behind a TLS proxy and run the program where the hop to the proxy is trusted (the proxy's computer, or a tunnel), or use the Python client; a token over plain HTTP crosses the network in the clear.
+- **One request per connection** (`Connection: close`). A client holds no connection between calls, and so outlives a network that comes and goes; a program that makes thousands of small requests a second would want keep-alive, which is not written. Many places are sampled in one request: more than 500 go by `POST`, up to 100 000.
+- **The stream's reconnection.** After a dropped connection, or 45 s without a byte (heartbeats come every 15 s), the stream connects again after 3 s (or the delay the service asks for, `retry:`), sending the last event's id as `Last-Event-ID`; the service replays what was missed of its last thousand events, and what is older is lost. An answer of an error (404, 503) is thrown, not retried.
+- **Time limits** bound connecting and each wait for bytes (60 s by default), not a whole answer, which for a large grid may be long. Redirects are not followed.
+- **Numbers are doubles**: integers are exact to 2^53, which holds every count and event id of the API; NaN and the infinities go as `null`. JSON nests at most 512 levels.
+- **Threads.** A `Client` holds only its address, token and time limit, so one may serve several threads at once; the C error state is per thread.
+- **Where it is checked.** Linux, with g++ 11.5 (in WSL), as C++17, C++20 and C99. The Winsock code for Windows is written but not compiled here (there is no compiler on this computer's Windows side), nor is MSVC, Clang or macOS tried; there is no CMake file, since CMake is not installed here.
 
 ## 4. The Endpoints in Brief
 
@@ -221,9 +282,11 @@ The version is in the path: `/api/v1`. Within v1, endpoints and fields are added
 | [`service/compute.mjs`](service/compute.mjs) | The Node worker of the compute bridge: JSON lines in and out | draft |
 | [`python/science/`](python/science/) | The package `science`: `Client` ([client.py](python/science/client.py)), `Local` ([local.py](python/science/local.py)), the bridge's pool ([bridge.py](python/science/bridge.py)), field products ([fields.py](python/science/fields.py)), plug-ins ([plugins.py](python/science/plugins.py)) and their hosting ([hosting.py](python/science/hosting.py)); [pyproject.toml](python/pyproject.toml) | draft |
 | [`js/science.mjs`](js/science.mjs) | The JavaScript client, for Node and browsers | draft |
-| `c/` | The C client, usable from C++ | planned |
+| [`cpp/science.hpp`](cpp/science.hpp), [`cpp/science/`](cpp/science/) | The C++ client, header-only: `Client`, `Field`, the stream; its JSON ([json.hpp](cpp/science/json.hpp)) and its HTTP over the system's sockets ([http.hpp](cpp/science/http.hpp)) | draft |
+| [`c/`](c/) | The C client ([science.h](c/science.h)), implemented over the C++ ([science.cpp](c/science.cpp)) | draft |
+| [`Makefile`](Makefile) | Builds `libscience.a`, `libscience.so`, the C and C++ examples and the check programs into `build/` | draft |
 | [`openapi.json`](openapi.json) | The description of every endpoint (OpenAPI 3.1) | draft |
-| [`examples/`](examples/) | Python, JavaScript and curl | draft |
+| [`examples/`](examples/) | Python, JavaScript, C, C++ and curl | draft |
 | [`tests/`](tests/) | The checks (§10) | draft |
 
 **Dependencies.** The service reads the data library's cache and registry (`data/`), the sensors' store (`observation/sensors/`), the export of files (`data/formats/export.py`), the domains' and foundations' public interfaces, and the applications' `plugins/`. Nothing in the foundations or the domains depends on it. As an edge it may be used by works; an application that mounts it uses it as it uses the data library.
@@ -237,9 +300,10 @@ The version is in the path: `/api/v1`. Within v1, endpoints and fields are added
 - readings posted and received on a stream within a second, implausible readings refused with their reasons, a reconnecting stream receiving what it missed;
 - the write policy with and without a token, read-only, and from another origin; the errors (400, 404, 405, 409, 422);
 - the plug-ins: listed, described, run one at a time, their field served;
-- the Python client (`check_client.py`) against the service and against `Local`, and the interpolation of `fields.py` against cases known in closed form; the JavaScript client.
+- the Python client (`check_client.py`) against the service and against `Local`, and the interpolation of `fields.py` against cases known in closed form; the JavaScript client;
+- the C and C++ clients, where a compiler is found ([check_cpp.mjs](tests/check_cpp.mjs)): the Makefile builds everything without a warning, and the check programs ([check_cpp.cpp](tests/check_cpp.cpp), [check_c.c](tests/check_c.c)) hold their samples, series, grids and calls to the Python client's for the same requests ([check_cpp.py](tests/check_cpp.py)), exactly; receive a posted reading on the stream within a second, and after reconnecting what they missed; run a plug-in to its field (C++); and check, offline, their JSON (exponents, the limits of doubles, escapes, surrogate pairs, nesting, malformed texts) and their HTTP (chunked bodies, framing, the events of a stream, instants). On Windows the compiler is WSL's: the programs run in WSL, and reach the service in WSL's mirrored network, or else a service started inside WSL with WSL's Python (`SCIENCE_CHECK_CPP_SERVICE=wsl` takes that way always).
 
-What the computer cannot do is skipped and said: no Python with numpy, no products in the cache, no export module.
+What the computer cannot do is skipped and said: no Python with numpy, no products in the cache, no export module, no C and C++ compilers.
 
 ## 11. Open Questions
 

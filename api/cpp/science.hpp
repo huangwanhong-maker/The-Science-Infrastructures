@@ -22,7 +22,7 @@
 // WGS 84; values are in the units the product states, SI unless it says
 // otherwise. Errors are thrown as science::ApiError, with the HTTP status (0
 // when no answer came) and the service's message; JSON that does not parse, as
-// science::JsonError.
+// science::JsonError; an address the client cannot use, as std::invalid_argument.
 //
 // Each call opens its own connection (HTTP/1.1 with Connection: close, plain
 // http:// only: science/http.hpp says why and what to do for HTTPS). A Client
@@ -267,7 +267,8 @@ class Client {
   // A service at `url` (with or without /api/v1; empty: $SCIENCE_API_URL, else
   // http://127.0.0.1:8800), with the token its writes need (empty:
   // $SCIENCE_API_TOKEN), and the time limit in seconds on connecting and on each
-  // wait for an answer's bytes. No request is made here.
+  // wait for an answer's bytes. No request is made here; an address that is not
+  // http:// throws std::invalid_argument.
   explicit Client(std::string url = {}, std::string token = {}, double timeout = 60.0) : timeout_(timeout) {
     if (url.empty()) url = detail::env("SCIENCE_API_URL");
     if (url.empty()) url = DEFAULT_URL;

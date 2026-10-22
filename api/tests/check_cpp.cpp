@@ -6,8 +6,9 @@
 // answers held to the Python client's for the same requests, read on standard
 // input as check_cpp.py writes them: samples and series exactly, grids exactly
 // as float32, calls of the domains exactly; then readings posted and received on
-// a stream within a second, a reconnection that receives what it missed, and
-// the errors. One JSON object a line, as check_client.py reports.
+// a stream within a second, a reconnection that receives what it missed, a
+// plug-in run to its end, and the errors. One JSON object a line, as
+// check_client.py reports.
 //
 //     check_cpp --offline
 //     check_cpp --probe <url>                          exit 0 when the service answers
@@ -309,7 +310,7 @@ void http_checks() {
   bool https = false;
   try {
     Client("https://example.org");
-  } catch (const ApiError& e) {
+  } catch (const std::invalid_argument& e) {
     https = std::string(e.what()).find("TLS proxy") != std::string::npos;
   }
   affirm("http: an https address is refused, saying what to do", https);
@@ -437,6 +438,37 @@ void product_checks(const science::Client& api, const Json& ref) {
   affirm("the catalogue lists datasets and products", catalog.is_object() && catalog.size() > 0);
 }
 
+// The plug-ins: listed, described, and one run through to its field, as the JavaScript client's check runs it.
+void plugin_checks(const science::Client& api) {
+  Json listed;
+  try {
+    listed = api.plugins();
+  } catch (const science::ApiError& e) {
+    skip("plug-ins: " + e.message);
+    return;
+  }
+  bool found = false;
+  for (const auto& p : listed["earth-atlas"].is_array() ? listed["earth-atlas"].as_array() : Json::Array{})
+    found = found || p["file"].text() == "plugins/vorticity.py";
+  affirm("plug-ins: the Earth Atlas's vorticity plug-in is listed", found);
+  if (!found) return;
+  Json d = api.describe_plugin("earth-atlas", "plugins/vorticity.py");
+  affirm("plug-ins: its description, with its needs", d["id"].text() == "vorticity-py" && d["needs"][0]["name"].text() == "wind", d["id"].dump());
+  if (d["needs"][0]["chosen"].is_null()) {
+    skip("plug-ins: no wind in the cache to run the plug-in on");
+    return;
+  }
+  auto t0 = std::chrono::steady_clock::now();
+  Json job = api.run_plugin("earth-atlas", "plugins/vorticity.py", Json::object(), Json::object(), true, 0.3, 300);
+  double seconds = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
+  std::string field;
+  for (const auto& r : job["results"].as_array())
+    if (r["kind"].text() == "field") field = r["field"].text();
+  affirm("plug-ins: a run waited for to its end (" + science::number_text(std::round(seconds * 10) / 10) + " s), with a field among its results",
+         job["state"].text() == "done" && !field.empty(), job["state"].text());
+  if (!field.empty()) affirm("plug-ins: the run's field is served among the fields", api.field(field).variable("zeta").is_object(), field);
+}
+
 // Readings posted, received on a stream within a second, and again after a reconnection.
 void stream_checks(const science::Client& api, const std::string& source) {
   using clock = std::chrono::steady_clock;
@@ -549,6 +581,7 @@ int online(const std::string& url, const std::string& source, const std::string&
       {"fields", [&] { fields_checks(api, ref); }},
       {"compute", [&] { compute_checks(api, ref); }},
       {"observations and the stream", [&] { stream_checks(api, source); }},
+      {"plug-ins", [&] { plugin_checks(api); }},
       {"errors", [&] { unreachable_checks(); }},
   };
   for (const auto& p : parts) {

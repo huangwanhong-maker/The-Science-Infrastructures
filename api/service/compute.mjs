@@ -28,9 +28,9 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { createInterface } from 'node:readline';
-import { pathToFileURL } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
-const ROOT = resolve(import.meta.dirname, '../..');
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');   // import.meta.dirname would need Node 20.11
 const TYPED = { Float64Array, Float32Array, Int32Array, Uint32Array, Int16Array, Uint16Array, Int8Array, Uint8Array, Uint8ClampedArray };
 
 // The units: each domain and foundation with a public interface in JavaScript.

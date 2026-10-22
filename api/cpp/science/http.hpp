@@ -32,6 +32,7 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <stdexcept>
 #include <string>
 #include <string_view>
 #include <system_error>
@@ -94,26 +95,27 @@ struct Url {
   std::string host, port = "80", path;  // path: empty, or from its first '/'
 };
 
+// The parts of an http:// address; std::invalid_argument for any other.
 inline Url parse_url(const std::string& url) {
+  auto refuse = [&](const std::string& why) { return std::invalid_argument(why + ": " + url); };
   if (url.compare(0, 8, "https://") == 0)
-    throw ApiError(0, "this client speaks plain http:// only: reach an HTTPS service through a TLS proxy on a trusted hop, "
-                      "or use the Python client (api/README.md §3.5)", url);
+    throw refuse("this client speaks plain http:// only: reach an HTTPS service through a TLS proxy on a trusted hop, "
+                 "or use the Python client (api/README.md §3.5)");
   const std::string scheme = "http://";
-  if (url.compare(0, scheme.size(), scheme) != 0) throw ApiError(0, "an address of the API begins with http://", url);
+  if (url.compare(0, scheme.size(), scheme) != 0) throw refuse("an address of the API begins with http://");
   std::string rest = url.substr(scheme.size());
   std::size_t slash = rest.find_first_of("/?#");
   std::string authority = rest.substr(0, slash);
   Url u;
   if (slash != std::string::npos) u.path = rest.substr(slash);
-  if (authority.find('@') != std::string::npos)
-    throw ApiError(0, "an address with a user name is not taken: give the token instead", url);
+  if (authority.find('@') != std::string::npos) throw refuse("an address with a user name is not taken: give the token instead");
   std::string port;
   if (!authority.empty() && authority[0] == '[') {  // an IPv6 literal, [::1]:8800
     std::size_t close = authority.find(']');
-    if (close == std::string::npos) throw ApiError(0, "an IPv6 address without its closing bracket", url);
+    if (close == std::string::npos) throw refuse("an IPv6 address without its closing bracket");
     u.host = authority.substr(1, close - 1);
     if (close + 1 < authority.size()) {
-      if (authority[close + 1] != ':') throw ApiError(0, "an address that is not host:port", url);
+      if (authority[close + 1] != ':') throw refuse("an address that is not host:port");
       port = authority.substr(close + 2);
     }
   } else {
@@ -123,10 +125,10 @@ inline Url parse_url(const std::string& url) {
   }
   if (!port.empty()) {
     if (port.size() > 5 || !std::all_of(port.begin(), port.end(), [](unsigned char c) { return std::isdigit(c); }))
-      throw ApiError(0, "the port is not a number", url);
+      throw refuse("the port is not a number");
     u.port = port;
   }
-  if (u.host.empty()) throw ApiError(0, "an address without a host", url);
+  if (u.host.empty()) throw refuse("an address without a host");
   return u;
 }
 

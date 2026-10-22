@@ -4,9 +4,10 @@
 // (FieldProduct, over physis's grid.js), calls into the domains to the same
 // functions called here directly, readings posted to the stream that carries them
 // within a second — together with the write policy with and without a token, the
-// errors, the plug-ins and their jobs, and both clients: the Python client's
-// checks (check_client.py, reporting JSON lines as data/tests/checks.py does) and
-// the JavaScript client's, here.
+// errors, the plug-ins and their jobs, and the clients: the Python client's
+// checks (check_client.py, reporting JSON lines as data/tests/checks.py does), the
+// C and C++ clients' where a compiler is found (check_cpp.mjs, built by
+// api/Makefile), and the JavaScript client's, here.
 //
 // The services started here keep the sensors' readings and the plug-ins' products
 // in a directory of their own, deleted at the end, and build no products: the
@@ -23,6 +24,7 @@ import { pathToFileURL } from 'node:url';
 
 import { suite, PRODUCTS, ROOT } from '../../development/tools/checks.mjs';
 import { Client } from '../js/science.mjs';
+import { native } from './check_cpp.mjs';
 
 const { check, assert, skip, done } = suite();
 const HERE = import.meta.dirname;
@@ -432,6 +434,9 @@ if (!python) {
       else if (rec.kind === 'skip') skip(rec.name);
     }
     assert('api: check_client.py ran to the end', r.status === 0 && seen > 0, (r.stderr || '').trim().split('\n').slice(-4).join(' | '));
+
+    // The C and C++ clients, where a compiler is found (check_cpp.mjs says how, and where they run).
+    await native({ service, python, freePort, check, assert, skip, work });
 
     // The JavaScript client's own surface.
     const api = new Client(`http://127.0.0.1:${service.port}`);

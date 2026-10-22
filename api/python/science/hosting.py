@@ -275,7 +275,7 @@ class ProcessPlugin:
     # ---- the files of a run (api/cpp/plugin.hpp) ----
 
     def _write_input(self, work: Path, inputs: dict, params: dict, context) -> None:
-        lines = [f"time\t{int(context.time.timestamp() * 1000)}"]
+        lines = [f"time\t{round(context.time.timestamp() * 1000)}"]       # the page's whole ms, kept whole
         if context.pinned:
             lines.append(f"pinned\t{float(context.pinned[0])}\t{float(context.pinned[1])}")
         for name, value in params.items():
@@ -915,6 +915,8 @@ def _finite(value):
 def main(argv: list[str]) -> int:
     if argv[:1] == ["job"]:
         return job_main()
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")       # a Windows console's code page cannot print every label (ε²)
     if len(argv) < 3 or argv[0] not in ("describe", "run"):
         print(__doc__)
         return 2

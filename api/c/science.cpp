@@ -84,7 +84,7 @@ science::Json json_argument(const char* text, const char* what) {
   try {
     return science::Json::parse(text);
   } catch (const science::JsonError& e) {
-    throw Argument(std::string(what) + " is " + e.what());
+    throw Argument(std::string(what) + " cannot be read: " + e.what());
   }
 }
 
@@ -133,7 +133,7 @@ science_client* science_connect(const char* url, const char* token, double timeo
     last_error.clear();
     last_status = 0;
     return client;
-  } catch (const science::ApiError& e) {  // an address this client cannot use
+  } catch (const std::invalid_argument& e) {  // an address this client cannot use
     fail(SCIENCE_ERROR_ARGUMENT, e.what());
   } catch (const std::exception& e) {
     fail(SCIENCE_ERROR_FAILED, e.what());
@@ -257,7 +257,7 @@ int science_define(science_client* client, const char* source, const char* title
 
 int science_post_reading(science_client* client, const char* source, const char* station, double lon, double lat, const char* time,
                          const char* const* names, const double* values, size_t count) {
-  return guard([&] {
+  return guard([&]() -> int {
     need(client, "the client");
     need(source, "the source");
     need(station, "the station");

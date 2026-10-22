@@ -23,10 +23,18 @@ int main(int argc, char** argv) {
     science::Series u = gfs.series("ugrd10m", lon, lat);  // m s-1, toward the east
     science::Series v = gfs.series("vgrd10m", lon, lat);  // m s-1, toward the north
     std::printf("GFS at %.2f, %.2f (times UTC)\n", lon, lat);
+    bool bridge = true;  // false once the service says it cannot call the domains (it needs Node)
     for (std::size_t k = 0; k < t.times.size(); k++) {
       double speed = std::hypot(u.values[k], v.values[k]);
       // Meteorology's convention: the direction the wind blows from, clockwise from north.
-      double from = api.call("meteorology", "windFromDirection", u.values[k], v.values[k]).as_number();
+      double from = NAN;
+      try {
+        if (bridge) from = api.call("meteorology", "windFromDirection", u.values[k], v.values[k]).as_number();
+      } catch (const science::ApiError& e) {
+        if (e.status != 503 && e.status != 422) throw;
+        std::fprintf(stderr, "(no directions: %s)\n", e.message.c_str());
+        bridge = false;
+      }
       std::printf("  %.10s %.5s  %6.1f °C   wind %4.1f m/s from %3.0f°\n", t.times[k].c_str(), t.times[k].c_str() + 11,
                   t.values[k] - 273.15, speed, from);
     }

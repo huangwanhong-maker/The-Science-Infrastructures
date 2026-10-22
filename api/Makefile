@@ -38,6 +38,7 @@ C_EXAMPLES   := $(patsubst examples/c/%.c,$(BUILD)/c-%$(EXE),$(wildcard examples
 CHECKS       := $(BUILD)/check_cpp$(EXE) $(BUILD)/check_cpp20$(EXE) $(BUILD)/check_c$(EXE)
 
 .PHONY: all libraries examples check clean
+.SECONDARY:
 all: libraries examples
 libraries: $(BUILD)/libscience.a $(SHARED)
 examples: $(CPP_EXAMPLES) $(C_EXAMPLES)
