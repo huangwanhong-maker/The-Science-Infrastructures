@@ -169,9 +169,16 @@ Every science is meant to become a domain here: a library of its own objects and
 | [tides](domains/tides/), [navigation](domains/navigation/), [air-sea](domains/air-sea/) | bridges | Tides; celestial navigation and routes; exchange at the sea surface | planned |
 | [neuroscience](domains/neuroscience/) | field | The brain: reference spaces, parcellations and maps; the head and its electrodes (a repository of its own, as a submodule) | draft |
 
-### 4.2 The Next Domains
+### 4.2 The Next Work: Two Foundations, then Five Domains
 
-The next five, in this order, each reusing what the one before made. *Status: planned.*
+The foundations come first, for every domain stands on them. *Status: planned.*
+
+| # | Foundation | What it holds | Its first content |
+|---|---|---|---|
+| 1 | [**morphe**](https://github.com/huangwanhong-maker/morphe), the algebraic foundation | Mathematical structures and their equivalences | Arithmetic (ℤ, ℚ, finite fields, polynomial rings); algebra (groups, rings, modules, representations, lattices, homological algebra); category theory (functors, natural transformations, limits, monoidal structure, algebras and coalgebras of functors); topology (simplicial and CW complexes, homology and cohomology, persistent homology, fundamental groups); geometry (algebraic geometry with Gröbner bases and varieties; differential geometry with physis); equivalence (canonical forms, bisimulation); formal structures (words, trees, automata, grammars, rewriting) |
+| 2 | [**physis**](https://github.com/huangwanhong-maker/physis), the foundation of theoretical physics | Geometry and the laws of physics, on morphe and calx | Units as a free abelian group; differential and Riemannian geometry and the rotation groups; Lagrangian and Hamiltonian mechanics; gravitation and general relativity; thermodynamics; continuum mechanics; radiative transfer; and, to be proposed in its own decision log, what a theoretical physics needs beyond these: electromagnetism, quantum mechanics, statistical mechanics and field theory |
+
+Then the next five domains, in this order, each reusing what the one before made and what the foundations hold. *Status: planned.*
 
 | # | Domain or module | Kind and place | What it builds on | Its first content |
 |---|---|---|---|---|
@@ -343,7 +350,8 @@ To run an application, follow the Quick Start at the top of this page; each appl
 **As of 2026-10-22.** Three applications work, two of them online, all on any computer (Quick Start). Their science is the provisional JavaScript of nine domains, of physis and of the visualization layer, tested against published references and closed-form answers in 380 checks. Each domain passes its checks on its own. Neuroscience, the first domain beyond the Earth and the sky, is a repository of its own attached as a submodule, with the Brain Atlas drawing it ([ADR 0028](development/decisions/0028-neuroscience-and-the-brain-atlas.md)). The Earth Atlas takes plug-ins: scripts for prediction, assimilation and analysis, loaded on request ([ADR 0027](development/decisions/0027-earth-atlas-plugins.md)). There is no C++ yet. The next steps are in the [roadmap](development/roadmap.md):
 
 - Phase 0, the toolchain and the build;
-- the next domains, in the order of §4.2: spiking neural networks, computational linguistics, genomics, molecular science, drug discovery; and the foundation for the quantitative social sciences (§4.3).
+- the foundations next (§4.2): morphe, the algebraic foundation (category theory, algebra, topology, geometry), and physis, the foundation of theoretical physics;
+- then the next domains, in the order of §4.2: spiking neural networks, computational linguistics, genomics, molecular science, drug discovery; and the foundation for the quantitative social sciences (§4.3).
 
 ## 8. License
 

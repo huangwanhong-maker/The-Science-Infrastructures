@@ -17,6 +17,7 @@
   - Geophysics is a domain.
   - The word "laboratory" is retired.
 - **2026-10-23. The Earth Atlas as a forecasting system, and an API** ([ADR 0030](decisions/0030-the-api-edge.md), [ADR 0031](decisions/0031-observations-scores-and-hazards.md)): observations (METAR, buoys, the user's sensors), forecasts kept and scored on a schedule, ECMWF's open forecasts, hazard models (fire weather, heat, heavy rain, tsunami travel times, aftershocks, volcanic ash), people and regions with exposure, drainage, Sentinel-2, assimilation of real observations; and `api/`, through which programs in Python, C and C++ and JavaScript reach the data, the domains' functions, the sensors in real time and the plug-ins. The research arc of prediction is planned, and deferred.
+- **2026-10-23. The order of the next work,** set by the user: first the foundations, morphe (the algebraic foundation: category theory, algebra, topology, geometry) and physis (theoretical physics); then five domains (Phase 4). The README's §4 maps every science, the social sciences and the humanities included, and plans a foundation for the quantitative social sciences.
 - **2026-10-22. Neuroscience, the first domain beyond the Earth and the sky** ([ADR 0028](decisions/0028-neuroscience-and-the-brain-atlas.md)), in a repository of its own as a submodule: a brain atlas in the sense of the Human Brain Project's (reference spaces, parcellations, maps, for the human, the mouse and the rat), and the head with the 10–20 electrode system; the Brain Atlas application draws it and maps data onto it. Phase 4's choice of the next domains has begun.
 
 ## Phase 0. Foundations
@@ -77,7 +78,7 @@ This slice touches every tier at small scale. It reaches astronomy, geodesy, oce
 
 ## Phase 4. The Next Domains
 
-- **In the order the user set** (README §4.2), each reusing what the one before made, chosen where their structures meet those already here (see [the idea on shared structures](ideas/2026-10-22-shared-structures-across-the-sciences.md)). Neuroscience came first (ADR 0028, ADR 0032).
+- **After the foundations,** morphe and physis (README §4.2), which the user set first. Then **in the order the user set**, each reusing what the one before made, chosen where their structures meet those already here (see [the idea on shared structures](ideas/2026-10-22-shared-structures-across-the-sciences.md)). Neuroscience came first (ADR 0028, ADR 0032).
   1. **Spiking neural networks,** a module of neuroscience: leaky integrate-and-fire neurons, synapses, network simulation, spike-timing-dependent plasticity, shown in the Brain Atlas.
   2. **Computational linguistics:** automata, context-free grammars, parsing, grammar inference, on morphe's formal structures.
   3. **Genomics:** sequence alignment, k-mers, assembly, variant analysis, reusing the sequence, grammar, graph and inference algorithms.
