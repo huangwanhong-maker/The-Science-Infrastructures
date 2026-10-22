@@ -2,8 +2,8 @@
 title: Tropical Cyclones Found in a Field of Pressure
 status: draft
 implemented-by:
-  - applications/geography/earth-atlas/src/core/cyclones.js
-  - applications/geography/earth-atlas/src/layers/tracks.js
+  - applications/earth-atlas/src/core/cyclones.js
+  - applications/earth-atlas/src/layers/tracks.js
 references: [UllrichZarzycki2017, ZarzyckiUllrich2017, Holland1980, Emanuel2003]
 ---
 

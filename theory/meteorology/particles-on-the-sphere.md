@@ -2,7 +2,7 @@
 title: Particles Carried by a Flow on the Sphere
 status: draft
 implemented-by:
-  - applications/geography/earth-atlas/src/core/flow.js
+  - applications/earth-atlas/src/core/flow.js
 references: [Hairer2006, Hairer1993]
 ---
 

@@ -15,6 +15,6 @@
   "licence": "CC BY-SA 4.0",
   "citation": "HYG Stellar Database v4.1, https://github.com/astronexus/HYG-Database",
   "used_by": [
-    "applications/astronomy/celestial-atlas"
+    "applications/celestial-atlas"
   ]
 }

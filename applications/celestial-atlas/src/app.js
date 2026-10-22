@@ -114,7 +114,7 @@ const placeCoords = (lat, lon) => `${Math.abs(lat).toFixed(2)}° ${lat >= 0 ? 'N
 // The Earth Atlas at the same place and instant: on the local servers it has a
 // port of its own; on a site holding the repository, a path of its own.
 function earthAtlasUrl(place, ms) {
-  const base = location.port === '8770' ? `${location.protocol}//${location.hostname}:8790/` : '../../geography/earth-atlas/';
+  const base = location.port === '8770' ? `${location.protocol}//${location.hostname}:8790/` : '../earth-atlas/';
   const { lat, lon } = place;
   return `${base}#p=globe&c=${lon.toFixed(1)},${lat.toFixed(1)},2.4&at=${lon.toFixed(3)},${lat.toFixed(3)}`
     + `&t=${new Date(ms).toISOString().slice(0, 16)}Z`;

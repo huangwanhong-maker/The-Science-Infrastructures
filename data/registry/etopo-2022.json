@@ -66,6 +66,6 @@
   "licence": "US Government work, public domain; ERDDAP: \"The data may be used and redistributed for free but is not intended for legal use, since it may contain inaccuracies.\"",
   "citation": "NOAA National Centers for Environmental Information (2022). ETOPO 2022 15 Arc-Second Global Relief Model. doi:10.25921/fd45-gt74",
   "used_by": [
-    "applications/geography/earth-atlas"
+    "applications/earth-atlas"
   ]
 }

@@ -141,6 +141,6 @@
   "licence": "US Government work, public domain; distributed by Unidata's THREDDS Data Server (UCAR)",
   "citation": "NOAA (2025). AI Global Forecast System (AIGFS), from the EAGLE project; Unidata THREDDS Data Server (UCAR/NSF Unidata Program Center).",
   "used_by": [
-    "applications/geography/earth-atlas"
+    "applications/earth-atlas"
   ]
 }

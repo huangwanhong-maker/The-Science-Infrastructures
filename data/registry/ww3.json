@@ -84,6 +84,6 @@
   "licence": "US Government work, public domain; ERDDAP: \"The data may be used and redistributed for free but is not intended for legal use, since it may contain inaccuracies.\"",
   "citation": "The WAVEWATCH III Development Group (2019). User manual and system documentation of WAVEWATCH III version 6.07. NOAA/NWS/NCEP/MMAB Technical Note 333; served by PacIOOS.",
   "used_by": [
-    "applications/geography/earth-atlas"
+    "applications/earth-atlas"
   ]
 }

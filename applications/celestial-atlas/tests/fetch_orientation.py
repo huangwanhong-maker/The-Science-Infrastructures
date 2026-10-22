@@ -11,7 +11,7 @@ Writes tests/fixtures/orientation.json.
 
 Usage::
 
-    python applications/astronomy/celestial-atlas/tests/fetch_orientation.py
+    python applications/celestial-atlas/tests/fetch_orientation.py
 """
 
 from __future__ import annotations

@@ -601,7 +601,7 @@ function coords(lon, lat) {
 // The Celestial Atlas's Sky Chart at a place and instant: on the local servers
 // it has a port of its own; on a site holding the repository, a path of its own.
 function skyUrl(lon, lat, t, name) {
-  const base = location.port === '8790' ? `${location.protocol}//${location.hostname}:8770/` : '../../astronomy/celestial-atlas/';
+  const base = location.port === '8790' ? `${location.protocol}//${location.hostname}:8770/` : '../celestial-atlas/';
   const q = new URLSearchParams({ view: 'sky', lat: lat.toFixed(4), lon: lon.toFixed(4), t: new Date(t).toISOString().slice(0, 16) + 'Z' });
   if (name) q.set('name', name);
   return `${base}#${q}`;

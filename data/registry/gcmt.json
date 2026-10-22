@@ -22,6 +22,6 @@
   "citation": "Dziewonski, A. M., Chou, T.-A. and Woodhouse, J. H. (1981), Determination of earthquake source parameters from waveform data for studies of global and regional seismicity, J. Geophys. Res. 86, 2825-2852; Ekström, G., Nettles, M. and Dziewonski, A. M. (2012), The global CMT project 2004-2010: centroid-moment tensors for 13,017 earthquakes, Phys. Earth Planet. Inter. 200-201, 1-9.",
   "used_by": [
     "data/products/mechanism_catalog.py",
-    "applications/geography/earth-atlas"
+    "applications/earth-atlas"
   ]
 }

@@ -1,5 +1,5 @@
 // Tests for the Earth Atlas's provisional computational core.
-// Run from the repository root:  node applications/geography/earth-atlas/tests/run-tests.mjs
+// Run from the repository root:  node applications/earth-atlas/tests/run-tests.mjs
 // The checks on real data need the products of data/products/ (see the README);
 // they are skipped, and say so, when a product is missing.
 
@@ -32,7 +32,7 @@ import { cellIndex, column as crustColumn } from '../src/core/crust.js';
 import { travel, relativeTo, sectionLine, R_KM } from '../src/core/section.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const root = resolve(here, '../../../..');
+const root = resolve(here, '../../..');
 const products = resolve(root, 'data/cache/products');
 
 let failures = 0, checks = 0;

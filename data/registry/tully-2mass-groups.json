@@ -36,5 +36,5 @@
   "coverage": "43 038 galaxies brighter than Ks = 11.75 over the whole sky except near the Galactic plane",
   "licence": "Published catalogue (AJ 149, 171); cite the references; VizieR terms of use",
   "citation": "Tully, R. B. (2015). Galaxy Groups: A 2MASS Catalog. AJ 149, 171. Huchra, J. P., et al. (2012). The 2MASS Redshift Survey. ApJS 199, 26.",
-  "used_by": ["applications/astronomy/celestial-atlas"]
+  "used_by": ["applications/celestial-atlas"]
 }

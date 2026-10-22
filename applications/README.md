@@ -1,33 +1,66 @@
-# applications: Laboratories and Tools
+# applications: Works That Compose the Domains
 
 *Status: draft.* This directory is an edge at the top of the architecture. It may depend on everything, and nothing depends on it.
 
 ## 1. Purpose
 
-Applications are complete programs that people use. They come in two kinds:
+An application is a complete program that people use. Where a domain holds the knowledge of one science, an application is organised by purpose, and draws on as many domains as its purpose needs. The Earth Atlas, for instance, shows the work of geography, meteorology, oceanography, geophysics, geodesy and climate on one globe.
 
-- **Laboratories (labs)**, for learning and research.
-- **Tools**, for practical work.
+Every application says which of the three activities it serves:
+
+- **learning:** it shows how something works, and invites the reader to change it and watch;
+- **use:** it gives numbers and pictures that can be relied on;
+- **research:** it is the instrument of an open question.
 
 ## 2. Organisation
 
-`applications/` mirrors [`core/domains/`](../core/domains/), with one directory per field and per bridge ([ADR 0010](../development/decisions/0010-domain-organised-fields-and-applications.md)).
-
-- **Placement.** An application lives under the field or bridge it mainly serves.
-- **Applications that serve several fields** belong under the bridge that joins those fields. If no bridge fits, a new bridge is probably needed in `core/domains/`.
-- **Lab or tool.** Each application records whether it is a lab or a tool in its README. The directory structure does not encode this.
-- **Dependencies.** Each application declares what it depends on.
+- **One directory per application,** named for what it is, not for a field.
+- **Dependencies.** An application uses the domains, the foundations and the shared edges (`data/`, `visualization/`) only through their public interfaces. Its README names the domains it draws on.
+- **Its own server and tests.** Each web application has its own local server and port, and its own tests of what is particular to it; the checks of the science live with the domains.
+- **Applications do not depend on one another.** Two applications may link to each other's views, as the two atlases do, but neither imports the other.
 
 ## 3. Index
 
-| Directory | Planned applications |
-|---|---|
-| [`astronomy/`](astronomy/) | **Celestial Atlas (tool, working)**; orbital sandbox (lab); ephemeris calculator (tool) |
-| [`geography/`](geography/) | **Earth Atlas (tool, working)**; projection lab, terrain and watershed lab, remote-sensing lab (labs); land-use atlas (tool) |
-| [`oceanography/`](oceanography/) | Rotating tank (lab); ocean-profile explorer (tool) |
-| [`meteorology/`](meteorology/) | Weather-map lab and atmospheric-sounding lab (labs) |
-| [`geodesy/`](geodesy/) | Foucault pendulum (lab) |
-| [`tides/`](tides/) | Tide-predicting machine (lab); tide predictor (tool) |
-| [`navigation/`](navigation/) | Sight-reduction trainer (lab); route planner (tool) |
-| [`air_sea/`](air_sea/) | Air–sea exchange lab (lab) |
-| [`climate/`](climate/) | Energy-balance lab and Milankovitch lab (labs) |
+| Application | Serves | Draws on | Status |
+|---|---|---|---|
+| [Celestial Atlas](celestial-atlas/) | use, learning | metrology, astronomy, geodesy | draft |
+| [Earth Atlas](earth-atlas/) | use, learning | geography, meteorology, oceanography, geophysics, geodesy, astronomy, climate | draft |
+| Orbital sandbox | learning | astronomy | planned |
+| Ephemeris calculator | use | metrology, astronomy | planned |
+| Map projections | learning | geography | planned |
+| Terrain and watersheds | learning | geography | planned |
+| Remote sensing | learning | geography | planned |
+| Land-use atlas | use | geography | planned |
+| Rotating tank | learning | oceanography, meteorology | planned |
+| Ocean-profile explorer | use | oceanography | planned |
+| Weather maps | learning | meteorology | planned |
+| Atmospheric soundings | learning | meteorology | planned |
+| Foucault pendulum | learning | geodesy | planned |
+| Tide-predicting machine | learning | tides | planned |
+| Tide predictor | use | tides | planned |
+| Sight-reduction trainer | learning | navigation | planned |
+| Route planner | use | navigation, geography | planned |
+| Air–sea exchange | learning | air-sea | planned |
+| Energy balance | learning | climate | planned |
+| Milankovitch cycles | learning | climate, astronomy | planned |
+
+The planned applications in brief:
+
+- **Orbital sandbox:** two-body and n-body motion, Kepler's laws, perturbations.
+- **Ephemeris calculator:** tables of positions in any time scale and reference frame.
+- **Map projections:** projections and their distortions.
+- **Terrain and watersheds:** terrain models, slopes, drainage networks and basins.
+- **Remote sensing:** satellite imagery, its correction, band combinations and land-cover classification.
+- **Land-use atlas:** population, settlement and land use, mapped and analysed.
+- **Rotating tank:** shallow water on a rotating sphere, with Kelvin and Rossby waves; the same dynamics hold in the atmosphere.
+- **Ocean-profile explorer:** temperature and salinity profiles from Argo floats.
+- **Weather maps:** geostrophic wind, fronts and cyclones on real analyses.
+- **Atmospheric soundings:** radiosonde profiles, thermodynamic diagrams and stability.
+- **Foucault pendulum:** the rotation of the Earth made visible.
+- **Tide-predicting machine:** a digital version of Kelvin's machine, each constituent a wheel and the tide their sum.
+- **Tide predictor:** predictions for any tide gauge with a harmonic analysis.
+- **Sight-reduction trainer:** a position from star sights by spherical trigonometry.
+- **Route planner:** great-circle and rhumb-line routes on charts.
+- **Air–sea exchange:** wind stress, heat and gas fluxes, and the growth of wind waves.
+- **Energy balance:** the Earth's radiation budget and the greenhouse effect, from a single-layer model.
+- **Milankovitch cycles:** the Earth's orbital elements, insolation and the ice ages.

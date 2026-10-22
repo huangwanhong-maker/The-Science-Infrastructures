@@ -2,9 +2,9 @@
 title: The Shallow-Water Equations on the Sphere, and the Initialisation of a Forecast
 status: draft
 implemented-by:
-  - applications/geography/earth-atlas/src/core/shallowwater.js
-  - applications/geography/earth-atlas/src/core/spectral.js
-  - applications/geography/earth-atlas/src/workers/labmodel.worker.js
+  - applications/earth-atlas/src/core/shallowwater.js
+  - applications/earth-atlas/src/core/spectral.js
+  - applications/earth-atlas/src/workers/labmodel.worker.js
 references: [HackJakob1992, Williamson1992, LynchHuang1992, Lamb1932, Cressman1958, Durran2010]
 ---
 

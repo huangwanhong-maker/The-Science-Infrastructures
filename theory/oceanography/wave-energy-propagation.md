@@ -2,8 +2,8 @@
 title: How the Energy of Ocean Waves Travels
 status: draft
 implemented-by:
-  - applications/geography/earth-atlas/src/core/derived.js
-  - applications/geography/earth-atlas/src/layers/flow.js
+  - applications/earth-atlas/src/core/derived.js
+  - applications/earth-atlas/src/layers/flow.js
 references: [Holthuijsen2007, Phillips1977]
 ---
 

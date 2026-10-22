@@ -27,6 +27,6 @@
   "citation": "Blewitt, G., Hammond, W. C. and Kreemer, C. (2018), Harnessing the GPS data explosion for interdisciplinary science, Eos 99, doi:10.1029/2018EO104623.",
   "used_by": [
     "data/products/station_series.py",
-    "applications/geography/earth-atlas"
+    "applications/earth-atlas"
   ]
 }

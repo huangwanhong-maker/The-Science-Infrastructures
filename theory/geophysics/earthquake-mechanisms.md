@@ -2,10 +2,10 @@
 title: Earthquake Mechanisms: Moment Tensors, Beach Balls and Slabs
 status: draft
 implemented-by:
-  - applications/geography/earth-atlas/src/core/moment.js
-  - applications/geography/earth-atlas/src/render/beachballs.js
-  - applications/geography/earth-atlas/src/ui/stereonet.js
-  - applications/geography/earth-atlas/src/core/section.js
+  - applications/earth-atlas/src/core/moment.js
+  - applications/earth-atlas/src/render/beachballs.js
+  - applications/earth-atlas/src/ui/stereonet.js
+  - applications/earth-atlas/src/core/section.js
   - data/products/mechanism_catalog.py
 references: [AkiRichards2002, JostHerrmann1989, Dziewonski1981, Ekstrom2012, HanksKanamori1979, Frohlich1992]
 ---

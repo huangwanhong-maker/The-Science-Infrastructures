@@ -2,8 +2,8 @@
 title: The Subsolar Point, the Terminator and Twilight
 status: draft
 implemented-by:
-  - applications/geography/earth-atlas/src/core/sun.js
-  - applications/geography/earth-atlas/src/render/surface.js
+  - applications/earth-atlas/src/core/sun.js
+  - applications/earth-atlas/src/render/surface.js
 references: [AstronomicalAlmanac2019, Meeus1998]
 ---
 

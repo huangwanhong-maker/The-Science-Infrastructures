@@ -12,7 +12,7 @@ the user has just chosen, are requested on demand through the data library
 
 Usage::
 
-    python applications/geography/earth-atlas/serve.py [--port 8790] [--open]
+    python applications/earth-atlas/serve.py [--port 8790] [--open]
 
 then open http://127.0.0.1:8790/ in a browser.
 """
@@ -28,7 +28,7 @@ import webbrowser
 from pathlib import Path
 
 APP = Path(__file__).resolve().parent
-ROOT = APP.parents[2]
+ROOT = APP.parents[1]
 DATA = ROOT / "data" / "cache"
 JOBS = None          # the data library's jobs on demand, created at the first request
 
@@ -119,7 +119,7 @@ def main(argv: list[str]) -> int:
         print("The geography product is missing. From the repository root, run:\n"
               "  python data/acquisition/fetch.py natural-earth-50m\n"
               "  python data/products/geography.py\n"
-              "and see applications/geography/earth-atlas/README.md for the other data.", file=sys.stderr)
+              "and see applications/earth-atlas/README.md for the other data.", file=sys.stderr)
     server = Server(("127.0.0.1", args.port), Handler)
     url = f"http://127.0.0.1:{args.port}/"
     print(f"Earth Atlas at {url}  (Ctrl+C to stop)", flush=True)

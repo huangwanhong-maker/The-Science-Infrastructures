@@ -112,6 +112,6 @@
   "licence": "CC BY 4.0 (Solar System Scope textures)",
   "citation": "Solar System Scope textures (https://www.solarsystemscope.com/textures/), CC BY 4.0, based on NASA, JPL and ESA mission data.",
   "used_by": [
-    "applications/astronomy/celestial-atlas"
+    "applications/celestial-atlas"
   ]
 }

@@ -2,7 +2,7 @@
 title: Cosmic Flows from Peculiar Velocities
 status: seed
 date: 2026-10-22
-related: [applications/astronomy/celestial-atlas, core/domains/astronomy, core/inference]
+related: [applications/celestial-atlas, core/domains/astronomy, core/inference]
 ---
 
 # Cosmic Flows from Peculiar Velocities

@@ -8,7 +8,7 @@ These are screenshots of the laboratory's two applications, taken on 22 October 
 - Their computations are the laboratory's provisional core, tested against published references: 151 checks for the Earth Atlas and 66 for the Celestial Atlas.
 - Each caption says what is shown, where the data come from, and how the picture is made.
 
-Click an image to see it at full size. To run the applications yourself, see the READMEs of the [Earth Atlas](../applications/geography/earth-atlas/README.md) and the [Celestial Atlas](../applications/astronomy/celestial-atlas/README.md).
+Click an image to see it at full size. To run the applications yourself, see the READMEs of the [Earth Atlas](../applications/earth-atlas/README.md) and the [Celestial Atlas](../applications/celestial-atlas/README.md).
 
 ## 1. The Earth Atlas
 

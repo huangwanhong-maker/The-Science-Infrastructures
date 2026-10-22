@@ -47,6 +47,6 @@
   "citation": "GDACS, Global Disaster Alert and Coordination System, https://www.gdacs.org/, retrieved through its API.",
   "used_by": [
     "data/products/disaster_catalog.py",
-    "applications/geography/earth-atlas"
+    "applications/earth-atlas"
   ]
 }

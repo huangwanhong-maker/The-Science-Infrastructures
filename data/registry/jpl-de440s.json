@@ -15,6 +15,6 @@
   "licence": "Freely distributed by NAIF; cite the reference below",
   "citation": "Park, R. S., Folkner, W. M., Williams, J. G., & Boggs, D. H. (2021). The JPL Planetary and Lunar Ephemerides DE440 and DE441. The Astronomical Journal, 161(3), 105.",
   "used_by": [
-    "applications/astronomy/celestial-atlas"
+    "applications/celestial-atlas"
   ]
 }

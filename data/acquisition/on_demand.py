@@ -19,7 +19,7 @@ while it is current. Requests run in threads, two at a time, so that the
 servers asked are not crowded; identical requests share one job.
 
 The laboratory's local servers expose this to their pages (for example
-applications/geography/earth-atlas/serve.py, at /request); nothing here is
+applications/earth-atlas/serve.py, at /request); nothing here is
 reachable from outside the computer.
 """
 

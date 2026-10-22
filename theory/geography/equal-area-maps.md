@@ -2,9 +2,9 @@
 title: Equal-Area Maps and Data per Place
 status: draft
 implemented-by:
-  - applications/geography/earth-atlas/src/core/projections.js
-  - applications/geography/earth-atlas/src/core/raster.js
-  - applications/geography/earth-atlas/src/core/join.js
+  - applications/earth-atlas/src/core/projections.js
+  - applications/earth-atlas/src/core/raster.js
+  - applications/earth-atlas/src/core/join.js
 references: [Savric2018, Snyder1987]
 ---
 

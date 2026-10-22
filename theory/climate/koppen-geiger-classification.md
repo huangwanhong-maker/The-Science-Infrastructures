@@ -2,8 +2,8 @@
 title: The Köppen–Geiger Classification of Climates, and the Climate Diagram
 status: draft
 implemented-by:
-  - applications/geography/earth-atlas/src/core/climate.js
-  - applications/geography/earth-atlas/src/ui/climate.js
+  - applications/earth-atlas/src/core/climate.js
+  - applications/earth-atlas/src/ui/climate.js
 references: [Koppen1936, Peel2007, Beck2018, Beck2023, Abatzoglou2018, WalterLieth1960, BagnoulsGaussen1957]
 ---
 

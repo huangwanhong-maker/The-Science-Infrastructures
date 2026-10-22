@@ -2,9 +2,9 @@
 title: The Barotropic Vorticity Equation, and the First Numerical Forecast
 status: draft
 implemented-by:
-  - applications/geography/earth-atlas/src/core/spectral.js
-  - applications/geography/earth-atlas/src/core/barotropic.js
-  - applications/geography/earth-atlas/src/layers/labmodel.js
+  - applications/earth-atlas/src/core/spectral.js
+  - applications/earth-atlas/src/core/barotropic.js
+  - applications/earth-atlas/src/layers/labmodel.js
 references: [Charney1950, Haurwitz1940, Williamson1992, Durran2010, HoltonHakim2013]
 ---
 

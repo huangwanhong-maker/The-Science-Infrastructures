@@ -62,6 +62,6 @@
   "licence": "US Government work, public domain",
   "citation": "U.S. Geological Survey, Earthquake Hazards Program (2017). Advanced National Seismic System (ANSS) Comprehensive Catalog of Earthquake Events and Products. doi:10.5066/F7MS3QZH",
   "used_by": [
-    "applications/geography/earth-atlas"
+    "applications/earth-atlas"
   ]
 }

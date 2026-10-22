@@ -26,5 +26,5 @@
   "coverage": "869 galaxies, mostly within 11 Mpc",
   "licence": "Published catalogue (AJ 145, 101); cite the reference; VizieR terms of use",
   "citation": "Karachentsev, I. D., Makarov, D. I., & Kaisina, E. I. (2013). Updated Nearby Galaxy Catalog. AJ 145, 101.",
-  "used_by": ["applications/astronomy/celestial-atlas"]
+  "used_by": ["applications/celestial-atlas"]
 }

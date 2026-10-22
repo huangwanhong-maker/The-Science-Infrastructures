@@ -12,7 +12,7 @@ Writes tests/fixtures/subsolar.json.
 
 Usage::
 
-    python applications/geography/earth-atlas/tests/fetch_fixtures.py
+    python applications/earth-atlas/tests/fetch_fixtures.py
 """
 
 from __future__ import annotations

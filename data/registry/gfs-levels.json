@@ -130,6 +130,6 @@
   "licence": "US Government work, public domain; distributed by Unidata's THREDDS Data Server (UCAR)",
   "citation": "NOAA National Centers for Environmental Prediction, Global Forecast System; Unidata THREDDS Data Server (UCAR/NSF Unidata Program Center).",
   "used_by": [
-    "applications/geography/earth-atlas"
+    "applications/earth-atlas"
   ]
 }

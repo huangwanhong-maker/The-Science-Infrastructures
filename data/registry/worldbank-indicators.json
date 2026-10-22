@@ -110,6 +110,6 @@
   "licence": "CC BY 4.0 (World Bank terms of use for datasets)",
   "citation": "World Bank, World Development Indicators, https://data.worldbank.org (retrieved through the Indicators API v2).",
   "used_by": [
-    "applications/geography/earth-atlas"
+    "applications/earth-atlas"
   ]
 }

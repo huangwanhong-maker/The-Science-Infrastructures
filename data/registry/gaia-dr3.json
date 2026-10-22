@@ -53,5 +53,5 @@
   "coverage": "Gaia DR3: about 1.8 billion sources, 1.5 billion with parallaxes",
   "licence": "CC BY-SA 3.0 IGO (ESA Gaia data); acknowledge ESA Gaia and DPAC",
   "citation": "Gaia Collaboration, Vallenari, A., et al. (2023). Gaia Data Release 3: Summary of the content and survey properties. A&A 674, A1. Distances: Bailer-Jones, C. A. L., et al. (2021). AJ 161, 147.",
-  "used_by": ["applications/astronomy/celestial-atlas"]
+  "used_by": ["applications/celestial-atlas"]
 }

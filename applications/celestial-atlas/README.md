@@ -1,6 +1,6 @@
 # Celestial Atlas
 
-*Status: draft (2026-10-22). Kind: tool. Field: astronomy.* Decision records: [ADR 0011](../../../development/decisions/0011-first-application-celestial-atlas.md), [ADR 0013](../../../development/decisions/0013-galaxies-and-their-relations.md), [ADR 0016](../../../development/decisions/0016-maps-of-bodies-and-iau-rotation.md), [ADR 0020](../../../development/decisions/0020-detail-of-bodies-at-close-range.md), [ADR 0021](../../../development/decisions/0021-the-sky-from-a-place.md).
+*Status: draft (2026-10-22). Serves: use and learning. Draws on: metrology, astronomy and geodesy.* Decision records: [ADR 0011](../../development/decisions/0011-first-application-celestial-atlas.md), [ADR 0013](../../development/decisions/0013-galaxies-and-their-relations.md), [ADR 0016](../../development/decisions/0016-maps-of-bodies-and-iau-rotation.md), [ADR 0020](../../development/decisions/0020-detail-of-bodies-at-close-range.md), [ADR 0021](../../development/decisions/0021-the-sky-from-a-place.md).
 
 The Celestial Atlas shows the Sun, Moon, planets, stars and galaxies, at any instant from 1849 to 2150 or live. It is organised as five views, from the Solar System out to the cosmic web.
 
@@ -26,12 +26,12 @@ python data/products/galaxy_catalog.py --source ungc
 python data/products/galaxy_catalog.py --source tully-2mass-groups  # names from SIMBAD, cached
 python data/acquisition/fetch.py solar-system-maps                  # optional: maps of the bodies and the sky
 python data/products/body_maps.py
-python applications/astronomy/celestial-atlas/serve.py --open
+python applications/celestial-atlas/serve.py --open
 ```
 
 The page also loads three.js from jsDelivr, and the Source Serif 4 font from Google Fonts. Close to the Moon, Mars or Mercury it fetches map tiles from NASA's Trek services.
 
-To choose which part of a catalogue to fetch, and how much of it, see `python data/acquisition/fetch.py --list` and [data/registry](../../../data/registry/README.md).
+To choose which part of a catalogue to fetch, and how much of it, see `python data/acquisition/fetch.py --list` and [data/registry](../../data/registry/README.md).
 
 ## 2. Data
 
@@ -63,7 +63,7 @@ To choose which part of a catalogue to fetch, and how much of it, see `python da
 - **Orientation of the bodies.** The IAU rotation models (Archinal et al. 2018) give each body's pole (α₀, δ₀) and prime meridian W in the ICRF, including the Moon's periodic terms and those of Mercury and Mars. The rotation to body-fixed axes is B = R_z(W) R_x(90° − δ₀) R_z(90° + α₀).
 - **Detail at close range.** When the focused body fills a third of the view or more, rays from the screen find the region in view in body-fixed longitude and latitude; the tiles of the level whose pixels match the screen's (at most 48) are fetched and drawn over the global map by the body's shader, fading in at their edges.
 - **Maps.** A body's map is in east longitude with 0 at its centre; the textured sphere's local axes are related to body-fixed ones by (x, y, z)_body = (x, −z, y)_local. The Milky Way map is in galactic coordinates; its orientation was checked against twelve bright stars when it was built. The Earth's night lights show where the Sun is below the horizon.
-- **Galaxies.** The theory is in [theory/astronomy/galaxy-relations.md](../../../theory/astronomy/galaxy-relations.md).
+- **Galaxies.** The theory is in [theory/astronomy/galaxy-relations.md](../../theory/astronomy/galaxy-relations.md).
   - Positions use supergalactic coordinates.
   - The tidal index Θ₁ = max log(M/D³) − 10.96 is recomputed, along with each galaxy's main disturber.
   - The Milky Way's missing luminosity is inferred from the published indices of its satellites.
@@ -74,7 +74,7 @@ To choose which part of a catalogue to fetch, and how much of it, see `python da
 ## 4. Verification
 
 ```
-node applications/astronomy/celestial-atlas/tests/run-tests.mjs
+node applications/celestial-atlas/tests/run-tests.mjs
 ```
 
 There are 66 checks.
@@ -94,7 +94,7 @@ There are 66 checks.
 
 ## 5. Structure
 
-The computation in `src/core/` is a provisional stand-in for the laboratory's C++ core ([ADR 0011](../../../development/decisions/0011-first-application-celestial-atlas.md)).
+The computation in `src/core/` is a provisional stand-in for the laboratory's C++ core ([ADR 0011](../../development/decisions/0011-first-application-celestial-atlas.md)).
 
 | Path | Role | Stands in for |
 |---|---|---|

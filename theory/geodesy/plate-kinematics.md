@@ -2,9 +2,9 @@
 title: The Motion of Rigid Plates on a Sphere
 status: draft
 implemented-by:
-  - applications/geography/earth-atlas/src/core/plates.js
-  - applications/geography/earth-atlas/src/layers/plates.js
-  - applications/geography/earth-atlas/src/layers/stations.js
+  - applications/earth-atlas/src/core/plates.js
+  - applications/earth-atlas/src/layers/plates.js
+  - applications/earth-atlas/src/layers/stations.js
 references: [ArgusGordonDeMets2011, Altamimi2023, Bird2003, ArgusGordon1991, CoxHart1986, Blewitt2016]
 ---
 

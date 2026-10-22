@@ -2,9 +2,9 @@
 title: Relations Between Galaxies: Supergalactic Frame, Tidal Index, Hubble Flow
 status: draft
 implemented-by:
-  - applications/astronomy/celestial-atlas/src/core/frames.js
-  - applications/astronomy/celestial-atlas/src/core/galaxies.js
-  - applications/astronomy/celestial-atlas/src/views/galaxy-diagrams.js
+  - applications/celestial-atlas/src/core/frames.js
+  - applications/celestial-atlas/src/core/galaxies.js
+  - applications/celestial-atlas/src/views/galaxy-diagrams.js
 references: [deVaucouleurs1976, Karachentsev1999, Karachentsev2013, Tully2015]
 ---
 

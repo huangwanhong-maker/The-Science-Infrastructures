@@ -81,6 +81,6 @@
   "licence": "CC0 1.0, public domain (as stated in the Google Earth Engine catalogue entry for TerraClimate)",
   "citation": "Abatzoglou, J. T., S. Z. Dobrowski, S. A. Parks and K. C. Hegewisch (2018), TerraClimate, a high-resolution global dataset of monthly climate and climatic water balance from 1958–2015, Scientific Data 5, 170191.",
   "used_by": [
-    "applications/geography/earth-atlas"
+    "applications/earth-atlas"
   ]
 }

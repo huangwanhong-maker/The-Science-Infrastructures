@@ -6,7 +6,7 @@
   "provider": "NASA Global Imagery Browse Services (GIBS), from the ASTER Global Digital Elevation Model (NASA and METI, Japan)",
   "licence": "NASA imagery: no restrictions on use; acknowledge NASA GIBS and the data source (NASA Earthdata use policy). ASTER GDEM is a product of METI and NASA.",
   "used_by": [
-    "applications/geography/earth-atlas"
+    "applications/earth-atlas"
   ],
   "credit": "NASA GIBS, ASTER GDEM (METI and NASA)",
   "requests": [

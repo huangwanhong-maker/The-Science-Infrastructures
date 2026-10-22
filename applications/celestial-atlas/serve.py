@@ -5,7 +5,7 @@ cache (``data/cache/``) under ``/data/``. Only 127.0.0.1 is bound.
 
 Usage::
 
-    python applications/astronomy/celestial-atlas/serve.py [--port 8770] [--open]
+    python applications/celestial-atlas/serve.py [--port 8770] [--open]
 
 then open http://127.0.0.1:8770/ in a browser.
 """
@@ -20,7 +20,7 @@ import webbrowser
 from pathlib import Path
 
 APP = Path(__file__).resolve().parent
-ROOT = APP.parents[2]
+ROOT = APP.parents[1]
 DATA = ROOT / "data" / "cache"
 
 # Explicit types: on Windows the registry may otherwise map .js to text/plain,

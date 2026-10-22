@@ -2,8 +2,8 @@
 title: The Ocean Beneath a Place: Currents and Temperature by Depth
 status: draft
 implemented-by:
-  - applications/geography/earth-atlas/src/core/ocean.js
-  - applications/geography/earth-atlas/src/ui/column.js
+  - applications/earth-atlas/src/core/ocean.js
+  - applications/earth-atlas/src/ui/column.js
   - data/products/ocean_column.py
 references: [Gill1982, deBoyerMontegut2004, Barton2021, Bleck2002, RDI2011]
 ---

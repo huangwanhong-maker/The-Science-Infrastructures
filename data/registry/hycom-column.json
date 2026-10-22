@@ -38,6 +38,6 @@
   "citation": "Barton, N., Metzger, E. J., Reynolds, C. A., et al. (2021), The Navy's Earth System Prediction Capability: a new global coupled atmosphere-ocean-sea ice prediction system designed for daily to subseasonal forecasting, Earth and Space Science 8, e2020EA001199; data from HYCOM.org (ESPC-D-V02).",
   "used_by": [
     "data/products/ocean_column.py",
-    "applications/geography/earth-atlas"
+    "applications/earth-atlas"
   ]
 }

@@ -6,7 +6,7 @@
   "provider": "NASA Global Imagery Browse Services (GIBS), Earth Science Data and Information System (ESDIS)",
   "licence": "NASA imagery: no restrictions on use; acknowledge NASA GIBS and the data source (NASA Earthdata use policy)",
   "used_by": [
-    "applications/geography/earth-atlas"
+    "applications/earth-atlas"
   ],
   "credit": "NASA GIBS, Blue Marble, Black Marble",
   "requests": [

@@ -1,5 +1,5 @@
 // Tests for the atlas's provisional computational core.
-// Run from the repository root:  node applications/astronomy/celestial-atlas/tests/run-tests.mjs
+// Run from the repository root:  node applications/celestial-atlas/tests/run-tests.mjs
 // Requires data/cache/jpl-de440s/de440s.bsp (python data/acquisition/fetch.py jpl-de440s).
 
 import { readFileSync } from 'node:fs';
@@ -25,7 +25,7 @@ import {
 import { existsSync } from 'node:fs';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const root = resolve(here, '../../../..');
+const root = resolve(here, '../../..');
 const fixtures = JSON.parse(readFileSync(resolve(here, 'fixtures/horizons.json'), 'utf8'));
 const kernel = readFileSync(resolve(root, 'data/cache/jpl-de440s/de440s.bsp'));
 const spk = new SPK(kernel.buffer.slice(kernel.byteOffset, kernel.byteOffset + kernel.byteLength));
