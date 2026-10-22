@@ -1,4 +1,4 @@
-// Loading data products from the laboratory's data library (data/products/).
+// Loading data products from the data library (data/products/).
 //
 // The application reads only products, never raw downloads. The index lists
 // what has been built; each product's metadata is small and read at once, and

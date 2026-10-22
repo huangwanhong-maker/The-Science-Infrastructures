@@ -4,7 +4,7 @@
 // The application composes layers (src/layers/) over a base map, all drawn by
 // the stage (src/render/stage.js), and keeps them at the time shown. Every
 // number it shows is computed by the domains' provisional JavaScript (domains/) from data
-// products of the laboratory's data library (data/products/).
+// products of the data library (data/products/).
 
 import { Stage } from './render/stage.js';
 import { Labels } from './render/labels.js';
@@ -30,7 +30,7 @@ import { SegmentLayer, polylineSegments } from './render/segments.js';
 import { SeriesFigure } from './ui/series.js';
 import { Requests } from './data/requests.js';
 import { ImageryLayer, DetailLayer } from './layers/imagery.js';
-import { LabModel, modelInputs, LAB_MODELS } from './layers/labmodel.js';
+import { OurModel, modelInputs, OUR_MODELS } from './layers/ourmodels.js';
 import { setClouds } from './render/surface.js';
 import { Timeline, formatUTC, formatShortUTC, formatDay, formatOffset } from './ui/timeline.js';
 import { renderLegend } from './ui/legend.js';
@@ -66,9 +66,9 @@ const state = {
 };
 
 let library, catalogue, stage, base, surface, flow, lines, events, labels, timeline, geography, elevation, tracks;
-let imagery, detail, labModel, detailSource = null, ocean, plates, stations, series, mechanisms, crust = null, section, sectionLayer;
+let imagery, detail, ourModel, detailSource = null, ocean, plates, stations, series, mechanisms, crust = null, section, sectionLayer;
 const asked = new Requests();       // data requested on demand for the place card, other than the ocean's
-const lab = { input: null, running: null, progress: 0, runs: {}, start: null, against: '', error: '' };
+const ours = { input: null, running: null, progress: 0, runs: {}, start: null, against: '', error: '' };
 const MODEL_COLOURS = ['#CA8DBE', '#f6c47e', '#9fb6e8', '#8fd1b4', '#e8a0a0'];
 const loaded = new Map();          // field products in memory, by name
 const classMaps = new Map();       // class products in memory, by name
@@ -131,9 +131,9 @@ async function start() {
   const painting = base.paint(elevation, base.painted);
   imagery = new ImageryLayer(stage, library);
   detail = new DetailLayer(stage);
-  labModel = new LabModel(library);
+  ourModel = new OurModel(library);
   const inputs = modelInputs(library);
-  if (inputs) lab.input = `${inputs.model} at the start`;
+  if (inputs) ours.input = `${inputs.model} at the start`;
 
   surface = new SurfaceLayer(stage, library, geography.meta.layers.countries);
   flow = new FlowLayer(stage, library);
@@ -179,7 +179,7 @@ async function start() {
   renderPanel();
   $('loading').hidden = true;
   // For inspection from the browser's console and for automated checks.
-  window.atlas = { state, stage, base, surface, flow, lines, events, library, catalogue: () => catalogue, labels, imagery, detail, lab, runLab, ocean, plates,
+  window.atlas = { state, stage, base, surface, flow, lines, events, library, catalogue: () => catalogue, labels, imagery, detail, ours, runOurModel, ocean, plates,
     select: { surface: (id) => selectSurface(id), compare: (id) => selectCompare(id), flow: (id) => selectFlow(id), lines: (id) => selectLines(id) } };
   requestAnimationFrame(loop);
 
@@ -205,7 +205,7 @@ function addOurClasses(normals, p, present) {
   const ref = library.classMeta.get(present.product);
   const period = normals.period.split('/').map((d) => Number(d.slice(0, 4)));
   library.addClasses(new ClassRaster({
-    name: `${ref.series}-laboratory`, title: `${ref.title.split(',')[0]}, classified here from ${normals.model} normals`,
+    name: `${ref.series}-ours`, title: `${ref.title.split(',')[0]}, classified here from ${normals.model} normals`,
     series: ref.series, period, scenario: null, computed: true, model: `ours, from ${normals.model}`, domain: ref.domain,
     grid: p.grid, classes: ref.classes, no_value: 0,
     source: { credit: `classified here from ${p.meta.source.credit}` },
@@ -321,20 +321,20 @@ function renderPanel() {
     imagery: imagery ? imagery.dayImagery() : [],
     lights: Boolean(imagery && imagery.entry('night-lights')),
     clouds: catalogue.clouds.length > 0,
-    lab: lab.input ? lab : null,
+    ours: ours.input ? ours : null,
     modelColour,
     plates: Boolean(plates && plates.plates),
     stations: library.list('stations').length > 0,
     mechanisms: library.list('events').some((e) => e.kind === 'mechanism'),
     ai: [...library.fieldMeta.values()].filter((m) => m.verification && m.verification.start).map((m) => ({
-      label: m.model, short: m.model.replace(/ \(laboratory\)$/, '').replace(/ hindcast$/, ''),
+      label: m.model, short: m.model.replace(/ \((ours|run here)\)$/, '').replace(/ hindcast$/, ''),
       start: Date.parse(m.verification.start), leads: m.verification.leads,
     })),
   };
   buildPanel($('layers'), catalogue, state, years, extra, {
     surface: (id) => selectSurface(id),
     compare: (id) => selectCompare(id),
-    runLab: (kind) => runLab(kind),
+    runOurModel: (kind) => runOurModel(kind),
     flow: (id) => selectFlow(id),
     lines: (id) => selectLines(id),
     events: (id) => selectEvents(id),
@@ -1072,31 +1072,31 @@ function renderAbout() {
     series.add(m.series);
     add(`${m.title.split(',')[0]}, ${[...library.classMeta.values()].filter((x) => x.series === m.series && !x.computed).length} maps`, m.source);
   }
-  if (lab.input) rows.push(`<dt>Laboratory models</dt><dd>Two models of the flow at 500 hPa, solved by the spectral transform method at triangular truncation T42 (a Gaussian grid of 128 × 64) with fourth-order Runge–Kutta steps. The barotropic vorticity equation, as in the first numerical forecast (Charney, Fjørtoft and von Neumann 1950), starts from the wind of the GFS, in steps of 30 min; heights follow by linear balance and are added, as changes, to the analysed height. The shallow-water equations start from its wind and height, in steps of 15 min, after a digital filter over six hours removes the gravity waves of an unbalanced start (Lynch and Huang 1992); their finite radius of deformation slows the longest waves, which the barotropic model moves westward too fast. Tested against the Rossby–Haurwitz wave, Williamson et al.'s steady flow across the poles, and gravity waves of known period.</dd>`);
+  if (ours.input) rows.push(`<dt>Our models</dt><dd>Two models of the flow at 500 hPa, solved by the spectral transform method at triangular truncation T42 (a Gaussian grid of 128 × 64) with fourth-order Runge–Kutta steps. The barotropic vorticity equation, as in the first numerical forecast (Charney, Fjørtoft and von Neumann 1950), starts from the wind of the GFS, in steps of 30 min; heights follow by linear balance and are added, as changes, to the analysed height. The shallow-water equations start from its wind and height, in steps of 15 min, after a digital filter over six hours removes the gravity waves of an unbalanced start (Lynch and Huang 1992); their finite radius of deformation slows the longest waves, which the barotropic model moves westward too fast. Tested against the Rossby–Haurwitz wave, Williamson et al.'s steady flow across the poles, and gravity waves of known period.</dd>`);
   if (catalogue.normals.length) rows.push(`<dt>Climate</dt><dd>Climate classes follow Köppen (1936) as revised by Peel et al. (2007) and Beck et al. (2018): the arid group first, then the tropical, polar, temperate and cold groups, with summer the warmer half-year. Besides the published maps, the atlas classifies the ${esc(catalogue.normals[0].model)} normals itself, with the mean temperature of a month taken as the mean of its daily maximum and minimum; the two agree in about nine land cells in ten. Climate diagrams follow Walter and Lieth (1960): 10 °C to 20 mm, dry where precipitation falls below twice the temperature (Gaussen).</dd>`);
   if (plates.meta) rows.push(`<dt>Tectonic plates</dt><dd>The outlines of 52 plates and the classes of their boundaries are Bird's model PB2002 (as converted by H. Ahlenius, Nordpil; ODC Attribution licence). Each plate turns rigidly about its pole, at the rate of NNR-MORVEL56 (Argus, Gordon and DeMets 2011), relative to the no-net-rotation frame, the mean motion of the whole surface: a point moves at ω × r, computed here on the WGS 84 ellipsoid. Bird's Africa takes MORVEL's Nubia; MORVEL's Capricorn, Lwandle, Macquarie and Sur, which PB2002 does not outline, move with the plates containing them. Across a boundary the relative motion is resolved into opening (or closing) and sliding, right- or left-lateral. <i>Bird, P. (2003), G-cubed 4(3), 1027; Argus, D. F., Gordon, R. G. and DeMets, C. (2011), G-cubed 12, Q11001.</i></dd>`);
   if (library.list('crust').length) rows.push(`<dt>The crust</dt><dd>CRUST1.0 (Laske, Masters, Ma and Pasyanos 2013): on 1° cells, water, ice, three layers of sediment and three of crystalline crust down to the Moho, each with its P- and S-wave speed and density, and the speed of P waves just below the Moho. A place takes the values of the cell containing it, as the model's authors advise. No licence is stated; cite Laske et al. (2013), EGU2013-2658.</dd>`);
   if (library.list('stations').length) rows.push(`<dt>GPS stations</dt><dd>The velocities of some 20,000 continuous GNSS stations, estimated by MIDAS (Blewitt et al. 2016) at the Nevada Geodetic Laboratory, in IGS20, aligned with ITRF2020; kept where a station has run for two years or more with horizontal uncertainties of 2 mm/yr or less. Relative to its plate, a station's velocity is less the motion of the plate it stands on (NNR-MORVEL56; ITRF2020's own rotation against the no-net-rotation frame, a fraction of a millimetre a year, remains). A station's daily positions are asked for on demand. No licence is stated; data are supplied as is. <i>Blewitt, G., Hammond, W. C. and Kreemer, C. (2018), Eos 99, doi:10.1029/2018EO104623.</i></dd>`);
   if (library.list('events').some((e) => e.kind === 'mechanism')) rows.push(`<dt>Earthquake mechanisms</dt><dd>The centroid moment tensors of the Global CMT Project, about 70,000 earthquakes since 1976 (final solutions, and the quick ones of the present year). Each is drawn as a beach ball: the lower hemisphere of the source in equal-area projection, north up, coloured where the first motion of P waves is a push. Its axes and nodal planes are computed here from the tensor's eigenvectors (they agree with the catalogue's own to within a degree), and it is called thrust, normal or strike-slip by the plunges of its axes (Frohlich 1992). <i>Dziewonski, Chou and Woodhouse (1981), J. Geophys. Res. 86, 2825; Ekström, Nettles and Dziewonski (2012), Phys. Earth Planet. Inter. 200-201, 1.</i></dd>`);
-  rows.push(`<dt>The ocean beneath a place</dt><dd>Asked for on demand, through this atlas's server and the laboratory's data library, from the US Navy's global ocean model (ESPC-D-V02, its ocean HYCOM on a 1/12° grid with 40 levels to 5000 m) on HYCOM.org's OPeNDAP server: the column at the model's grid point nearest the place, every 6 hours from two days back to four ahead. Approved for public release, distribution unlimited; HYCOM was developed with funding from the National Ocean Partnership Program and the Office of Naval Research, and its data-assimilative products are funded by the U.S. Navy. <i>Barton, N., et al. (2021), The Navy's Earth System Prediction Capability, Earth and Space Science 8, e2020EA001199.</i> The mixed layer is where temperature first differs from that at 10 m by 0.2 °C (de Boyer Montégut et al. 2004).</dd>`);
+  rows.push(`<dt>The ocean beneath a place</dt><dd>Asked for on demand, through this atlas's server and the data library, from the US Navy's global ocean model (ESPC-D-V02, its ocean HYCOM on a 1/12° grid with 40 levels to 5000 m) on HYCOM.org's OPeNDAP server: the column at the model's grid point nearest the place, every 6 hours from two days back to four ahead. Approved for public release, distribution unlimited; HYCOM was developed with funding from the National Ocean Partnership Program and the Office of Naval Research, and its data-assimilative products are funded by the U.S. Navy. <i>Barton, N., et al. (2021), The Navy's Earth System Prediction Capability, Earth and Space Science 8, e2020EA001199.</i> The mixed layer is where temperature first differs from that at 10 m by 0.2 °C (de Boyer Montégut et al. 2004).</dd>`);
   rows.push(`<dt>Method</dt><dd>Fields are interpolated bilinearly in space and linearly in time between the stored steps; a place near missing values takes the mean of the valid neighbours carrying at least half the weight. Wind direction is the direction it comes from. Wave energy travels at the deep-water group speed g T / 4π along the peak direction. The Sun's position follows the Astronomical Almanac's low-precision formulas (0.01°); day, civil, nautical and astronomical twilight are drawn as bands. Countries are joined to indicators by their World Bank and ISO codes; boundaries are Natural Earth's de facto depiction. The Equal Earth projection keeps areas true.</dd>`);
   $('about-body').innerHTML = `<dl>${rows.join('')}</dl>`;
 }
 
-// ---- the laboratory's model ---------------------------------------------------------
+// ---- our models ---------------------------------------------------------------------
 
-let labPanelTimer = 0;
-async function runLab(kind = 'barotropic') {
-  if (lab.running) return;
-  lab.running = kind; lab.progress = 0; lab.error = '';
+let modelPanelTimer = 0;
+async function runOurModel(kind = 'barotropic') {
+  if (ours.running) return;
+  ours.running = kind; ours.progress = 0; ours.error = '';
   renderPanel();
   try {
-    const result = await labModel.run(state.time, {
+    const result = await ourModel.run(state.time, {
       model: kind,
       onProgress: (f) => {
-        lab.progress = f;
-        clearTimeout(labPanelTimer);
-        labPanelTimer = setTimeout(renderPanel, 60);
+        ours.progress = f;
+        clearTimeout(modelPanelTimer);
+        modelPanelTimer = setTimeout(renderPanel, 60);
       },
     });
     const meta = result.product.meta;
@@ -1106,17 +1106,17 @@ async function runLab(kind = 'barotropic') {
     surface.textures.forget(meta.name);
     catalogue = buildCatalogue(library);
     // Runs from another start are not comparable: they are forgotten.
-    if (lab.start !== result.start) lab.runs = {};
-    lab.runs[kind] = result.verification;
-    lab.start = result.start;
-    lab.against = result.against;
+    if (ours.start !== result.start) ours.runs = {};
+    ours.runs[kind] = result.verification;
+    ours.start = result.start;
+    ours.against = result.against;
     state.live = false;
     state.time = result.start;
-    const label = LAB_MODELS[kind].label;
+    const label = OUR_MODELS[kind].label;
     const height = catalogue.surfaces.find((d) => d.key === 'height|500 hPa|' && d.model === label);
     const contours = catalogue.lines.find((d) => d.key === 'heights|500 hPa' && d.model === label);
     const wind = catalogue.flows.find((d) => d.key === 'wind|500 hPa' && d.model === label);
-    lab.running = null;
+    ours.running = null;
     await Promise.all([
       height ? selectSurface(height.id, false) : null,
       contours ? selectLines(contours.id, false) : null,
@@ -1126,9 +1126,9 @@ async function runLab(kind = 'barotropic') {
     updatePlay();
   } catch (e) {
     console.error(e);
-    lab.error = `The model could not run: ${e.message}`;
+    ours.error = `The model could not run: ${e.message}`;
   }
-  lab.running = null;
+  ours.running = null;
   renderPanel();
   updateTimeline();
   remember();

@@ -1,5 +1,5 @@
-// Data requested on demand from the local server, which has the laboratory's
-// data library fetch a dataset with chosen parameters and build a product
+// Data requested on demand from the local server, which has the data
+// library fetch a dataset with chosen parameters and build a product
 // (data/acquisition/on_demand.py). The page asks, then follows the job until
 // its product is ready; a page served without that server cannot ask.
 

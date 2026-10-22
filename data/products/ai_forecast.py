@@ -1,13 +1,13 @@
 """Run an AI weather model from an analysis, and build its forecast as a field product.
 
-The laboratory runs the model itself, on its own computer, from an analysis
+We run the model ourselves, on our own computer, from an analysis
 the data library has fetched; the forecast is then a field product like any
 other, which the Earth Atlas draws, compares with other models and verifies.
 
 Pangu-Weather (Bi et al. 2023) is a 3D Earth-specific transformer trained on
 ERA5. It maps the state of the atmosphere at one instant (five variables at
 13 pressure levels and four at the surface, on a 0.25 degree grid) to the
-state 1, 3, 6 or 24 hours later; the laboratory uses the 24 and 6 hour models.
+state 1, 3, 6 or 24 hours later; we use the 24 and 6 hour models.
 A forecast of n hours is composed from them by hierarchical temporal
 aggregation (Bi et al. 2023, Methods): the 24 hour model is applied as often
 as it fits, from the analysis, and the 6 hour model fills the remainder from
@@ -29,10 +29,11 @@ at 500 hPa, temperature at 850 hPa, and wind at 850, 500 and 250 hPa. With
 the GFS's analyses (from the product fields-gfs-levels-forecast) is recorded,
 with persistence for comparison.
 
-Usage (in the laboratory's model environment, which has onnxruntime and ecCodes)::
+Usage (in the model environment, which has onnxruntime and ecCodes)::
 
     .venv/Scripts/python data/products/ai_forecast.py --source gfs-analysis-0p25 --hours 168
-    .venv/Scripts/python data/products/ai_forecast.py --source gfs-analysis-0p25 --profile custom-272f93c4 --hours 72 --name pangu-hindcast --verify
+    .venv/Scripts/python data/products/ai_forecast.py --source gfs-analysis-0p25 --profile custom-272f93c4 --hours 72 --name pangu-hindcast \
+        --label "Pangu-Weather hindcast (run here)" --verify
 """
 
 from __future__ import annotations
@@ -60,7 +61,7 @@ UPPER = ["gh", "q", "t", "u", "v"]           # ecCodes short names, in the model
 SURFACE = [("prmsl", "meanSea", 0), ("10u", "heightAboveGround", 10), ("10v", "heightAboveGround", 10),
            ("2t", "heightAboveGround", 2)]
 STRIDE = 4                                    # 0.25 -> 1 degree
-MODEL = "Pangu-Weather (laboratory)"
+MODEL = "Pangu-Weather (run here)"
 
 
 def read_analysis(path: Path) -> tuple[np.ndarray, np.ndarray, dt.datetime]:
@@ -258,8 +259,8 @@ def main(argv: list[str]) -> int:
     files = write_groups(work, init, leads, frames)
     source = {
         "dataset": args.source, "profile": args.profile,
-        "provider": f"computed by the laboratory with {weights['title'].split(':')[0]} from the {retrieval['dataset']} analysis of {init:%Y-%m-%d %H:%M} UTC",
-        "credit": f"Pangu-Weather (Bi et al. 2023), run by the laboratory from the GFS analysis of {init:%d %b %H} UTC",
+        "provider": f"computed here with {weights['title'].split(':')[0]} from the {retrieval['dataset']} analysis of {init:%Y-%m-%d %H:%M} UTC",
+        "credit": f"Pangu-Weather (Bi et al. 2023), run here from the GFS analysis of {init:%d %b %H} UTC",
         "licence": "Derived from Pangu-Weather, whose parameters are licensed CC BY-NC-SA 4.0: for research and learning, not for commercial use",
         "citation": weights["citation"],
         "retrieved_at": retrieval["retrieved_at"],

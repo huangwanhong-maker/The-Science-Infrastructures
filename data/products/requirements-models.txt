@@ -1,4 +1,4 @@
-# The laboratory's model environment, for data/products/ai_forecast.py (ADR 0022).
+# The model environment, for data/products/ai_forecast.py (ADR 0022).
 # The rest of the data library needs only the standard library and numpy.
 #
 #   python -m venv .venv

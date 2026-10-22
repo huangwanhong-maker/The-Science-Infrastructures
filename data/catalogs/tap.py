@@ -17,7 +17,7 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-USER_AGENT = "laboratory-data-tap/1"
+USER_AGENT = "science-infrastructures-tap/1"
 CHUNK = 1 << 20
 
 

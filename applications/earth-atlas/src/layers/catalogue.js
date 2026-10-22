@@ -98,8 +98,8 @@ export const DOMAINS = {
 };
 
 // Models in the order they are offered.
-const MODEL_ORDER = ['GFS', 'AIGFS', 'AIGEFS mean', 'Pangu-Weather (laboratory)', 'Pangu-Weather hindcast (laboratory)',
-  'Shallow water (laboratory)', 'Barotropic (laboratory)'];
+const MODEL_ORDER = ['GFS', 'AIGFS', 'AIGEFS mean', 'Pangu-Weather (run here)', 'Pangu-Weather hindcast (run here)',
+  'Shallow water (ours)', 'Barotropic (ours)'];
 export const modelRank = (m) => { const i = MODEL_ORDER.indexOf(m); return i < 0 ? MODEL_ORDER.length : i; };
 
 const isDirection = (v) => /direction/.test(v.standard_name || '') || v.units === 'degree';

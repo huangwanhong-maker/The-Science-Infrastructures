@@ -1,15 +1,15 @@
 ---
-title: A Primitive-Equation Model, the Next Laboratory Model
+title: A Primitive-Equation Model, Our Next Model
 status: seed
 date: 2026-10-22
 related: [core/domains/meteorology, lib/physis/continuum, lib/calx, theory/meteorology/shallow-water-model.md]
 ---
 
-# A Primitive-Equation Model, the Next Laboratory Model
+# A Primitive-Equation Model, Our Next Model
 
 ## 1. Idea
 
-The laboratory's models now retrace the history of numerical weather prediction:
+Our models now retrace the history of numerical weather prediction:
 - the barotropic vorticity equation (1950);
 - the shallow-water equations (ADR 0019).
 

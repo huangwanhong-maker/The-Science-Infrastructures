@@ -18,6 +18,6 @@ Written while building the first version ([ADR 0014](../decisions/0014-earth-atl
    - Where do people live relative to forecast heat?
 
    This needs gridded population (GHSL or WorldPop) beside country totals. It also needs zonal statistics, a field summarised over each country, which is again a join, this time from a grid to polygons.
-5. **Our own models.** The output of the laboratory's own simulations (calx, physis) can be written as netCDF and shown with `field_grid.py --input`. A shallow-water model on the sphere would be a first test. (A shallow-water model now runs in the atlas itself: [ADR 0019](../decisions/0019-shallow-water-model.md). The next step is [a primitive-equation model](2026-10-22-primitive-equation-model.md).)
+5. **Our own models.** The output of our own simulations (calx, physis) can be written as netCDF and shown with `field_grid.py --input`. A shallow-water model on the sphere would be a first test. (A shallow-water model now runs in the atlas itself: [ADR 0019](../decisions/0019-shallow-water-model.md). The next step is [a primitive-equation model](2026-10-22-primitive-equation-model.md).)
 6. **Shared web modules.** The Celestial Atlas and the Earth Atlas share a server, label placement, palette and time arithmetic. These could move into `visualization/` (renderers and styles) once the user agrees.
 7. **Higher resolution.** Tiles or chunked grids (Zarr) for kilometre-scale data such as Sentinel imagery and regional models.

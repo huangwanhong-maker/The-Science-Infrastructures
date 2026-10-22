@@ -1,6 +1,6 @@
 // The layer panel: what is drawn on the surface and by which model (or, for
 // climate classes, which period, scenario and source), what moves, which lines
-// and events are shown, the laboratory's own model, and how the base map looks.
+// and events are shown, our own models, and how the base map looks.
 
 import { cssGradient } from '../render/colormaps.js';
 import { DOMAINS, byKey } from '../layers/catalogue.js';
@@ -167,21 +167,21 @@ export function buildPanel(el, catalogue, state, years, extra, on) {
     }
   }
 
-  // ---- the laboratory's model ----
-  if (extra.lab) {
-    const lab = extra.lab;
+  // ---- our models ----
+  if (extra.ours) {
+    const ours = extra.ours;
     const kinds = [['barotropic', 'Barotropic'], ['shallow-water', 'Shallow water']];
-    html.push('<h3>Laboratory models</h3>');
-    html.push(`<div class="lab"><p>The flow at 500 hPa, spectral T42, from ${esc(lab.input)}: the barotropic vorticity equation of 1950, or the shallow-water equations.</p>`);
-    if (lab.running) {
-      html.push(`<div class="progress lab-progress"><span style="width:${Math.round(lab.progress * 100)}%"></span></div>`);
+    html.push('<h3>Our models</h3>');
+    html.push(`<div class="ours"><p>The flow at 500 hPa, spectral T42, from ${esc(ours.input)}: the barotropic vorticity equation of 1950, or the shallow-water equations.</p>`);
+    if (ours.running) {
+      html.push(`<div class="progress ours-progress"><span style="width:${Math.round(ours.progress * 100)}%"></span></div>`);
     } else {
-      html.push(`<div class="runs">${kinds.map(([k, label]) => `<button type="button" class="run" data-run-lab="${k}">Run ${label.toLowerCase()}</button>`).join('')}</div>`);
+      html.push(`<div class="runs">${kinds.map(([k, label]) => `<button type="button" class="run" data-run-model="${k}">Run ${label.toLowerCase()}</button>`).join('')}</div>`);
     }
-    // Runs of the laboratory's models, and AI models run here (products with a
+    // Runs of our models, and AI models run here (products with a
     // verification), compared at the same start when they share one.
-    const columns = kinds.filter(([k]) => lab.runs[k] && lab.runs[k].length).map(([k, label]) => [label, lab.runs[k]]);
-    const ai = (extra.ai || []).filter((a) => !columns.length || a.start === lab.start);
+    const columns = kinds.filter(([k]) => ours.runs[k] && ours.runs[k].length).map(([k, label]) => [label, ours.runs[k]]);
+    const ai = (extra.ai || []).filter((a) => !columns.length || a.start === ours.start);
     if (!columns.length && ai.length) html.push(`<p class="note">${esc(ai[0].label)}, run here from the GFS analysis of ${esc(new Date(ai[0].start).toISOString().slice(0, 13).replace('T', ' '))} UTC:</p>`);
     columns.push(...ai.slice(0, columns.length ? 3 : 1).map((a) => [a.short, a.leads]));
     if (columns.length) {
@@ -191,9 +191,9 @@ export function buildPanel(el, catalogue, state, years, extra, on) {
       html.push(`<table class="verify"><thead><tr><th>Lead</th>${columns.map(([label]) => `<th>${esc(label)}</th>`).join('')}<th>Persistence</th></tr></thead><tbody>${leads
         .map((h) => `<tr><th>+${h} h</th>${columns.map(([, rows]) => `<td>${cell(rows, h)}</td>`).join('')}<td>${persistence(h)}</td></tr>`).join('')}</tbody></table>`);
       const all = columns.flatMap(([, rows]) => rows);
-      html.push(`<p class="note">Root-mean-square error of height, 20–80° N, against ${esc(lab.against || 'GFS')}${all.some((r) => r.against === 'forecast') ? ' (its forecast, beyond the present)' : ' analyses'}.</p>`);
+      html.push(`<p class="note">Root-mean-square error of height, 20–80° N, against ${esc(ours.against || 'GFS')}${all.some((r) => r.against === 'forecast') ? ' (its forecast, beyond the present)' : ' analyses'}.</p>`);
     }
-    if (lab.error) html.push(`<p class="note">${esc(lab.error)}</p>`);
+    if (ours.error) html.push(`<p class="note">${esc(ours.error)}</p>`);
     html.push('</div>');
   }
 
@@ -224,7 +224,7 @@ export function buildPanel(el, catalogue, state, years, extra, on) {
   el.querySelectorAll('button[data-style]').forEach((b) => b.addEventListener('click', () => on.base('style', b.dataset.style)));
   el.querySelectorAll('input[data-base]').forEach((i) => i.addEventListener('change', () => on.base(i.dataset.base, i.checked)));
   el.querySelectorAll('button[data-year]').forEach((b) => b.addEventListener('click', () => on.year(Number(b.dataset.year))));
-  el.querySelectorAll('[data-run-lab]').forEach((b) => b.addEventListener('click', () => on.runLab(b.dataset.runLab)));
+  el.querySelectorAll('[data-run-model]').forEach((b) => b.addEventListener('click', () => on.runOurModel(b.dataset.runModel)));
   const ind = el.querySelector('#indicator');
   if (ind) ind.addEventListener('change', () => on.surface(ind.value));
   el.querySelector('#language').addEventListener('change', (e) => on.base('lang', e.target.value));

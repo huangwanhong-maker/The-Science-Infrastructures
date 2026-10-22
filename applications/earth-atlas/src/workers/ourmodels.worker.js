@@ -1,4 +1,4 @@
-// Runs one of the laboratory's models away from the page's main thread, and
+// Runs one of our models away from the page's main thread, and
 // returns its fields every few hours on a regular grid:
 //   'barotropic'     the barotropic vorticity equation (domains/meteorology/js/barotropic.js);
 //   'shallow-water'  the shallow-water equations (domains/meteorology/js/shallowwater.js),

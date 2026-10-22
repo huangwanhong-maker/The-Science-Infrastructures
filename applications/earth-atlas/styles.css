@@ -213,13 +213,13 @@ select {
 .models button[aria-pressed="true"]::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--accent); }
 .compare { display: flex; align-items: center; gap: 8px; margin: 2px 0 6px 40px; font-size: 12.5px; color: var(--text-faint); font-style: italic; }
 .compare select { font-size: 12.5px; padding: 1px 4px; }
-.lab p { margin: 0 0 8px; font-size: 13.5px; color: var(--text-dim); }
-.lab .runs { display: flex; flex-wrap: wrap; gap: 6px; }
-.lab p.note { font-size: 12px; font-style: italic; color: var(--text-faint); margin-top: 6px; }
-.lab .run { padding: 4px 14px; border-radius: 14px; color: var(--text); border: 1px solid transparent;
+.ours p { margin: 0 0 8px; font-size: 13.5px; color: var(--text-dim); }
+.ours .runs { display: flex; flex-wrap: wrap; gap: 6px; }
+.ours p.note { font-size: 12px; font-style: italic; color: var(--text-faint); margin-top: 6px; }
+.ours .run { padding: 4px 14px; border-radius: 14px; color: var(--text); border: 1px solid transparent;
   background: linear-gradient(var(--night-2), var(--night-2)) padding-box, var(--accent-gradient) border-box; }
-.lab .run:hover { background: linear-gradient(var(--night-3), var(--night-3)) padding-box, var(--accent-gradient) border-box; }
-.lab-progress { margin: 6px 0 4px; width: 100%; }
+.ours .run:hover { background: linear-gradient(var(--night-3), var(--night-3)) padding-box, var(--accent-gradient) border-box; }
+.ours-progress { margin: 6px 0 4px; width: 100%; }
 table.verify { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
 table.verify th, table.verify td { padding: 3px 2px; text-align: right; font-weight: 400; }
 table.verify thead th { color: var(--text-faint); font-size: 11px; letter-spacing: 0.04em; }

@@ -5,7 +5,7 @@
 // effective and accurate colormap selection", Oceanography 29(3), 9-13),
 // MIT licence, Copyright (c) 2015 Kristen M. Thyng; 33 of the 256 entries of
 // each table, interpolated linearly in sRGB between them.
-// orchid: the laboratory's own, from plum through Dusty Orchid (#CA8DBE) to
+// orchid: our own, from plum through Dusty Orchid (#CA8DBE) to
 // cream, with OKLab lightness rising evenly from 0.22 to 0.98.
 
 const STOPS = {

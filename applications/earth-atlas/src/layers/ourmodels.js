@@ -1,4 +1,4 @@
-// The laboratory's own forecasts, run in the page from the 500 hPa analysis of
+// Our own forecasts, run in the page from the 500 hPa analysis of
 // a forecast product and verified against that product's heights:
 // - the barotropic vorticity model of 1950, from the wind;
 // - the shallow-water model, from the wind and the height, started by a
@@ -14,11 +14,11 @@ import { bilinear, gaussLegendre } from '../../../../foundations/physis/js/index
 import { ComputedField, statistics } from '../data/fields.js';
 import { rmsDifference } from '../../../../domains/meteorology/js/index.js';
 
-export const LAB_MODELS = {
-  barotropic: { label: 'Barotropic (laboratory)', title: 'Barotropic vorticity model (laboratory)', short: 'Barotropic', dt: 1800 },
-  'shallow-water': { label: 'Shallow water (laboratory)', title: 'Shallow-water model (laboratory)', short: 'Shallow water', dt: 900 },
+export const OUR_MODELS = {
+  barotropic: { label: 'Barotropic (ours)', title: 'Barotropic vorticity model (ours)', short: 'Barotropic', dt: 1800 },
+  'shallow-water': { label: 'Shallow water (ours)', title: 'Shallow-water model (ours)', short: 'Shallow water', dt: 900 },
 };
-export const LAB_MODEL = LAB_MODELS.barotropic.label;
+export const OUR_MODEL = OUR_MODELS.barotropic.label;
 const OUTPUT = { lon0: -178.75, dlon: 2.5, nlon: 144, lat0: 88.75, dlat: 2.5, nlat: 72, periodic: true };
 const TRUNCATION = 42;
 
@@ -36,7 +36,7 @@ export function modelInputs(library) {
   return found[0] || null;
 }
 
-export class LabModel {
+export class OurModel {
   constructor(library) {
     this.library = library;
     this.running = false;
@@ -46,7 +46,7 @@ export class LabModel {
   // Runs a model ('barotropic' or 'shallow-water') from the product time at or
   // before `time`; returns { product, verification, start }.
   async run(time, { model: kind = 'barotropic', hours = 72, onProgress = () => {} } = {}) {
-    const spec = LAB_MODELS[kind];
+    const spec = OUR_MODELS[kind];
     const inputs = modelInputs(this.library);
     if (!inputs) throw new Error('no product with wind and height at 500 hPa');
     const product = await this.library.field(inputs.product);
@@ -72,7 +72,7 @@ export class LabModel {
 
     this.running = true;
     const out = await new Promise((resolve, reject) => {
-      const worker = new Worker(new URL('../workers/labmodel.worker.js', import.meta.url), { type: 'module' });
+      const worker = new Worker(new URL('../workers/ourmodels.worker.js', import.meta.url), { type: 'module' });
       worker.onmessage = (e) => {
         if (e.data.progress !== undefined) onProgress(e.data.progress);
         if (e.data.done) { worker.terminate(); resolve(e.data); }
@@ -87,7 +87,7 @@ export class LabModel {
     const zStart = regrid(product, inputs.z, i0);
     const heights = out.fields.z || out.fields.dz.map((dz) => dz.map((x, i) => x + zStart[i]));
     const times = out.times.map((s) => new Date(t0 + s * 1000).toISOString().replace('.000Z', 'Z'));
-    const name = `lab-${kind}`;
+    const name = `ours-${kind}`;
     const variables = [
       { name: 'z@500hPa', long_name: 'Geopotential height at 500 hPa', standard_name: 'geopotential_height', units: 'm', level: '500 hPa', ...statistics(heights) },
       { name: 'u@500hPa', long_name: 'Eastward wind at 500 hPa', standard_name: 'eastward_wind', units: 'm s-1', level: '500 hPa', ...statistics(out.fields.u) },
@@ -99,7 +99,7 @@ export class LabModel {
       title: spec.title, model: spec.label, domain: 'meteorology',
       grid: OUTPUT, times, time_scale: 'UTC', variables,
       vectors: [{ name: 'wind@500hPa', u: 'u@500hPa', v: 'v@500hPa', units: 'm s-1', standard_name: 'wind', level: '500 hPa' }],
-      source: { dataset: inputs.product, provider: `computed in the page from ${inputs.model} at ${times[0]}`, credit: `${spec.short} model T${TRUNCATION} (laboratory), from ${inputs.model}` },
+      source: { dataset: inputs.product, provider: `computed in the page from ${inputs.model} at ${times[0]}`, credit: `${spec.short} model T${TRUNCATION} (ours), from ${inputs.model}` },
     };
     const computed = new ComputedField(meta, { 'z@500hPa': heights, 'u@500hPa': out.fields.u, 'v@500hPa': out.fields.v, 'zeta@500hPa': out.fields.zeta });
 

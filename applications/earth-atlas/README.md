@@ -2,7 +2,7 @@
 
 *Status: draft (2026-10-22). Serves: use and learning. Draws on: geography, meteorology, oceanography, geophysics, geodesy, astronomy and climate.* Decision records: [ADR 0014](../../development/decisions/0014-earth-atlas-separated-data-and-typed-layers.md), [ADR 0015](../../development/decisions/0015-earth-atlas-models-imagery-detail.md), [ADR 0017](../../development/decisions/0017-climate-classes-and-normals.md), [ADR 0018](../../development/decisions/0018-fine-relief-at-close-range.md), [ADR 0019](../../development/decisions/0019-shallow-water-model.md), [ADR 0022](../../development/decisions/0022-ai-forecast-cyclones-and-disasters.md), [ADR 0023](../../development/decisions/0023-ocean-column-and-data-on-demand.md), [ADR 0024](../../development/decisions/0024-the-solid-earth.md).
 
-The Earth Atlas shows the atmosphere, the ocean, the land and the people of the Earth on one globe, at one instant. Each kind of data comes from its own dataset and is joined to the map only here, in the application. Forecasts from several models can be compared: NOAA's, an AI model the laboratory runs itself, and two simple models of our own that run in the page. Tropical cyclones are found in every forecast and set beside their observed tracks and official forecasts, and current disasters are shown by their alert levels. Climates can be read too: their classes from 1901 to 2099, and the normal year of any place. The map itself is one dataset among others, and carries no values but names and places.
+The Earth Atlas shows the atmosphere, the ocean, the land and the people of the Earth on one globe, at one instant. Each kind of data comes from its own dataset and is joined to the map only here, in the application. Forecasts from several models can be compared: NOAA's, an AI model we run ourselves, and two simple models of our own that run in the page. Tropical cyclones are found in every forecast and set beside their observed tracks and official forecasts, and current disasters are shown by their alert levels. Climates can be read too: their classes from 1901 to 2099, and the normal year of any place. The map itself is one dataset among others, and carries no values but names and places.
 
 ## 1. Concepts
 
@@ -23,7 +23,7 @@ The Earth Atlas shows the atmosphere, the ocean, the land and the people of the 
   - **tracks:** several sources at once, so that forecasts of one cyclone can be compared;
   - the **base map:** relief, satellite imagery, or plain; plus forecast clouds, lights at night, coasts, boundaries, rivers, the graticule with the tropics and polar circles, names, and day and night.
 - **Fields recognised by standard name and level.** A field with a known CF standard name is drawn in that quantity's style at its level, for example geopotential height at 500 hPa. A field with an unknown one is drawn in a style fitted to its own range.
-- **Models as a choice.** The same quantity from several models (GFS, NOAA's AI model AIGFS, the AIGEFS ensemble, Pangu-Weather run by the laboratory, our own two) is one layer with a choice of model.
+- **Models as a choice.** The same quantity from several models (GFS, NOAA's AI model AIGFS, the AIGEFS ensemble, Pangu-Weather run here, our own two) is one layer with a choice of model.
   - Any two models can be shown as a difference.
   - The place card gives each model's value and draws their courses together, and links to the sky at that place and time in the Celestial Atlas.
   - Ensemble spread is a layer of its own.
@@ -32,7 +32,7 @@ The Earth Atlas shows the atmosphere, the ocean, the land and the people of the 
   - The atlas also classifies the TerraClimate normals of 1991–2020 itself and offers the result beside the published map.
   - Monthly normals of temperature and precipitation follow the month of the time shown.
   - The place card draws the normal year of any place on land as a climate diagram (Walter and Lieth 1960).
-- **An AI model, run here.** Pangu-Weather (Bi et al. 2023), a transformer trained on 39 years of ERA5, runs on the laboratory's computer from the GFS analysis at 0.25° and 13 levels. A week's forecast takes about 40 minutes on the CPU. It becomes a product like the others, and is verified against later analyses beside our own models and persistence.
+- **An AI model, run here.** Pangu-Weather (Bi et al. 2023), a transformer trained on 39 years of ERA5, runs on our own computer from the GFS analysis at 0.25° and 13 levels. A week's forecast takes about 40 minutes on the CPU. It becomes a product like the others, and is verified against later analyses beside our own models and persistence.
 - **Tropical cyclones.**
   - Each forecast's cyclones are found in its sea-level pressure: a minimum with a closed contour of 2 hPa, linked from time to time (after TempestExtremes; Ullrich and Zarzycki 2017). Each model's tracks are drawn in its colour.
   - The observed track and the official forecast come from GDACS, solid and dashed.
@@ -90,7 +90,7 @@ python data/products/crust_model.py
 python applications/earth-atlas/serve.py --open
 ```
 
-For the laboratory's AI forecast, in the model environment (see [data/README](../../data/README.md)), 2.4 GB of weights and 57 MB of analysis:
+For our AI forecast, in the model environment (see [data/README](../../data/README.md)), 2.4 GB of weights and 57 MB of analysis:
 
 ```
 python data/acquisition/fetch.py pangu-weather gfs-analysis-0p25
@@ -157,13 +157,13 @@ The ERDDAP servers add: "The data may be used and redistributed for free but is 
 | Plate motion | v = ω × r on WGS 84, ω from NNR-MORVEL56; relative motion as the difference of angular velocities, resolved across a boundary into opening and right-lateral sliding by Bird's conventions; GPS velocities relative to ITRF2020's plate motion model (with its origin rate bias) where it covers the plate | Argus et al. (2011), Altamimi et al. (2023), Bird (2003); `domains/geophysics/js/plates.js`; [theory note](../../domains/geophysics/theory/plate-kinematics.md) |
 | Mechanisms | Principal axes by Jacobi rotations; nodal planes from T ± P; classes by Frohlich's (1992) plunges; beach balls by xᵀMx per pixel, lower hemisphere, equal area, turned to the map's north | Aki and Richards (2002); `domains/geophysics/js/moment.js`, `src/render/beachballs.js`; [theory note](../../domains/geophysics/theory/earthquake-mechanisms.md) |
 | Sections | Along- and cross-track distances on the sphere; across the nearest boundary within 900 km, toward the overriding plate at a subduction zone | `domains/geophysics/js/section.js`, `src/ui/section.js` |
-| Model comparison | Differences on a diverging scale fitted to the 98th percentile over the shared forecast. The model's verification is the root-mean-square height error over 20–80° N, against analyses and against persistence. | `src/layers/surface.js`, `src/layers/labmodel.js` |
+| Model comparison | Differences on a diverging scale fitted to the 98th percentile over the shared forecast. The model's verification is the root-mean-square height error over 20–80° N, against analyses and against persistence. | `src/layers/surface.js`, `src/layers/ourmodels.js` |
 | Day and night | Subsolar point from the Astronomical Almanac's low-precision Sun. Sunrise at −0.833°; civil, nautical and astronomical twilight at −6°, −12° and −18°. Lights from the Black Marble on the night side. | [theory note](../../domains/astronomy/theory/subsolar-point-and-twilight.md) |
 | Imagery and detail | Global images at 8192 × 4096. Gaps in a daily mosaic are filled from the day before; where imagery has none, the relief shows. At close range, a WMS request covers the region in view at the screen's resolution. | `data/products/imagery.py`, `src/layers/imagery.js` |
 | Isolines | Marching squares, saddles resolved by the cell mean. Highs and lows are extrema over a neighbourhood with a stated prominence (heights outside the tropics only). | `visualization/js/contour.js` |
 | Countries | Scanline rasterisation, even-odd rule, 4096 × 2048. Joins to indicators by stated keys. | `domains/geography/js/raster.js`, `domains/geography/js/join.js` |
 | Relief | Hypsometric tints, and Lambert shading from the north-west at 45°, exaggerated 14× for a 10′ grid and in proportion to the grid's spacing (7× on the 5′ grid), with the darkening limited; painted at 8192 × 4096 in a worker. At close range, on land, ASTER's fine shading replaces it; water is the uniform grey of the shading where a whole neighbourhood has it. | Imhof (1982); `src/render/relief.js`, `domains/geography/js/raster.js` |
-| Colour maps | cmocean (Thyng et al. 2016, MIT licence), and the laboratory's own orchid map, with lightness rising evenly | `src/render/colormaps.js` |
+| Colour maps | cmocean (Thyng et al. 2016, MIT licence), and our own orchid map, with lightness rising evenly | `src/render/colormaps.js` |
 | Climate classes | Köppen–Geiger after Peel et al. (2007) and Beck et al. (2018): B first, summer the warmer half-year. Classes are read from the cell containing a place, never interpolated. Colours are the conventional ones, softened in OKLab. | `domains/climate/js/climate.js`, `src/render/classes.js`; [theory note](../../domains/climate/theory/koppen-geiger-classification.md) |
 | Climate diagram | Walter and Lieth (1960): 10 °C level with 20 mm; dry months (P ≤ 2T, Gaussen) dotted, humid hatched, above 100 mm a tenfold scale; frost months marked; from July south of the equator | `src/ui/climate.js` |
 | Conventions | Wind direction is where it blows from. Times in UTC. Values stored in their source units and converted only for display (vorticity in 10⁻⁵ s⁻¹). | `domains/meteorology/js/wind.js`, `visualization/js/units.js` |
@@ -247,7 +247,7 @@ Its own code:
 
 - Fields are drawn at the resolution of their product (1° for the default forecasts). Finer profiles exist, at a cost in download.
 - The best time series of GFS and AIGFS join past analyses to the latest forecast. Their past is close to analyses; their future is one run's forecast.
-- The laboratory models have one layer and no topography, moisture or heating. The barotropic model's long waves drift west too fast; the shallow-water model corrects much of that, but neither represents the growth of storms, which needs several levels (the next idea: a primitive-equation model).
+- Our models have one layer and no topography, moisture or heating. The barotropic model's long waves drift west too fast; the shallow-water model corrects much of that, but neither represents the growth of storms, which needs several levels (the next idea: a primitive-equation model).
 - Cyclone intensities are those of 1° fields, well above the true central pressures; Pangu-Weather underestimates intensity further, as its authors report. Tracks are the more trustworthy part.
 - The cyclone tracker has no warm-core test, so a strong monsoon depression may be counted.
 - The ocean column needs the atlas's own server (`serve.py`), which asks the data library; HYCOM's analyses lag about two days, and a first request takes minutes.

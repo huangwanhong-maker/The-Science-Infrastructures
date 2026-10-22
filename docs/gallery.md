@@ -2,10 +2,10 @@
 
 *Status: draft, 2026-10-22.*
 
-These are screenshots of the laboratory's two applications, taken on 22 October 2026 from their local servers, with the data of that day.
+These are screenshots of the infrastructure's two applications, taken on 22 October 2026 from their local servers, with the data of that day.
 
 - Both are web applications without a build step.
-- Their computations are the laboratory's provisional core, tested against published references: 151 checks for the Earth Atlas and 66 for the Celestial Atlas.
+- Their science is the provisional JavaScript of the domains they draw on, tested against published references in 218 checks.
 - Each caption says what is shown, where the data come from, and how the picture is made.
 
 Click an image to see it at full size. To run the applications yourself, see the READMEs of the [Earth Atlas](../applications/earth-atlas/README.md) and the [Celestial Atlas](../applications/celestial-atlas/README.md).
@@ -27,16 +27,16 @@ The atmosphere, the ocean, the land and its people on one globe, or on equal-are
 </tr>
 </table>
 
-### 1.2 Models Compared, and the Laboratory's Own
+### 1.2 Models Compared, and Our Own
 
 <table>
 <tr>
 <td width="50%" valign="top"><a href="../assets/gallery/earth-05-model-difference.jpg"><img src="../assets/gallery/earth-05-model-difference.jpg" alt="AIGFS minus GFS, air temperature at 2 m"></a><br><b>Two models compared.</b> NOAA's AI model AIGFS minus the GFS, air temperature at 2 m, on a diverging scale fitted to the whole forecast. Any two models of the same quantity can be differenced this way.</td>
-<td width="50%" valign="top"><a href="../assets/gallery/earth-06-laboratory-models.jpg"><img src="../assets/gallery/earth-06-laboratory-models.jpg" alt="The shallow-water model's 500 hPa heights after 48 hours, with its verification table"></a><br><b>A model of our own.</b> The laboratory's shallow-water model, 48 hours after starting from the GFS analysis of 19 October 2026: heights at 500 hPa, contours every 60 m, and the wind.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/earth-06-our-models.jpg"><img src="../assets/gallery/earth-06-our-models.jpg" alt="The shallow-water model's 500 hPa heights after 48 hours, with its verification table"></a><br><b>A model of our own.</b> Our shallow-water model, 48 hours after starting from the GFS analysis of 19 October 2026: heights at 500 hPa, contours every 60 m, and the wind.</td>
 </tr>
 </table>
 
-The laboratory's two models run in the page by the spectral transform method at T42. The panel compares their errors with persistence, the forecast that nothing changes:
+Our two models run in the page by the spectral transform method at T42. The panel compares their errors with persistence, the forecast that nothing changes:
 
 | Lead | Barotropic model (1950) | Shallow-water model | Persistence |
 |---|---|---|---|
@@ -48,12 +48,12 @@ These are root-mean-square errors of the height of the 500 hPa surface over 20�
 
 ### 1.3 Prediction: an AI Model Run Here, Tropical Cyclones and Disasters
 
-The laboratory runs the AI weather model Pangu-Weather (Bi et al. 2023) itself, on a laptop's CPU, from NOAA's GFS analysis at 0.25°. A week's forecast takes about half an hour, and becomes a product like NOAA's. Tropical cyclones are found in every forecast's sea-level pressure and drawn beside the observed track and the official forecast ([ADR 0022](../development/decisions/0022-ai-forecast-cyclones-and-disasters.md)).
+We run the AI weather model Pangu-Weather (Bi et al. 2023) ourselves, on a laptop's CPU, from NOAA's GFS analysis at 0.25°. A week's forecast takes about half an hour, and becomes a product like NOAA's. Tropical cyclones are found in every forecast's sea-level pressure and drawn beside the observed track and the official forecast ([ADR 0022](../development/decisions/0022-ai-forecast-cyclones-and-disasters.md)).
 
 <table>
 <tr>
 <td width="50%" valign="top"><a href="../assets/gallery/earth-15-cyclone-forecasts.jpg"><img src="../assets/gallery/earth-15-cyclone-forecasts.jpg" alt="Forecast tracks of Typhoon Champi from four models beside the official forecast"></a><br><b>One typhoon, five forecasts.</b> Typhoon Champi on 23 October 2026, 12:00 UTC, in Pangu-Weather's sea-level pressure and wind. Its track as found in each model is drawn in that model's colour. Pangu-Weather (green) and NOAA's AIGFS (gold) recurve it toward southern Japan with the official forecast (white, dashed), the AIGEFS ensemble mean (blue) takes it north, and the GFS (pink) west into the Taiwan Strait. The label gives each model's central pressure.</td>
-<td width="50%" valign="top"><a href="../assets/gallery/earth-16-ai-verification.jpg"><img src="../assets/gallery/earth-16-ai-verification.jpg" alt="Pangu-Weather hindcast of Typhoon Champi beside its observed track, with the verification table"></a><br><b>A forecast checked.</b> Pangu-Weather started from the analysis of 19 October 2026, 00:00 UTC, seen 48 hours later. Its track of Champi (red) runs beside the observed one (white), within 49 km at one day and 58 km at two. In the panel, its errors are set beside the laboratory's own models and persistence.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/earth-16-ai-verification.jpg"><img src="../assets/gallery/earth-16-ai-verification.jpg" alt="Pangu-Weather hindcast of Typhoon Champi beside its observed track, with the verification table"></a><br><b>A forecast checked.</b> Pangu-Weather started from the analysis of 19 October 2026, 00:00 UTC, seen 48 hours later. Its track of Champi (red) runs beside the observed one (white), within 49 km at one day and 58 km at two. In the panel, its errors are set beside our own models and persistence.</td>
 </tr>
 <tr>
 <td width="50%" valign="top"><a href="../assets/gallery/earth-17-ai-week-ahead.jpg"><img src="../assets/gallery/earth-17-ai-week-ahead.jpg" alt="Pangu-Weather's wind at 10 m five days ahead on the Equal Earth projection"></a><br><b>Five days ahead.</b> Pangu-Weather's wind at 10 m and pressure at sea level for 27 October 2026, 00:00 UTC, from the analysis of 21 October, 18:00 UTC: the storm tracks of both hemispheres, the trade winds, and two cyclones in the western Pacific.</td>
@@ -61,7 +61,7 @@ The laboratory runs the AI weather model Pangu-Weather (Bi et al. 2023) itself, 
 </tr>
 </table>
 
-Errors of the forecast from 19 October, as for the laboratory's models above:
+Errors of the forecast from 19 October, as for our models above:
 
 | Lead | Pangu-Weather | Shallow-water model | Barotropic model | Persistence |
 |---|---|---|---|---|
@@ -178,14 +178,14 @@ The Sun, the Moon, the planets, the stars and the galaxies, at any instant from 
 
 ## 3. Credits
 
-The screenshots are the laboratory's, under its MIT licence, except the three that show Pangu-Weather's forecasts (§1.3: earth-15, earth-16 and earth-17). Those are shared under CC BY-NC-SA 4.0, the licence of the model's parameters: for learning and research, not for commercial use. The data in all of them keep their own licences.
+The screenshots are the infrastructure's, under its MIT licence, except the three that show Pangu-Weather's forecasts (§1.3: earth-15, earth-16 and earth-17). Those are shared under CC BY-NC-SA 4.0, the licence of the model's parameters: for learning and research, not for commercial use. The data in all of them keep their own licences.
 
 | Data | Source | Licence |
 |---|---|---|
 | Base map | Natural Earth | Public domain |
 | Relief | ETOPO 2022 (NOAA NCEI); ASTER GDEM (METI and NASA), shaded by NASA GIBS | Public domain; NASA, acknowledge |
 | Forecasts and analyses | GFS and WaveWatch III (NOAA NCEP, via PacIOOS ERDDAP); AIGFS and AIGEFS (NOAA NCEP and EPIC, via Unidata THREDDS); OISST v2.1 (NOAA NCEI) | Public domain |
-| The laboratory's AI forecasts | Pangu-Weather (Bi et al. 2023, *Nature* 619, 533–538), run from the GFS analysis at 0.25° (NOAA NCEP, NOMADS) | Model parameters CC BY-NC-SA 4.0; analysis public domain |
+| Our AI forecasts | Pangu-Weather (Bi et al. 2023, *Nature* 619, 533–538), run from the GFS analysis at 0.25° (NOAA NCEP, NOMADS) | Model parameters CC BY-NC-SA 4.0; analysis public domain |
 | Cyclone tracks and disaster alerts | GDACS (United Nations and European Commission JRC), relaying the warning centres | No reuse licence stated; provided "as is"; credited, and not a warning |
 | Climate classes | Beck et al. (2023), *Scientific Data* 10, 724 | CC BY 4.0 |
 | Climate normals | TerraClimate (Abatzoglou et al. 2018) | CC0 |

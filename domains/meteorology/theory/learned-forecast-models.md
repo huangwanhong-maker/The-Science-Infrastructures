@@ -1,12 +1,12 @@
 ---
-title: Forecasting by a Learned Map: Pangu-Weather Run in the Laboratory
+title: Forecasting by a Learned Map: Pangu-Weather Run Here
 status: draft
 implemented-by:
   - data/products/ai_forecast.py
 references: [Bi2023, Hersbach2020, Liu2021Swin]
 ---
 
-# Forecasting by a Learned Map: Pangu-Weather Run in the Laboratory
+# Forecasting by a Learned Map: Pangu-Weather Run Here
 
 ## 1. The Forecast as a Map
 
@@ -14,7 +14,7 @@ Let X be the space of states of the atmosphere on a grid. For Pangu-Weather (Bi 
 
   X = ℝ^{5 × 13 × 721 × 1440} × ℝ^{4 × 721 × 1440},  dim X = 71 638 560.  (1)
 
-The equations of motion define a flow, Φ_τ : X → X, the state τ hours later. A numerical model approximates Φ_τ by discretising the equations, as the laboratory's [barotropic](barotropic-vorticity-model.md) and [shallow-water](shallow-water-model.md) models do. A learned model instead fits a map F_τ ≈ Φ_τ to pairs of states (x(t), x(t + τ)) drawn from a reanalysis, here ERA5 (Hersbach et al. 2020), 1979–2017.
+The equations of motion define a flow, Φ_τ : X → X, the state τ hours later. A numerical model approximates Φ_τ by discretising the equations, as our [barotropic](barotropic-vorticity-model.md) and [shallow-water](shallow-water-model.md) models do. A learned model instead fits a map F_τ ≈ Φ_τ to pairs of states (x(t), x(t + τ)) drawn from a reanalysis, here ERA5 (Hersbach et al. 2020), 1979–2017.
 
 The two approaches fail differently.
 - A numerical model inherits the conservation laws and the dispersion relations of its equations, and fails where its resolution or its physics does.
@@ -32,7 +32,7 @@ Pangu-Weather provides F_1, F_3, F_6 and F_24, and composes T greedily: as many 
 
 *Remark.* The proof uses only the fact that each step divides the next, so that the step set is a chain under divisibility. For a set like {1, 4, 6}, greedy fails: 8 = 6 + 1 + 1 by greedy, three steps, but 4 + 4 is two.
 
-The laboratory uses F_24 and F_6, and forecasts every 6 hours: a lead of T = 24a + 6b (0 ≤ b ≤ 3) takes a + b steps. Each state at a multiple of 24 h is kept, and the leads between it and the next are reached from it by F_6. A forecast to 168 h with outputs every 6 h takes 7 + 7 × 3 = 28 steps.
+We use F_24 and F_6, and forecasts every 6 hours: a lead of T = 24a + 6b (0 ≤ b ≤ 3) takes a + b steps. Each state at a multiple of 24 h is kept, and the leads between it and the next are reached from it by F_6. A forecast to 168 h with outputs every 6 h takes 7 + 7 × 3 = 28 steps.
 
 ## 3. The Architecture, Briefly
 
@@ -42,11 +42,11 @@ Pangu-Weather is a transformer of the Swin family (Liu et al. 2021), arranged in
 - Attention is computed within windows of tokens and the windows shift between layers, so that information crosses their edges. The encoder has 2 + 6 layers, with one step of down-sampling between them, and the decoder mirrors it.
 - The grid is not translation-invariant on the sphere. A cell near the pole is smaller than one at the equator, and a level near the ground behaves differently from one in the stratosphere. Swin's relative positional bias is therefore replaced by an *Earth-specific* bias, indexed by the absolute latitude and level of the window. The grid is periodic in longitude only, and the windows wrap there.
 
-The model has about 256 million parameters and was trained on 192 GPUs. Each forecast step costs about 1.4 s on one such GPU, or 85 s on the eight CPU threads of the laboratory's computer.
+The model has about 256 million parameters and was trained on 192 GPUs. Each forecast step costs about 1.4 s on one such GPU, or 85 s on the eight CPU threads of our own computer.
 
 ## 4. An Initial State from Another System
 
-The model was trained on ERA5 states, but the laboratory starts it from the GFS analysis (NOAA), at 0.25° and the same 13 levels. The two analyses differ in their models, their assimilation and their biases. A learned map applied to states slightly unlike those it was fitted on degrades by an amount nobody can derive. The laboratory therefore measures it directly (§5).
+The model was trained on ERA5 states, but we start it from the GFS analysis (NOAA), at 0.25° and the same 13 levels. The two analyses differ in their models, their assimilation and their biases. A learned map applied to states slightly unlike those it was fitted on degrades by an amount nobody can derive. We therefore measure it directly (§5).
 
 GFS gives geopotential height, which is converted to geopotential by Φ = g₀ Z with g₀ = 9.80665 m s⁻² (WMO's standard gravity, which defines geopotential height).
 
@@ -54,7 +54,7 @@ GFS gives geopotential height, which is converted to geopotential by Φ = g₀ Z
 
 ### 5.1 The Height of the 500 hPa Surface
 
-The forecast from 2026-10-19 00:00 UTC was compared with the GFS analyses at the leads that have since passed. It took 12 steps and 17 minutes. The measure is the root-mean-square error of the 500 hPa height over 20–80° N on a 1° grid, as for the laboratory's other models. At +72 h the reference is the GFS's forecast, as no analysis yet existed when the data were fetched.
+The forecast from 2026-10-19 00:00 UTC was compared with the GFS analyses at the leads that have since passed. It took 12 steps and 17 minutes. The measure is the root-mean-square error of the 500 hPa height over 20–80° N on a 1° grid, as for our other models. At +72 h the reference is the GFS's forecast, as no analysis yet existed when the data were fetched.
 
 | Lead | Pangu-Weather | Shallow water | Barotropic | Persistence |
 |---|---|---|---|---|
@@ -84,4 +84,4 @@ The track is good: within 80 km at two and a half days. The intensity is not. At
 
 ## 6. Use and Licence
 
-The model's parameters are licensed CC BY-NC-SA 4.0. The laboratory uses them for learning and research, never commercially. They are fetched into its cache and not redistributed, and every forecast product says so in its source.
+The model's parameters are licensed CC BY-NC-SA 4.0. We use them for learning and research, never commercially. They are fetched into the data library's cache and not redistributed, and every forecast product says so in its source.

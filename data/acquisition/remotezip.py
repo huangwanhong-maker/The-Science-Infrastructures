@@ -19,7 +19,7 @@ import urllib.error
 import urllib.request
 import zipfile
 
-AGENT = "laboratory-data-fetch/1 (+https://github.com/huangwanhong-maker/Integrative_Astronomy_Geography_Oceanography_Laboratory)"
+AGENT = "science-infrastructures-data/1 (+https://github.com/huangwanhong-maker/The-Science-Infrastructures)"
 
 
 class RangeError(OSError):

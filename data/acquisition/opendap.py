@@ -35,7 +35,7 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "formats"))
 import netcdf3  # noqa: E402
 
-AGENT = {"User-Agent": "laboratory-data-fetch/1 (+https://github.com/huangwanhong-maker/Integrative_Astronomy_Geography_Oceanography_Laboratory)"}
+AGENT = {"User-Agent": "science-infrastructures-data/1 (+https://github.com/huangwanhong-maker/The-Science-Infrastructures)"}
 # DAP2 base type -> (XDR dtype on the wire, bytes per value, dtype written to netCDF)
 TYPES = {"Byte": (">u1", 1, "int16"), "Int16": (">i4", 4, "int16"), "UInt16": (">u4", 4, "int32"),
          "Int32": (">i4", 4, "int32"), "UInt32": (">u4", 4, "float64"),

@@ -4,7 +4,7 @@ status: draft
 implemented-by:
   - domains/meteorology/js/shallowwater.js
   - foundations/physis/js/spectral.js
-  - applications/earth-atlas/src/workers/labmodel.worker.js
+  - applications/earth-atlas/src/workers/ourmodels.worker.js
 references: [HackJakob1992, Williamson1992, LynchHuang1992, Lamb1932, Cressman1958, Durran2010]
 ---
 
@@ -83,7 +83,7 @@ Case 2 is exact because its height and stream function are polynomials of degree
 
 ## 6. A Forecast Verified
 
-Both laboratory models were started from the GFS analysis of 2026-10-19 00:00 UTC. They are compared with the GFS's own analyses (forecast beyond the present) over 20–80° N.
+Both of our models were started from the GFS analysis of 2026-10-19 00:00 UTC. They are compared with the GFS's own analyses (forecast beyond the present) over 20–80° N.
 
 | Lead | Barotropic | Shallow water | Persistence |
 |---|---|---|---|

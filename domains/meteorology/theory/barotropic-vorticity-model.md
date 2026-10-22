@@ -4,7 +4,7 @@ status: draft
 implemented-by:
   - foundations/physis/js/spectral.js
   - domains/meteorology/js/barotropic.js
-  - applications/earth-atlas/src/layers/labmodel.js
+  - applications/earth-atlas/src/layers/ourmodels.js
 references: [Charney1950, Haurwitz1940, Williamson1992, Durran2010, HoltonHakim2013]
 ---
 

@@ -121,7 +121,7 @@ def _download(url: str, dest: Path, timeout: int) -> None:
     dest.parent.mkdir(parents=True, exist_ok=True)
     part = dest.with_name(dest.name + ".part")
     have = part.stat().st_size if part.exists() else 0
-    headers = {"User-Agent": "laboratory-data-fetch/1 (+https://github.com/huangwanhong-maker/Integrative_Astronomy_Geography_Oceanography_Laboratory)"}
+    headers = {"User-Agent": "science-infrastructures-data/1 (+https://github.com/huangwanhong-maker/The-Science-Infrastructures)"}
     if have:
         headers["Range"] = f"bytes={have}-"
     request = urllib.request.Request(url, headers=headers)

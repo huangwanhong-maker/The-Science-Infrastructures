@@ -16,7 +16,7 @@ A map shows the ocean's surface. Beneath any point lies a column several kilomet
 
 **By measuring it.** An acoustic Doppler current profiler (ADCP), on a ship's hull or a mooring, sends pulses of sound down through the water. Particles and plankton drifting with the water scatter some of the sound back. The Doppler shift of the echo gives the speed of the scatterers along the beam: for a pulse of frequency f₀ and sound speed c, the shift is Δf = 2 f₀ v / c. Three or four beams, inclined about 20° to 30° from the vertical, give the three components of velocity. Gating the echo in time gives them in depth cells, because an echo from depth z returns after 2z / c (RDI 2011). The strength of the echo is recorded too. It shows the scatterers themselves: the layers of zooplankton that rise towards the surface at dusk and sink at dawn, the largest daily migration of animals on Earth.
 
-**By computing it.** An ocean model integrates the equations of motion of a rotating, stratified fluid and assimilates observations. The laboratory reads the US Navy's global model, the ocean component of ESPC-D-V02 (HYCOM on a 1/12° grid, with 40 output levels from the surface to 5000 m; Barton et al. 2021). The model gives currents, temperature and salinity at every point, now and a week ahead. It has no plankton, so it cannot show the echoes.
+**By computing it.** An ocean model integrates the equations of motion of a rotating, stratified fluid and assimilates observations. We read the US Navy's global model, the ocean component of ESPC-D-V02 (HYCOM on a 1/12° grid, with 40 output levels from the surface to 5000 m; Barton et al. 2021). The model gives currents, temperature and salinity at every point, now and a week ahead. It has no plankton, so it cannot show the echoes.
 
 The Earth Atlas draws the model's column as a profiler would record it: depth downward, time across.
 
@@ -60,7 +60,7 @@ Above the panels, a strip shows the Sun's height at the place: pale for day and 
 
 ## 5. Data on Demand
 
-The model's grid has 19 million points, about 12 million of them at sea, so the laboratory cannot fetch every column ahead of time. When a place is chosen, the local server asks the data library for that column. The library reads the model's coordinates, finds the grid point nearest the place, and requests the column from the model's OPeNDAP server, two days back and four ahead every 6 hours, in short runs of times, four at a time. That takes about four minutes the first time; afterwards the column is in the cache (ADR 0023).
+The model's grid has 19 million points, about 12 million of them at sea, so we cannot fetch every column ahead of time. When a place is chosen, the local server asks the data library for that column. The library reads the model's coordinates, finds the grid point nearest the place, and requests the column from the model's OPeNDAP server, two days back and four ahead every 6 hours, in short runs of times, four at a time. That takes about four minutes the first time; afterwards the column is in the cache (ADR 0023).
 
 ## 6. Verification
 

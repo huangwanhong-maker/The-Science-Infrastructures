@@ -23,7 +23,7 @@ Make dimensional correctness and frame correctness properties that the compiler 
   - type annotations valued in an abelian group supplied by the user;
   - tags whose combination is governed by a groupoid.
 
-  physis would then instantiate these with SI dimensions, and the laboratory's `core/metrology` with astronomical frames. The groups and groupoids themselves are studied and implemented in morphe.
+  physis would then instantiate these with SI dimensions, and the metrology domain with astronomical frames. The groups and groupoids themselves are studied and implemented in morphe.
 
 ## 3. Questions
 

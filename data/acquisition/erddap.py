@@ -22,7 +22,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-AGENT = {"User-Agent": "laboratory-data-fetch/1 (+https://github.com/huangwanhong-maker/Integrative_Astronomy_Geography_Oceanography_Laboratory)"}
+AGENT = {"User-Agent": "science-infrastructures-data/1 (+https://github.com/huangwanhong-maker/The-Science-Infrastructures)"}
 
 
 class ErddapError(RuntimeError):

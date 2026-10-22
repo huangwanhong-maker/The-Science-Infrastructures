@@ -136,7 +136,7 @@ def build_ungc(profile: str) -> None:
 
 def simbad(adql: str) -> list[dict]:
     data = urllib.parse.urlencode({"REQUEST": "doQuery", "LANG": "ADQL", "FORMAT": "csv", "QUERY": adql}).encode()
-    request = urllib.request.Request(SIMBAD, data=data, headers={"User-Agent": "laboratory-products/1"})
+    request = urllib.request.Request(SIMBAD, data=data, headers={"User-Agent": "science-infrastructures-products/1"})
     with urllib.request.urlopen(request, timeout=120) as response:
         text = response.read().decode("utf-8", "replace")
     return list(csv.DictReader(text.splitlines()))
