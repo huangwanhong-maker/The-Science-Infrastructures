@@ -203,7 +203,8 @@ export function buildPanel(el, catalogue, state, years, extra, on) {
     html.push('<h3>Plug-ins</h3>');
     html.push('<div class="plugins"><p>Algorithms written as scripts, loaded on request, run on the data shown and drawn like any product (<a class="link" href="plugins/README.md" target="_blank" rel="noopener">how to write one</a>).</p>');
     for (const e of pl.loaded) {
-      html.push(`<div class="plugin"><div class="plugin-head"><strong>${esc(e.title)}</strong><button type="button" class="link" data-plugin-unload="${esc(e.id)}">unload</button></div>`);
+      const runtime = { python: 'Python, in the server', cpp: 'C++, in the server' }[e.runtime];
+      html.push(`<div class="plugin"><div class="plugin-head"><strong>${esc(e.title)}${runtime ? ` <small>${esc(runtime)}</small>` : ''}</strong><button type="button" class="link" data-plugin-unload="${esc(e.id)}">unload</button></div>`);
       if (e.description) html.push(`<p>${esc(e.description)}</p>`);
       for (const n of e.needs) {
         const options = n.candidates.length ? n.candidates.map((c) => `<option value="${esc(c.key)}"${c.key === n.chosen ? ' selected' : ''}>${esc(c.model)}</option>`).join('') : '<option value="">nothing in the library</option>';

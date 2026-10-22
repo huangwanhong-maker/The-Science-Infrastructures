@@ -7,8 +7,12 @@
 import { Context } from './context.js';
 import * as api from './index.js';
 import { modelRank, levelOf } from '../layers/catalogue.js';
+import { FieldProduct } from '../data/fields.js';
 
 const defaults = (parameters) => Object.fromEntries(Object.entries(parameters || {}).map(([k, p]) => [k, p.default]));
+// Plug-ins the server runs (ADR 0029): Python in its process, C++ as a compiled program.
+const REMOTE = /\.(py|cpp|cc|cxx)$/i;
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export class PluginHost {
   // hooks: { publish(product, show), sketches(list), changed(), progress(), time() -> ms, pinned() -> [lon, lat] | null }
@@ -28,8 +32,10 @@ export class PluginHost {
   }
 
   // Loads a script by URL (one of plugins/, or any other) and asks it for its plug-in.
+  // A Python or C++ file is described by the server, which will run it.
   async load(url) {
     this.error = null;
+    if (REMOTE.test(url)) return this.loadRemote(url);
     try {
       const module = await import(new URL(url, document.baseURI).href);
       if (typeof module.create !== 'function') throw new Error(`${url} does not export create(api)`);
@@ -47,6 +53,28 @@ export class PluginHost {
     } catch (error) {
       console.error(error);
       this.error = `${url}: ${error.message || error}`;
+      return null;
+    } finally {
+      this.hooks.changed();
+    }
+  }
+
+  async loadRemote(file) {
+    try {
+      const r = await fetch(`plugin-host/describe?file=${encodeURIComponent(file)}`, { cache: 'no-store' });
+      const d = await r.json();
+      if (!r.ok || d.error) throw new Error(d.error || `the server answered ${r.status}`);
+      const entry = {
+        id: d.id, url: file, runtime: d.runtime, remote: true,
+        plugin: { title: d.title, description: d.description, parameters: d.parameters || {} },
+        params: defaults(d.parameters), needs: d.needs, chosen: Object.fromEntries(d.needs.map((n) => [n.name, n.chosen])),
+        running: false, progress: 0, text: '', results: [], error: null,
+      };
+      this.loaded.set(entry.id, entry);
+      return entry;
+    } catch (error) {
+      console.error(error);
+      this.error = `${file}: ${error.message || error}`;
       return null;
     } finally {
       this.hooks.changed();
@@ -100,6 +128,7 @@ export class PluginHost {
     if (!entry || entry.running) return;
     entry.running = true; entry.error = null; entry.progress = 0; entry.text = '';
     this.hooks.changed();
+    if (entry.remote) return this.runRemote(entry);
     try {
       const inputs = {};
       for (const need of entry.needs) {
@@ -122,6 +151,43 @@ export class PluginHost {
     this.hooks.changed();
   }
 
+  // A run in the server: started, followed by polling, and its results fetched; a field
+  // comes back as a product written by the server and read here as any product is.
+  async runRemote(entry) {
+    try {
+      const body = { file: entry.url, chosen: entry.chosen, params: entry.params, context: { time: this.hooks.time(), pinned: this.hooks.pinned() } };
+      const started = await (await fetch('plugin-host/run', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })).json();
+      if (started.error) throw new Error(started.error);
+      let job = started;
+      while (job.state === 'running') {
+        await sleep(700);
+        job = await (await fetch(`plugin-host/job/${started.id}`, { cache: 'no-store' })).json();
+        entry.progress = job.progress || 0; entry.text = job.text || '';
+        this.hooks.progress();
+      }
+      if (job.state !== 'done') throw new Error(job.message || job.error || 'the run failed');
+      const results = [];
+      for (const r of job.results || []) {
+        if (r.kind === 'field') {
+          const meta = await (await fetch(r.url, { cache: 'no-store' })).json();
+          const bin = await (await fetch(r.url.replace(/[^/]+$/, meta.file), { cache: 'no-store' })).arrayBuffer();
+          const product = new FieldProduct(meta, bin);
+          results.push({ kind: 'field', product, show: r.show || {} });
+          await this.hooks.publish(product, r.show || {});
+        } else {
+          results.push(r);
+        }
+      }
+      entry.results = results;
+      this.hooks.sketches(this.sketches());
+    } catch (error) {
+      console.error(error);
+      entry.error = `The plug-in could not run: ${error.message || error}`;
+    }
+    entry.running = false;
+    this.hooks.changed();
+  }
+
   // Every loaded plug-in's sketches, for the sketch layer.
   sketches() { return [...this.loaded.values()].flatMap((e) => e.results.filter((r) => r.kind === 'sketch')); }
 
@@ -131,7 +197,7 @@ export class PluginHost {
       available: this.available,
       error: this.error,
       loaded: [...this.loaded.values()].map((e) => ({
-        id: e.id, url: e.url, title: e.plugin.title, description: e.plugin.description,
+        id: e.id, url: e.url, title: e.plugin.title, description: e.plugin.description, runtime: e.runtime || 'javascript',
         parameters: e.plugin.parameters || {}, params: e.params,
         needs: e.needs.map((n) => ({ name: n.name, label: n.label || n.name, chosen: e.chosen[n.name], candidates: n.candidates.map((c) => ({ key: c.key, model: c.model })) })),
         running: e.running, progress: e.progress, text: e.text, error: e.error,

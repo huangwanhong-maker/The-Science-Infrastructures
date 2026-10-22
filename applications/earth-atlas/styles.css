@@ -333,6 +333,7 @@ dialog .link { margin-top: 20px; }
 .plugin { border-top: 1px solid var(--hair); padding: 8px 0 4px; }
 .plugin-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 4px; }
 .plugin-head strong { font-weight: 500; }
+.plugin-head small { font-weight: 400; font-size: 12px; color: var(--text-faint); margin-left: 6px; }
 .plugin label.select { margin: 3px 0; }
 .plugin input[type="number"] { width: 6em; }
 .plugin-url { display: flex; gap: 10px; align-items: center; margin-top: 8px; }

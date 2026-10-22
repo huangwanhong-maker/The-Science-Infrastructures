@@ -9,6 +9,7 @@
 
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { spawnSync } from 'node:child_process';
 
 import { suite, PRODUCTS } from '../../../development/tools/checks.mjs';
 import { FieldProduct, ClassRaster } from '../src/data/fields.js';
@@ -209,6 +210,27 @@ const { check, assert, skip, done } = suite();
   const smallest = (await import('../plugins/wind-speed.js')).create(api);
   const [speed] = await smallest.run({ wind }, {}, context(t0));
   check('plug-in wind speed (the smallest): U cos φ at 45° N', Math.abs(speed.product.slice('speed', 0)[row45 + 10] - U * Math.cos(45 * DEG)), 1e-4, 'm/s');
+}
+
+// ---- plug-ins the server runs (ADR 0029): Python, and C++ where a compiler is at hand -----------
+{
+  const root = resolve(import.meta.dirname, '../../..');
+  const pythons = [resolve(root, '.venv/Scripts/python.exe'), resolve(root, '.venv/bin/python'), 'python3', 'python'];
+  const python = pythons.find((p) => spawnSync(p, ['-c', 'import numpy'], { stdio: 'ignore' }).status === 0);
+  if (python) {
+    const run = spawnSync(python, [resolve(import.meta.dirname, '../py/check.py')], { encoding: 'utf8', timeout: 180000 });
+    let report = null;
+    try { report = JSON.parse(run.stdout.trim().split('\n').pop()); } catch { /* no report */ }
+    assert('plug-ins in Python: the check ran', run.status === 0 && report !== null, (run.stderr || '').trim().split('\n').pop() || '');
+    if (report) {
+      check('plug-ins in Python: vorticity of a solid-body rotation', report.python.zeta_error, 2e-8, '1/s');
+      check('plug-ins in Python: a product written and read back, within half a quantum', report.round_trip.max_error - report.round_trip.half_quantum, 1e-9);
+      if (report.cpp.skipped) skip(`plug-ins in C++: ${report.cpp.skipped}`);
+      else { assert('plug-ins in C++: compiled and run through the file contract', report.cpp.ok, report.cpp.error || ''); if (report.cpp.ok) check('plug-ins in C++: vorticity of a solid-body rotation', report.cpp.zeta_error, 2e-8, '1/s'); }
+    }
+  } else {
+    skip('plug-ins in Python and C++: no Python with numpy found');
+  }
 }
 
 done();

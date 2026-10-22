@@ -2,7 +2,7 @@
 
 *Status: draft (2026-10-22).* Decision record: [ADR 0027](../../../development/decisions/0027-earth-atlas-plugins.md). The classes are in [src/plugins/plugin.js](../src/plugins/plugin.js); the host that loads and runs plug-ins is [src/plugins/host.js](../src/plugins/host.js).
 
-A plug-in is a script that the Earth Atlas loads when asked, runs on the data it holds, and shows on the Earth. It derives from one of the atlas's classes, says which fields it needs, and returns data, which the atlas draws like anything else. Nothing is loaded without a click, and a loaded script runs with the page's authority: read a script before loading it, as any code.
+A plug-in is a script that the Earth Atlas loads when asked, runs on the data it holds, and shows on the Earth. It derives from one of the atlas's classes, says which fields it needs, and returns data, which the atlas draws like anything else. It is written in JavaScript, and runs in the page; or in Python or C++, and runs in the atlas's server (§9), shown the same way. Nothing is loaded without a click, and a loaded script runs with the page's, or the server's, authority: read a script before loading it, as any code.
 
 ## 1. Using a Plug-in
 
@@ -115,9 +115,57 @@ const [result] = await plugin.run({ wind: { product, names: ['u', 'v'], variable
 | [trajectories.js](trajectories.js) | `Trajectories` | Parcels from a ring around the chosen place, or a lattice, through the forecast wind; the paths, and the parcels moving with the time shown | A parcel in a solid-body rotation keeps its latitude and turns by U t / a |
 | [optimal-interpolation.js](optimal-interpolation.js) | `DataAssimilation` | A background analysed toward a second model's values at a lattice of points; the increment, and the analysis among the models of the quantity | Exact observations are reproduced where they are, and the background kept far from them |
 | [barotropic.js](barotropic.js) | `ForecastModel` | The barotropic vorticity equation from the 500 hPa wind, the height in balance, verified against the source | A solid-body rotation is steady |
+| [vorticity.py](vorticity.py) | `Diagnostic`, Python | The same diagnostic in Python, run by the server on numpy (§9) | The same solid-body rotation, and a product's round trip through the files |
+| [vorticity.cpp](vorticity.cpp) | `Diagnostic`, C++ | The same diagnostic in C++, compiled and run by the server (§9) | The same solid-body rotation, where a compiler exists |
 
-## 9. Limits and Next Steps
+## 9. The Same Contract in Python and C++
 
-- A plug-in runs in the page's thread; `breathe()` keeps the page alive but a long model is slow there. A plug-in may start its own worker, as the atlas's models do.
+A plug-in may be written in Python or C++ instead ([ADR 0029](../../../development/decisions/0029-plugins-in-python-and-cpp.md)). It then runs in the atlas's server rather than in the page, and the page shows it the same way, with the language named beside its title. The file must lie under this `plugins/` directory: the server runs nothing from elsewhere.
+
+**Python.** The classes of [../py/plugins.py](../py/plugins.py) have the same names, hooks and results as the JavaScript ones; fields are numpy arrays `(nlat, nlon)` of float32 with NaN where there is no value, and times are datetimes in UTC. The script defines `create(api)`:
+
+```python
+def create(api):
+    class Vorticity(api.Diagnostic):
+        id = "vorticity-py"
+        title = "Vorticity and divergence (Python)"
+        def needs(self): return [{"name": "wind", "label": "Wind", "standard_names": ["eastward_wind", "northward_wind"]}]
+        def outputs(self): return [{"name": "zeta", "long_name": "Relative vorticity", "standard_name": "atmosphere_relative_vorticity", "units": "s-1"}]
+        def compute(self, inputs, params, index, context):
+            u = inputs["wind"].product.slice(inputs["wind"].names[0], index)
+            ...
+            return {"zeta": zeta}
+    return Vorticity()
+```
+
+[vorticity.py](vorticity.py) is the whole of it. From the command line, in the environment of `data/requirements.txt`:
+
+```
+python applications/earth-atlas/py/host.py describe plugins/vorticity.py
+python applications/earth-atlas/py/host.py run plugins/vorticity.py "wind=gfs-levels-forecast|500 hPa"
+```
+
+**C++.** A plug-in is a program built from [cpp/plugin.hpp](cpp/plugin.hpp), which gives the same `Diagnostic` and the main function; the server compiles it with the compiler at hand (`c++`, `g++` or `clang++`, C++20, standard library only) and runs it on files:
+
+```cpp
+#include "cpp/plugin.hpp"
+struct Vorticity : plugin::Diagnostic {
+  Vorticity() { id = "vorticity-cpp"; title = "Vorticity and divergence (C++)";
+    needs = {{"wind", "Wind", {"eastward_wind", "northward_wind"}, "", 0}};
+    outputs = {{"zeta", "Relative vorticity", "atmosphere_relative_vorticity", "s-1", "", false}}; show = {{"surface", "zeta"}}; }
+  std::map<std::string, std::vector<float>> compute(const plugin::Inputs& in, const plugin::Params&, int index) override {
+    const float* u = in.at("wind").slice(0, index); /* ... */ return {{"zeta", zeta}};
+  }
+};
+PLUGIN_MAIN(Vorticity)
+```
+
+[vorticity.cpp](vorticity.cpp) is the whole of it. The contract on disk, should another language want it: the host writes a directory with `input.txt` (tab-separated lines: `time`, `pinned`, `param`, `need` with the grid, `times`, `data` naming a float32 file per variable, `ntimes × nlat × nlon`, NaN where missing) and runs the program with `--run <dir>`; the program writes `output.txt` (`field` lines naming a float32 file per output, `show` lines) beside it. `--describe` prints the plug-in's description as JSON. In C++ the classes stop at `Diagnostic` for now, and parameters are numbers.
+
+**Checking.** `python applications/earth-atlas/py/check.py` runs the Python plug-in, a product's round trip through the files, and the C++ plug-in when a compiler exists; the atlas's suite runs it.
+
+## 10. Limits and Next Steps
+
+- A JavaScript plug-in runs in the page's thread; `breathe()` keeps the page alive but a long model is slow there. A plug-in may start its own worker, as the atlas's models do; or be written in Python or C++ and run in the server.
 - The two models the atlas runs itself (ADR 0015, 0019) are the pattern's other appearance; migrating them to `ForecastModel` plug-ins would delete their hand-written wiring.
-- The classes could be mirrored in Python, with the server as the context, for algorithms too heavy for the page.
+- `ForecastModel`, `DataAssimilation` and `Trajectories` in C++ are the next step of the file contract.

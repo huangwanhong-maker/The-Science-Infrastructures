@@ -8,6 +8,10 @@
     {"file": "plugins/optimal-interpolation.js", "title": "optimal interpolation", "class": "DataAssimilation",
      "description": "A background analysed toward observations taken from a second model at a lattice of points."},
     {"file": "plugins/barotropic.js", "title": "the barotropic model", "class": "ForecastModel",
-     "description": "The barotropic vorticity equation from the 500 hPa wind, verified against the source."}
+     "description": "The barotropic vorticity equation from the 500 hPa wind, verified against the source."},
+    {"file": "plugins/vorticity.py", "title": "vorticity and divergence (Python)", "class": "Diagnostic", "runtime": "python",
+     "description": "The same diagnostic written in Python, run by the server on numpy."},
+    {"file": "plugins/vorticity.cpp", "title": "vorticity and divergence (C++)", "class": "Diagnostic", "runtime": "cpp",
+     "description": "The same diagnostic written in C++, compiled and run by the server; needs a C++ compiler on the serving computer."}
   ]
 }

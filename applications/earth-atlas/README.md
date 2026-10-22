@@ -174,6 +174,8 @@ What to try with each:
 
 From the browser's console, `atlas.plugins.load('plugins/vorticity.js')` and `atlas.plugins.run('vorticity')` do the same. The pictures are in [the gallery, §1.8](../../docs/gallery.md#18-plug-ins-algorithms-loaded-on-request); writing a plug-in is a page of JavaScript, explained in [plugins/README.md](plugins/README.md).
 
+A plug-in may also be written in **Python** or **C++** ([ADR 0029](../../development/decisions/0029-plugins-in-python-and-cpp.md)): it then runs in the atlas's server, on numpy or as a compiled program, and the panel shows it the same way, naming the language. *Load vorticity and divergence (Python)* and *(C++)* are the same diagnostic in those languages; the C++ one needs a C++ compiler on the computer that serves the page.
+
 ## 3. Data
 
 | Data | Source | Product | Licence |
@@ -300,7 +302,8 @@ Its own code:
 | `src/data/requests.js` | Asks the local server for data on demand, and follows the job |
 | `src/layers/` | The catalogue of layers and models; one module per kind of layer; imagery and detail; our models; the sketches of plug-ins |
 | `src/plugins/` | Plug-ins (ADR 0027): the classes a script derives from, the context it sees, and the host that loads and runs it |
-| `plugins/` | The built-in plug-ins, which are the examples, their index, and the guide to writing one |
+| `plugins/` | The built-in plug-ins, which are the examples, their index, and the guide to writing one; `plugins/cpp/plugin.hpp`, the classes in C++ |
+| `py/` | Plug-ins run by the server (ADR 0029): the classes in Python, the reading and writing of field products, the host, and its check |
 | `src/workers/` | The integration of our models and the painting of the base map, off the page's main thread |
 | `src/render/` | The surface shader, lines, markers, labels, relief, colour maps, colours of classes, the stage |
 | `src/ui/` | Panel, timeline, legend, place card, climate diagram, the ocean column's record |

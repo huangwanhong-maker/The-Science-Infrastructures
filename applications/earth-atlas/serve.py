@@ -18,6 +18,12 @@ built, in order) is reported to the page and run on its request:
     GET  /setup                          each step and whether it is done; a run in progress
     POST /setup/run[?steps=a,b&again=1]  run the missing steps, or the chosen ones again
 
+Plug-ins written in Python or C++ run here rather than in the page (py/host.py):
+
+    GET  /plugin-host/describe?file=plugins/x.py   identity, parameters and needs, with the sources that serve each
+    POST /plugin-host/run                           {file, chosen, params, context} starts a job; returns {job}
+    GET  /plugin-host/job/<id>                      the job's state, progress and results
+
 Usage::
 
     python applications/earth-atlas/serve.py [--host 127.0.0.1] [--port 8790] [--open]
@@ -69,6 +75,19 @@ def recipe_job():
         RECIPE = recipe.Job(APP / "recipe.json", ROOT)
     return RECIPE
 
+
+PLUGINS = None       # the host of the plug-ins run here (py/host.py), created at the first request
+PLUGIN_JOBS = None   # its jobs
+
+
+def plugin_host():
+    global PLUGINS
+    if PLUGINS is None:
+        sys.path.insert(0, str(APP / "py"))
+        import host
+        PLUGINS = host
+    return PLUGINS
+
 # Explicit types: on Windows the registry may otherwise map .js to text/plain,
 # which browsers refuse for ES modules.
 TYPES = {
@@ -101,6 +120,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             self.on_demand(url)
         elif url.path == "/setup":
             self.reply_json(*self.recipe_request(url))
+        elif url.path.startswith("/plugin-host/"):
+            self.reply_json(*self.plugin_request(url))
         elif SIBLING and url.path.startswith("/celestial-atlas/"):
             # The page links to the Celestial Atlas as ../celestial-atlas/, keeping
             # the place and instant in the fragment, which the browser carries over
@@ -115,8 +136,39 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         url = urllib.parse.urlsplit(self.path)
         if url.path == "/setup/run":
             self.reply_json(*self.recipe_request(url))
+        elif url.path == "/plugin-host/run":
+            self.reply_json(*self.plugin_request(url, self.body()))
         else:
             self.send_error(404)
+
+    def body(self) -> dict:
+        length = int(self.headers.get("Content-Length") or 0)
+        return json.loads(self.rfile.read(length).decode("utf-8")) if length else {}
+
+    def plugin_request(self, url, body: dict | None = None) -> tuple[dict, int]:
+        """A plug-in run here: its description (GET /plugin-host/describe?file=), a run
+        (POST /plugin-host/run) and a job's state (GET /plugin-host/job/<id>)."""
+        global PLUGIN_JOBS
+        try:
+            host = plugin_host()
+            if url.path == "/plugin-host/describe":
+                return host.describe(dict(urllib.parse.parse_qsl(url.query)).get("file", "")), 200
+            if PLUGIN_JOBS is None:
+                PLUGIN_JOBS = host.Jobs()
+            if url.path == "/plugin-host/run":
+                b = body or {}
+                return PLUGIN_JOBS.start(b.get("file", ""), b.get("chosen") or {}, b.get("params") or {}, b.get("context") or {}), 200
+            if url.path.startswith("/plugin-host/job/"):
+                return PLUGIN_JOBS.status(url.path[len("/plugin-host/job/"):]), 200
+            return {"error": "unknown"}, 404
+        except ImportError as error:
+            return {"error": f"plug-ins run here need numpy: {error}"}, 503
+        except ValueError as error:          # a file outside plugins/, a bad request
+            return {"error": str(error)}, 400
+        except RuntimeError as error:        # no compiler, a compilation error, a failed program
+            return {"error": str(error)}, 503
+        except Exception as error:           # anything else a script did at import or describe
+            return {"error": f"{type(error).__name__}: {error}"}, 500
 
     def on_demand(self, url) -> None:
         try:
