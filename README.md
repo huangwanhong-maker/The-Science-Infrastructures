@@ -59,8 +59,7 @@ python3 -m venv .venv
 The Earth Atlas opens in your browser at http://127.0.0.1:8790/. For the Celestial Atlas, run the last line with `applications/celestial-atlas/serve.py` in a second terminal; it opens at http://127.0.0.1:8770/, and the two link to each other. For the Brain Atlas, fetch its data (about 80 MB) and serve it:
 
 ```
-python data/acquisition/fetch.py templateflow-mni152 massp-2 harvard-oxford mial-thalamic-nuclei ebrains-deep-white-matter schaefer-2018 ebrains-julich-brain allen-mouse-ccf
-python data/products/brain_anatomy.py
+python data/acquisition/recipe.py applications/brain-atlas/recipe.json
 python applications/brain-atlas/serve.py --open
 ```
 

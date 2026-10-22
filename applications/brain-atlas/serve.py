@@ -88,9 +88,9 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--port", type=int, default=8810)
     parser.add_argument("--open", action="store_true", help="open the page in the default browser")
     args = parser.parse_args(argv)
-    if not (DATA / "templateflow-mni152" / "tpl-MNI152NLin2009cAsym_res-01_desc-brain_T1w.nii.gz").exists():
-        print("The MNI template is missing. From the repository root, run:\n"
-              "  python data/acquisition/fetch.py templateflow-mni152 schaefer-2018 ebrains-julich-brain allen-mouse-ccf\n"
+    if not (DATA / "products" / "anatomy-mni152.json").exists():
+        print("The atlas's data are missing. From the repository root, run:\n"
+              "  python data/acquisition/recipe.py applications/brain-atlas/recipe.json\n"
               "and see applications/brain-atlas/README.md.", file=sys.stderr)
     server = Server((args.host, args.port), Handler)
     url = f"http://127.0.0.1:{args.port}/"

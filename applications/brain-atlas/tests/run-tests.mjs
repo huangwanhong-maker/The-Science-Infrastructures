@@ -41,6 +41,12 @@ const read = async (rel) => new Uint8Array(inflate(readFileSync(cachePath(rel)))
   }
   assert('files: every file the atlas reads is in its dataset’s manifest', missing.length === 0, missing.join(', '));
   assert('files: every parcellation names its licence and its source', PARCELLATIONS.every((p) => p.licence && p.citation && p.description));
+  // The recipe fetches every dataset the atlas reads, and builds the anatomy.
+  const recipe = JSON.parse(readFileSync(resolve(ROOT, 'applications', 'brain-atlas', 'recipe.json'), 'utf8'));
+  const steps = new Set(recipe.steps.map((s) => s.id));
+  const datasets = new Set([...files].map((f) => f.split('/')[0]));
+  const absent = [...datasets, 'massp-2', 'harvard-oxford', 'mial-thalamic-nuclei', 'ebrains-deep-white-matter', 'allen-mouse-ccf', 'anatomy'].filter((d) => !steps.has(d));
+  assert('files: the recipe fetches every dataset the atlas reads and builds the anatomy after the atlases it is made from', absent.length === 0 && recipe.steps.findIndex((s) => s.id === 'anatomy') > recipe.steps.findIndex((s) => s.id === 'ebrains-deep-white-matter'), absent.join());
 }
 
 // ---- the anatomy product ---------------------------------------------------------------------------

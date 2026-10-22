@@ -24,13 +24,14 @@ The Brain Atlas shows the human brain in the round, every part of it clickable f
 
 ## 2. Running
 
-From the repository root, fetch the data and build the anatomy (about 110 MB, and a minute to build):
+From the repository root, fetch the data and build the anatomy with the atlas's recipe (`recipe.json`: about 110 MB, and a minute to build), then serve the page:
 
 ```
-python data/acquisition/fetch.py templateflow-mni152 massp-2 harvard-oxford mial-thalamic-nuclei ebrains-deep-white-matter schaefer-2018 ebrains-julich-brain allen-mouse-ccf
-python data/products/brain_anatomy.py
+python data/acquisition/recipe.py applications/brain-atlas/recipe.json
 python applications/brain-atlas/serve.py --open
 ```
+
+`recipe.py ... --status` says which steps are done; the steps are the commands of §3's datasets and the anatomy product.
 
 The page is at http://127.0.0.1:8810/. The address bar keeps the mode, the chosen structure, the cortex's style and colouring, the cut and the view, so that a link reproduces a view.
 

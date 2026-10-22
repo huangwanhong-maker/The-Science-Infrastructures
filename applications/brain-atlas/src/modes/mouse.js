@@ -10,6 +10,7 @@ import { loadMouse, indicesOf, measureRegion } from '../data/mouse.js';
 import { soften } from '../data/parcellations.js';
 import { Sections } from '../sections/sections.js';
 import { esc, volumeText } from '../ui/card.js';
+import { samplesOf } from '../ui/plate.js';
 import { rasToCcf, CITATIONS } from '../../../../domains/neuroscience/js/index.js';
 
 const ENLARGE = 12;
@@ -48,7 +49,9 @@ export class MouseView {
     this.active = true;
     const app = this.app;
     app.otherSpecies = true;
-    app.plateOff = true;
+    // The plate names the mouse's divisions, and a name chooses its structure.
+    app.plateCandidates = () => this.plateCandidates();
+    app.plateClick = (id) => this.select(this.mouse.ontology.byId.get(Number(id)));
     this.ctx.applyStyles();
     this.ctx.schedulePlate(0);
     if (!this.mouse) {
@@ -74,6 +77,7 @@ export class MouseView {
     if (!this.built) await this.build();
     for (const inst of this.instances) app.viewer.setVisible(inst, true);
     this.showStyles();
+    this.ctx.schedulePlate(400);
     this.legend();
   }
 
@@ -81,7 +85,8 @@ export class MouseView {
     this.active = false;
     const app = this.app;
     app.otherSpecies = false;
-    app.plateOff = false;
+    app.plateCandidates = null;
+    app.plateClick = null;
     for (const inst of this.instances) app.viewer.setVisible(inst, false);
     app.viewer.setScale([1, 1, 1], [0, 0, 0]);
     if (this.humanSections) {
@@ -157,6 +162,7 @@ export class MouseView {
     for (const view of Object.values(app.views)) view.redraw();
     app.cardOverride = () => { setTimeout(() => this.bindCard(), 0); return this.selected ? this.cardHtml() : this.introHtml(); };
     this.ctx.renderCard();
+    this.ctx.schedulePlate();
     const tree = document.querySelector('.mouse-tree');
     if (tree) tree.innerHTML = this.treeHtml();
     if (!region || !meas.indices.length || this.parts.has(region)) return;
@@ -167,6 +173,22 @@ export class MouseView {
     v.setEmphasis(this.regionInst, 0.16, '#f6d39a');
     this.instances.push(this.regionInst);
     this.showStyles();
+    this.ctx.schedulePlate();
+  }
+
+  plateCandidates() {
+    if (!this.parts) return [];
+    const out = [];
+    for (const [region, inst] of this.parts) {
+      if (!inst.visible || inst.style === 'ghost') continue;
+      inst.allSamples = inst.allSamples || samplesOf(inst, null, 220);
+      out.push({ id: String(region.id), side: '', name: region.name, colour: css(this.colourOf(region)), inst, samples: inst.allSamples, selected: region === this.selected, weight: 1 });
+    }
+    if (this.regionInst && this.selected) {
+      this.regionInst.allSamples = this.regionInst.allSamples || samplesOf(this.regionInst, null, 220);
+      out.push({ id: String(this.selected.id), side: '', name: this.selected.name, colour: css(this.colourOf(this.selected)), inst: this.regionInst, samples: this.regionInst.allSamples, selected: true, weight: 1 });
+    }
+    return out;
   }
 
   // ---- picking, sections ----------------------------------------------------------------------

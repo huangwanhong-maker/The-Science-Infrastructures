@@ -22,16 +22,17 @@ export function layoutPlate({ viewer, candidates, max = 12, svg, labelsEl }) {
   const cam = viewer.camera.position;
   const W = viewer.width, H = viewer.height;
   const scored = [];
+  const wp = cam.clone();          // a scratch vector: a sample in the world
   for (const c of candidates) {
     const s = c.samples;
     const off = c.inst.mesh.position;
     const pts = [];
     let sx = 0, sy = 0;
     for (let i = 0; i < s.length; i += 6) {
-      const px = s[i] + off.x, py = s[i + 1] + off.y, pz = s[i + 2] + off.z;
-      const facing = s[i + 3] * (cam.x - px) + s[i + 4] * (cam.y - py) + s[i + 5] * (cam.z - pz);
+      viewer.root.localToWorld(wp.set(s[i] + off.x, s[i + 1] + off.y, s[i + 2] + off.z));
+      const facing = s[i + 3] * (cam.x - wp.x) + s[i + 4] * (cam.y - wp.y) + s[i + 5] * (cam.z - wp.z);
       if (facing <= 0) continue;
-      if (viewer.cut && c.inst.mesh.material.clippingPlanes?.length && viewer.clipPlane.distanceToPoint({ x: px, y: py, z: pz }) < 0) continue;
+      if (viewer.cut && c.inst.mesh.material.clippingPlanes?.length && viewer.clipPlane.distanceToPoint(wp) < 0) continue;
       const q = viewer.project([s[i], s[i + 1], s[i + 2]], c.inst);
       if (!q || q.x < 0 || q.y < 0 || q.x > W || q.y > H) continue;
       pts.push([q.x, q.y, i]);
@@ -51,7 +52,7 @@ export function layoutPlate({ viewer, candidates, max = 12, svg, labelsEl }) {
     // The sample nearest the centre of the seen part, that is truly in view.
     const order = s.pts.map((p) => [(p[0] - s.cx) ** 2 + (p[1] - s.cy) ** 2, p]).sort((a, b) => a[0] - b[0]);
     let anchor = null;
-    for (const [, p] of order.slice(0, 8)) {
+    for (const [, p] of order.slice(0, 24)) {
       const i = p[2], smp = s.c.samples;
       if (viewer.visibleAt([smp[i], smp[i + 1], smp[i + 2]], s.c.inst)) { anchor = p; break; }
     }

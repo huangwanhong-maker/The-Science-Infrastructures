@@ -594,6 +594,7 @@ function schedulePlate(delay = 120) {
 function drawPlate() {
   const svg = $('plate'), el = $('plate-labels');
   if (!state.labels || app.plateOff || inSections() || !app.instances.size) { clearPlate(svg, el); return; }
+  if (app.plateCandidates) { layoutPlate({ viewer: app.viewer, candidates: app.plateCandidates(), max: 14, svg, labelsEl: el }); return; }
   const sel = selectionKeys();
   const candidates = [];
   const cortexShown = state.cortexStyle === 'solid' && !app.hidden.has('cerebral-cortex');
@@ -644,8 +645,8 @@ function drawPlate() {
 function screenBox() {
   const v = app.viewer;
   let x0 = Infinity, x1 = -Infinity;
-  for (const list of app.instances.values()) for (const inst of list) {
-    if (!inst.visible || inst.style === 'ghost') continue;
+  for (const inst of v.instances.values()) {
+    if (!inst.visible || inst.style === 'ghost' || inst.key === 'scalp') continue;
     inst.allSamples = inst.allSamples || samplesOf(inst, null, 220);
     const s = inst.allSamples;
     for (let i = 0; i < s.length; i += 6) {
@@ -954,6 +955,7 @@ function bindChrome() {
   });
   $('plate-labels').addEventListener('click', (e) => {
     const l = e.target.closest('[data-select]');
+    if (l && app.plateClick) { app.plateClick(l.dataset.select); return; }
     if (l) select({ id: l.dataset.select, side: l.dataset.side && l.dataset.side !== 'mid' ? l.dataset.side : null });
   });
   // The search.

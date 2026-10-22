@@ -22,10 +22,9 @@ export const FILES = {
   },
 };
 
-export const MISSING = `The anatomy is not built yet. From the repository root, run:<br><br>
-<code>python data/acquisition/fetch.py templateflow-mni152 massp-2 harvard-oxford mial-thalamic-nuclei ebrains-deep-white-matter ebrains-julich-brain schaefer-2018</code><br>
-<code>python data/products/brain_anatomy.py</code><br><br>
-then reload this page.`;
+export const MISSING = `The atlas's data are not fetched and built yet. From the repository root, run:<br><br>
+<code>python data/acquisition/recipe.py applications/brain-atlas/recipe.json</code><br><br>
+then reload this page. It fetches about 110 MB and builds the anatomy in a minute.`;
 
 const isGzip = (b) => b.length > 2 && b[0] === 0x1f && b[1] === 0x8b;
 
