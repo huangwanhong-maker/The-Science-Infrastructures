@@ -1,0 +1,12 @@
+{
+  "name": "geodesy",
+  "kind": "field",
+  "status": "draft",
+  "depends": [
+    "metrology"
+  ],
+  "foundations": [
+    "calx",
+    "physis"
+  ]
+}

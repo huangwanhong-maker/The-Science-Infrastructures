@@ -6,12 +6,12 @@
 // enlarged Earth. At a size factor of 1 everything is to scale.
 //
 // Bodies carry maps of their surfaces (or cloud tops), turned by the IAU
-// rotation models (src/core/rotation.js) to their orientation at the instant
+// rotation models (domains/astronomy/js/rotation.js) to their orientation at the instant
 // shown; the Earth shows its lights on the night side; the sky behind the stars
 // is the Milky Way.
 //
 // The Earth is turned instead by Greenwich mean sidereal time and precession,
-// the frame in which the Sky Chart places an observer (src/core/sky.js), so that
+// the frame in which the Sky Chart places an observer (domains/astronomy/js/sky.js), so that
 // a place chosen by clicking the Earth is the place whose sky the chart shows.
 // (The IAU model of the Earth differs from it by 0.05 to 0.26 degrees in
 // longitude between 2000 and 2100.)
@@ -19,13 +19,13 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
-import { BODIES, BY_KEY } from '../core/bodies.js';
-import { AU_KM, DEG, ICRS_TO_ECLIPTIC, ICRS_TO_GALACTIC, apply, multiply, transpose, sub, rotZ } from '../core/frames.js';
-import { geocentricLatitude, geodeticLatitude } from '../core/geodesy.js';
-import { bodyFixedMatrix } from '../core/rotation.js';
+import { BODIES, BY_KEY, bodyFixedMatrix, osculatingOrbit } from '../../../../domains/astronomy/js/index.js';
+import {
+  AU_KM, DEG, ICRS_TO_ECLIPTIC, ICRS_TO_GALACTIC, apply, multiply, transpose, sub, rotZ,
+} from '../../../../domains/metrology/js/index.js';
+import { geocentricLatitude, geodeticLatitude } from '../../../../domains/geodesy/js/index.js';
 import { BODY_FROM_LOCAL, quaternionOf, skyRotation, skySphere, nightLights } from '../render/maps.js';
 import { BodyDetail } from '../render/detail.js';
-import { osculatingOrbit } from '../core/sky.js';
 import { starPoints, magnitudeStyle } from '../render/points.js';
 import { starRgb } from '../render/colour.js';
 import { declutter } from '../render/declutter.js';

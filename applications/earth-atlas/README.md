@@ -146,35 +146,37 @@ The ERDDAP servers add: "The data may be used and redistributed for free but is 
 
 | Topic | Method | Source |
 |---|---|---|
-| Interpolation | Bilinear in space and linear in time. Beside missing values, the valid neighbours are used if they carry at least half the weight. Directions are interpolated through unit vectors. The GPU and the readout use the same rule. | `src/core/grid.js` |
-| Flat maps | Equal Earth, equal-area, as the default. Equirectangular shows the data grid as it is. | Šavrič, Patterson and Jenny (2018); [theory note](../../theory/geography/equal-area-maps.md) |
-| Particles | The midpoint rule on the sphere, with parallel transport. Exact for flow along a great circle; second-order otherwise. | `src/core/flow.js`, [theory note](../../theory/meteorology/particles-on-the-sphere.md) |
-| Wave energy | Deep-water group speed c_g = g T / 4π, along the peak direction | Holthuijsen (2007); [theory note](../../theory/oceanography/wave-energy-propagation.md) |
-| Our models | Spectral transform method at T42 (Gaussian grid 128 × 64, FFTs in longitude), Runge–Kutta 4 and ∇⁴ damping. The barotropic vorticity equation in steps of 30 min, heights from linear balance added as changes to the analysis. The shallow-water equations in vorticity–divergence form, in steps of 15 min, from the analysed wind and height after a digital filter of six hours. | `src/core/spectral.js`, `src/core/barotropic.js`, `src/core/shallowwater.js`; theory notes on the [barotropic](../../theory/meteorology/barotropic-vorticity-model.md) and [shallow-water](../../theory/meteorology/shallow-water-model.md) models |
-| AI forecast | Pangu-Weather's 24 h and 6 h models (ONNX, onnxruntime on the CPU), composed by hierarchical temporal aggregation in the fewest steps; geopotential as height times 9.80665 m s⁻²; every fourth point kept for 1° | Bi et al. (2023); `data/products/ai_forecast.py`; [theory note](../../theory/meteorology/learned-forecast-models.md) |
-| Tropical cyclones | A sea-level pressure minimum, lowest within 6°, with a pressure rise of 2 hPa within 5.5° along 16 rays; placed between grid points by a paraboloid; linked within 8° per 6 h, nearest pairs first; kept if it lasts 24 h, deepens to 1000 hPa and begins over the sea within 25° of the equator | Ullrich and Zarzycki (2017); `src/core/cyclones.js`; [theory note](../../theory/meteorology/tropical-cyclone-tracking.md) |
-| The ocean column | The model's grid point nearest the place; linear in time and depth between its times and levels; mixed layer where temperature first differs from that at 10 m by 0.2 °C; inertial period 2π / f; currents named by where they flow | de Boyer Montégut et al. (2004), Gill (1982); `src/core/ocean.js`, `src/ui/column.js`; [theory note](../../theory/oceanography/the-ocean-column.md) |
-| Plate motion | v = ω × r on WGS 84, ω from NNR-MORVEL56 (in the core); relative motion as the difference of angular velocities, resolved across a boundary into opening and right-lateral sliding by Bird's conventions; GPS velocities relative to ITRF2020's plate motion model (with its origin rate bias) where it covers the plate | Argus et al. (2011), Altamimi et al. (2023), Bird (2003); `src/core/plates.js`; [theory note](../../theory/geodesy/plate-kinematics.md) |
-| Mechanisms | Principal axes by Jacobi rotations; nodal planes from T ± P; classes by Frohlich's (1992) plunges; beach balls by xᵀMx per pixel, lower hemisphere, equal area, turned to the map's north | Aki and Richards (2002); `src/core/moment.js`, `src/render/beachballs.js`; [theory note](../../theory/geophysics/earthquake-mechanisms.md) |
-| Sections | Along- and cross-track distances on the sphere; across the nearest boundary within 900 km, toward the overriding plate at a subduction zone | `src/core/section.js`, `src/ui/section.js` |
+| Interpolation | Bilinear in space and linear in time. Beside missing values, the valid neighbours are used if they carry at least half the weight. Directions are interpolated through unit vectors. The GPU and the readout use the same rule. | `foundations/physis/js/grid.js`, `src/data/fields.js` |
+| Flat maps | Equal Earth, equal-area, as the default. Equirectangular shows the data grid as it is. | Šavrič, Patterson and Jenny (2018); [theory note](../../domains/geography/theory/equal-area-maps.md) |
+| Particles | The midpoint rule on the sphere, with parallel transport. Exact for flow along a great circle; second-order otherwise. | `visualization/js/flow.js`, [theory note](../../visualization/theory/particles-on-the-sphere.md) |
+| Wave energy | Deep-water group speed c_g = g T / 4π, along the peak direction | Holthuijsen (2007); [theory note](../../domains/oceanography/theory/wave-energy-propagation.md) |
+| Our models | Spectral transform method at T42 (Gaussian grid 128 × 64, FFTs in longitude), Runge–Kutta 4 and ∇⁴ damping. The barotropic vorticity equation in steps of 30 min, heights from linear balance added as changes to the analysis. The shallow-water equations in vorticity–divergence form, in steps of 15 min, from the analysed wind and height after a digital filter of six hours. | `foundations/physis/js/spectral.js`, `domains/meteorology/js/barotropic.js`, `domains/meteorology/js/shallowwater.js`; theory notes on the [barotropic](../../domains/meteorology/theory/barotropic-vorticity-model.md) and [shallow-water](../../domains/meteorology/theory/shallow-water-model.md) models |
+| AI forecast | Pangu-Weather's 24 h and 6 h models (ONNX, onnxruntime on the CPU), composed by hierarchical temporal aggregation in the fewest steps; geopotential as height times 9.80665 m s⁻²; every fourth point kept for 1° | Bi et al. (2023); `data/products/ai_forecast.py`; [theory note](../../domains/meteorology/theory/learned-forecast-models.md) |
+| Tropical cyclones | A sea-level pressure minimum, lowest within 6°, with a pressure rise of 2 hPa within 5.5° along 16 rays; placed between grid points by a paraboloid; linked within 8° per 6 h, nearest pairs first; kept if it lasts 24 h, deepens to 1000 hPa and begins over the sea within 25° of the equator | Ullrich and Zarzycki (2017); `domains/meteorology/js/cyclones.js`; [theory note](../../domains/meteorology/theory/tropical-cyclone-tracking.md) |
+| The ocean column | The model's grid point nearest the place; linear in time and depth between its times and levels; mixed layer where temperature first differs from that at 10 m by 0.2 °C; inertial period 2π / f; currents named by where they flow | de Boyer Montégut et al. (2004), Gill (1982); `domains/oceanography/js/ocean.js`, `src/ui/column.js`; [theory note](../../domains/oceanography/theory/the-ocean-column.md) |
+| Plate motion | v = ω × r on WGS 84, ω from NNR-MORVEL56; relative motion as the difference of angular velocities, resolved across a boundary into opening and right-lateral sliding by Bird's conventions; GPS velocities relative to ITRF2020's plate motion model (with its origin rate bias) where it covers the plate | Argus et al. (2011), Altamimi et al. (2023), Bird (2003); `domains/geophysics/js/plates.js`; [theory note](../../domains/geophysics/theory/plate-kinematics.md) |
+| Mechanisms | Principal axes by Jacobi rotations; nodal planes from T ± P; classes by Frohlich's (1992) plunges; beach balls by xᵀMx per pixel, lower hemisphere, equal area, turned to the map's north | Aki and Richards (2002); `domains/geophysics/js/moment.js`, `src/render/beachballs.js`; [theory note](../../domains/geophysics/theory/earthquake-mechanisms.md) |
+| Sections | Along- and cross-track distances on the sphere; across the nearest boundary within 900 km, toward the overriding plate at a subduction zone | `domains/geophysics/js/section.js`, `src/ui/section.js` |
 | Model comparison | Differences on a diverging scale fitted to the 98th percentile over the shared forecast. The model's verification is the root-mean-square height error over 20–80° N, against analyses and against persistence. | `src/layers/surface.js`, `src/layers/labmodel.js` |
-| Day and night | Subsolar point from the Astronomical Almanac's low-precision Sun. Sunrise at −0.833°; civil, nautical and astronomical twilight at −6°, −12° and −18°. Lights from the Black Marble on the night side. | [theory note](../../theory/astronomy/subsolar-point-and-twilight.md) |
+| Day and night | Subsolar point from the Astronomical Almanac's low-precision Sun. Sunrise at −0.833°; civil, nautical and astronomical twilight at −6°, −12° and −18°. Lights from the Black Marble on the night side. | [theory note](../../domains/astronomy/theory/subsolar-point-and-twilight.md) |
 | Imagery and detail | Global images at 8192 × 4096. Gaps in a daily mosaic are filled from the day before; where imagery has none, the relief shows. At close range, a WMS request covers the region in view at the screen's resolution. | `data/products/imagery.py`, `src/layers/imagery.js` |
-| Isolines | Marching squares, saddles resolved by the cell mean. Highs and lows are extrema over a neighbourhood with a stated prominence (heights outside the tropics only). | `src/core/contour.js` |
-| Countries | Scanline rasterisation, even-odd rule, 4096 × 2048. Joins to indicators by stated keys. | `src/core/raster.js`, `src/core/join.js` |
-| Relief | Hypsometric tints, and Lambert shading from the north-west at 45°, exaggerated 14× for a 10′ grid and in proportion to the grid's spacing (7× on the 5′ grid), with the darkening limited; painted at 8192 × 4096 in a worker. At close range, on land, ASTER's fine shading replaces it; water is the uniform grey of the shading where a whole neighbourhood has it. | Imhof (1982); `src/render/relief.js`, `src/core/raster.js` |
+| Isolines | Marching squares, saddles resolved by the cell mean. Highs and lows are extrema over a neighbourhood with a stated prominence (heights outside the tropics only). | `visualization/js/contour.js` |
+| Countries | Scanline rasterisation, even-odd rule, 4096 × 2048. Joins to indicators by stated keys. | `domains/geography/js/raster.js`, `domains/geography/js/join.js` |
+| Relief | Hypsometric tints, and Lambert shading from the north-west at 45°, exaggerated 14× for a 10′ grid and in proportion to the grid's spacing (7× on the 5′ grid), with the darkening limited; painted at 8192 × 4096 in a worker. At close range, on land, ASTER's fine shading replaces it; water is the uniform grey of the shading where a whole neighbourhood has it. | Imhof (1982); `src/render/relief.js`, `domains/geography/js/raster.js` |
 | Colour maps | cmocean (Thyng et al. 2016, MIT licence), and the laboratory's own orchid map, with lightness rising evenly | `src/render/colormaps.js` |
-| Climate classes | Köppen–Geiger after Peel et al. (2007) and Beck et al. (2018): B first, summer the warmer half-year. Classes are read from the cell containing a place, never interpolated. Colours are the conventional ones, softened in OKLab. | `src/core/climate.js`, `src/render/classes.js`; [theory note](../../theory/climate/koppen-geiger-classification.md) |
+| Climate classes | Köppen–Geiger after Peel et al. (2007) and Beck et al. (2018): B first, summer the warmer half-year. Classes are read from the cell containing a place, never interpolated. Colours are the conventional ones, softened in OKLab. | `domains/climate/js/climate.js`, `src/render/classes.js`; [theory note](../../domains/climate/theory/koppen-geiger-classification.md) |
 | Climate diagram | Walter and Lieth (1960): 10 °C level with 20 mm; dry months (P ≤ 2T, Gaussen) dotted, humid hatched, above 100 mm a tenfold scale; frost months marked; from July south of the equator | `src/ui/climate.js` |
-| Conventions | Wind direction is where it blows from. Times in UTC. Values stored in their source units and converted only for display (vorticity in 10⁻⁵ s⁻¹). | `src/core/derived.js`, `src/core/units.js` |
+| Conventions | Wind direction is where it blows from. Times in UTC. Values stored in their source units and converted only for display (vorticity in 10⁻⁵ s⁻¹). | `domains/meteorology/js/wind.js`, `visualization/js/units.js` |
 
 ## 5. Verification
 
+The science the atlas shows is checked with the domains it draws on, with physis and with the shared visualization layer. The atlas's own suite checks its reading of the products, the two checks where domains meet through real products (the plates' boundaries, on geography's rasters; our climate classes against the published maps), and its climate diagram. All the checks run with:
+
 ```
-node applications/earth-atlas/tests/run-tests.mjs
+node development/tools/run-tests.mjs
 ```
 
-There are 151 checks. The checks on real data need the products; without them they are skipped.
+Of the atlas's 151 checks, 16 are its own now; the others run with geodesy, astronomy, geography, meteorology, oceanography, geophysics, climate, physis and the visualization layer. The checks on real data need the products; without them they are skipped.
 
 | Quantity | Reference | Agreement |
 |---|---|---|
@@ -211,39 +213,35 @@ There are 151 checks. The checks on real data need the products; without them th
 | Mechanisms | Double couples recovered; classes; eigenvalues; the equal-area projection; the nodal planes of all 70,451 Global CMT events against the catalogue's | 10⁻⁶ °; exact; 10⁻¹⁵; 10⁻¹⁵; 99 % within 0.76° |
 | Crust and sections | A constructed column; CRUST1.0 beneath Tibet, the Pacific and the Canadian Shield; along- and cross-track distances | Exact; within stated bounds; 10⁻¹¹ km |
 
-Fetch the reference values again with `python applications/earth-atlas/tests/fetch_fixtures.py`.
+Fetch the reference values of the subsolar point again with `python domains/astronomy/tests/fetch_subsolar.py`.
 
 ## 6. Structure
 
-The computation in `src/core/` is a provisional stand-in for the laboratory's C++ core ([ADR 0011](../../development/decisions/0011-first-application-celestial-atlas.md), [ADR 0014](../../development/decisions/0014-earth-atlas-separated-data-and-typed-layers.md)).
+The atlas's science is the provisional JavaScript of its domains, of physis and of the shared visualization layer ([ADR 0011](../../development/decisions/0011-first-application-celestial-atlas.md), [ADR 0014](../../development/decisions/0014-earth-atlas-separated-data-and-typed-layers.md), [ADR 0026](../../development/decisions/0026-domains-as-libraries.md)). It imports each through its public interface, `js/index.js`.
 
-| Path | Role | Stands in for |
-|---|---|---|
-| `src/core/sphere.js` | Places, directions, distances, great circles | `core/domains/geodesy` |
-| `src/core/sun.js` | The Sun's position, subsolar point, altitude, twilight | `core/domains/astronomy` |
-| `src/core/projections.js` | Equal Earth and equirectangular, forward and inverse | `core/domains/geography` (cartography) |
-| `src/core/grid.js` | Fields: grid positions, interpolation, time brackets, climatological months; computed fields; class maps | `core/inference` |
-| `src/core/spectral.js` | Spherical harmonics, Gaussian grids, spectral transforms, the FFT | calx, physis (discretisation) |
-| `src/core/barotropic.js` | The barotropic vorticity model; linear balance | `core/domains/meteorology` |
-| `src/core/shallowwater.js` | The shallow-water model; digital-filter initialisation | `core/domains/meteorology` |
-| `src/core/cyclones.js` | Tropical cyclones: detection, linking, positions between times | `core/domains/meteorology` |
-| `src/core/ocean.js` | The ocean column: inertial period, direction of flow, mixed layer, interpolation | `core/domains/oceanography` |
-| `src/core/plates.js` | Plate rotations (NNR-MORVEL56, ITRF2020's model), velocities, motion across boundaries | `core/domains/geodesy` |
-| `src/core/moment.js` | Moment tensors: axes, nodal planes, classes, radiation, the equal-area projection | `core/domains/geophysics` (proposed) |
-| `src/core/crust.js`, `src/core/section.js` | The crust beneath a place; sections along great circles | `core/domains/geophysics` (proposed), `geodesy` |
-| `src/core/climate.js` | Köppen–Geiger classes; dry months after Gaussen | `core/domains/climate` (zones) |
-| `src/core/contour.js` | Isolines, highs and lows | `core/domains/geography` |
-| `src/core/raster.js` | Polygons to rasters, areas | `core/domains/geography` (GIS) |
-| `src/core/flow.js` | Particles carried by a flow on the sphere | physis (kinematics) |
-| `src/core/derived.js` | Wind direction, wave group speed | `core/domains/meteorology`, `oceanography` |
-| `src/core/units.js` | Units for display | physis (units) |
-| `src/core/join.js` | Joins of data to places by key | `core/domains/geography` (GIS) |
-| `src/data/products.js` | Reads products from the data library | — |
-| `src/data/requests.js` | Asks the local server for data on demand, and follows the job | — |
-| `src/layers/` | The catalogue of layers and models; one module per kind of layer; imagery and detail; the laboratory model | `visualization/scene` |
-| `src/workers/` | The laboratory models' integration and the painting of the base map, off the page's main thread | — |
-| `src/render/` | The surface shader, lines, markers, labels, relief, colour maps, colours of classes, the stage | `visualization/renderers` |
-| `src/ui/` | Panel, timeline, legend, place card, climate diagram, the ocean column's record | — |
+| Library | Modules the atlas uses |
+|---|---|
+| [geodesy](../../domains/geodesy/) | `sphere.js`: places, directions, distances, great circles; `compass.js`: points of the compass |
+| [astronomy](../../domains/astronomy/) | `sun.js`: the Sun's position, subsolar point, altitude, twilight |
+| [geography](../../domains/geography/) | `projections.js`: Equal Earth and equirectangular; `raster.js`: polygons to rasters, areas; `join.js`: data joined to places by key |
+| [meteorology](../../domains/meteorology/) | `barotropic.js` and `shallowwater.js`: our two models; `cyclones.js`: detection, linking, positions between times; `wind.js`: wind direction |
+| [oceanography](../../domains/oceanography/) | `ocean.js`: the ocean column; `waves.js`: wave group speed |
+| [geophysics](../../domains/geophysics/) | `plates.js`: plate rotations and motion across boundaries; `moment.js`: moment tensors; `crust.js` and `section.js`: the crust, sections |
+| [climate](../../domains/climate/) | `climate.js`: Köppen–Geiger classes; dry months after Gaussen |
+| [physis](https://github.com/huangwanhong-maker/physis/tree/main/js) | `spectral.js`: spherical harmonics, Gaussian grids, the FFT; `grid.js`: grid positions, interpolation, time brackets |
+| [visualization](../../visualization/) | `contour.js`: isolines, highs and lows; `flow.js`: particles carried by a flow; `units.js`: units for display |
+
+Its own code:
+
+| Path | Role |
+|---|---|
+| `src/data/fields.js` | Reads field and class products: decoding, climatological months, computed fields |
+| `src/data/products.js` | Reads products from the data library |
+| `src/data/requests.js` | Asks the local server for data on demand, and follows the job |
+| `src/layers/` | The catalogue of layers and models; one module per kind of layer; imagery and detail; our models |
+| `src/workers/` | The integration of our models and the painting of the base map, off the page's main thread |
+| `src/render/` | The surface shader, lines, markers, labels, relief, colour maps, colours of classes, the stage |
+| `src/ui/` | Panel, timeline, legend, place card, climate diagram, the ocean column's record |
 
 ## 7. Limits
 

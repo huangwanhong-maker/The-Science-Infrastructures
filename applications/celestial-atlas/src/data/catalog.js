@@ -3,10 +3,10 @@
 // stars-v1 is built by data/products/star_catalog.py from the HYG database
 // (CC BY-SA 4.0); constellations come from d3-celestial (BSD 3-Clause).
 
-import { fromSpherical, DEG } from '../core/frames.js';
+import { fromSpherical, DEG } from '../../../../domains/metrology/js/index.js';
 import {
   supergalactic, tidalIndices, tidalGroups, inferDisturberLuminosities, displayName,
-} from '../core/galaxies.js';
+} from '../../../../domains/astronomy/js/index.js';
 
 async function json(url) {
   const r = await fetch(url);

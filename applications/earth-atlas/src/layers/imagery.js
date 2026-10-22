@@ -15,7 +15,7 @@
 // there.
 
 import { imageTexture, setTexture } from '../render/surface.js';
-import { waterMask } from '../core/raster.js';
+import { waterMask } from '../../../../domains/geography/js/index.js';
 
 function loadImage(url) {
   return new Promise((resolve, reject) => {

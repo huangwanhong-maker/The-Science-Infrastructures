@@ -1,7 +1,7 @@
 // Runs one of the laboratory's models away from the page's main thread, and
 // returns its fields every few hours on a regular grid:
-//   'barotropic'     the barotropic vorticity equation (src/core/barotropic.js);
-//   'shallow-water'  the shallow-water equations (src/core/shallowwater.js),
+//   'barotropic'     the barotropic vorticity equation (domains/meteorology/js/barotropic.js);
+//   'shallow-water'  the shallow-water equations (domains/meteorology/js/shallowwater.js),
 //                    started by a digital filter.
 //
 // Message in:  { model, u, v, z: Float64Array on the model's Gaussian grid (rows
@@ -12,8 +12,7 @@
 //   z (shallow water: the height), u, v (m/s), zeta (1/s) }, each a list of
 //   Float32Arrays, one per time.
 
-import { BarotropicModel, GRAVITY } from '../core/barotropic.js';
-import { ShallowWaterModel } from '../core/shallowwater.js';
+import { BarotropicModel, GRAVITY, ShallowWaterModel } from '../../../../domains/meteorology/js/index.js';
 
 self.onmessage = (event) => {
   const { model: kind = 'barotropic', u, v, z, hours, dt, every, grid, truncation } = event.data;

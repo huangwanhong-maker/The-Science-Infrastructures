@@ -21,7 +21,7 @@
 // of the time shown, and feeds the place card's climate diagram.
 //
 // Styles (colour map, range, scale) live here, in the application, and not in
-// the data. Ranges are in the units shown (src/core/units.js); `ranges` gives
+// the data. Ranges are in the units shown (visualization/js/units.js); `ranges` gives
 // a range per level where the quantity's values depend on the level.
 
 const QUANTITIES = [

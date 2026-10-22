@@ -10,9 +10,9 @@
 // so the atlas draws it, contours it, carries particles with it, and compares
 // it with the other models, without code of its own.
 
-import { bilinear, ComputedField, statistics } from '../core/grid.js';
-import { gaussLegendre } from '../core/spectral.js';
-import { rmsDifference } from '../core/barotropic.js';
+import { bilinear, gaussLegendre } from '../../../../foundations/physis/js/index.js';
+import { ComputedField, statistics } from '../data/fields.js';
+import { rmsDifference } from '../../../../domains/meteorology/js/index.js';
 
 export const LAB_MODELS = {
   barotropic: { label: 'Barotropic (laboratory)', title: 'Barotropic vorticity model (laboratory)', short: 'Barotropic', dt: 1800 },

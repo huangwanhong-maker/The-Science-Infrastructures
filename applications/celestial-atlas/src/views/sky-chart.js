@@ -3,8 +3,10 @@
 // zenith at the centre, north at the top and east at the left, which is how the
 // sky looks when the chart is held overhead.
 
-import { BODIES, BY_KEY } from '../core/bodies.js';
-import { DEG, ECLIPTIC_TO_ICRS, apply, fromSpherical, refraction, dot, sub, scale, add, unit } from '../core/frames.js';
+import { BODIES, BY_KEY } from '../../../../domains/astronomy/js/index.js';
+import {
+  DEG, ECLIPTIC_TO_ICRS, apply, fromSpherical, refraction, dot, sub, scale, add, unit,
+} from '../../../../domains/metrology/js/index.js';
 import { PALETTE, rgba } from '../render/colour.js';
 import { LabelPlacer } from '../render/declutter.js';
 

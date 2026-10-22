@@ -6,7 +6,7 @@
 // time shown, or every earthquake of magnitude 6.5 and more since 1976.
 
 import { BeachBallLayer } from '../render/beachballs.js';
-import { mechanism, tensorNED } from '../core/moment.js';
+import { mechanism, tensorNED } from '../../../../domains/geophysics/js/index.js';
 
 export const KIND_COLOURS = { thrust: '#e0697f', normal: '#7ea4dd', 'strike-slip': '#86c29b', oblique: '#c08ac4' };
 const hex = (h) => [parseInt(h.slice(1, 3), 16) / 255, parseInt(h.slice(3, 5), 16) / 255, parseInt(h.slice(5, 7), 16) / 255];

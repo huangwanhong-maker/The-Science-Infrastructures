@@ -1,0 +1,15 @@
+{
+  "name": "tides",
+  "kind": "bridge",
+  "status": "planned",
+  "depends": [
+    "astronomy",
+    "geodesy",
+    "oceanography",
+    "meteorology"
+  ],
+  "foundations": [
+    "calx",
+    "physis"
+  ]
+}

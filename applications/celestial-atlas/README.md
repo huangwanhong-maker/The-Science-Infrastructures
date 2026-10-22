@@ -63,7 +63,7 @@ To choose which part of a catalogue to fetch, and how much of it, see `python da
 - **Orientation of the bodies.** The IAU rotation models (Archinal et al. 2018) give each body's pole (α₀, δ₀) and prime meridian W in the ICRF, including the Moon's periodic terms and those of Mercury and Mars. The rotation to body-fixed axes is B = R_z(W) R_x(90° − δ₀) R_z(90° + α₀).
 - **Detail at close range.** When the focused body fills a third of the view or more, rays from the screen find the region in view in body-fixed longitude and latitude; the tiles of the level whose pixels match the screen's (at most 48) are fetched and drawn over the global map by the body's shader, fading in at their edges.
 - **Maps.** A body's map is in east longitude with 0 at its centre; the textured sphere's local axes are related to body-fixed ones by (x, y, z)_body = (x, −z, y)_local. The Milky Way map is in galactic coordinates; its orientation was checked against twelve bright stars when it was built. The Earth's night lights show where the Sun is below the horizon.
-- **Galaxies.** The theory is in [theory/astronomy/galaxy-relations.md](../../theory/astronomy/galaxy-relations.md).
+- **Galaxies.** The theory is in [theory/astronomy/galaxy-relations.md](../../domains/astronomy/theory/galaxy-relations.md).
   - Positions use supergalactic coordinates.
   - The tidal index Θ₁ = max log(M/D³) − 10.96 is recomputed, along with each galaxy's main disturber.
   - The Milky Way's missing luminosity is inferred from the published indices of its satellites.
@@ -73,11 +73,13 @@ To choose which part of a catalogue to fetch, and how much of it, see `python da
 
 ## 4. Verification
 
+The science the atlas shows is checked with the domains it draws on, and its own suite checks only the globe on which a place is chosen. All the checks run with:
+
 ```
-node applications/celestial-atlas/tests/run-tests.mjs
+node development/tools/run-tests.mjs
 ```
 
-There are 66 checks.
+Of the atlas's 66 checks, 8 now run with metrology, 49 with astronomy, 4 with geodesy and 4 with the visualization layer; one is the atlas's own.
 
 | Quantity | Reference | Agreement |
 |---|---|---|
@@ -94,22 +96,23 @@ There are 66 checks.
 
 ## 5. Structure
 
-The computation in `src/core/` is a provisional stand-in for the laboratory's C++ core ([ADR 0011](../../development/decisions/0011-first-application-celestial-atlas.md)).
+The atlas's science is the provisional JavaScript of its domains and of the shared visualization layer ([ADR 0011](../../development/decisions/0011-first-application-celestial-atlas.md), [ADR 0026](../../development/decisions/0026-domains-as-libraries.md)). It imports each through its public interface, `js/index.js`.
 
-| Path | Role | Stands in for |
-|---|---|---|
-| `src/core/time.js` | Time scales, Earth rotation angle, GMST | `core/metrology` (time) |
-| `src/core/frames.js` | Rotations, precession, horizon, galactic and supergalactic frames | `core/metrology` (frames) |
-| `src/core/spk.js` | DE440 reader and evaluator | `core/domains/astronomy` |
-| `src/core/sky.js` | Apparent places, elongation, phase | `core/domains/astronomy` |
-| `src/core/kepler.js` | Osculating orbits | physis (mechanics) |
-| `src/core/galaxies.js` | Tidal index, main disturbers, inferred masses, tidal groups | `core/domains/astronomy` |
-| `src/core/rotation.js` | IAU rotation models of the Sun, the Moon and the planets | `core/domains/astronomy` |
-| `src/core/tiles.js` | Tiles of an equirectangular map service for a region and a resolution | `core/domains/geography` (cartography) |
-| `src/core/geodesy.js` | Geodetic and geocentric latitude, distances, the nearest place | `core/domains/geodesy` |
-| `src/data/catalog.js` | Loads products: stars, constellations, galaxies | — |
-| `src/render/` | Palette, star points, label placement, maps of the bodies and the sky, detail at close range, the globe for choosing a place | `visualization/` |
-| `src/views/` | The five views and the galaxy diagrams | `visualization/renderers` |
+| Library | Modules the atlas uses |
+|---|---|
+| [metrology](../../domains/metrology/) | `time.js`: time scales, Earth rotation angle, GMST; `frames.js`: rotations, precession, the horizon, galactic and supergalactic frames |
+| [astronomy](../../domains/astronomy/) | `spk.js`: the DE440 reader and evaluator; `sky.js`: apparent places, elongation, phase; `kepler.js`: osculating orbits; `rotation.js`: IAU rotation models; `galaxies.js`: tidal index, main disturbers, inferred masses, tidal groups |
+| [geodesy](../../domains/geodesy/) | `geodesy.js`: geodetic and geocentric latitude, distances, the nearest place |
+| [visualization](../../visualization/) | `tiles.js`: tiles of an equirectangular map service for a region and a resolution |
+
+Its own code:
+
+| Path | Role |
+|---|---|
+| `src/data/catalog.js` | Loads products: stars, constellations, galaxies |
+| `src/data/ephemeris.js` | Fetches the DE440 kernel, with its progress; astronomy reads it |
+| `src/render/` | Palette, star points, label placement, maps of the bodies and the sky, detail at close range, the globe for choosing a place |
+| `src/views/` | The five views and the galaxy diagrams |
 
 ## 6. Limits
 

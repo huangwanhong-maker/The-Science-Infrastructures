@@ -1,0 +1,12 @@
+{
+  "name": "visualization",
+  "kind": "edge",
+  "status": "draft",
+  "depends": [
+    "geodesy"
+  ],
+  "foundations": [
+    "calx",
+    "physis"
+  ]
+}

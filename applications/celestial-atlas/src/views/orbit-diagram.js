@@ -2,9 +2,8 @@
 // equinox to the right; planets move anticlockwise. Two scales: the inner
 // planets on a linear scale, or all planets with a square-root radial scale.
 
-import { PLANETS, BY_KEY } from '../core/bodies.js';
-import { AU_KM, ICRS_TO_ECLIPTIC, apply } from '../core/frames.js';
-import { osculatingOrbit } from '../core/sky.js';
+import { PLANETS, BY_KEY, osculatingOrbit } from '../../../../domains/astronomy/js/index.js';
+import { AU_KM, ICRS_TO_ECLIPTIC, apply } from '../../../../domains/metrology/js/index.js';
 import { PALETTE, hexToRgb, rgba } from '../render/colour.js';
 import { LabelPlacer } from '../render/declutter.js';
 

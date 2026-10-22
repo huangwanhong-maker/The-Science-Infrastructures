@@ -3,7 +3,7 @@ their boundaries, with each step's class and the polarity of subduction.
 
 The product carries geometry only. How each plate moves (its rotation about a
 pole) is a model, kept with the code that computes velocities from it (the
-Earth Atlas's src/core/plates.js, after NNR-MORVEL56), so that the geometry of
+geophysics domain's domains/geophysics/js/plates.js, after NNR-MORVEL56), so that the geometry of
 one model can be used with the kinematics of another.
 
 Input: data/cache/pb2002/ (data/registry/pb2002.json): Bird's (2003) PB2002

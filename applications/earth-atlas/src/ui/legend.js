@@ -1,7 +1,7 @@
 // The legend over the map: for each active layer, what it shows, in which
 // units, from which source, and at which time.
 
-import { format } from '../core/units.js';
+import { format } from '../../../../visualization/js/index.js';
 import { DEPTH_CLASSES, radiusOf, ALERTS } from '../layers/events.js';
 
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));

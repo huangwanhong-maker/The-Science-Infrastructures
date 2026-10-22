@@ -1,0 +1,13 @@
+{
+  "name": "air-sea",
+  "kind": "bridge",
+  "status": "planned",
+  "depends": [
+    "meteorology",
+    "oceanography"
+  ],
+  "foundations": [
+    "calx",
+    "physis"
+  ]
+}

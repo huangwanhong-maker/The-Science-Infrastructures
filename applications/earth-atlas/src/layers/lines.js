@@ -1,9 +1,8 @@
 // The lines layer: isolines of a field at an instant, such as isobars, with
 // the field's highs and lows marked.
 
-import { isolines, extrema } from '../core/contour.js';
+import { isolines, extrema, displayUnit, toShown } from '../../../../visualization/js/index.js';
 import { SegmentLayer, pairSegments } from '../render/segments.js';
-import { displayUnit, toShown } from '../core/units.js';
 
 export class LinesLayer {
   constructor(stage, library) {

@@ -7,7 +7,7 @@
 // Message out: { rgba: Uint8Array (width x height x 4) } or { error }
 
 import { baseImage } from '../render/relief.js';
-import { FieldProduct } from '../core/grid.js';
+import { FieldProduct } from '../data/fields.js';
 
 self.onmessage = (event) => {
   try {

@@ -7,8 +7,8 @@
 // for the layers (a projector), and screen positions into places for the probe.
 
 import * as THREE from 'three';
-import { DEG, toVector, wrapLongitude } from '../core/sphere.js';
-import { PROJECTIONS, extent, forward, inverse, outline } from '../core/projections.js';
+import { DEG, toVector, wrapLongitude } from '../../../../domains/geodesy/js/index.js';
+import { PROJECTIONS, extent, forward, inverse, outline } from '../../../../domains/geography/js/index.js';
 import { createSurfaceMaterial } from './surface.js';
 
 const FOV = 28;

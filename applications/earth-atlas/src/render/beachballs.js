@@ -1,6 +1,6 @@
 // Beach balls: earthquake mechanisms drawn where they happened. Each is a disc
 // facing the screen, the lower hemisphere of the source seen from above in
-// equal-area projection (src/core/moment.js), turned so that its north is the
+// equal-area projection (domains/geophysics/js/moment.js), turned so that its north is the
 // map's north there. A fragment is in a compressional quadrant, and coloured,
 // where x^T M x > 0 for the direction x it stands for; the dilatational
 // quadrants are pale.

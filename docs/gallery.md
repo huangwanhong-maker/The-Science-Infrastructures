@@ -44,7 +44,7 @@ The laboratory's two models run in the page by the spectral transform method at 
 | +48 h | 85 m | 74 m | 108 m |
 | +72 h | 108 m | 100 m | 127 m |
 
-These are root-mean-square errors of the height of the 500 hPa surface over 20–80° N, against the GFS's own analyses. The theory is in [the barotropic note](../theory/meteorology/barotropic-vorticity-model.md) and [the shallow-water note](../theory/meteorology/shallow-water-model.md).
+These are root-mean-square errors of the height of the 500 hPa surface over 20–80° N, against the GFS's own analyses. The theory is in [the barotropic note](../domains/meteorology/theory/barotropic-vorticity-model.md) and [the shallow-water note](../domains/meteorology/theory/shallow-water-model.md).
 
 ### 1.3 Prediction: an AI Model Run Here, Tropical Cyclones and Disasters
 
@@ -69,7 +69,7 @@ Errors of the forecast from 19 October, as for the laboratory's models above:
 | +48 h | 12.7 m | 74 m | 85 m | 108 m |
 | +72 h | 18.3 m | 100 m | 108 m | 126 m |
 
-Its cyclones are too weak, as its authors report: Champi's central pressure in it is about 45 hPa above the GFS's on the same grid. The theory is in [the note on learned forecast models](../theory/meteorology/learned-forecast-models.md) and [the note on cyclone tracking](../theory/meteorology/tropical-cyclone-tracking.md).
+Its cyclones are too weak, as its authors report: Champi's central pressure in it is about 45 hPa above the GFS's on the same grid. The theory is in [the note on learned forecast models](../domains/meteorology/theory/learned-forecast-models.md) and [the note on cyclone tracking](../domains/meteorology/theory/tropical-cyclone-tracking.md).
 
 ### 1.4 Climate
 
@@ -84,7 +84,7 @@ Its cyclones are too weak, as its authors report: Champi's central pressure in i
 </tr>
 </table>
 
-The atlas also classifies the TerraClimate normals itself, by the rules of Beck et al. (2018). Its classes agree with the published map in 89 % of land cells. The classification is invariant under a group of order 2·(6!)⁴: permutations of the months within each half-year, and the exchange of the halves. See [the theory note](../theory/climate/koppen-geiger-classification.md).
+The atlas also classifies the TerraClimate normals itself, by the rules of Beck et al. (2018). Its classes agree with the published map in 89 % of land cells. The classification is invariant under a group of order 2·(6!)⁴: permutations of the months within each half-year, and the exchange of the halves. See [the theory note](../domains/climate/theory/koppen-geiger-classification.md).
 
 ### 1.5 The Earth from Space, and Its Relief
 
@@ -127,7 +127,7 @@ Choose a place, and the atlas looks beneath it: into the ocean, fetched on deman
 </tr>
 </table>
 
-Their verification: plate velocities agree with the EarthScope calculator to 0.005 mm/yr; GPS stations in stable plate interiors move by 0.3 to 0.6 mm/yr relative to their plate; the nodal planes of all 70,451 Global CMT earthquakes agree with the catalogue's within 0.76° (99 %). The theory is in [the note on plate kinematics](../theory/geodesy/plate-kinematics.md), [the note on earthquake mechanisms](../theory/geophysics/earthquake-mechanisms.md) and [the note on the ocean column](../theory/oceanography/the-ocean-column.md).
+Their verification: plate velocities agree with the EarthScope calculator to 0.005 mm/yr; GPS stations in stable plate interiors move by 0.3 to 0.6 mm/yr relative to their plate; the nodal planes of all 70,451 Global CMT earthquakes agree with the catalogue's within 0.76° (99 %). The theory is in [the note on plate kinematics](../domains/geophysics/theory/plate-kinematics.md), [the note on earthquake mechanisms](../domains/geophysics/theory/earthquake-mechanisms.md) and [the note on the ocean column](../domains/oceanography/theory/the-ocean-column.md).
 
 ## 2. The Celestial Atlas
 

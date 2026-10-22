@@ -1,0 +1,12 @@
+{
+  "name": "oceanography",
+  "kind": "field",
+  "status": "draft",
+  "depends": [
+    "geodesy"
+  ],
+  "foundations": [
+    "calx",
+    "physis"
+  ]
+}

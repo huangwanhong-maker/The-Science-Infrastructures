@@ -1,6 +1,6 @@
 // The tracks layer: tropical cyclones as their centres move, from several
 // sources at once, so that their forecasts can be compared:
-// - tracks found here in a model's sea-level pressure (src/core/cyclones.js),
+// - tracks found here in a model's sea-level pressure (domains/meteorology/js/cyclones.js),
 //   one colour per model;
 // - a tracks product, such as GDACS's: observed positions (solid) and the
 //   official forecast (dashed).
@@ -10,7 +10,7 @@
 
 import { SegmentLayer, polylineSegments } from '../render/segments.js';
 import { MarkerLayer } from '../render/markers.js';
-import { trackProduct, arcDeg, positionAt } from '../core/cyclones.js';
+import { trackProduct, arcDeg, positionAt } from '../../../../domains/meteorology/js/index.js';
 
 const hex = (h) => [parseInt(h.slice(1, 3), 16) / 255, parseInt(h.slice(3, 5), 16) / 255, parseInt(h.slice(5, 7), 16) / 255];
 const OFFICIAL = '#f6ece8';

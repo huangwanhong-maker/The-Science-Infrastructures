@@ -3,7 +3,9 @@
 // compressional quadrants coloured, the two nodal planes as great circles, and
 // the P (pressure) and T (tension) axes.
 
-import { fromEqualArea, radiation, planeTrace, toEqualArea } from '../core/moment.js';
+import {
+  fromEqualArea, radiation, planeTrace, toEqualArea,
+} from '../../../../domains/geophysics/js/index.js';
 
 // The beach ball as an image (a data URL), painted pixel by pixel.
 function ballImage(m, colour, px) {

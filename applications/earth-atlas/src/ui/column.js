@@ -6,11 +6,13 @@
 // grey. Pointing at the record reads every value there.
 
 import { lookupTable } from '../render/colormaps.js';
-import { columnSampler, symmetricRange, mixedLayerDepth, flowToward, inertialPeriodHours } from '../core/ocean.js';
-import { isolines } from '../core/contour.js';
-import { subsolarPoint, sunAltAz } from '../core/sun.js';
-import { compassPoint } from '../core/derived.js';
-import { arcDeg } from '../core/cyclones.js';
+import {
+  columnSampler, symmetricRange, mixedLayerDepth, flowToward, inertialPeriodHours,
+} from '../../../../domains/oceanography/js/index.js';
+import { isolines } from '../../../../visualization/js/index.js';
+import { subsolarPoint, sunAltAz } from '../../../../domains/astronomy/js/index.js';
+import { compassPoint } from '../../../../domains/geodesy/js/index.js';
+import { arcDeg } from '../../../../domains/meteorology/js/index.js';
 
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const DAY = 86400000, HOUR = 3600000;

@@ -1,0 +1,14 @@
+{
+  "name": "navigation",
+  "kind": "bridge",
+  "status": "planned",
+  "depends": [
+    "astronomy",
+    "geodesy",
+    "geography"
+  ],
+  "foundations": [
+    "calx",
+    "physis"
+  ]
+}

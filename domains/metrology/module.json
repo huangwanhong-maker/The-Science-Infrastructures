@@ -1,0 +1,10 @@
+{
+  "name": "metrology",
+  "kind": "field",
+  "status": "draft",
+  "depends": [],
+  "foundations": [
+    "calx",
+    "physis"
+  ]
+}

@@ -19,9 +19,9 @@
 import { SegmentLayer, pairSegments } from '../render/segments.js';
 import { MarkerLayer } from '../render/markers.js';
 import { colourAt } from '../render/colormaps.js';
-import { velocityAt, itrfVelocityAt } from '../core/plates.js';
-import { compassPoint } from '../core/derived.js';
-import { flowToward } from '../core/ocean.js';
+import { velocityAt, itrfVelocityAt } from '../../../../domains/geophysics/js/index.js';
+import { compassPoint } from '../../../../domains/geodesy/js/index.js';
+import { flowToward } from '../../../../domains/oceanography/js/index.js';
 
 const CELL = 16;                                 // px: one station per cell where they crowd
 const M_PER_DEG = 111195;

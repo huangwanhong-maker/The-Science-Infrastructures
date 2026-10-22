@@ -1,7 +1,9 @@
 """Serve the Celestial Atlas on this computer.
 
-The page is served from this directory, and the data from the repository's
-cache (``data/cache/``) under ``/data/``. Only 127.0.0.1 is bound.
+The page is served from this directory; the code it shares, from the
+repository's ``domains/``, ``foundations/`` and ``visualization/`` under the
+same paths; and the data from the repository's cache (``data/cache/``)
+under ``/data/``. Only 127.0.0.1 is bound.
 
 Usage::
 
@@ -22,6 +24,12 @@ from pathlib import Path
 APP = Path(__file__).resolve().parent
 ROOT = APP.parents[1]
 DATA = ROOT / "data" / "cache"
+MOUNTS = {
+    "/data/": DATA,
+    "/domains/": ROOT / "domains",
+    "/foundations/": ROOT / "foundations",
+    "/visualization/": ROOT / "visualization",
+}
 
 # Explicit types: on Windows the registry may otherwise map .js to text/plain,
 # which browsers refuse for ES modules.
@@ -50,7 +58,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
     def translate_path(self, path: str) -> str:
         path = urllib.parse.unquote(path.split("?", 1)[0].split("#", 1)[0])
-        base, rel = (DATA, path[len("/data/"):]) if path.startswith("/data/") else (APP, path.lstrip("/"))
+        prefix = next((p for p in MOUNTS if path.startswith(p)), None)
+        base, rel = (MOUNTS[prefix], path[len(prefix):]) if prefix else (APP, path.lstrip("/"))
         target = (base / rel).resolve()
         if target != base and base not in target.parents:
             return str(base / "__outside__")

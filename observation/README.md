@@ -4,7 +4,7 @@
 
 ## 1. Purpose
 
-This directory covers practical astronomy and oceanography with real instruments: controlling the instruments, acquiring measurements, and keeping observation logs. It handles only the contact with the physical world. The algorithms that reduce raw measurements, such as calibration, astrometry and sight reduction, belong in `core/domains/`.
+This directory covers practical astronomy and oceanography with real instruments: controlling the instruments, acquiring measurements, and keeping observation logs. It handles only the contact with the physical world. The algorithms that reduce raw measurements, such as calibration, astrometry and sight reduction, belong in `domains/`.
 
 ## 2. Planned Modules
 

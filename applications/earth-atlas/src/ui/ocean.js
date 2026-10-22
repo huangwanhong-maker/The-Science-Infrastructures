@@ -4,8 +4,8 @@
 
 import { Requests } from '../data/requests.js';
 import { ColumnFigure } from './column.js';
-import { columnSampler, mixedLayerDepth, flowToward } from '../core/ocean.js';
-import { compassPoint } from '../core/derived.js';
+import { columnSampler, mixedLayerDepth, flowToward } from '../../../../domains/oceanography/js/index.js';
+import { compassPoint } from '../../../../domains/geodesy/js/index.js';
 
 const DATASET = 'hycom-column';
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));

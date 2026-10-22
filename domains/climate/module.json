@@ -1,0 +1,16 @@
+{
+  "name": "climate",
+  "kind": "bridge",
+  "status": "draft",
+  "depends": [
+    "meteorology",
+    "oceanography",
+    "geography",
+    "astronomy",
+    "air-sea"
+  ],
+  "foundations": [
+    "calx",
+    "physis"
+  ]
+}

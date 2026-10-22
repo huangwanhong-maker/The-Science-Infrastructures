@@ -1,0 +1,13 @@
+{
+  "name": "geography",
+  "kind": "field",
+  "status": "draft",
+  "depends": [
+    "geodesy"
+  ],
+  "foundations": [
+    "calx",
+    "morphe",
+    "physis"
+  ]
+}

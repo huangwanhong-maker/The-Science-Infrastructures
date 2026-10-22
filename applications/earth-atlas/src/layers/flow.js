@@ -3,11 +3,11 @@
 // Kinds of flow:
 //   vector  the two components of a velocity in the product (wind, currents);
 //   waves   the velocity at which the energy of ocean waves travels, derived
-//           from the peak direction and period (src/core/derived.js).
+//           from the peak direction and period (domains/oceanography/js/waves.js).
 
-import { ParticleSystem } from '../core/flow.js';
-import { bilinear } from '../core/grid.js';
-import { deepWaterGroupSpeed } from '../core/derived.js';
+import { ParticleSystem } from '../../../../visualization/js/index.js';
+import { bilinear } from '../../../../foundations/physis/js/index.js';
+import { deepWaterGroupSpeed } from '../../../../domains/oceanography/js/index.js';
 import { SegmentLayer } from '../render/segments.js';
 
 const TRAIL = 16;            // segments kept per particle

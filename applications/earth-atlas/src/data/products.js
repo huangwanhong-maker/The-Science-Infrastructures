@@ -4,7 +4,7 @@
 // what has been built; each product's metadata is small and read at once, and
 // its values (the larger binary files) are read when a layer first needs them.
 
-import { FieldProduct, ClassRaster } from '../core/grid.js';
+import { FieldProduct, ClassRaster } from './fields.js';
 
 async function json(url) {
   const r = await fetch(url);

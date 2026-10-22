@@ -18,7 +18,7 @@
 // Sources: Horn (1981), "Hill shading and the reflectance map", Proc. IEEE 69(1);
 // Imhof (1982), Cartographic Relief Presentation, ch. 8 and 13 (hypsometric tints).
 
-import { maskRaster } from '../core/raster.js';
+import { maskRaster } from '../../../../domains/geography/js/index.js';
 
 const hex = (h) => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
 

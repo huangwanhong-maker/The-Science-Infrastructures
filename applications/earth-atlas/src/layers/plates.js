@@ -2,7 +2,7 @@
 // drawn by class (spreading ridges and rifts, transform faults, convergent
 // boundaries, and subduction zones with teeth on the overriding plate), their
 // names, and their motion, from the rotations of NNR-MORVEL56 (Argus et al.
-// 2011; src/core/plates.js).
+// 2011; domains/geophysics/js/plates.js).
 //
 // The motion is offered as a field product computed here (east and north
 // velocity, mm/yr, every half degree), so that the flow and surface layers draw
@@ -10,13 +10,15 @@
 // speed.
 
 import { SegmentLayer, polylineSegments } from '../render/segments.js';
-import { ComputedField } from '../core/grid.js';
-import { fillRings, featureAreaFraction } from '../core/raster.js';
-import { poleOf, omega, velocityAt, subtract, acrossStep, azimuth, inRings, morvelCode } from '../core/plates.js';
-import { arcDeg } from '../core/cyclones.js';
-import { compassPoint } from '../core/derived.js';
-import { flowToward } from '../core/ocean.js';
-import { travel as offsetAlong, relativeTo } from '../core/section.js';
+import { ComputedField } from '../data/fields.js';
+import { fillRings, featureAreaFraction } from '../../../../domains/geography/js/index.js';
+import {
+  poleOf, omega, velocityAt, subtract, acrossStep, azimuth, inRings, morvelCode,
+  travel as offsetAlong, relativeTo,
+} from '../../../../domains/geophysics/js/index.js';
+import { arcDeg } from '../../../../domains/meteorology/js/index.js';
+import { compassPoint } from '../../../../domains/geodesy/js/index.js';
+import { flowToward } from '../../../../domains/oceanography/js/index.js';
 
 export const MOTION_PRODUCT = 'plate-motion-nnr-morvel56';
 export const GROUPS = [

@@ -5,7 +5,7 @@
 // Wadati-Benioff zone, down to about 660 km, where the mantle's minerals change
 // phase and deep earthquakes end.
 
-import { sectionLine, relativeTo } from '../core/section.js';
+import { sectionLine, relativeTo } from '../../../../domains/geophysics/js/index.js';
 import { KIND_COLOURS } from '../layers/mechanisms.js';
 
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));

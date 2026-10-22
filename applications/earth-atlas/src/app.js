@@ -3,7 +3,7 @@
 //
 // The application composes layers (src/layers/) over a base map, all drawn by
 // the stage (src/render/stage.js), and keeps them at the time shown. Every
-// number it shows is computed by the provisional core (src/core/) from data
+// number it shows is computed by the domains' provisional JavaScript (domains/) from data
 // products of the laboratory's data library (data/products/).
 
 import { Stage } from './render/stage.js';
@@ -19,13 +19,13 @@ import { TracksLayer } from './layers/tracks.js';
 import { PlatesLayer, MOTION_PRODUCT } from './layers/plates.js';
 import { StationsLayer } from './layers/stations.js';
 import { MechanismsLayer, KIND_COLOURS } from './layers/mechanisms.js';
-import { mechanism } from './core/moment.js';
+import {
+  mechanism, cellIndex, column as crustColumn, sectionLine,
+} from '../../../domains/geophysics/js/index.js';
 import { stereonet } from './ui/stereonet.js';
-import { arcDeg } from './core/cyclones.js';
-import { cellIndex, column as crustColumn } from './core/crust.js';
+import { arcDeg, windFromDirection } from '../../../domains/meteorology/js/index.js';
 import { crustDiagram } from './ui/crust.js';
 import { SectionFigure } from './ui/section.js';
-import { sectionLine } from './core/section.js';
 import { SegmentLayer, polylineSegments } from './render/segments.js';
 import { SeriesFigure } from './ui/series.js';
 import { Requests } from './data/requests.js';
@@ -36,15 +36,17 @@ import { Timeline, formatUTC, formatShortUTC, formatDay, formatOffset } from './
 import { renderLegend } from './ui/legend.js';
 import { renderPlace } from './ui/place.js';
 import { buildPanel } from './ui/panel.js';
-import { toVector } from './core/sphere.js';
-import { subsolarPoint, sunAltAz, daylight, localMeanSolarTime } from './core/sun.js';
-import { windFromDirection, compassPoint } from './core/derived.js';
-import { flowToward } from './core/ocean.js';
-import { displayUnit, toShown, format } from './core/units.js';
-import { areaMean, ClassRaster } from './core/grid.js';
-import { koppen, koppenGrid, meanTemperature } from './core/climate.js';
+import { toVector, compassPoint } from '../../../domains/geodesy/js/index.js';
+import {
+  subsolarPoint, sunAltAz, daylight, localMeanSolarTime,
+} from '../../../domains/astronomy/js/index.js';
+import { flowToward } from '../../../domains/oceanography/js/index.js';
+import { displayUnit, toShown, format } from '../../../visualization/js/index.js';
+import { areaMean } from '../../../foundations/physis/js/index.js';
+import { ClassRaster } from './data/fields.js';
+import { koppen, koppenGrid, meanTemperature } from '../../../domains/climate/js/index.js';
 import { climateDiagram } from './ui/climate.js';
-import { joinCountries, valueForYear, latestWellCoveredYear } from './core/join.js';
+import { joinCountries, valueForYear, latestWellCoveredYear } from '../../../domains/geography/js/index.js';
 import { OceanBeneath } from './ui/ocean.js';
 
 const $ = (id) => document.getElementById(id);

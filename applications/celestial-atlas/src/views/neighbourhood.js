@@ -6,7 +6,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
-import { ICRS_TO_GALACTIC, apply } from '../core/frames.js';
+import { ICRS_TO_GALACTIC, apply } from '../../../../domains/metrology/js/index.js';
 import { starPoints, magnitudeStyle } from '../render/points.js';
 import { starColour } from '../render/colour.js';
 import { declutter } from '../render/declutter.js';

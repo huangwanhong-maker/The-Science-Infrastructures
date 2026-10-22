@@ -1,16 +1,18 @@
 // Celestial Atlas: data loading, the clock, the four views and the interface.
 
 import * as THREE from 'three';
-import { SPK } from './core/spk.js';
-import { scalesFromUnixMs, unixMsFromJdTDB, formatUtc, J2000, DAY } from './core/time.js';
-import { DEG, AU_KM, ICRS_TO_ECLIPTIC, ICRS_TO_GALACTIC, apply, sub, norm, toSpherical } from './core/frames.js';
-import { BODIES, BY_KEY, PLANETS, orbitalMu } from './core/bodies.js';
-import { snapshot } from './core/sky.js';
-import { osculating } from './core/kepler.js';
+import {
+  BODIES, BY_KEY, PLANETS, orbitalMu, snapshot, osculating,
+} from '../../../domains/astronomy/js/index.js';
+import {
+  scalesFromUnixMs, unixMsFromJdTDB, formatUtc, J2000, DAY, DEG, AU_KM, ICRS_TO_ECLIPTIC,
+  ICRS_TO_GALACTIC, apply, sub, norm, toSpherical,
+} from '../../../domains/metrology/js/index.js';
 import { loadStars, loadConstellations, listStarCatalogues } from './data/catalog.js';
+import { loadEphemeris } from './data/ephemeris.js';
 import { loadMaps } from './render/maps.js';
 import { GlobePicker } from './render/globe-picker.js';
-import { nearestPlace } from './core/geodesy.js';
+import { nearestPlace } from '../../../domains/geodesy/js/index.js';
 import { SolarSystemView } from './views/solar-system.js';
 import { NeighbourhoodView, LY_PER_PC, absoluteMagnitude } from './views/neighbourhood.js';
 import { SkyChartView } from './views/sky-chart.js';
@@ -313,7 +315,7 @@ function renderInfo(info) {
 async function main() {
   const progress = $('#loading-bar');
   const [spk, stars, constellations, catalogues, galaxyCatalogues] = await Promise.all([
-    SPK.fromUrl(`${DATA}/jpl-de440s/de440s.bsp`, (p) => { progress.style.width = `${(p * 100).toFixed(1)}%`; }),
+    loadEphemeris(`${DATA}/jpl-de440s/de440s.bsp`, (p) => { progress.style.width = `${(p * 100).toFixed(1)}%`; }),
     loadStars(DATA),
     loadConstellations(DATA),
     listStarCatalogues(DATA),

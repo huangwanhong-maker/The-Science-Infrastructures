@@ -13,7 +13,7 @@
 // frame is (X, -Z, Y)_galactic, by the same reasoning.
 
 import * as THREE from 'three';
-import { multiply, transpose } from '../core/frames.js';
+import { multiply, transpose } from '../../../../domains/metrology/js/index.js';
 
 // Row-major 3 x 3 matrices.
 export const BODY_FROM_LOCAL = [1, 0, 0, 0, 0, -1, 0, 1, 0];

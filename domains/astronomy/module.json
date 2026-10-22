@@ -1,0 +1,13 @@
+{
+  "name": "astronomy",
+  "kind": "field",
+  "status": "draft",
+  "depends": [
+    "metrology",
+    "geodesy"
+  ],
+  "foundations": [
+    "calx",
+    "physis"
+  ]
+}

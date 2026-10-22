@@ -12,7 +12,7 @@
 // 256-pixel tiles, from 180 W and 90 N, in east longitude.
 
 import * as THREE from 'three';
-import { tilesFor } from '../core/tiles.js';
+import { tilesFor } from '../../../../visualization/js/index.js';
 
 const GRID = 8;                        // rays across the screen, each way
 

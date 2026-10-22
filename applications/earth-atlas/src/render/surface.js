@@ -6,10 +6,10 @@
 //
 // One fragment shader serves every projection. For the globe it reads the
 // place from the sphere's surface; for a flat map it inverts the projection at
-// each pixel (transcribing src/core/projections.js). It then samples, at that
+// each pixel (transcribing domains/geography/js/projections.js). It then samples, at that
 // place, the base, the data and the Sun's altitude. Fields are sampled from
 // float textures holding the grid exactly as stored, with the bilinear rule of
-// src/core/grid.js (weights renormalised beside missing values) and linear
+// foundations/physis/js/grid.js (weights renormalised beside missing values) and linear
 // interpolation between two times, so the GPU draws what the probe reports.
 
 import * as THREE from 'three';
@@ -94,7 +94,7 @@ vec2 equalEarthInverse(vec2 p) {
 
 float cell(sampler2D t, int c, int r) { return texelFetch(t, ivec2(c, r), 0).r; }
 
-// Bilinear interpolation with renormalised weights (src/core/grid.js).
+// Bilinear interpolation with renormalised weights (foundations/physis/js/grid.js).
 float fieldAt(sampler2D t, vec2 ll, vec4 grid, ivec3 gridN) {
   float nlon = float(gridN.x), nlat = float(gridN.y);
   float x = (ll.x - grid.x) / grid.y;

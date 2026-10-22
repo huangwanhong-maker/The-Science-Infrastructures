@@ -4,7 +4,7 @@
 import { SegmentLayer, polylineSegments } from '../render/segments.js';
 import { baseImage } from '../render/relief.js';
 import { setBase, setCountryRaster } from '../render/surface.js';
-import { indexRaster } from '../core/raster.js';
+import { indexRaster } from '../../../../domains/geography/js/index.js';
 
 const RASTER = [4096, 2048];      // countries and seas, for looking up places
 const BASE = [8192, 4096];        // the painted base map: about 5 km to a pixel

@@ -4,10 +4,14 @@
 // from another period.
 
 import { lookupTable, colourAt, cssGradient } from '../render/colormaps.js';
-import { FieldTextures, setField, setLut, setCountryColours, classTexture, setClasses } from '../render/surface.js';
+import {
+  FieldTextures, setField, setLut, setCountryColours, classTexture, setClasses,
+} from '../render/surface.js';
 import { classColours, soften, cssColour } from '../render/classes.js';
-import { displayUnit, toShown, toStored } from '../core/units.js';
-import { joinCountries, valueForYear, latestWellCoveredYear } from '../core/join.js';
+import { displayUnit, toShown, toStored } from '../../../../visualization/js/index.js';
+import {
+  joinCountries, valueForYear, latestWellCoveredYear,
+} from '../../../../domains/geography/js/index.js';
 
 // Rounded ends for an automatic range.
 function niceRange(lo, hi) {
