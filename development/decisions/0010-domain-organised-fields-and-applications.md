@@ -1,6 +1,6 @@
 # 0010. Domain-Organised Fields and Applications
 
-- **Status:** Accepted
+- **Status:** Superseded in part by [0026](0026-domains-as-libraries.md): the fields and bridges are the domains of `domains/`, and applications have one directory each
 - **Date:** 2026-10-22
 - **Decided by:** the user, who asked for:
   - `core/domains/` to hold "the domains we investigate integratively";

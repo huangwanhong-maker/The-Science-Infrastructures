@@ -2,7 +2,7 @@
 title: Units and Frames as Types in the IR
 status: seed
 date: 2026-10-21
-related: [lib/calx/compute/ir, lib/morphe/algebra, lib/physis/units, core/metrology]
+related: [foundations/calx/compute/ir, foundations/morphe/algebra, foundations/physis/units, domains/metrology]
 ---
 
 # Units and Frames as Types in the IR

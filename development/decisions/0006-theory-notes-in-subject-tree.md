@@ -1,6 +1,6 @@
 # 0006. Theory Notes in a Subject Tree
 
-- **Status:** Accepted; amended by [0008](0008-independent-libraries.md)
+- **Status:** Superseded by [0026](0026-domains-as-libraries.md): notes live in each domain's `theory/`; previously amended by [0008](0008-independent-libraries.md)
 - **Date:** 2026-10-21
 - **Decided by:** designed by Claude at the user's request; settles the open question of where theory notes live
 

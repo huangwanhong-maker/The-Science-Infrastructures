@@ -2,7 +2,7 @@
 title: The Tidal Spectrum as a Lattice
 status: seed
 date: 2026-10-21
-related: [core/domains/tides, lib/morphe/algebra, core/inference/estimation]
+related: [domains/tides, foundations/morphe/algebra, foundations/inference/estimation (planned)]
 ---
 
 # The Tidal Spectrum as a Lattice

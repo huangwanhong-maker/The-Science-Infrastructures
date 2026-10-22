@@ -1,6 +1,6 @@
 # 0002. Layered Architecture with a Pure Core
 
-- **Status:** Accepted; amended by [0008](0008-independent-libraries.md) and [0010](0010-domain-organised-fields-and-applications.md)
+- **Status:** Accepted; amended by [0008](0008-independent-libraries.md), [0010](0010-domain-organised-fields-and-applications.md) and [0026](0026-domains-as-libraries.md)
 - **Date:** 2026-10-21
 - **Decided by:** designed by Claude at the user's request, following the discussion of 2026-10-21
 

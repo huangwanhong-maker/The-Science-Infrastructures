@@ -2,7 +2,7 @@
 title: Learning from Operational Ocean Models
 status: seed
 date: 2026-10-21
-related: [lib/physis/continuum, lib/physis/chemistry, core/domains/oceanography, core/inference/assimilation]
+related: [foundations/physis/continuum, foundations/physis/chemistry, domains/oceanography, foundations/inference/assimilation (planned)]
 ---
 
 # Learning from Operational Ocean Models

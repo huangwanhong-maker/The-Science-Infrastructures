@@ -1,6 +1,6 @@
 # 0008. Independent Libraries in Separate Repositories
 
-- **Status:** Accepted
+- **Status:** Accepted; amended by [0026](0026-domains-as-libraries.md): the libraries are at `foundations/`
 - **Date:** 2026-10-21
 - **Decided by:**
   - The user proposed separate repositories: first one for numerical computing and one for theoretical physics, then a third for algebraic structures.

@@ -2,7 +2,7 @@
 title: A Primitive-Equation Model, Our Next Model
 status: seed
 date: 2026-10-22
-related: [core/domains/meteorology, lib/physis/continuum, lib/calx, theory/meteorology/shallow-water-model.md]
+related: [domains/meteorology, foundations/physis/continuum, foundations/calx, domains/meteorology/theory/shallow-water-model.md]
 ---
 
 # A Primitive-Equation Model, Our Next Model
@@ -23,7 +23,7 @@ The next step is the one operational models took in the 1960s and 1970s: the hyd
   - The Held and Suarez (1994) forcing, to test the model's climate.
 - **Data.** GFS on its isobaric levels, through THREDDS (the `ncss` kind already reads them). Ten to twenty levels would be needed, not three.
 - **Where.**
-  - A C++ dynamical core in `core/domains/meteorology`, on calx's spectral transforms, is the right home (ADR 0003).
+  - A C++ dynamical core in `domains/meteorology`, on calx's spectral transforms, is the right home (ADR 0003).
   - The JavaScript stand-ins have shown the design, and their tests could be carried over.
 
 ## 3. Open Questions

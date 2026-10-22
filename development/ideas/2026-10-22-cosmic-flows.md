@@ -2,7 +2,7 @@
 title: Cosmic Flows from Peculiar Velocities
 status: seed
 date: 2026-10-22
-related: [applications/celestial-atlas, core/domains/astronomy, core/inference]
+related: [applications/celestial-atlas, domains/astronomy, foundations/inference (planned)]
 ---
 
 # Cosmic Flows from Peculiar Velocities
@@ -20,7 +20,7 @@ Where distances are measured independently of redshift, the difference v âˆ’ Hâ‚
 
 - **Data.** Cosmicflows-4 (Tully et al. 2023; VizieR J/ApJ/944/94) gives distances for 56 000 galaxies and peculiar velocities for groups. It can be registered as a further `tap` manifest.
 - **Display.** Only the radial component of the velocity is observed. The first view colours galaxies by approaching or receding relative to the Hubble flow.
-- **Reconstruction.** The full three-dimensional velocity field and the density field behind it come from reconstruction: Wiener filtering, or Bayesian inference with the gravitational potential as a latent field. This belongs in `core/inference`.
+- **Reconstruction.** The full three-dimensional velocity field and the density field behind it come from reconstruction: Wiener filtering, or Bayesian inference with the gravitational potential as a latent field. This belongs in the inference foundation (planned).
 - **Representation.** Streamlines of the reconstructed flow, which connect to the atlas's 3D map.
 
 ## 3. Questions

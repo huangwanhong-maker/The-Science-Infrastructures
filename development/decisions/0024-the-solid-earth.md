@@ -1,6 +1,6 @@
 # 0024. The Solid Earth: Plates, GPS, Earthquake Mechanisms, the Crust and Sections
 
-- **Status:** Accepted, provisionally: built at the user's request; open to revision on review. Making geophysics a field of `core/domains/` and `applications/` is proposed (§2.7) and awaits the user's decision.
+- **Status:** Accepted, provisionally: built at the user's request; open to revision on review. Making geophysics a field of `core/domains/` and `applications/` is proposed (§2.7) and awaits the user's decision. Geophysics became a domain by [0026](0026-domains-as-libraries.md).
 - **Date:** 2026-10-22
 - **Decided by:** the user asked which ways of seeing the motion of the solid Earth were feasible from global open data, and then asked for all but the real-time streams (NTRIP, SeedLink, InSAR, LiDAR). Claude chose the sources and the design below.
 

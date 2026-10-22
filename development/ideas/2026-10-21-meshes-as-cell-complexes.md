@@ -2,7 +2,7 @@
 title: Meshes as Cell Complexes
 status: seed
 date: 2026-10-21
-related: [lib/morphe/topology, lib/physis/discretisation, lib/physis/continuum]
+related: [foundations/morphe/topology, foundations/physis/discretisation, foundations/physis/continuum]
 ---
 
 # Meshes as Cell Complexes
