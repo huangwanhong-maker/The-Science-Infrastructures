@@ -266,7 +266,7 @@ A domain directory contains:
 
 - Record decisions that shape structure, conventions or tooling in `development/decisions/NNNN-slug.md`, using the template in the index.
 - Never rewrite a record. A new record supersedes or amends it, and the old record's status is updated to point to the new one. Paths in old records are as they were written; ADR 0026 maps them to the present.
-- Records accepted so far: 0001–0031. Records 0001–0024 were written in the first laboratory, which the infrastructure absorbed; 0025 founded this repository.
+- Records accepted so far: 0001–0032. Records 0001–0024 were written in the first laboratory, which the infrastructure absorbed; 0025 founded this repository.
 
 ### 6.4 Change Discipline
 
@@ -353,8 +353,8 @@ A domain directory contains:
 As of 2026-10-22:
 
 - **The structure of ADR 0026 is in place.** The first laboratory's history is joined to this repository, and the foundations are submodules under `foundations/`.
-- **The domains.** Nine domains have code: metrology, geodesy, astronomy, geophysics, geography, oceanography, meteorology, climate and neuroscience. Tides, navigation and air–sea are planned. All the code is provisional JavaScript, with 348 checks against published references and closed-form answers, run in fourteen suites. Every domain passes its checks alone.
-- **The Brain Atlas** (`applications/brain-atlas`, [ADR 0028](development/decisions/0028-neuroscience-and-the-brain-atlas.md)) shows a template brain in three slices and in the round, its parcellations as a tree (Julich-Brain, Schaefer, the Allen mouse ontology), and data mapped onto it by region, by coordinate and from electrodes on the scalp; the brain can be scaled to a subject's head.
+- **The domains.** Nine domains have code: metrology, geodesy, astronomy, geophysics, geography, oceanography, meteorology, climate and neuroscience. Tides, navigation and air–sea are planned. All the code is provisional JavaScript, with 380 checks against published references and closed-form answers, run in fourteen suites. Every domain passes its checks alone.
+- **The Brain Atlas** (`applications/brain-atlas`, [ADR 0028](development/decisions/0028-neuroscience-and-the-brain-atlas.md), [ADR 0032](development/decisions/0032-the-anatomy-of-the-brain-atlas.md)) shows the human brain in the round from an anatomy product (`data/products/brain_anatomy.py`): the cortex by gyrus, the deep nuclei, ventricles and fibre bundles, every part with a card from the domain's knowledge base (152 structures, with references). It cuts the brain and shows sections, colours the cortex by Julich-Brain or Schaefer, maps data by structure and by coordinate, places the 10–20 electrodes on the scalp and carries their values onto the cortex, scales the brain to a subject's head, and shows the Allen mouse brain; five guided tours.
 - **The Celestial Atlas** (`applications/celestial-atlas`, [ADR 0011](development/decisions/0011-first-application-celestial-atlas.md)) is a web application with five views:
   - the Solar System;
   - the stellar neighbourhood, from HYG or Gaia;

@@ -291,7 +291,7 @@ function applyStyles() {
       let visible = !app.hidden.has(id) && !app.otherSpecies;
       let style = 'solid';
       if (id === 'cerebral-cortex') {
-        visible = state.cortexStyle !== 'hidden' && !app.hidden.has(id);
+        visible = state.cortexStyle !== 'hidden' && !app.hidden.has(id) && !app.otherSpecies;
         style = state.cortexStyle === 'glass' ? 'glass' : 'solid';
         if (focus && !sel.has(inst.key) && ![...sel].some((k) => k.startsWith('ho:'))) style = 'glass';
       } else {

@@ -56,6 +56,7 @@ python data/products/class_raster.py --source koppen-geiger
 python data/products/field_grid.py --source terraclimate-normals
 python data/acquisition/fetch.py gdacs                           # disasters of the last month, and cyclone tracks
 python data/products/disaster_catalog.py
+python data/products/brain_anatomy.py                            # the brain's surfaces and labels, from the fetched atlases
 python data/acquisition/fetch.py metar ndbc --refresh            # the latest weather reports of aerodromes and buoys
 python data/products/observation_set.py                          # as observations: a rolling window of 48 hours
 python data/acquisition/fetch.py ibtracs --refresh               # best tracks of the storms of the last week
@@ -138,6 +139,7 @@ Products are written to `data/cache/products/` and listed by kind in `index.json
 | `columns` | `ocean_column.py` | The ocean beneath a place: currents and temperature by depth and time, at a model's grid point, with its latest run and deepest level. Made on demand, kept in `products/columns/`, not listed in the index. | `.json` |
 | `tracks` | `disaster_catalog.py`, `ibtracs_tracks.py` | Moving things, as positions over time. Tropical cyclones (`cyclone`) from GDACS: positions every 6 or 12 hours, each marked observed or forecast by the responsible warning centre. Best tracks from IBTrACS (`ibtracs-active`, `ibtracs-last3years`): the agencies' own fixes, with central pressure (hPa), maximum sustained wind (m s-1) and the agency each comes from, since the agencies average the wind over different periods. | `.json` |
 | `imagery` | `imagery.py`, `body_maps.py` | Equirectangular images with a role. Shaded relief of the land (`relief-shading`), with its grey levels of water and flat land, for detail at close range. The Earth (`day`, `night-lights`): true colour of a day (gaps filled from the day before), the Blue Marble, the Black Marble, with the provider's service for detail. Other bodies (`body`), Saturn's rings (`rings`, a radial strip) and the whole sky in galactic coordinates (`sky`, its orientation checked against bright stars). | `.jpg` or `.png`, and `.json` |
+| `anatomy` | `brain_anatomy.py` | The human brain in the MNI 152 ICBM 2009c space: surfaces of the cortex (its vertices labelled by gyrus), the white matter and the cerebellum, and meshes of the nuclei, ventricles and fibre bundles, shaded by baked obscurance and sulcal depth, in three packs; the joined labels of all sources on the template's grid, with each structure's measures and contacts (ADR 0032). Not listed in the index; read by the Brain Atlas. | `.json`, `.bin.gz` packs (int16 positions, int8 normals, uint16 or uint32 indices) and `.nii.gz` |
 
 ## 5. Datasets
 
@@ -185,6 +187,14 @@ Products are written to `data/cache/products/` and listed by kind in `index.json
 | `ndbc` | http | NOAA National Data Buoy Center | The latest observations of about 850 buoys, coastal stations and platforms |
 | `ibtracs` | http | NOAA NCEI, IBTrACS v04r01 (Knapp et al. 2010) | Best tracks of tropical cyclones: the storms of the last week, and the last three years |
 | `crust1` | files | Laske et al. 2013 (IGPP, UC San Diego) | CRUST1.0: the crust's layers, speeds and densities on 1° cells |
+| `templateflow-mni152` | files | TemplateFlow (McConnell Brain Imaging Centre) | The MNI 152 ICBM 2009c template: T1 image, masks, tissue maps, FreeSurfer's segmentation |
+| `massp-2` | files | TemplateFlow (Bazin et al. 2020) | MASSP 2.0, subcortical structures from 7 T MRI |
+| `harvard-oxford` | files | TemplateFlow (FSL) | The Harvard–Oxford cortical gyri, lateralised |
+| `mial-thalamic-nuclei` | files | TemplateFlow (Najdenovska et al. 2018) | Thalamic nuclei from diffusion MRI |
+| `ebrains-deep-white-matter` | files | EBRAINS (Guevara et al. 2012) | The deep white-matter bundles |
+| `ebrains-julich-brain` | files | EBRAINS (Amunts et al. 2020) | Julich-Brain 3.1, cytoarchitectonic areas |
+| `schaefer-2018` | files | TemplateFlow (CBIG) | Schaefer's parcels of seven resting-state networks |
+| `allen-mouse-ccf` | files | Allen Institute | The mouse brain: CCFv3 template, annotation and ontology |
 
 ### 5.2 Planned
 

@@ -9,6 +9,18 @@ An integrative infrastructure for learning, using and researching all domains of
 </p>
 <p align="center"><i>The Earth Atlas and the Celestial Atlas, the first two applications: see the <a href="docs/gallery.md">gallery</a>.</i></p>
 
+<p align="center">
+<a href="docs/gallery.md"><img src="assets/gallery/brain-02-hippocampus.jpg" width="32%" alt="The deep structures of the brain through a glass cortex, with the hippocampus and its card, in the Brain Atlas"></a>
+<a href="docs/gallery.md"><img src="assets/gallery/brain-03-coronal-section.jpg" width="32%" alt="A coronal cut through the brain, its face washed in the colours of the structures, in the Brain Atlas"></a>
+<a href="docs/gallery.md"><img src="assets/gallery/brain-08-scalp-map.jpg" width="32%" alt="The electrodes of the 10-20 system on the scalp, with a map of channel values on the cortex, in the Brain Atlas"></a>
+</p>
+<p align="center">
+<a href="docs/gallery.md"><img src="assets/gallery/brain-01-gyri.jpg" width="32%" alt="The cortex by gyrus and lobe, named as on an engraved plate, in the Brain Atlas"></a>
+<a href="docs/gallery.md"><img src="assets/gallery/brain-07-networks.jpg" width="32%" alt="Yeo's seven networks on the cortex, in the Brain Atlas"></a>
+<a href="docs/gallery.md"><img src="assets/gallery/brain-09-mouse.jpg" width="32%" alt="The Allen mouse brain and its major divisions, in the Brain Atlas"></a>
+</p>
+<p align="center"><i>The Brain Atlas: every part of the brain clickable for its anatomy, with sections, atlases, data, the head and its electrodes, and the mouse.</i></p>
+
 ## Quick Start
 
 **Online, with nothing to install.** Both applications run on the project's server:
@@ -47,7 +59,8 @@ python3 -m venv .venv
 The Earth Atlas opens in your browser at http://127.0.0.1:8790/. For the Celestial Atlas, run the last line with `applications/celestial-atlas/serve.py` in a second terminal; it opens at http://127.0.0.1:8770/, and the two link to each other. For the Brain Atlas, fetch its data (about 80 MB) and serve it:
 
 ```
-python data/acquisition/fetch.py templateflow-mni152 schaefer-2018 ebrains-julich-brain allen-mouse-ccf
+python data/acquisition/fetch.py templateflow-mni152 massp-2 harvard-oxford mial-thalamic-nuclei ebrains-deep-white-matter schaefer-2018 ebrains-julich-brain allen-mouse-ccf
+python data/products/brain_anatomy.py
 python applications/brain-atlas/serve.py --open
 ```
 
@@ -172,7 +185,7 @@ Mathematics, logic, computation and statistics are foundations.
   - the plates and their motion, 20,000 GPS stations and 70,000 earthquake mechanisms;
   - the crust, and sections through subduction zones.
 
-- The [Brain Atlas](applications/brain-atlas/README.md) shows a template brain in three slices and in the round, with Julich-Brain's cytoarchitectonic areas and Schaefer's functional parcels as a tree, and the mouse brain in the Allen framework; data are mapped onto it by region, by coordinate and from electrodes on the scalp, and the brain can be scaled to a subject's head.
+- The [Brain Atlas](applications/brain-atlas/README.md) shows the human brain in the round, its cortex by gyrus and its deep nuclei, ventricles and fibre bundles drawn as surfaces, every part clickable for its anatomy: where it lies, what it does, what it connects, what supplies it and what follows when it fails. It cuts the brain and shows it in sections, colours the cortex by Julich-Brain's areas or Schaefer's networks, maps data by structure and by coordinate, places the electrodes of the 10–20 system on the scalp and carries their values onto the cortex, scales the brain to a subject's head, and shows the mouse brain in the Allen framework.
 
 The first two run online on the project's server, the [Celestial Atlas](http://173.212.213.207:9200/) and the [Earth Atlas](http://173.212.213.207:9201/), and all three on your own computer in a few lines (Quick Start, above). The [index of applications](applications/README.md) lists those planned.
 
@@ -211,7 +224,7 @@ To run an application, follow the Quick Start at the top of this page; each appl
 
 ## 7. Status
 
-**As of 2026-10-22.** Three applications work, two of them online, all on any computer (Quick Start). Their science is the provisional JavaScript of nine domains, of physis and of the visualization layer, tested against published references and closed-form answers in 348 checks. Each domain passes its checks on its own. Neuroscience, the first domain beyond the Earth and the sky, is a repository of its own attached as a submodule, with the Brain Atlas drawing it ([ADR 0028](development/decisions/0028-neuroscience-and-the-brain-atlas.md)). The Earth Atlas takes plug-ins: scripts for prediction, assimilation and analysis, loaded on request ([ADR 0027](development/decisions/0027-earth-atlas-plugins.md)). There is no C++ yet. The next steps are in the [roadmap](development/roadmap.md):
+**As of 2026-10-22.** Three applications work, two of them online, all on any computer (Quick Start). Their science is the provisional JavaScript of nine domains, of physis and of the visualization layer, tested against published references and closed-form answers in 380 checks. Each domain passes its checks on its own. Neuroscience, the first domain beyond the Earth and the sky, is a repository of its own attached as a submodule, with the Brain Atlas drawing it ([ADR 0028](development/decisions/0028-neuroscience-and-the-brain-atlas.md)). The Earth Atlas takes plug-ins: scripts for prediction, assimilation and analysis, loaded on request ([ADR 0027](development/decisions/0027-earth-atlas-plugins.md)). There is no C++ yet. The next steps are in the [roadmap](development/roadmap.md):
 
 - Phase 0, the toolchain and the build;
 - the choice of the next domains.

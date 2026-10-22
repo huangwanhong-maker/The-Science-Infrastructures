@@ -1,6 +1,6 @@
 # 0028. Neuroscience as a Domain, and the Brain Atlas
 
-- **Status:** Accepted
+- **Status:** Accepted; amended by [0032](0032-the-anatomy-of-the-brain-atlas.md)
 - **Date:** 2026-10-22
 - **Decided by:** the user asked for a new domain, neuroscience, beginning with a brain atlas like the Human Brain Project's, of high quality, MIT-licensed, in a git repository of its own attached as a submodule; then said that what they love is a system that visualises the brain and maps data onto it, and that setting the brain's size and shape would help, for brain-wave data among others. Claude chose the design below and wrote this record.
 
