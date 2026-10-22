@@ -153,6 +153,64 @@ Each plug-in is checked without a page, in [the Earth Atlas's suite](../applicat
 </tr>
 </table>
 
+### 1.9 Observations, and Our Own Sensors
+
+Weather stations, buoys and the user's own sensors are drawn as dots, each its report nearest the time shown, on the same colour scale as the models' fields, so that a dot and the field beneath it compare by eye ([ADR 0031](../development/decisions/0031-observations-scores-and-hazards.md)). A sensor's reading, posted to the API, appears on the globe within a tenth of a second ([observation/sensors](../observation/sensors/README.md)).
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/earth-31-observations.jpg"><img src="../assets/gallery/earth-31-observations.jpg" alt="Air temperature at about 5,300 aerodromes over Europe, from METAR"></a><br><b>Weather at aerodromes.</b> Air temperature at about 5,300 aerodromes (METAR, NOAA Aviation Weather Center) at 16:19 UTC on 22 October 2026, each station's report nearest the time shown. The place card gives the models' values at a chosen place, and below them the nearest station's report.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/earth-32-buoys.jpg"><img src="../assets/gallery/earth-32-buoys.jpg" alt="Wave heights measured by NDBC buoys over WaveWatch III's forecast"></a><br><b>Waves measured and forecast.</b> NDBC buoys off the eastern United States, coloured by the significant wave height they measured, over WaveWatch III's forecast on the same scale.</td>
+</tr>
+</table>
+
+### 1.10 ECMWF's Forecasts, the Scores, and Real Observations Assimilated
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/earth-33-ecmwf.jpg"><img src="../assets/gallery/earth-33-ecmwf.jpg" alt="ECMWF AIFS wind at 10 m and isobars over the North Atlantic"></a><br><b>ECMWF's AI model.</b> AIFS's wind at 10 m and isobars over the North Atlantic, with lows of 984–995 hPa. ECMWF's IFS and AIFS are model buttons beside GFS, AIGFS and Pangu-Weather under every quantity (open data, CC BY 4.0: based on data and products of ECMWF).</td>
+<td width="50%" valign="top"><a href="../assets/gallery/earth-34-ensemble-probability.jpg"><img src="../assets/gallery/earth-34-ensemble-probability.jpg" alt="ECMWF ensemble probability of at least 20 mm of rain in 24 hours"></a><br><b>The ensemble as a probability.</b> The chance, among ECMWF's ensemble members, of at least 20 mm of rain in the 24 hours to 23 October 00 UTC: the intertropical convergence zone, the storm tracks, and a typhoon east of the Philippines.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/earth-35-scores.jpg"><img src="../assets/gallery/earth-35-scores.jpg" alt="The scorecard: anomaly correlation and RMSE of 500 hPa height by lead"></a><br><b>How the forecasts did.</b> Every run is kept and scored once its weather has happened. Pangu-Weather's 500 hPa height errs by 6.6 m at a day and 18.5 m at three; persistence (dashed) by 80 and 127 m. Its anomaly correlation stays above 0.98 at three days, while persistence falls to 0.24. Faint points rest on few cases.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/earth-36-assimilation.jpg"><img src="../assets/gallery/earth-36-assimilation.jpg" alt="Optimal interpolation of GFS 2 m temperature toward METAR reports over Europe"></a><br><b>Real observations assimilated.</b> GFS's 2 m temperature analysed toward 5,104 METAR reports at the time shown, 96 rejected as gross errors: the increment, warm where the stations are warmer than the model. The root-mean-square difference from the stations falls from 2.88 K to 1.70 K.</td>
+</tr>
+</table>
+
+### 1.11 Hazards
+
+Hazard models in the domains, run as plug-ins on the forecasts and catalogues. None is a warning: warnings come from the national services.
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/earth-37-fire-weather.jpg"><img src="../assets/gallery/earth-37-fire-weather.jpg" alt="The Fire Weather Index over Australia"></a><br><b>Fire weather.</b> The Canadian Fire Weather Index over Australia on 24 October 2026, from GFS's weather at local noon (Van Wagner 1987; the standard test data reproduced). The dry west and centre rate highest.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/earth-38-heat.jpg"><img src="../assets/gallery/earth-38-heat.jpg" alt="The daily maximum of the wet-bulb temperature over South Asia and Arabia"></a><br><b>Heat.</b> The day's greatest wet-bulb temperature (Stull 2011), where heat meets humidity: highest over the warm seas and coasts of the Arabian Sea and the Bay of Bengal. The plug-in also gives the NWS heat index and the excess over the month's normal.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/earth-39-heavy-rain.jpg"><img src="../assets/gallery/earth-39-heavy-rain.jpg" alt="Precipitation in 72 hours from GFS on the Equal Earth projection"></a><br><b>Heavy rain.</b> The rain of the 72 hours to 24 October 18:00 UTC from GFS, on a logarithmic scale; the plug-in also gives it as a fraction of the month's normal.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/earth-40-tsunami.jpg"><img src="../assets/gallery/earth-40-tsunami.jpg" alt="Tsunami travel times from an earthquake off Vanuatu, with hourly contours"></a><br><b>Tsunami travel times</b> from the M 6.6 earthquake off Vanuatu on 20 October, over ETOPO's bathymetry, with hourly contours: Port Vila in 44 minutes, Honiara in 1 h 09 min. Chile 1960, computed the same way, reaches Hilo in 14.9 h and Sanriku in 22.4 h, as observed.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/earth-41-aftershocks.jpg"><img src="../assets/gallery/earth-41-aftershocks.jpg" alt="Aftershock probabilities after the M 7.7 earthquake off Panama"></a><br><b>Aftershocks</b> of the M 7.7 earthquake off Panama on 9 October, 12.9 days on (Reasenberg and Jones 1989): a 23 % chance of M ≥ 6 in the next week, 50 % in the month. The circle is the zone of the rupture's length; the dots, the earthquakes since.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/earth-42-volcanic-ash.jpg"><img src="../assets/gallery/earth-42-volcanic-ash.jpg" alt="Ash parcels from Sakurajima carried east by the forecast wind"></a><br><b>Volcanic ash</b> from Sakurajima: parcels of 25 µm ash released 1 to 12 km up the column, carried by the forecast wind at their height and settling at Stokes' speed. The lowest land on Kyushu and Shikoku within hours; the highest are carried thousands of kilometres east.</td>
+</tr>
+</table>
+
+### 1.12 People, Regions and the Land
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/earth-43-exposure.jpg"><img src="../assets/gallery/earth-43-exposure.jpg" alt="People exposed to temperatures above 35 °C, by country"></a><br><b>People exposed</b> to a forecast maximum above 35 °C, by country, from GHS-POP 2025 and GFS: 88 million in Nigeria, 73 million in Pakistan, 92 % of the people of Sudan. Provinces are offered too.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/earth-44-population.jpg"><img src="../assets/gallery/earth-44-population.jpg" alt="Population density over South and East Asia"></a><br><b>Where people live:</b> GHS-POP 2025 (European Commission JRC, CC BY 4.0), summed to 0.25°, on a logarithmic scale. Its world total, 8 191 988 536, is the release's own.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/earth-45-terrain.jpg"><img src="../assets/gallery/earth-45-terrain.jpg" alt="The area draining through each cell of South America, and the Amazon's watershed at Óbidos"></a><br><b>Terrain and water.</b> The area draining through each cell of South America, from ETOPO's relief by Priority-Flood and D8 (2.3 million cells in 0.7 s in the page), which draws the rivers; with the Amazon's watershed at Óbidos, 5.3 million km², its main stem and its way to the sea.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/earth-46-ndvi.jpg"><img src="../assets/gallery/earth-46-ndvi.jpg" alt="Sentinel-2 vegetation index near Tsukuba on the globe"></a><br><b>The Earth at 20 m.</b> The vegetation index (NDVI) of the Sentinel-2 scene of 18 October 2026 in a box of 20 km near Tsukuba, computed by a Python plug-in in the server from Cloud-Optimised GeoTIFF windows (contains modified Copernicus Sentinel data 2026). <a href="../assets/gallery/earth-46b-ndvi-close.jpg">A close-up</a> shows the Kinu and Kokai rivers among the fields.</td>
+</tr>
+</table>
+
+Every product shown here is also served to programs in Python, C and C++ and JavaScript by the API ([api/README.md](../api/README.md)): fields sampled at places, observations and their stream, the domains' functions, and the plug-ins.
+
 ## 2. The Celestial Atlas
 
 The Sun, the Moon, the planets, the stars and the galaxies, at any instant from 1849 to 2150 or live. Positions come from JPL's DE440 ephemeris, read directly from its kernel.
@@ -245,6 +303,13 @@ The screenshots are the infrastructure's, under its MIT licence, except the thre
 | Detail of the Moon and Mars | LRO WAC (NASA/GSFC/ASU), Viking MDIM 2.1 (NASA/USGS), via NASA Trek | NASA, acknowledge |
 | Stars | HYG v4.1 | CC BY-SA 4.0 |
 | Galaxies | Karachentsev et al. (2013); Tully (2015); names from SIMBAD (CDS) | Published catalogues; cite |
+| Station observations | METAR (NOAA Aviation Weather Center); NDBC buoys (NOAA) | Public domain |
+| Best tracks of cyclones | IBTrACS v04r01 (NOAA NCEI; Knapp et al. 2010) | Public domain |
+| ECMWF forecasts | IFS, AIFS and ENS open data (ECMWF) | CC BY 4.0; based on data and products of ECMWF |
+| Population | GHS-POP R2023A (European Commission JRC) | CC BY 4.0 |
+| Provinces | Natural Earth 1:10m admin-1 | Public domain |
+| Climatology of the scores | NCEP/NCAR Reanalysis 1 (NOAA PSL) | Public domain |
+| Sentinel-2 | Copernicus Sentinel-2 Level-2A, via Earth Search | Free and open; contains modified Copernicus Sentinel data 2026 |
 
 ## 5. Making the Screenshots
 

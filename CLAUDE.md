@@ -16,7 +16,7 @@ This is an integrative programme to learn, use and research all domains of scien
   - **Foundations:** calx (computation and numerical methods), morphe (mathematical structures and their equivalences), physis (geometry and theoretical physics), and a planned library for inference. They hold laws and methods that name no object in nature.
   - **Domains:** one library per science, holding its objects and their models. A domain is a field or a bridge between fields.
   - **Works:** applications, research and notebooks, organised by purpose, each composing the domains it needs.
-- **Shared edges** touch the world for every work: data, visualization and observation.
+- **Shared edges** touch the world for every work: data, visualization, observation, and the API through which other programs reach the infrastructure (ADR 0030).
 - **The first domains** are those of the Earth and the sky:
   - **Fields:** metrology, geodesy, astronomy, geophysics, geography, oceanography and meteorology.
   - **Bridges:** tides, navigation, air–sea exchange and climate.
@@ -118,7 +118,7 @@ The foundations and the domains perform pure computation:
 - no hidden global state;
 - only files whose paths are passed in are read.
 
-The edges (`data/`, `observation/`, `visualization/`) and the works (`applications/`, `research/`, `notebooks/`) deal with the outside world and call the core.
+The edges (`data/`, `observation/`, `visualization/`, `api/`) and the works (`applications/`, `research/`, `notebooks/`) deal with the outside world and call the core.
 
 ### 3.4 Dependency Rules
 
@@ -224,7 +224,8 @@ These conventions are shared with the foundation libraries.
 │   └── neuroscience/  reference spaces · parcellations · maps · the head (git submodule, ADR 0028)
 ├── data/              dataset registry · acquisition · formats · products · provenance
 ├── visualization/     scene model · renderers · styles (ADR 0005); provisional js/
-├── observation/       instruments · field work
+├── observation/       instruments · field work · sensors
+├── api/               the service and its clients: Python · C and C++ · JavaScript (ADR 0030)
 ├── applications/      one folder per application: celestial-atlas · earth-atlas · brain-atlas
 ├── research/          questions · experiments · papers
 ├── notebooks/         exploration and teaching
@@ -265,7 +266,7 @@ A domain directory contains:
 
 - Record decisions that shape structure, conventions or tooling in `development/decisions/NNNN-slug.md`, using the template in the index.
 - Never rewrite a record. A new record supersedes or amends it, and the old record's status is updated to point to the new one. Paths in old records are as they were written; ADR 0026 maps them to the present.
-- Records accepted so far: 0001–0029. Records 0001–0024 were written in the first laboratory, which the infrastructure absorbed; 0025 founded this repository.
+- Records accepted so far: 0001–0031. Records 0001–0024 were written in the first laboratory, which the infrastructure absorbed; 0025 founded this repository.
 
 ### 6.4 Change Discipline
 
@@ -280,7 +281,7 @@ A domain directory contains:
 
 ### 6.5 Checks
 
-- `node development/tools/run-tests.mjs` checks the dependency rules, runs every suite (foundations, domains in their order, visualization, applications), then runs each domain alone with its down-set. Run it before every commit that touches code.
+- `node development/tools/run-tests.mjs` checks the dependency rules, runs every suite (foundations, domains in their order, visualization, the data library's Python checks in `data/tests/`, the API, applications), then runs each domain alone with its down-set. Run it before every commit that touches code.
 - A domain's own suite: `node domains/<name>/tests/run-tests.mjs`.
 - Check the applications visually by driving headless Chrome over the DevTools protocol, with an absolute `--user-data-dir`.
 
@@ -375,4 +376,5 @@ As of 2026-10-22:
   - **Manifests** choose which data, and how much, from fixed files, TAP queries, ERDDAP, THREDDS (NCSS) and OPeNDAP subsets, or web requests.
   - **Products** are of fourteen kinds, listed in an index that applications read.
   - **Data requested on demand** go through each application's server.
+- **The Earth Atlas as a forecasting system** ([ADR 0031](development/decisions/0031-observations-scores-and-hazards.md)): observations (METAR, NDBC buoys, the user's sensors through `observation/sensors`), forecasts kept and scored on a schedule (`data/acquisition/schedule.py`, `applications/earth-atlas/schedule.json`), ECMWF's open forecasts (IFS, AIFS, ENS probabilities), hazard plug-ins (fire weather, heat, heavy rain, tsunami travel times, aftershocks, volcanic ash), people and regions with exposure, drainage, Sentinel-2 NDVI, and assimilation of real observations. The research arc (inference foundation, C++ toolchain, a primitive-equation model with a real assimilation cycle) is planned in `development/ideas/2026-10-23-the-research-arc.md` and deferred.
 - **There is no C++ code yet.** The next step is roadmap Phase 0.

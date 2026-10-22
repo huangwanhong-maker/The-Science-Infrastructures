@@ -120,7 +120,7 @@ The programme will grow over decades and change direction as it learns. Its gove
 | Tier | What it holds | Where |
 |---|---|---|
 | Works | Applications and studies, organised by purpose, each composing domains | `applications/`, `research/`, `notebooks/` |
-| Shared edges | Data (registry, acquisition, products, requests on demand), visualization, observation | `data/`, `visualization/`, `observation/` |
+| Shared edges | Data (registry, acquisition, products, requests on demand), visualization, observation and sensors, and the API for other programs | `data/`, `visualization/`, `observation/`, `api/` |
 | Domains | One library per science, pure and tested; fields, and bridges between them | `domains/` |
 | Foundations | [calx](https://github.com/huangwanhong-maker/calx) (computation), [morphe](https://github.com/huangwanhong-maker/morphe) (mathematical structures), [physis](https://github.com/huangwanhong-maker/physis) (geometry and physics); inference planned | `foundations/` (submodules) |
 
@@ -185,7 +185,8 @@ The first two run online on the project's server, the [Celestial Atlas](http://1
 │                    meteorology · tides · navigation · air-sea · climate · neuroscience (submodule)
 ├── data/            registry · acquisition · formats · products · requests on demand
 ├── visualization/   scene model · renderers · styles; provisional drawing helpers
-├── observation/     instruments · field work
+├── observation/     instruments · field work · sensors
+├── api/             the service and its clients in Python, C and C++, JavaScript
 ├── applications/    celestial-atlas · earth-atlas · brain-atlas
 ├── research/        questions · experiments · papers
 ├── notebooks/       exploration and teaching

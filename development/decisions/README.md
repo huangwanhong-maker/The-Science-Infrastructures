@@ -41,7 +41,9 @@ Decisions that concern only one library are recorded in that library's own `deve
 | [0026](0026-domains-as-libraries.md) | Domains as libraries, and works that compose them | Accepted |
 | [0027](0027-earth-atlas-plugins.md) | Plug-ins of the Earth Atlas: algorithms loaded on request, shown through the layers | Accepted, provisionally |
 | [0028](0028-neuroscience-and-the-brain-atlas.md) | Neuroscience as a domain, in a repository of its own, and the Brain Atlas | Accepted |
-| [0029](0029-plugins-in-python-and-cpp.md) | Plug-ins in Python and C++: the same contract, run by the server | Accepted, provisionally; amends 0027 |
+| [0029](0029-plugins-in-python-and-cpp.md) | Plug-ins in Python and C++: the same contract, run by the server | Accepted, provisionally; amends 0027; amended by 0030 |
+| [0030](0030-the-api-edge.md) | The API: an edge through which other programs reach the infrastructure | Accepted, provisionally; amends 0029 |
+| [0031](0031-observations-scores-and-hazards.md) | Observations, scores and hazards: the Earth Atlas as a forecasting system | Accepted, provisionally |
 
 ## 2. Template
 

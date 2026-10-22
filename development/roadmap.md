@@ -16,6 +16,7 @@
   - Its knowledge became the domains: one library per science, each declaring its dependencies, each passing its checks alone.
   - Geophysics is a domain.
   - The word "laboratory" is retired.
+- **2026-10-23. The Earth Atlas as a forecasting system, and an API** ([ADR 0030](decisions/0030-the-api-edge.md), [ADR 0031](decisions/0031-observations-scores-and-hazards.md)): observations (METAR, buoys, the user's sensors), forecasts kept and scored on a schedule, ECMWF's open forecasts, hazard models (fire weather, heat, heavy rain, tsunami travel times, aftershocks, volcanic ash), people and regions with exposure, drainage, Sentinel-2, assimilation of real observations; and `api/`, through which programs in Python, C and C++ and JavaScript reach the data, the domains' functions, the sensors in real time and the plug-ins. The research arc of prediction is planned, and deferred.
 - **2026-10-22. Neuroscience, the first domain beyond the Earth and the sky** ([ADR 0028](decisions/0028-neuroscience-and-the-brain-atlas.md)), in a repository of its own as a submodule: a brain atlas in the sense of the Human Brain Project's (reference spaces, parcellations, maps, for the human, the mouse and the rat), and the head with the 10–20 electrode system; the Brain Atlas application draws it and maps data onto it. Phase 4's choice of the next domains has begun.
 
 ## Phase 0. Foundations
@@ -69,7 +70,7 @@ This slice touches every tier at small scale. It reaches astronomy, geodesy, oce
 - **Geophysics:** seismology, gravity and magnetism; slabs where they can be fetched.
 - **Geography:** terrain and drainage analysis, remote sensing, and a land-use atlas.
 - **Coupling:** the atmosphere and ocean coupled through `air-sea`, leading towards a simple coupled climate model.
-- **Inference:** data assimilation and uncertainty quantification, in the inference foundation.
+- **Inference:** data assimilation and uncertainty quantification, in the inference foundation; the steps are planned in [the research arc of prediction](ideas/2026-10-23-the-research-arc.md).
 - **Machine learning:** surrogate models.
 - **Observation and field work.**
 - **Visualization:** star and galaxy catalogues at full scale in the renderers.
