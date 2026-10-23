@@ -37,7 +37,7 @@ for (const d of asked) {
   const dir = mkdtempSync(join(tmpdir(), `alone-${d}-`));
   try {
     for (const e of below) {
-      for (const part of ['js', 'tests', 'module.json']) {
+      for (const part of ['js', 'tests', 'theory', 'module.json']) {
         const from = join(ROOT, 'domains', e, part);
         if (existsSync(from)) cpSync(from, join(dir, 'domains', e, part), { recursive: true });
       }

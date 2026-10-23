@@ -1,12 +1,16 @@
 # Brain Atlas
 
-*Status: draft (2026-10-23). Serves: learning and use. Draws on: neuroscience.* Decision records: [ADR 0028](../../development/decisions/0028-neuroscience-and-the-brain-atlas.md), [ADR 0032](../../development/decisions/0032-the-anatomy-of-the-brain-atlas.md).
+*Status: draft (2026-10-23). Serves: learning and use. Draws on: neuroscience.* Decision records: [ADR 0028](../../development/decisions/0028-neuroscience-and-the-brain-atlas.md), [ADR 0032](../../development/decisions/0032-the-anatomy-of-the-brain-atlas.md), [ADR 0034](../../development/decisions/0034-biosignals-on-the-brain.md).
 
-The Brain Atlas shows the human brain in the round, every part of it clickable for its anatomy: where it lies, what it does, what it connects, what supplies it with blood, and what follows when it fails. It cuts the brain and shows it in sections, colours its cortex by other divisions, maps data onto it, places the electrodes of the 10–20 system on the scalp around it, and shows the mouse brain beside it. The brain is the unbiased average of 152 adults, the MNI 152 ICBM 2009c template that the Human Brain Project's atlas uses.
+The Brain Atlas shows the human brain in the round, every part of it clickable for its anatomy: where it lies, what it does, what it connects, what supplies it with blood, and what follows when it fails. It cuts the brain and shows it in sections, colours its cortex by other divisions, maps data onto it, places the electrodes of the 10–20 system on the scalp around it, carries recordings of EEG, MEG and fMRI onto it, and shows the mouse brain beside it. The brain is the unbiased average of 152 adults, the MNI 152 ICBM 2009c template that the Human Brain Project's atlas uses.
 
 <p align="center">
 <img src="../../assets/gallery/brain-02-hippocampus.jpg" width="49%" alt="The deep structures through a glass cortex, with the hippocampus and its card">
 <img src="../../assets/gallery/brain-03-coronal-section.jpg" width="49%" alt="A coronal cut, its face washed in the colours of the structures">
+</p>
+<p align="center">
+<img src="../../assets/gallery/brain-10-alpha-sources.jpg" width="49%" alt="The alpha rhythm of closed eyes estimated on the cortex from 64 EEG channels">
+<img src="../../assets/gallery/brain-15-fmri-language.jpg" width="49%" alt="An fMRI map of listening to stories against arithmetic on the cortex">
 </p>
 
 ## 1. Concepts
@@ -21,6 +25,10 @@ The Brain Atlas shows the human brain in the round, every part of it clickable f
   - *Atlases:* the cortex coloured by Julich-Brain's cytoarchitectonic areas or by Schaefer's parcels of Yeo's seven networks, each area with where it lies in the gross anatomy; and the mouse brain in the Allen Common Coordinate Framework, with its ontology as a tree.
   - *Data:* a pasted table of structures and values colours the brain (names as the atlas gives them, as FreeSurfer's aseg.stats gives them, or the regions of the atlas shown); pasted points, in MNI or Talairach coordinates, are drawn with what lies at each. Two examples come from the atlas itself: the volume of every structure, and the asymmetry between its sides.
   - *Head:* the template's scalp, cast from its T1 image; the electrodes of the 10–20 or 10–10 system placed on it by the arcs between the nasion, the inion and the ears (Jasper 1958; Oostenveld and Praamstra 2001); a subject's head length, breadth and height scale the brain and the scalp, and the electrodes are placed again; pasted channel values are interpolated over the scalp by spherical splines (Perrin et al. 1989) and carried radially onto the cortex. Each electrode's card names the cortex beneath it.
+  - *Signals:* recordings of the living brain on the template, in three parts.
+    - *EEG.* A recording (EDF, EDF+, BDF, BrainVision or a table, opened or dropped on the brain; or one of four from PhysioNet) is placed on the template's electrodes. A lead field through three spheres (Rush and Driscoll 1968), computed in a worker, and an inverse (sLORETA, dSPM or minimum norm) carry it to 4,700 sources on the cortex. The map shows the potential at the cursor, the power of a band over a window, or the contrast of two conditions read from the recording's annotations; the traces play beneath at any speed, and the card holds the scalp map, the strongest sources and the spectrum.
+    - *EEG and MEG.* One current placed on the cortex by a click, its potential and its magnetic field (Sarvas 1987) side by side, and the estimate of each; turning it shows what each modality sees.
+    - *fMRI.* A statistical map (NIfTI; or one of six from Individual Brain Charting) read through the cortex onto its surface, smoothed and restandardised, with its peaks named by the anatomy; in the round or in sections.
 
 ## 2. Running
 
@@ -51,6 +59,8 @@ The page is at http://127.0.0.1:8810/. A public instance runs at http://173.212.
 | Julich-Brain 3.1, the maximum-probability maps of 207 areas | Amunts et al. (2020), EBRAINS | `ebrains-julich-brain` | CC BY-NC-SA 4.0 |
 | Schaefer 2018, 100 and 400 parcels in 7 networks | Schaefer et al. (2018), via TemplateFlow | `schaefer-2018` | MIT |
 | Allen Mouse Brain CCFv3, template and 2017 annotation at 50 µm, ontology | Allen Institute (Wang et al. 2020) | `allen-mouse-ccf` | Allen Institute terms of use |
+| EEG: four runs of subject 1 of the Motor Movement/Imagery Dataset, 64 channels at 160 Hz | Schalk et al. (2004), PhysioNet | `physionet-eegmmidb` | ODC Attribution 1.0 |
+| fMRI: six z maps of subject 1 of Individual Brain Charting | Pinho et al. (2018), via NeuroVault | `neurovault-ibc` | CC0 |
 
 The anatomy product (`data/cache/products/anatomy-mni152.json` with its three packs of meshes and the joined labels) is built from these files by `data/products/brain_anatomy.py`, and is never committed.
 
@@ -60,7 +70,7 @@ The anatomy product (`data/cache/products/anatomy-mni152.json` with its three pa
 node applications/brain-atlas/tests/run-tests.mjs
 ```
 
-The checks need the fetched data and the product, and are skipped, and say so, when they are missing. They verify what is the atlas's own: that every file it reads is in its dataset's manifest; that the product's labels are numbered once, each a structure of the catalogue, on the template's grid; that Schaefer's parcels lie on the side their names say and Julich-Brain's areas fall in their lobes, with soft colours; that the electrodes fall where they should on the template's scalp; that pasted names are read (the atlas's, FreeSurfer's, Latin and other names, with or without a side); and that the tours name structures that exist. The science (the tree, the sides of every key, the knowledge base) is checked with the neuroscience domain.
+The checks need the fetched data and the product, and are skipped, and say so, when they are missing. They verify what is the atlas's own: that every file it reads is in its dataset's manifest; that the product's labels are numbered once, each a structure of the catalogue, on the template's grid; that Schaefer's parcels lie on the side their names say and Julich-Brain's areas fall in their lobes, with soft colours; that the electrodes fall where they should on the template's scalp; that pasted names are read (the atlas's, FreeSurfer's, Latin and other names, with or without a side); that the tours name structures that exist; that the pages of channels and the scalp's disc are as drawn; and, on the real data, that every EEG channel finds its electrode, that the alpha rhythm of closed eyes is estimated at the back of the brain, that the mu rhythm subsides most over the sensorimotor cortex as a fist moves, and that the right hand's fMRI map peaks in the left central gyri. The science (the tree, the sides of every key, the knowledge base) is checked with the neuroscience domain.
 
 ## 5. Structure
 
@@ -74,10 +84,14 @@ applications/brain-atlas/
 ├── src/data/anatomy.js            the anatomy product and the template, from the cache
 ├── src/data/parcellations.js      Julich-Brain and Schaefer on the template's grid, with their colours
 ├── src/data/mouse.js              the Allen mouse brain, reoriented to RAS, with a compact label index
-├── src/modes/atlases.js, mouse.js, data.js, head.js   the modes
+├── src/modes/atlases.js, mouse.js, data.js, head.js, signals.js   the modes
+├── src/signals/head-model.js      the template's head and electrodes for the signals, and the scalp's splines
+├── src/signals/sources.js         the sources: the cortex thinned to 6 mm, spread back to its vertices, maxima
 ├── src/ui/card.js, plate.js, tree.js, controls.js, tours.js, data.js   the card, the plate of names, the tree, the toolbar and search, the tours, pasted data
+├── src/ui/traces.js, topo.js      the traces of a recording with its overview and annotations; the scalp's disc
 ├── src/render/colormaps.js        colour maps (as the Earth Atlas)
 ├── src/workers/surface.worker.js  surfaces by surface nets, off the main thread (the scalp, the mouse)
+├── src/workers/leadfield.worker.js   lead fields of EEG and MEG, off the main thread
 └── tests/run-tests.mjs
 ```
 
@@ -86,6 +100,6 @@ applications/brain-atlas/
 1. **Surfaces of the cortex** with its layers (the pial and white surfaces of fsaverage, or BigBrain's), and parcellations defined on them.
 2. **Probability maps** of Julich-Brain, so that a point is assigned with its uncertainty.
 3. **The rat,** with the Waxholm Space atlas.
-4. **Digitised electrode positions** and a measured head, in place of the template's provisional landmarks; a forward model, so that scalp maps lead to their sources.
+4. **Digitised electrode positions** and a measured head, in place of the template's provisional landmarks; a boundary-element head model in place of the spheres.
 5. **The fibre bundles** as streamlines from tractography, in place of the territories of a maximum-probability map.
 6. **A colour of its own** for the atlas, within the warm family; it shares the orchid palette for now.

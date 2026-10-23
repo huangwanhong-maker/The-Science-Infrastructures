@@ -1,6 +1,6 @@
 # 0032. The Anatomy of the Brain Atlas: Surfaces, a Tree of Structures and What Is Known of Each
 
-- **Status:** Accepted
+- **Status:** Accepted; amended by [0034](0034-biosignals-on-the-brain.md)
 - **Date:** 2026-10-23
 - **Amends:** [0028](0028-neuroscience-and-the-brain-atlas.md), §2.5 and §2.6
 - **Decided by:** the user found the first Brain Atlas rough, its interface poor, and asked that the anatomical structures be comprehensive and well rendered, and that clicking a part show its anatomy; they asked for high quality, creativity, and time taken. Claude chose the design below and wrote this record.

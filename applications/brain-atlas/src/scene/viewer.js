@@ -18,6 +18,7 @@ THREE.BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree;
 THREE.Mesh.prototype.raycast = acceleratedRaycast;
 
 const AXES = { sagittal: 0, coronal: 1, axial: 2 };
+let SRGB_LINEAR = null;      // sRGB to linear light, tabulated on first use
 const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 
 // A fresnel material: the cortex as glass, or any surface as a ghost.
@@ -191,6 +192,46 @@ export class Viewer {
     this.applyClip(inst);
     this.dirty = true;
     return inst;
+  }
+
+  // Colour an instance from an array of sRGB colours, three per vertex (0..1), shaded as
+  // paint() shades: the fast path for maps that change every frame. The conversion to linear
+  // light is tabulated.
+  paintRGB(inst, rgb) {
+    if (!SRGB_LINEAR) { SRGB_LINEAR = new Float32Array(4096); for (let i = 0; i < 4096; i++) { const c = i / 4095; SRGB_LINEAR[i] = c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; } }
+    const arr = inst.mesh.geometry.attributes.color.array, shade = inst.shade, n = shade.length;
+    for (let i = 0; i < n; i++) {
+      const s = shade[i], k = 3 * i;
+      arr[k] = SRGB_LINEAR[Math.min(4095, Math.max(0, (rgb[k] * 4095) | 0))] * s;
+      arr[k + 1] = SRGB_LINEAR[Math.min(4095, Math.max(0, (rgb[k + 1] * 4095) | 0))] * s;
+      arr[k + 2] = SRGB_LINEAR[Math.min(4095, Math.max(0, (rgb[k + 2] * 4095) | 0))] * s;
+    }
+    inst.mesh.geometry.attributes.color.needsUpdate = true;
+    this.dirty = true;
+  }
+
+  // An arrow from a point along a direction (atlas mm), drawn above the surfaces: a dipole.
+  setArrow(key, from, dir, { length = 18, colour = '#f6c47e' } = {}) {
+    this.arrows = this.arrows || new Map();
+    const old = this.arrows.get(key);
+    if (old) { this.root.remove(old); old.traverse((o) => { if (o.geometry) o.geometry.dispose(); }); this.arrows.delete(key); }
+    if (!from) { this.dirty = true; return; }
+    const d = new THREE.Vector3(...dir).normalize();
+    const group = new THREE.Group();
+    const mat = new THREE.MeshPhysicalMaterial({ color: colour, roughness: 0.3, clearcoat: 0.8, emissive: colour, emissiveIntensity: 0.25, depthTest: false });
+    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(1.3, 1.3, length * 0.72, 16), mat);
+    shaft.position.y = length * 0.36;
+    const head = new THREE.Mesh(new THREE.ConeGeometry(3.4, length * 0.3, 20), mat);
+    head.position.y = length * 0.85;
+    const ball = new THREE.Mesh(new THREE.SphereGeometry(2.1, 20, 14), mat);
+    group.add(shaft, head, ball);
+    group.position.set(...from);
+    group.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d);
+    group.renderOrder = 10;
+    group.traverse((o) => { o.renderOrder = 10; });
+    this.root.add(group);
+    this.arrows.set(key, group);
+    this.dirty = true;
   }
 
   // Colour an instance: one colour, or one per vertex from fn(vertexIndex) -> [r, g, b] (sRGB 0..1).

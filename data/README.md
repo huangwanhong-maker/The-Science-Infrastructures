@@ -195,6 +195,8 @@ Products are written to `data/cache/products/` and listed by kind in `index.json
 | `ebrains-julich-brain` | files | EBRAINS (Amunts et al. 2020) | Julich-Brain 3.1, cytoarchitectonic areas |
 | `schaefer-2018` | files | TemplateFlow (CBIG) | Schaefer's parcels of seven resting-state networks |
 | `allen-mouse-ccf` | files | Allen Institute | The mouse brain: CCFv3 template, annotation and ontology |
+| `physionet-eegmmidb` | files | PhysioNet (Schalk et al. 2004) | EEG: four runs of one person, 64 channels, at rest and moving a fist |
+| `neurovault-ibc` | files | NeuroVault (Individual Brain Charting) | fMRI: six z maps of one person, motor, language, faces, memory, social |
 
 ### 5.2 Planned
 

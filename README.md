@@ -19,14 +19,19 @@ An integrative infrastructure for learning, using and researching all domains of
 <a href="docs/gallery.md"><img src="assets/gallery/brain-07-networks.jpg" width="32%" alt="Yeo's seven networks on the cortex, in the Brain Atlas"></a>
 <a href="docs/gallery.md"><img src="assets/gallery/brain-09-mouse.jpg" width="32%" alt="The Allen mouse brain and its major divisions, in the Brain Atlas"></a>
 </p>
-<p align="center"><i>The Brain Atlas: every part of the brain clickable for its anatomy, with sections, atlases, data, the head and its electrodes, and the mouse.</i></p>
+<p align="center">
+<a href="docs/gallery.md"><img src="assets/gallery/brain-10-alpha-sources.jpg" width="32%" alt="The alpha rhythm of closed eyes estimated on the cortex from 64 EEG channels, in the Brain Atlas"></a>
+<a href="docs/gallery.md"><img src="assets/gallery/brain-13-eeg-and-meg.jpg" width="32%" alt="One current in the cortex with its EEG potential and MEG field, in the Brain Atlas"></a>
+<a href="docs/gallery.md"><img src="assets/gallery/brain-15-fmri-language.jpg" width="32%" alt="An fMRI map of listening to stories on the cortex, in the Brain Atlas"></a>
+</p>
+<p align="center"><i>The Brain Atlas: every part of the brain clickable for its anatomy, with sections, atlases, data, the head and its electrodes, and the mouse; and EEG, MEG and fMRI carried onto the brain.</i></p>
 
 ## Quick Start
 
 **Online, with nothing to install.** The three applications run on the project's server:
 
 - **Earth Atlas:** http://173.212.213.207:9201/ — the atmosphere, the ocean, the land, the people and the solid Earth on one globe.
-- **Brain Atlas:** http://173.212.213.207:9202/ — the human brain in the round, every part with its anatomy; sections, atlases, data, the head and its electrodes, and the mouse brain.
+- **Brain Atlas:** http://173.212.213.207:9202/ — the human brain in the round, every part with its anatomy; sections, atlases, data, the head and its electrodes, the mouse brain, and EEG, MEG and fMRI mapped onto the brain.
 - **Celestial Atlas:** http://173.212.213.207:9200/ — the Sun, the Moon, the planets, the stars and the galaxies, at any instant from 1849 to 2150.
 
 The Earth and Celestial Atlases link to each other: a place on the Earth leads to its sky, and a sky to its weather.
@@ -409,7 +414,7 @@ To run an application, follow the Quick Start at the top of this page; each appl
 
 ## 7. Status
 
-**As of 2026-10-23.** Three applications work, online and on any computer (Quick Start). Their science is the provisional JavaScript of nine domains, of physis and of the visualization layer, tested against published references and closed-form answers in 380 checks. Each domain passes its checks on its own. Neuroscience, the first domain beyond the Earth and the sky, is a repository of its own attached as a submodule, with the Brain Atlas drawing it ([ADR 0028](development/decisions/0028-neuroscience-and-the-brain-atlas.md)). The Earth Atlas takes plug-ins: scripts for prediction, assimilation and analysis, loaded on request ([ADR 0027](development/decisions/0027-earth-atlas-plugins.md)). There is no C++ yet. The next steps are in the [roadmap](development/roadmap.md), in the order of §4.6:
+**As of 2026-10-23.** Three applications work, online and on any computer (Quick Start). Their science is the provisional JavaScript of nine domains, of physis and of the visualization layer, tested against published references and closed-form answers in 422 checks. Each domain passes its checks on its own. Neuroscience, the first domain beyond the Earth and the sky, is a repository of its own attached as a submodule, with the Brain Atlas drawing it ([ADR 0028](development/decisions/0028-neuroscience-and-the-brain-atlas.md)). The Earth Atlas takes plug-ins: scripts for prediction, assimilation and analysis, loaded on request ([ADR 0027](development/decisions/0027-earth-atlas-plugins.md)). There is no C++ yet. The next steps are in the [roadmap](development/roadmap.md), in the order of §4.6:
 
 - Phase 0, the toolchain and the build;
 - tier 1: the foundations morphe, the algebraic foundation (category theory, algebra, topology, geometry), and physis, the foundation of theoretical physics; then spiking neural networks, computational linguistics, genomics, molecular science and drug discovery;

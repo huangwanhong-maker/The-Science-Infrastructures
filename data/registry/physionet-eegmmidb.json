@@ -1,0 +1,41 @@
+{
+  "id": "physionet-eegmmidb",
+  "domain": "neuroscience",
+  "title": "Four runs of one person from the EEG Motor Movement/Imagery Dataset: one minute at rest with the eyes open and one with them closed, two minutes of opening and closing a fist, and two of imagining it; 64 channels of the 10-10 system at 160 Hz, with the cues as EDF+ annotations",
+  "provider": "G. Schalk and colleagues (Wadsworth Center), recorded with BCI2000, served by PhysioNet",
+  "credit": "EEG: EEG Motor Movement/Imagery Dataset, subject 1 (Schalk et al. 2004), PhysioNet",
+  "files": [
+    {
+      "url": "https://physionet.org/files/eegmmidb/1.0.0/S001/S001R01.edf",
+      "file": "S001R01.edf",
+      "size": 1275936,
+      "sha256": "4743b736131a7e147c150e8b37711029b6cda5e356c4b3e8261a03cdcaaf8b0c"
+    },
+    {
+      "url": "https://physionet.org/files/eegmmidb/1.0.0/S001/S001R02.edf",
+      "file": "S001R02.edf",
+      "size": 1275936,
+      "sha256": "31a95e0a880e6c3d89960d9d62c144f24cc4e9f5d7e93c7f864ef61cd49e847e"
+    },
+    {
+      "url": "https://physionet.org/files/eegmmidb/1.0.0/S001/S001R03.edf",
+      "file": "S001R03.edf",
+      "size": 2596896,
+      "sha256": "3427c8d01bff1380bc9ab9f27a35ece2af5dfadf3e291bbc05eb66e4dadbfe2e"
+    },
+    {
+      "url": "https://physionet.org/files/eegmmidb/1.0.0/S001/S001R04.edf",
+      "file": "S001R04.edf",
+      "size": 2596896,
+      "sha256": "3d161f88e1c00632585287d2ce584c2bc0f08862438eb255ea8723e00fac693d"
+    }
+  ],
+  "format": "EDF+C: 64 EEG channels of the 10-10 system (labels such as Fc5., Cz.., T10.) at 160 Hz in microvolts, and an EDF Annotations channel: T0 rest, T1 the onset of movement (real or imagined) of the left fist, T2 of the right fist (runs 3 and 4).",
+  "coverage": "Subject 1 of 109, runs 1 to 4 of 14",
+  "licence": "Open Data Commons Attribution License v1.0 (PhysioNet, the dataset's page).",
+  "citation": "Schalk, G., McFarland, D. J., Hinterberger, T., Birbaumer, N. and Wolpaw, J. R. (2004), BCI2000: a general-purpose brain-computer interface (BCI) system, IEEE Transactions on Biomedical Engineering 51, 1034-1043, doi:10.1109/tbme.2004.827072; Goldberger, A. L. et al. (2000), PhysioBank, PhysioToolkit, and PhysioNet, Circulation 101, e215-e220, doi:10.1161/01.cir.101.23.e215; the dataset: doi:10.13026/C28G6P.",
+  "used_by": [
+    "domains/neuroscience",
+    "applications/brain-atlas"
+  ]
+}

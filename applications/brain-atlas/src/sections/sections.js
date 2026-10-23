@@ -41,6 +41,22 @@ export class Sections {
     this.overlay = 0.5;
     this.selected = null;            // Set of label values lit
     this.dimOthers = false;
+    // An overlay of a statistic: {vol (a volume of its own grid), threshold, colour(v) ->
+    // [r, g, b] 0..255 or null, inv (world to voxel)}; drawn over the image where the
+    // statistic is beyond the threshold, the labels then shown by their boundaries only.
+    this.stat = null;
+  }
+
+  // The statistic at a world point, trilinearly, or NaN outside its grid.
+  statAt(x, y, z) {
+    const st = this.stat, A = st.inv, v = st.vol, [nx, ny, nz] = v.dims;
+    const u = A[0] * x + A[1] * y + A[2] * z + A[3], w = A[4] * x + A[5] * y + A[6] * z + A[7], t = A[8] * x + A[9] * y + A[10] * z + A[11];
+    const i0 = Math.floor(u), j0 = Math.floor(w), k0 = Math.floor(t);
+    if (i0 < 0 || j0 < 0 || k0 < 0 || i0 >= nx - 1 || j0 >= ny - 1 || k0 >= nz - 1) return NaN;
+    const fu = u - i0, fv = w - j0, fw = t - k0, d = v.data, sxy = nx * ny, b = i0 + nx * j0 + sxy * k0;
+    const c00 = d[b] * (1 - fu) + d[b + 1] * fu, c10 = d[b + nx] * (1 - fu) + d[b + nx + 1] * fu;
+    const c01 = d[b + sxy] * (1 - fu) + d[b + sxy + 1] * fu, c11 = d[b + sxy + nx] * (1 - fu) + d[b + sxy + nx + 1] * fu;
+    return (c00 * (1 - fv) + c10 * fv) * (1 - fw) + (c01 * (1 - fv) + c11 * fv) * fw;
   }
 
   voxelOf(p) { return [0, 1, 2].map((a) => (p[a] - this.origin[a]) / this.spacing[a]); }
@@ -93,7 +109,20 @@ export class Sections {
         const gi = Math.round(g);
         let r = ramp[3 * gi], gg = ramp[3 * gi + 1], b = ramp[3 * gi + 2];
         let alpha = 255;
-        if (L) {
+        let washed = false;
+        if (this.stat && gi > 8) {
+          // The world point of this pixel: the plane's fixed coordinate and the two running ones.
+          const ijk = [0, 0, 0];
+          ijk[p.axis] = fixed; ijk[p.u] = uf; ijk[p.v] = vf;
+          const statValue = this.statAt(this.origin[0] + ijk[0] * this.spacing[0], this.origin[1] + ijk[1] * this.spacing[1], this.origin[2] + ijk[2] * this.spacing[2]);
+          const col = Number.isFinite(statValue) ? this.stat.colour(statValue) : null;
+          if (col) {
+            const lum = 0.55 + 0.45 * (gi / 255);
+            r = r * 0.15 + col[0] * lum * 0.85; gg = gg * 0.15 + col[1] * lum * 0.85; b = b * 0.15 + col[2] * lum * 0.85;
+            washed = true;
+          }
+        }
+        if (L && !washed && !this.stat) {
           let s = (pal[4 * L + 3] / 255) * this.overlay;
           const lit = this.selected && this.selected.has(L);
           if (lit) s = Math.min(0.9, s + 0.38);

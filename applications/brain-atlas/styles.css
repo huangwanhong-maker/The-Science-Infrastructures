@@ -339,3 +339,55 @@ dialog .link { margin-top: 14px; }
 .region-list .lr:hover { color: var(--text); border-color: rgba(202, 141, 190, 0.55); }
 .region-list .lr.on { color: var(--night); background: var(--blush); border-color: var(--blush); }
 .toolbar { flex-wrap: wrap; justify-content: center; row-gap: 6px; }
+
+/* ---- the Signals mode ---- */
+.dock { position: absolute; left: 0; right: 0; bottom: 0; height: 236px; z-index: 6; display: grid; grid-template-rows: 34px 34px minmax(0, 1fr); background: linear-gradient(180deg, rgba(26, 19, 29, 0.94), rgba(20, 14, 22, 0.98)); border-top: 1px solid var(--hair-2); box-shadow: 0 -14px 30px rgba(0, 0, 0, 0.32); }
+.dock[hidden] { display: none; }
+.dock-bar { display: flex; align-items: center; gap: 14px; padding: 0 14px; font-size: 12.5px; color: var(--text-dim); border-bottom: 1px solid var(--hair); white-space: nowrap; overflow: hidden; }
+.dock-bar .play { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; color: var(--night); background: var(--gold); box-shadow: 0 0 0 3px rgba(242, 194, 124, 0.18); }
+.dock-bar .play svg { width: 13px; height: 13px; }
+.dock-bar .clock { font-variant-numeric: tabular-nums; color: var(--text); min-width: 110px; }
+.dock-bar .sep { width: 1px; height: 16px; background: var(--hair-2); }
+.dock-bar select { font-size: 12px; padding: 1px 4px; margin-left: 4px; }
+.dock-bar .gain button { width: 20px; height: 20px; border: 1px solid var(--hair-2); border-radius: 4px; margin-left: 3px; }
+.dock-bar .band-name { color: var(--gold); font-style: italic; }
+.dock-bar .dock-note { color: var(--text-faint); font-style: italic; margin-left: auto; overflow: hidden; text-overflow: ellipsis; }
+.dock canvas { width: 100%; height: 100%; display: block; cursor: crosshair; }
+.dock canvas.overview { border-bottom: 1px solid var(--hair); }
+#stage.with-dock #viewport { bottom: 236px; }
+#stage.with-dock .toolbar { bottom: 250px; }
+#stage.with-dock #legend { bottom: 316px; }
+#stage.with-dock #credits { bottom: 244px; }
+#stage.dropping::before { content: 'Drop a recording or a map'; position: absolute; inset: 14px; z-index: 20; display: grid; place-items: center; border: 2px dashed rgba(202, 141, 190, 0.7); border-radius: 14px; background: rgba(40, 26, 44, 0.55); color: var(--blush); font-size: 20px; font-style: italic; pointer-events: none; }
+.electrode-layer { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
+.topo-wrap { display: grid; place-items: center; padding: 4px 0 2px; }
+.topo-wrap canvas { width: 236px; height: 236px; }
+.topo-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 14px 0 6px; }
+.topo-pair canvas { width: 160px; height: 160px; display: block; margin: 0 auto; }
+svg.spectrum { display: block; margin: 4px 0 2px; }
+svg.spectrum .band { fill: rgba(202, 141, 190, 0.05); stroke: rgba(240, 226, 238, 0.06); }
+svg.spectrum .band.on { fill: rgba(242, 194, 124, 0.14); }
+svg.spectrum .psd { fill: none; stroke: #f2c27c; stroke-width: 1.6; }
+svg.spectrum .peak { stroke: rgba(246, 238, 245, 0.55); stroke-dasharray: 2 3; }
+svg.spectrum text { font: 10px 'Source Serif 4', Georgia, serif; fill: rgba(246, 238, 245, 0.55); }
+svg.spectrum .bl { font-size: 12px; text-anchor: middle; fill: rgba(246, 238, 245, 0.7); font-style: italic; }
+svg.spectrum .tk { text-anchor: middle; }
+svg.spectrum .pk { fill: var(--gold); font-style: italic; }
+.peak-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 2px; }
+.peak-table th { font-weight: 500; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint); text-align: left; padding: 2px 4px 4px; border-bottom: 1px solid var(--hair); }
+.peak-table td { padding: 3px 4px; border-bottom: 1px solid rgba(240, 226, 238, 0.05); color: var(--text-dim); font-variant-numeric: tabular-nums; vertical-align: middle; }
+.peak-table tr[data-peak-pos] { cursor: pointer; }
+.peak-table tr[data-peak-pos]:hover td { background: rgba(240, 226, 238, 0.04); }
+.peak-table td.pos { color: #f2b27c; }
+.peak-table td.neg { color: #8fb8e8; }
+.peak-table button { color: var(--text); text-align: left; }
+.peak-table button:hover { color: var(--gold); }
+.peak-table small { color: var(--text-faint); }
+.btn.file { cursor: pointer; display: inline-flex; align-items: center; }
+.drop-note { margin-top: -4px; }
+.contrast { display: grid; gap: 5px; font-size: 13px; color: var(--text-dim); }
+.contrast select { width: 100%; margin-top: 2px; }
+.seg.modality .opt { font-size: 13.5px; }
+.seg .opt small { color: var(--text-faint); font-size: 10.5px; }
+.peak-table td:nth-child(3) { white-space: nowrap; font-size: 12.5px; }
+.peak-table td:nth-child(1) { color: var(--text-faint); font-size: 11.5px; }

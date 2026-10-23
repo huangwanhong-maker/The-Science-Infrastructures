@@ -1,24 +1,104 @@
 {
   "title": "The Brain Atlas's data",
-  "about": "The atlases the Brain Atlas draws and the anatomy product built from them, in the order of applications/brain-atlas/README.md §3. Run with data/acquisition/recipe.py. About 110 MB, and a minute to build the anatomy.",
+  "about": "The atlases the Brain Atlas draws and the anatomy product built from them, in the order of applications/brain-atlas/README.md §3. Run with data/acquisition/recipe.py. About 145 MB, and a minute to build the anatomy.",
   "steps": [
-    {"id": "templateflow-mni152", "title": "The MNI 152 ICBM 2009c template: image, masks, tissue maps, FreeSurfer's segmentation",
-     "run": ["data/acquisition/fetch.py", "templateflow-mni152"], "done": "data/cache/templateflow-mni152/**/retrieval.json"},
-    {"id": "massp-2", "title": "MASSP 2.0: the subcortical structures",
-     "run": ["data/acquisition/fetch.py", "massp-2"], "done": "data/cache/massp-2/**/retrieval.json"},
-    {"id": "harvard-oxford", "title": "The Harvard–Oxford cortical gyri",
-     "run": ["data/acquisition/fetch.py", "harvard-oxford"], "done": "data/cache/harvard-oxford/**/retrieval.json"},
-    {"id": "mial-thalamic-nuclei", "title": "The thalamic nuclei",
-     "run": ["data/acquisition/fetch.py", "mial-thalamic-nuclei"], "done": "data/cache/mial-thalamic-nuclei/**/retrieval.json"},
-    {"id": "ebrains-deep-white-matter", "title": "The deep white-matter bundles",
-     "run": ["data/acquisition/fetch.py", "ebrains-deep-white-matter"], "done": "data/cache/ebrains-deep-white-matter/**/retrieval.json"},
-    {"id": "ebrains-julich-brain", "title": "Julich-Brain 3.1: the cytoarchitectonic areas",
-     "run": ["data/acquisition/fetch.py", "ebrains-julich-brain"], "done": "data/cache/ebrains-julich-brain/**/retrieval.json"},
-    {"id": "anatomy", "title": "The anatomy: surfaces, meshes and joined labels, built",
-     "run": ["data/products/brain_anatomy.py"], "done": "data/cache/products/anatomy-mni152.json"},
-    {"id": "schaefer-2018", "title": "Schaefer 2018: the parcels of seven networks",
-     "run": ["data/acquisition/fetch.py", "schaefer-2018"], "done": "data/cache/schaefer-2018/**/retrieval.json"},
-    {"id": "allen-mouse-ccf", "title": "The Allen mouse brain: template, annotation and ontology",
-     "run": ["data/acquisition/fetch.py", "allen-mouse-ccf"], "done": "data/cache/allen-mouse-ccf/**/retrieval.json"}
+    {
+      "id": "templateflow-mni152",
+      "title": "The MNI 152 ICBM 2009c template: image, masks, tissue maps, FreeSurfer's segmentation",
+      "run": [
+        "data/acquisition/fetch.py",
+        "templateflow-mni152"
+      ],
+      "done": "data/cache/templateflow-mni152/**/retrieval.json"
+    },
+    {
+      "id": "massp-2",
+      "title": "MASSP 2.0: the subcortical structures",
+      "run": [
+        "data/acquisition/fetch.py",
+        "massp-2"
+      ],
+      "done": "data/cache/massp-2/**/retrieval.json"
+    },
+    {
+      "id": "harvard-oxford",
+      "title": "The Harvard–Oxford cortical gyri",
+      "run": [
+        "data/acquisition/fetch.py",
+        "harvard-oxford"
+      ],
+      "done": "data/cache/harvard-oxford/**/retrieval.json"
+    },
+    {
+      "id": "mial-thalamic-nuclei",
+      "title": "The thalamic nuclei",
+      "run": [
+        "data/acquisition/fetch.py",
+        "mial-thalamic-nuclei"
+      ],
+      "done": "data/cache/mial-thalamic-nuclei/**/retrieval.json"
+    },
+    {
+      "id": "ebrains-deep-white-matter",
+      "title": "The deep white-matter bundles",
+      "run": [
+        "data/acquisition/fetch.py",
+        "ebrains-deep-white-matter"
+      ],
+      "done": "data/cache/ebrains-deep-white-matter/**/retrieval.json"
+    },
+    {
+      "id": "ebrains-julich-brain",
+      "title": "Julich-Brain 3.1: the cytoarchitectonic areas",
+      "run": [
+        "data/acquisition/fetch.py",
+        "ebrains-julich-brain"
+      ],
+      "done": "data/cache/ebrains-julich-brain/**/retrieval.json"
+    },
+    {
+      "id": "anatomy",
+      "title": "The anatomy: surfaces, meshes and joined labels, built",
+      "run": [
+        "data/products/brain_anatomy.py"
+      ],
+      "done": "data/cache/products/anatomy-mni152.json"
+    },
+    {
+      "id": "schaefer-2018",
+      "title": "Schaefer 2018: the parcels of seven networks",
+      "run": [
+        "data/acquisition/fetch.py",
+        "schaefer-2018"
+      ],
+      "done": "data/cache/schaefer-2018/**/retrieval.json"
+    },
+    {
+      "id": "allen-mouse-ccf",
+      "title": "The Allen mouse brain: template, annotation and ontology",
+      "run": [
+        "data/acquisition/fetch.py",
+        "allen-mouse-ccf"
+      ],
+      "done": "data/cache/allen-mouse-ccf/**/retrieval.json"
+    },
+    {
+      "id": "physionet-eegmmidb",
+      "title": "EEG: four runs of the Motor Movement/Imagery Dataset (PhysioNet)",
+      "run": [
+        "data/acquisition/fetch.py",
+        "physionet-eegmmidb"
+      ],
+      "done": "data/cache/physionet-eegmmidb/**/retrieval.json"
+    },
+    {
+      "id": "neurovault-ibc",
+      "title": "fMRI: six maps of the Individual Brain Charting project (NeuroVault)",
+      "run": [
+        "data/acquisition/fetch.py",
+        "neurovault-ibc"
+      ],
+      "done": "data/cache/neurovault-ibc/**/retrieval.json"
+    }
   ]
 }

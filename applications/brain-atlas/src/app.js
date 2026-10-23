@@ -18,6 +18,7 @@ import { TOURS } from './ui/tours.js';
 import { AtlasesMode } from './modes/atlases.js';
 import { DataMode } from './modes/data.js';
 import { HeadMode } from './modes/head.js';
+import { SignalsMode } from './modes/signals.js';
 import {
   BRAIN_STRUCTURES, structure, childrenOf, ancestorsOf, descendantsOf, keysOf, structureOfKey, LOBE_COLOURS, lobeOf,
   SYSTEMS, system, knowledgeOf, referencesOf, mniToTalairach,
@@ -242,6 +243,7 @@ function selectionKeys() {
 }
 
 function paintCortex() {
+  if (app.cortexPainter) { for (const inst of app.instances.get('cerebral-cortex') || []) app.cortexPainter(inst); return; }
   const sel = selectionKeys();
   const hover = state.hover && state.hover.key;
   const pal = app.cortexColour ? null : cortexPalette(state.colouring);
@@ -275,6 +277,7 @@ function paintAll() {
   for (const [id, list] of app.instances) {
     if (id === 'cerebral-cortex') continue;
     for (const inst of list) {
+      if (app.meshPainter && app.meshPainter(inst)) continue;
       inst.colour = (app.meshColour && app.meshColour(inst)) || colourOf(id) || inst.colour;
       app.viewer.paint(inst);
     }
@@ -908,6 +911,24 @@ function renderToolbar() {
 }
 
 function bindChrome() {
+  // Files dropped on the stage go to the Signals mode: recordings and maps.
+  const stage = $('stage');
+  stage.addEventListener('dragover', (e) => { if (e.dataTransfer && [...e.dataTransfer.types].includes('Files')) { e.preventDefault(); stage.classList.add('dropping'); } });
+  stage.addEventListener('dragleave', () => stage.classList.remove('dropping'));
+  stage.addEventListener('drop', async (e) => {
+    e.preventDefault();
+    stage.classList.remove('dropping');
+    const files = e.dataTransfer && e.dataTransfer.files;
+    if (!files || !files.length) return;
+    const isMap = [...files].some((f) => /\.nii(\.gz)?$/i.test(f.name));
+    const signals = app.modes.signals;
+    if (state.mode !== 'signals') { signals.modality = isMap ? 'fmri' : 'eeg'; setMode('signals'); }
+    else if (isMap && signals.modality !== 'fmri') await signals.switchTo('fmri');
+    else if (!isMap && signals.modality !== 'eeg') await signals.switchTo('eeg');
+    const wait = () => new Promise((r) => setTimeout(r, 200));
+    while (!signals.space) await wait();
+    signals.openFiles(files);
+  });
   const tb = $('toolbar');
   tb.addEventListener('click', async (e) => {
     const b = e.target.closest('button');
@@ -1012,7 +1033,7 @@ export { revealAndSelect };
 // ---- modes --------------------------------------------------------------------------------------
 
 // The sections are shown in their own mode, and in the Atlases and Data modes when chosen there.
-function inSections() { return state.mode === 'sections' || (['atlases', 'data'].includes(state.mode) && state.show === 'sections'); }
+function inSections() { return state.mode === 'sections' || (['atlases', 'data'].includes(state.mode) && state.show === 'sections') || (state.mode === 'signals' && app.modes.signals.modality === 'fmri' && state.show === 'sections'); }
 function showStage() {
   const sections = inSections();
   $('sections').hidden = !sections;
@@ -1185,5 +1206,6 @@ const ctx = {
 app.modes.atlases = new AtlasesMode(ctx);
 app.modes.data = new DataMode(ctx);
 app.modes.head = new HeadMode(ctx);
+app.modes.signals = new SignalsMode(ctx);
 
 start().catch((e) => { console.error(e); fail(`The atlas could not start: ${esc(e.message)}`); });

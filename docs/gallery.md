@@ -5,7 +5,7 @@
 These are screenshots of the infrastructure's three applications, taken on 22 October 2026 from their local servers, with the data of that day.
 
 - Both are web applications without a build step.
-- Their science is the provisional JavaScript of the domains they draw on, tested against published references and closed-form answers in 380 checks.
+- Their science is the provisional JavaScript of the domains they draw on, tested against published references and closed-form answers in 422 checks.
 - Each caption says what is shown, where the data come from, and how the picture is made.
 
 Click an image to see it at full size. To run the applications yourself, see the READMEs of the [Earth Atlas](../applications/earth-atlas/README.md), the [Celestial Atlas](../applications/celestial-atlas/README.md) and the [Brain Atlas](../applications/brain-atlas/README.md).
@@ -285,6 +285,29 @@ The human brain in the round, every part of it clickable for its anatomy; sectio
 </tr>
 </table>
 
+### 3.1 Signals on the Brain
+
+The Signals mode carries recordings of the living brain onto the template: EEG through a model of the head and an inverse estimate, MEG beside it, and fMRI read through the cortex ([ADR 0034](../development/decisions/0034-biosignals-on-the-brain.md)).
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/brain-10-alpha-sources.jpg"><img src="../assets/gallery/brain-10-alpha-sources.jpg" alt="The alpha rhythm of a resting person with closed eyes, estimated on the cortex from 64 EEG channels, strongest at both occipital poles"></a><br><b>The alpha rhythm</b> of one person at rest with the eyes closed (PhysioNet's EEG Motor Movement/Imagery Dataset, Schalk et al. 2004): its power over a minute, carried from 64 electrodes to 4,694 sources on the cortex through three spheres (Rush and Driscoll 1968) and sLORETA (Pascual-Marqui 2002). It lies at both occipital poles, where Berger (1929) found it; the scalp map, the strongest sources and the spectrum, peaking at 10 Hz, are on the card, the 64 traces below.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/brain-11-potential.jpg"><img src="../assets/gallery/brain-11-potential.jpg" alt="The EEG at one instant, its potential on the scalp and its signed estimate on the cortex, with the traces paused at 20.36 s"></a><br><b>One instant</b> of the same recording, filtered to the alpha band: the potential on the scalp by spherical splines, and the signed estimate on the cortex, the current flowing out (warm) or in (cool). Playing the recording, at any speed down to a tenth, moves the cursor through the traces and the maps with it.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/brain-12-mu-rhythm.jpg"><img src="../assets/gallery/brain-12-mu-rhythm.jpg" alt="The contrast of alpha-band power between moving a fist and rest, cool over both central sulci"></a><br><b>The mu rhythm</b> subsiding as a fist opens and closes: the power of 8–13 Hz in the spans of movement, against the spans of rest, read from the recording's annotations. The ratio falls most over the postcentral and precentral gyri of both sides, the event-related desynchronisation of Pfurtscheller and Lopes da Silva (1999).</td>
+<td width="50%" valign="top"><a href="../assets/gallery/brain-13-eeg-and-meg.jpg"><img src="../assets/gallery/brain-13-eeg-and-meg.jpg" alt="A dipole in the postcentral gyrus inside a glass head and an MEG helmet, with the EEG potential and the MEG field side by side"></a><br><b>EEG and MEG</b> of one current in the postcentral gyrus, placed by a click: the potential through three shells and the field by Sarvas's formula (1987) on a helmet of 248 magnetometers. The potential is broad, the field a tight pair of poles at right angles to it; turn the current to point along the radius and the field vanishes, while the potential stays.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/brain-14-fmri-hand.jpg"><img src="../assets/gallery/brain-14-fmri-hand.jpg" alt="An fMRI map of moving the right hand on the cortex, bright over the left central sulcus"></a><br><b>Moving the right hand</b>, an fMRI map of one person from the Individual Brain Charting project (Pinho et al. 2018), smoothed by 6 mm and read through the cortex onto its surface: the hand knob of the left central sulcus, with the peaks named by the anatomy at them.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/brain-15-fmri-language.jpg"><img src="../assets/gallery/brain-15-fmri-language.jpg" alt="An fMRI map of listening to stories against arithmetic, warm on the left temporal lobe and angular gyrus, cool over the parietal lobes"></a><br><b>Listening to stories</b>, against mental arithmetic: warm on the left middle temporal and angular gyri, where language and meaning are; cool over the intraparietal sulci, where the arithmetic is.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/brain-16-fmri-sections.jpg"><img src="../assets/gallery/brain-16-fmri-sections.jpg" alt="Three sections through the template with the story map overlaid at a peak in the left middle temporal gyrus"></a><br><b>In sections</b>, the same map over the template's image, at its peak in the left middle temporal gyrus; a click on a peak in the card goes there.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/brain-17-fmri-faces.jpg"><img src="../assets/gallery/brain-17-fmri-faces.jpg" alt="An fMRI map of seeing faces seen from below and behind, warm on the occipital and fusiform face areas"></a><br><b>Seeing faces</b>, against bodies, places and tools: the occipital and fusiform face areas of both sides, on the underside of the occipital and temporal lobes.</td>
+</tr>
+</table>
+
 ## 4. Credits
 
 The screenshots are the infrastructure's, under its MIT licence, except the three that show Pangu-Weather's forecasts (§1.3: earth-15, earth-16 and earth-17). Those are shared under CC BY-NC-SA 4.0, the licence of the model's parameters: for learning and research, not for commercial use. The data in all of them keep their own licences.
@@ -324,6 +347,8 @@ The screenshots are the infrastructure's, under its MIT licence, except the thre
 | Cytoarchitectonic areas, fibre bundles | Julich-Brain 3.1 (Amunts et al. 2020); deep white matter (Guevara et al. 2012), EBRAINS | CC BY-NC-SA 4.0 |
 | Networks | Schaefer et al. (2018), via TemplateFlow | MIT |
 | The mouse brain | Allen Mouse Brain CCFv3 (Wang et al. 2020), Allen Institute | Allen Institute terms of use |
+| EEG | EEG Motor Movement/Imagery Dataset (Schalk et al. 2004), PhysioNet | ODC Attribution 1.0 |
+| fMRI maps | Individual Brain Charting (Pinho et al. 2018), via NeuroVault | CC0 |
 
 ## 5. Making the Screenshots
 

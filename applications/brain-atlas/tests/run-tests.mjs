@@ -12,14 +12,18 @@ import zlib from 'node:zlib';
 
 import { suite, CACHE, ROOT } from '../../../development/tools/checks.mjs';
 import {
-  readNifti, maskScalp, tenTwenty, structure, system, BRAIN_STRUCTURES, keysOf,
+  readNifti, maskScalp, tenTwenty, structure, system, BRAIN_STRUCTURES, keysOf, structureOfKey,
+  readEdf, electrodeMap, radialNormaliser, shellModel, eegLeadField, inverseOperator, bandpass, covariance, decimate, peaks, THREE_SHELLS,
 } from '../../../domains/neuroscience/js/index.js';
+import { MONTAGES, regionOf } from '../src/ui/traces.js';
+import { project } from '../src/ui/topo.js';
 import { FILES } from '../src/data/anatomy.js';
 import { PARCELLATIONS, loadParcellation, groupOf } from '../src/data/parcellations.js';
 import { parseTable, parsePoints, channelValues, valueRange } from '../src/ui/data.js';
 import { headMask, LANDMARKS, CENTRE } from '../src/modes/head.js';
 import { DataMode } from '../src/modes/data.js';
 import { TOURS } from '../src/ui/tours.js';
+import { EEG_EXAMPLES, FMRI_EXAMPLES } from '../src/modes/signals.js';
 
 const { check, assert, skip, done } = suite();
 const inflate = (b) => (b.length > 2 && b[0] === 0x1f && b[1] === 0x8b ? zlib.gunzipSync(b) : b);
@@ -31,6 +35,7 @@ const read = async (rel) => new Uint8Array(inflate(readFileSync(cachePath(rel)))
 {
   const files = [FILES.t1, FILES.head, ...FILES.julich, FILES.julichHierarchy, FILES.julichMap, ...Object.values(FILES.schaefer).flatMap((f) => [f.volume, f.table])];
   for (const p of PARCELLATIONS) files.push(...Object.values(p.files).flat());
+  files.push(...EEG_EXAMPLES.map((x) => x.file), ...FMRI_EXAMPLES.map((x) => x.file));
   const missing = [];
   for (const f of new Set(files)) {
     const [dataset, name] = f.split('/');
@@ -156,6 +161,93 @@ const read = async (rel) => new Uint8Array(inflate(readFileSync(cachePath(rel)))
     }
   }
   assert(`tours: ${TOURS.length} tours of ${TOURS.reduce((n, t) => n + t.steps.length, 0)} steps, each naming structures that exist`, problems.length === 0, problems.join('; '));
+}
+
+
+// ---- signals: the montages and the disc -------------------------------------------------------------------
+{
+  const known = ['Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8', 'F7', 'F3', 'Fz', 'F4', 'F8', 'FCz', 'FC5', 'FC3', 'FC1', 'FC2', 'FC4', 'FC6', 'T7', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'T8', 'CP5', 'CP3', 'CPz', 'CP4', 'CP6', 'P7', 'P3', 'Pz', 'P4', 'P8', 'PO7', 'POz', 'PO8', 'O1', 'Oz', 'O2', 'Iz'];
+  const sizes = Object.entries(MONTAGES).filter(([k]) => k !== 'butterfly').map(([, m]) => known.filter((n) => m.pick(n)).length);
+  assert('signals: every page of channels holds 9 to 16 of the 10-10 system', sizes.every((n) => n >= 9 && n <= 16), sizes.join());
+  assert('signals: channels by region', regionOf('Fp1') === 'frontal' && regionOf('C3') === 'central' && regionOf('T7') === 'temporal' && regionOf('CPz') === 'parietal' && regionOf('O2') === 'occipital');
+  const [vx, vy] = project([0, 0, 1]), [fx, fy] = project([0, 1, 0]), [rx, ry] = project([1, 0, 0]);
+  assert('signals: the disc has the vertex at its centre, the nose up and the right to the right', Math.hypot(vx, vy) < 1e-9 && fy < 0 && Math.abs(fx) < 1e-9 && rx > 0 && Math.abs(ry) < 1e-9 && Math.abs(Math.hypot(fx, fy) - (90 / 125)) < 1e-9);
+}
+
+// ---- signals: real recordings and maps, on the template ------------------------------------------------------
+{
+  const edf = (r) => `physionet-eegmmidb/S001R0${r}.edf`;
+  const product = 'products/anatomy-mni152.json';
+  if (has(edf(2)) && has(edf(3)) && has(FILES.head) && has(product)) {
+    // The template's head and its electrodes, as the Signals mode builds them.
+    const mask = headMask(readNifti(await read(FILES.head)).volume);
+    const scalp = maskScalp(mask, { centre: CENTRE, axes: [[1, 0, 0], [0, 1, 0], [0, 0, 1]], step: 2, maxRadius: 230 });
+    const lm = Object.fromEntries(Object.entries(LANDMARKS).map(([k, p]) => [k, scalp.onSurface(p)]));
+    const placed = tenTwenty(scalp, lm, { system: '10-10', samples: 240 });
+    const electrodes = electrodeMap(placed);
+    const rec = readEdf(await read(edf(2)));
+    const named = rec.channels.filter((c) => c.name && electrodes.has(c.name));
+    assert(`signals: every channel of the EEGMMIDB recordings finds its electrode (${named.length} of ${rec.channels.length})`, named.length === 64);
+    // The cortex of the anatomy product, thinned to sources 6 mm apart, as the mode does.
+    const p = JSON.parse(readFileSync(cachePath(product), 'utf8'));
+    const pack = await read(`products/${p.packs.core}`);
+    const sources = [], normals = [], gyri = [];
+    for (const m of p.meshes.filter((x) => x.key.startsWith('cortex:'))) {
+      const pos = new Int16Array(pack.buffer, pack.byteOffset + m.position, 3 * m.vertices), nrm = new Int8Array(pack.buffer, pack.byteOffset + m.normal, 4 * m.vertices);
+      const lab = new Uint8Array(pack.buffer, pack.byteOffset + m.label, m.vertices);
+      const pts = Array.from({ length: m.vertices }, (_, v) => [pos[3 * v] * p.positionScale, pos[3 * v + 1] * p.positionScale, pos[3 * v + 2] * p.positionScale]);
+      for (const v of decimate(pts, 6)) {
+        sources.push(pts[v]);
+        const n = [nrm[4 * v], nrm[4 * v + 1], nrm[4 * v + 2]], l = Math.hypot(...n) || 1;
+        normals.push(n.map((x) => x / l));
+        gyri.push(lab[v] ? structureOfKey(`ho:${lab[v]}`) : null);
+      }
+    }
+    const radii = placed.positions.filter((q) => !['Nz', 'Iz', 'LPA', 'RPA'].includes(q.name)).map((q) => Math.hypot(...q.position.map((x, a) => x - scalp.centre[a]))).sort((a, b) => a - b);
+    const R = radii[Math.floor(radii.length / 2)], normalise = radialNormaliser(scalp, R);
+    const sensors = named.map((c) => normalise(electrodes.get(c.name)));
+    const L = eegLeadField(shellModel({ radius: R, ...THREE_SHELLS, terms: 100 }), scalp.centre, sensors, sources.map(normalise), normals);
+    const op = inverseOperator(L, sensors.length, sources.length, { method: 'sLORETA', snr: 3 });
+    const bandCov = (r, lo, hi, spans) => {
+      const data = named.map((c) => bandpass(r.channels.find((x) => x.name === c.name).data, r.rate, lo, hi));
+      const n = data[0].length;
+      for (let t = 0; t < n; t++) { let m = 0; for (const d of data) m += d[t]; m /= data.length; for (const d of data) d[t] -= m; }
+      const N = data.length, C = new Float64Array(N * N);
+      let total = 0;
+      for (const [a, b] of spans(r)) { const Ci = covariance(data.map((d) => ({ data: d })), a, b); for (let i = 0; i < C.length; i++) C[i] += Ci[i] * (b - a); total += b - a; }
+      for (let i = 0; i < C.length; i++) C[i] /= total;
+      return C;
+    };
+    const whole = (r) => [[0, r.channels[0].data.length]];
+    const peakOf = (values) => { let b = 0; for (let s = 1; s < values.length; s++) if (values[s] > values[b]) b = s; return b; };
+    const lobe = (s) => { const g = gyri[s]; if (!g) return null; let x = structure(g.id); while (x && !x.lobe) x = structure(x.parent); return x ? x.lobe : null; };
+    const alpha = op.power(bandCov(rec, 8, 13, whole));
+    const a = peakOf(alpha);
+    assert(`signals: the alpha of closed eyes has its strongest source at the back of the brain (${gyri[a] ? structure(gyri[a].id).name : '?'}, y = ${sources[a][1].toFixed(0)} mm)`, sources[a][1] < -60 && ['occipital', 'parietal'].includes(lobe(a)));
+    // Moving a fist: the mu rhythm subsides over the sensorimotor cortex (event-related desynchronisation).
+    const motor = readEdf(await read(edf(3)));
+    const spansOf = (codes, skip) => (r) => r.annotations.filter((x) => codes.includes(x.text)).map((x) => [Math.round((x.onset + skip) * r.rate), Math.min(r.channels[0].data.length, Math.round((x.onset + x.duration) * r.rate))]).filter(([u, w]) => w - u > 16);
+    const move = op.power(bandCov(motor, 8, 13, spansOf(['T1', 'T2'], 0.5))), rest = op.power(bandCov(motor, 8, 13, spansOf(['T0'], 0)));
+    const drop = Array.from(move, (v, s) => Math.log10(rest[s] / v));
+    const d = peakOf(drop);
+    const central = ['precentral-gyrus', 'postcentral-gyrus', 'supramarginal-gyrus-anterior', 'superior-parietal-lobule', 'central-operculum', 'supplementary-motor-area'];
+    assert(`signals: moving a fist, the mu rhythm subsides most over the sensorimotor cortex (${gyri[d] ? structure(gyri[d].id).name : '?'}, ${gyri[d] ? gyri[d].side : ''})`, gyri[d] && central.includes(gyri[d].id));
+  } else skip('signals: real recordings and maps', 'fetch physionet-eegmmidb and build the anatomy');
+  if (has('neurovault-ibc/right_hand-avg.nii.gz') && has(product)) {
+    const vol = readNifti(await read('neurovault-ibc/right_hand-avg.nii.gz')).volume;
+    const top = peaks(vol, { threshold: 5, max: 1 })[0];
+    const labels = readNifti(await read(`products/${JSON.parse(readFileSync(cachePath(product), 'utf8')).labels}`)).volume;
+    const table = new Map(JSON.parse(readFileSync(cachePath(product), 'utf8')).labelTable);
+    const near = [];
+    for (let dz = -3; dz <= 3; dz++) for (let dy = -3; dy <= 3; dy++) for (let dx = -3; dx <= 3; dx++) {
+      const q = [top.position[0] + dx, top.position[1] + dy, top.position[2] + dz];
+      const ijk = [0, 1, 2].map((a) => Math.round(q[a] - labels.affine[4 * a + 3]));
+      const k = table.get(labels.data[ijk[0] + labels.dims[0] * (ijk[1] + labels.dims[1] * ijk[2])]);
+      const at = k && structureOfKey(k);
+      if (at) near.push(at);
+    }
+    assert(`fMRI: moving the right hand peaks in the left central gyri (${top.position.map((x) => Math.round(x)).join(', ')})`, top.position[0] < -20 && near.some((at) => ['precentral-gyrus', 'postcentral-gyrus'].includes(at.id) && at.side === 'left'));
+  } else skip('fMRI: the IBC maps', 'fetch neurovault-ibc');
 }
 
 done();

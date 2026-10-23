@@ -1,0 +1,52 @@
+{
+  "id": "neurovault-ibc",
+  "domain": "neuroscience",
+  "title": "Six task contrasts of one person from the Individual Brain Charting project, as z maps in MNI space at 1.5 mm: moving the right hand and the tongue, listening to stories against mental arithmetic, faces against bodies, places and tools, 2-back against 0-back, and mental against random motion",
+  "provider": "The Individual Brain Charting project (A. L. Pinho, B. Thirion and colleagues, Inria and NeuroSpin), served by NeuroVault (collection 2138)",
+  "credit": "fMRI maps: Individual Brain Charting, subject 1 (Pinho et al. 2018), via NeuroVault",
+  "files": [
+    {
+      "url": "https://neurovault.org/media/images/2138/right_hand-avg.nii.gz",
+      "file": "right_hand-avg.nii.gz",
+      "size": 4588770,
+      "sha256": "ed4a4ffc22167f9eca6c3c6a2ba0b906931ee4cff5f0d03c57d623c22f1160d6"
+    },
+    {
+      "url": "https://neurovault.org/media/images/2138/tongue-avg.nii.gz",
+      "file": "tongue-avg.nii.gz",
+      "size": 4593429,
+      "sha256": "1ac811741920b3bdcaef9607bba85b4e6bb685ee5faa82294e816baaf2a98467"
+    },
+    {
+      "url": "https://neurovault.org/media/images/2138/story-math.nii.gz",
+      "file": "story-math.nii.gz",
+      "size": 4587936,
+      "sha256": "123a20c6659840ad904c28f29536b991c95ab2488a5e88d6362038e9b6334e31"
+    },
+    {
+      "url": "https://neurovault.org/media/images/2138/face-avg.nii.gz",
+      "file": "face-avg.nii.gz",
+      "size": 4731196,
+      "sha256": "b7cfbe39f13970383fd6a8792f27a086bd2e0912aca24b9aa111699ef20cec7f"
+    },
+    {
+      "url": "https://neurovault.org/media/images/2138/2back-0back.nii.gz",
+      "file": "2back-0back.nii.gz",
+      "size": 4729330,
+      "sha256": "1040c079389b8ed2f7d1111a7d4c4880cf62254951e0b60b3772c641c38f566c"
+    },
+    {
+      "url": "https://neurovault.org/media/images/2138/mental-random.nii.gz",
+      "file": "mental-random.nii.gz",
+      "size": 4729765,
+      "sha256": "7bf95a8d1d95f647f8becaabc2ddd29bb66bc632936c962ccf30d3565dcc8c29"
+    }
+  ],
+  "format": "NIfTI-1, gzipped, float64 z statistics on a 105 x 126 x 91 grid of 1.5 mm in MNI space (LAS orientation; the affine says so), unsmoothed, fixed effects across the two phase-encoding directions. NeuroVault images 40024, 40027, 40012, 40043, 40041 and 40016: the HCP motor, language, working-memory (whose blocks show faces, bodies, places and tools) and social tasks as run in the IBC protocol.",
+  "coverage": "The whole brain of one adult (subject 1 of IBC)",
+  "licence": "CC0 1.0: NeuroVault distributes all public data under CC0 (NeuroVault FAQ, question 13). The IBC raw data are on OpenNeuro (ds002685).",
+  "citation": "Pinho, A. L. et al. (2018), Individual Brain Charting, a high-resolution fMRI dataset for cognitive mapping, Scientific Data 5, 180105, doi:10.1038/sdata.2018.105; Gorgolewski, K. J. et al. (2015), NeuroVault.org: a web-based repository for collecting and sharing unthresholded statistical maps of the human brain, Frontiers in Neuroinformatics 9, 8, doi:10.3389/fninf.2015.00008.",
+  "used_by": [
+    "applications/brain-atlas"
+  ]
+}

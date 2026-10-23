@@ -40,12 +40,13 @@ Decisions that concern only one library are recorded in that library's own `deve
 | [0025](0025-an-umbrella-of-laboratories.md) | An umbrella of laboratories for all the sciences (the umbrella's 0001) | Superseded in part by 0026 |
 | [0026](0026-domains-as-libraries.md) | Domains as libraries, and works that compose them | Accepted |
 | [0027](0027-earth-atlas-plugins.md) | Plug-ins of the Earth Atlas: algorithms loaded on request, shown through the layers | Accepted, provisionally |
-| [0028](0028-neuroscience-and-the-brain-atlas.md) | Neuroscience as a domain, in a repository of its own, and the Brain Atlas | Accepted; amended by 0032 |
+| [0028](0028-neuroscience-and-the-brain-atlas.md) | Neuroscience as a domain, in a repository of its own, and the Brain Atlas | Accepted; amended by 0032 and 0034 |
 | [0029](0029-plugins-in-python-and-cpp.md) | Plug-ins in Python and C++: the same contract, run by the server | Accepted, provisionally; amends 0027; amended by 0030 and 0033 |
 | [0030](0030-the-api-edge.md) | The API: an edge through which other programs reach the infrastructure | Accepted, provisionally; amends 0029 |
 | [0031](0031-observations-scores-and-hazards.md) | Observations, scores and hazards: the Earth Atlas as a forecasting system | Accepted, provisionally |
-| [0032](0032-the-anatomy-of-the-brain-atlas.md) | The anatomy of the Brain Atlas: surfaces, a tree of structures and what is known of each | Accepted; amends 0028 |
+| [0032](0032-the-anatomy-of-the-brain-atlas.md) | The anatomy of the Brain Atlas: surfaces, a tree of structures and what is known of each | Accepted; amends 0028; amended by 0034 |
 | [0033](0033-cpp-plugin-classes-completed.md) | The C++ plug-in classes completed | Accepted, provisionally; amends 0029 |
+| [0034](0034-biosignals-on-the-brain.md) | Biosignals on the brain: EEG, MEG and fMRI carried onto the template | Accepted; amends 0028 and 0032 |
 
 ## 2. Template
 
