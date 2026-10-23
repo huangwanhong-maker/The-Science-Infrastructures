@@ -23,7 +23,7 @@ python data/acquisition/recipe.py applications/spiking-simulator/recipe.json   #
 python applications/spiking-simulator/serve.py --open
 ```
 
-It opens at http://127.0.0.1:8830/. Choose an example, or compose a network: add populations from the catalogue on the right, connect them, drive them and record them on the left, and run (Ctrl+Enter). The run's views are tabs: Activity (drag across a chart to look closer in time, double-click to see all of it), Statistics, States, Weights, Profile, Network, Summary (and its files), Specification. A link `#preset=brunel-ai&run=1` opens an example and runs it.
+It opens at http://127.0.0.1:8830/. Choose an example, or compose a network: add populations from the catalogue on the right, connect them, drive them and record them on the left, and run (Ctrl+Enter). The run's views are tabs: Activity (drag across a chart to look closer in time, double-click to see all of it), Statistics, States, Weights, Profile, Network, Summary (and its files), Specification. A link `#preset=brunel-ai&run=1` opens an example and runs it; `&tab=statistics` opens a tab of its own, and `&from=300&to=350` the activity on a span of time, in milliseconds.
 
 The examples:
 

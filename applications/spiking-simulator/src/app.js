@@ -83,6 +83,10 @@ function fail(message) {
 // ---- the page ----
 function ready() {
   const params = new URLSearchParams(location.hash.slice(1));
+  // A link may open the activity on a span of time (in ms) and on a tab of its own.
+  if (params.has('from') && params.has('to')) state.domain = [Number(params.get('from')) / 1e3, Number(params.get('to')) / 1e3];
+  state.tab = params.get('tab');
+  if (params.get('threads')) $('threads').value = params.get('threads');
   const saved = restore();
   if (params.get('preset') && preset(params.get('preset'))) load(params.get('preset'));
   else if (saved?.spec) { state.spec = normalise(saved.spec); state.presetId = saved.preset; }
@@ -141,7 +145,7 @@ function drawViews() {
     for (const id of ids) clear($(id)).append(el('div', { class: 'empty' }, el('p', { class: 'lead', text: id === 'activity' ? 'Run the network to see its activity.' : 'Run the network first.' }),
       id === 'activity' ? el('p', { class: 'note', text: 'Choose an example above, or compose a network on the left from the models on the right; Run, or Ctrl+Enter, sends it to the engine.' }) : null));
   } else {
-    views.activity($('activity'), state.results, state.ran, state.figures);
+    views.activity($('activity'), state.results, state.ran, state.figures, { domain: state.domain });
     views.statistics($('statistics'), state.results, state.ran, state.figures, state.catalogue);
     views.states($('states'), state.results, state.ran, state.figures);
     views.weights($('weights'), state.results, state.ran, state.figures, state.catalogue);
@@ -199,7 +203,8 @@ async function run() {
     state.ran = ran;
     status.textContent = `done in ${((performance.now() - t0) / 1000).toFixed(1)} s`;
     drawViews();
-    showTab('activity');
+    showTab(state.tab ?? 'activity');
+    state.tab = null;
   } catch (error) {
     status.textContent = error.status === 499 ? 'stopped' : '';
     if (error.status !== 499) clear($('results')).append(el('div', { class: 'empty' }, el('p', { class: 'lead error', text: `The engine refused: ${error.message}` })));

@@ -35,7 +35,7 @@ export const PRESETS = [
   {
     id: 'adex',
     title: 'One neuron and its adaptation',
-    about: 'An adaptive exponential integrate-and-fire neuron under a step of current: its spikes come closer at first, then spread as the adaptation current w builds up with each spike (Brette and Gerstner 2005).',
+    about: 'An adaptive exponential integrate-and-fire neuron under a step of current: it fires fast at first, then more slowly, as the adaptation current w grows with each spike and decays between them, until the two balance (Brette and Gerstner 2005).',
     spec: () => ({
       duration: '600 ms', resolution: '0.1 ms', seed: 1,
       populations: [{ name: 'neuron', model: 'adex', size: 1 }],
@@ -112,9 +112,9 @@ export const PRESETS = [
   {
     id: 'stdp',
     title: 'A neuron learns from its inputs',
-    about: 'A thousand Poisson inputs at 10 Hz reach one neuron through synapses with additive STDP, depression slightly stronger than potentiation. The weights drift until the neuron fires at a moderate rate, whatever their start: STDP balances the input (Song, Miller and Abbott 2000).',
+    about: 'A thousand Poisson inputs at 10 Hz reach one neuron through synapses with additive STDP, depression slightly stronger than potentiation. Over a minute the weights drift down and spread apart, and the neuron, at first driven hard, slows: STDP regulates its rate (Song, Miller and Abbott 2000). A small network, run on one thread: here the meetings of many threads would cost more than they save.',
     spec: () => ({
-      duration: '20 s', resolution: '0.1 ms', seed: 1,
+      duration: '60 s', resolution: '0.1 ms', seed: 1, threads: 1,
       populations: [
         { name: 'inputs', model: 'parrot', size: 1000 },
         { name: 'neuron', model: 'lif_psc_exp', size: 1 },
@@ -122,14 +122,14 @@ export const PRESETS = [
       projections: [{
         source: 'inputs', target: 'neuron', receptor: 'excitatory', rule: { all_to_all: true },
         weight: { uniform: ['0 pA', '40 pA'] }, delay: '1 ms',
-        synapse: { model: 'stdp', w_max: '40 pA', lambda: 0.005, alpha: 1.05, tau_plus: '20 ms', tau_minus: '20 ms' },
+        synapse: { model: 'stdp', w_max: '40 pA', lambda: 0.02, alpha: 1.05, tau_plus: '20 ms', tau_minus: '20 ms' },
       }],
       devices: [{ model: 'poisson', target: 'inputs', rate: '10 Hz', receptor: 'spike', weight: 1 }],
       recorders: [
         { model: 'spikes', population: 'neuron' },
         { model: 'spikes', population: 'inputs', first: 0, count: 100 },
-        { model: 'rate', population: 'neuron', bin: '500 ms' },
-        { model: 'weights', projection: 0, interval: '100 ms' },
+        { model: 'rate', population: 'neuron', bin: '1 s' },
+        { model: 'weights', projection: 0, interval: '250 ms' },
       ],
     }),
   },

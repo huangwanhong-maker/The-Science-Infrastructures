@@ -2,7 +2,7 @@
 
 *Status: draft, 2026-10-23.*
 
-These are screenshots of the infrastructure's three applications, taken on 22 October 2026 from their local servers, with the data of that day.
+These are screenshots of the infrastructure's applications, the three atlases taken on 22 October 2026 from their local servers with the data of that day, the Spiking Simulator on 23 October.
 
 - Both are web applications without a build step.
 - Their science is the provisional JavaScript of the domains they draw on, tested against published references and closed-form answers in 422 checks.
@@ -308,7 +308,34 @@ The Signals mode carries recordings of the living brain onto the template: EEG t
 </tr>
 </table>
 
-## 4. Credits
+## 4. The Spiking Simulator
+
+Networks of spiking neurons composed from the neuroscience domain's twenty-two models, classical and quantum, and run by its C++ engine: exact where the dynamics are linear, the same spikes on any number of threads ([ADR 0038](../development/decisions/0038-the-spiking-simulator.md)). Each picture is one of the simulator's examples, run on 23 October 2026 on the development machine (four cores, WSL) and shown by its visualizer; every number in a caption is the run's own, from the engine's analysis over the window it states.
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/snn-01-asynchronous-irregular.jpg"><img src="../assets/gallery/snn-01-asynchronous-irregular.jpg" alt="A raster of 500 neurons of Brunel's network over a second, without a rhythm, and the population rates beneath"></a><br><b>Brunel's balanced network</b> (Brunel 2000, Fig. 8C): 10,000 excitatory and 2,500 inhibitory integrate-and-fire neurons, each receiving 1,000 and 250 synapses after 1.5 ms, inhibition five times as strong (g = 5), Poisson drive twice threshold (η = 2); 15.6 million synapses, a second of activity. 400 and 100 of them are drawn over the populations' rates. Each fires at 38 Hz, its intervals varying with a CV of 0.43, the population's rate without a rhythm.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/snn-02-fast-oscillation.jpg"><img src="../assets/gallery/snn-02-fast-oscillation.jpg" alt="A sixty-millisecond close-up of the raster in the fast oscillation, the spikes in narrow vertical volleys"></a><br><b>The fast oscillation</b> (g = 6, η = 4; Fig. 8B), dragged out to 300–360 ms: the population fires in volleys 5.3 ms apart, the 187.5 Hz rhythm of its spectrum, while each neuron, at 60 Hz, joins about one volley in three and skips the rest, irregularly (CV 0.78).</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/snn-03-fast-oscillation-statistics.jpg"><img src="../assets/gallery/snn-03-fast-oscillation-statistics.jpg" alt="The statistics of the fast oscillation: a table of rates, CV, LV, Fano factors and synchrony, and the spectrum of the population rate peaking near 190 Hz"></a><br><b>Its statistics</b>, the engine's own: rates, the irregularity of intervals (CV, and the local variation LV), Fano factors, Golomb's synchrony χ = 0.23 (independent neurons would give 1/√400 = 0.05), and the spectrum of the population's rate by Welch's method, its peak at 187.5 Hz; the intervals between spikes below.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/snn-04-synchronous-regular.jpg"><img src="../assets/gallery/snn-04-synchronous-regular.jpg" alt="A raster of the synchronous regular state, every neuron firing in step in evenly spaced vertical lines"></a><br><b>Excitation dominant</b> (g = 3, η = 2; Fig. 8A), between 150 and 230 ms: every neuron fires at 332 Hz, near the limit set by its 2 ms refractory period, as regularly as a clock (CV below 0.01) and in step with the others (χ = 0.50).</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/snn-05-slow-oscillation.jpg"><img src="../assets/gallery/snn-05-slow-oscillation.jpg" alt="Two seconds of the slow oscillation: the raster in loose vertical bands and a population rate that rises and falls"></a><br><b>The slow oscillation</b> (g = 4.5, η = 0.9; Fig. 8D), two seconds: the population's rate rises and falls with a rhythm of 19.5 Hz, while each neuron fires at 6.3 Hz, irregularly (CV 0.66), in some of its waves.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/snn-06-classes-of-excitability.jpg"><img src="../assets/gallery/snn-06-classes-of-excitability.jpg" alt="Firing rate against current for three models: a continuous rise for two, a jump for the third"></a><br><b>The classes of excitability, in one run</b>: populations of 120 neurons, each neuron given its own current, so that its rate is a point of the model's f–I curve. Wang and Buzsáki's interneuron (1996) begins to fire at 16 pA, at any low rate, as Morris and Lecar's fibre does with Rinzel and Ermentrout's SNIC parameters, at 4 nA: class 1. Hodgkin and Huxley's axon jumps from silence to about 50 Hz near 0.6 nA: class 2 (Hodgkin 1948).</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/snn-07-quantum-emitters.jpg"><img src="../assets/gallery/snn-07-quantum-emitters.jpg" alt="Photons of driven and pulsed quantum emitters as a raster, with a damped oscillation of the driven rate and decays after each pulse"></a><br><b>Quantum emitters</b>, two-level systems followed along exact quantum trajectories, each detected photon a spike. 2,000 driven ones (Ω = 400 rad/s, γ = 100/s), starting together in their ground state, emit with a damped Rabi oscillation that settles near the master equation's 48.5 photons a second; 2,000 undriven ones, given a π pulse every 100 ms, decay at γ after each. No emitter gives two photons at once: the driven ones' Fano factor is 0.88, below Poisson's 1.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/snn-08-stdp.jpg"><img src="../assets/gallery/snn-08-stdp.jpg" alt="A neuron's rate over a minute falling from about 34 Hz to about 16 Hz as its thousand inputs' synapses learn"></a><br><b>A neuron learns from its inputs</b> (Song, Miller and Abbott 2000): a thousand Poisson inputs at 10 Hz reach it through synapses with additive STDP, depression 5 % the stronger. Over a minute the weights wear down and spread (mean 20.5 to 17.5 pA, standard deviation 11.5 to 12.8 pA), and the neuron, first driven at 34 Hz, slows to about 16 Hz.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/snn-09-adaptation.jpg"><img src="../assets/gallery/snn-09-adaptation.jpg" alt="The potential and the adaptation current of one AdEx neuron under a step of current"></a><br><b>Adaptation</b> in one adaptive exponential integrate-and-fire neuron (Brette and Gerstner 2005) under 800 pA from 100 to 500 ms: it fires fast at first, then more slowly, as the adaptation current w steps up by 80.5 pA at each spike and decays between them; after the step w ebbs and the potential sinks below rest before returning.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/snn-10-network.jpg"><img src="../assets/gallery/snn-10-network.jpg" alt="Brunel's network drawn: two populations, their projections and self-loops, and the Poisson drive of each"></a><br><b>The network drawn</b> from its specification: the two populations, their four projections (inhibitory ones ending in a dot) and the Poisson drive of each. Every network here is the engine's own JSON specification, with its quantities in units, and runs unchanged from the command line.</td>
+</tr>
+</table>
+
+## 5. Credits
 
 The screenshots are the infrastructure's, under its MIT licence, except the three that show Pangu-Weather's forecasts (§1.3: earth-15, earth-16 and earth-17). Those are shared under CC BY-NC-SA 4.0, the licence of the model's parameters: for learning and research, not for commercial use. The data in all of them keep their own licences.
 
@@ -350,7 +377,7 @@ The screenshots are the infrastructure's, under its MIT licence, except the thre
 | EEG | EEG Motor Movement/Imagery Dataset (Schalk et al. 2004), PhysioNet | ODC Attribution 1.0 |
 | fMRI maps | Individual Brain Charting (Pinho et al. 2018), via NeuroVault | CC0 |
 
-## 5. Making the Screenshots
+## 6. Making the Screenshots
 
 The screenshots were taken with headless Chrome at 1600 × 1000 pixels, driven over the DevTools protocol, and saved as JPEG.
 
@@ -364,3 +391,5 @@ http://127.0.0.1:8790/#p=globe&c=-32,36,3.25&s=wind.10m@gfs-forecast:speed&f=win
 - `c`: the longitude, latitude and distance of the view.
 - `s`, `f`, `l` and `m`: the surface, the flow, the lines, and the model compared.
 - `t`: the instant, in UTC.
+
+The Spiking Simulator's pictures, at 1500 × 950 pixels, were taken in the same way, each from a link that opens an example, runs it and opens a view, for example `http://127.0.0.1:8830/#preset=brunel-si-fast&run=1&from=300&to=360`: `preset` names the example, `run=1` runs it, `tab` opens a view, `from` and `to` (in ms) the span of the activity shown, and `threads` the threads used. The runs are deterministic, so each picture comes back the same.

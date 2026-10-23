@@ -33,10 +33,13 @@ function display(unit, values) {
 const colourFor = (results, name) => colourOf(Math.max(0, results.populations.findIndex((p) => p.name === name)));
 
 // ---- activity ----------------------------------------------------------------------------------------
-export function activity(root, results, spec, figures) {
+export function activity(root, results, spec, figures, { domain } = {}) {
   clear(root);
   const T = results.time;
-  const view = { domain: [0, T] };
+  // Time in ms for short runs, in s for long ones.
+  const long = T >= 5;
+  const tl = long ? 'time (s)' : 'time (ms)', tf = long ? (t) => short(t) : ms, tt = (t) => (long ? `${short(Number(t.toPrecision(5)))} s` : `${ms(t)} ms`);
+  const view = { domain: domain && domain[1] > domain[0] ? [Math.max(0, domain[0]), Math.min(T, domain[1])] : [0, T] };
   const recs = results.spikes;
   if (!recs.length && !results.rates.length) { root.append(el('p', { class: 'note', text: 'Nothing was recorded as spikes or rates: add a spike or rate recorder.' })); return; }
   root.append(el('p', { class: 'note', text: 'Drag across a chart to look closer in time; double-click to see the whole run.' }));
@@ -52,7 +55,7 @@ export function activity(root, results, spec, figures) {
       title: 'Spikes', subtitle: `${compact(recs.reduce((n, r) => n + r.times.length, 0))} spikes of ${compact(rows)} recorded neurons`,
       height: Math.min(520, Math.max(240, rows * 0.7 + 60)),
       legend: bands.map((b) => ({ label: `${b.r.population} (${compact(b.r.count)})`, colour: b.colour, kind: 'dot' })),
-      x: { label: 'time (ms)', format: ms }, y: { label: 'neuron', ticks: () => bands.map((b) => (b.from + b.to) / 2), format: (v) => bands.find((b) => (b.from + b.to) / 2 === v)?.r.population ?? '', grid: false },
+      x: { label: tl, format: tf }, y: { label: 'neuron', ticks: () => bands.map((b) => (b.from + b.to) / 2), format: (v) => bands.find((b) => (b.from + b.to) / 2 === v)?.r.population ?? '', grid: false },
       margin: { left: 96 },
       onSelect: select, onReset: reset,
       hover: (t, row) => {
@@ -60,7 +63,7 @@ export function activity(root, results, spec, figures) {
         if (!b) return null;
         const i = Math.floor(row - b.from) + b.r.first;
         const n = b.r.senders.reduce((c, s) => c + (s === i ? 1 : 0), 0);
-        return { title: `${ms(t)} ms`, rows: [{ colour: b.colour, value: `neuron ${i}`, label: `of ${b.r.population}` }, { value: `${n} spikes`, label: `${short(n / T)} Hz over the run` }] };
+        return { title: tt(t), rows: [{ colour: b.colour, value: `neuron ${i}`, label: `of ${b.r.population}` }, { value: `${n} spikes`, label: `${short(n / T)} Hz over the run` }] };
       },
     });
     fig.set(view.domain, [rows, 0], (ctx, x, y, a) => {
@@ -94,9 +97,9 @@ export function activity(root, results, spec, figures) {
     const fig = new Figure(root, {
       title: 'Population rate', subtitle: series[0].whole ? `each population in bins of ${ms(series[0].bin)} ms` : `the recorded neurons, in bins of ${ms(series[0].bin)} ms`,
       height: 200, legend: series.length > 1 ? series.map((s) => ({ label: s.name, colour: colourFor(results, s.name) })) : [],
-      x: { label: 'time (ms)', format: ms }, y: { label: 'Hz' }, onSelect: select, onReset: reset,
+      x: { label: tl, format: tf }, y: { label: 'Hz' }, onSelect: select, onReset: reset,
       margin: { left: recs.length ? 96 : 58 },
-      hover: (t) => ({ title: `${ms(t)} ms`, rows: series.map((s) => { const k = Math.min(s.rate.length - 1, Math.max(0, Math.floor(t / s.bin))); return { colour: colourFor(results, s.name), value: `${short(s.rate[k])} Hz`, label: s.name }; }) }),
+      hover: (t) => ({ title: tt(t), rows: series.map((s) => { const k = Math.min(s.rate.length - 1, Math.max(0, Math.floor(t / s.bin))); return { colour: colourFor(results, s.name), value: `${short(s.rate[k])} Hz`, label: s.name }; }) }),
     });
     const visibleMax = () => {
       let m = 0;
@@ -327,9 +330,13 @@ export function profile(root, results) {
   const balance = Math.min(...busy) / Math.max(...busy);
   const waiting = 1 - busy.reduce((a, b) => a + b, 0) / busy.length / longest;
   root.append(el('p', { class: 'note', text: `The least busy thread worked ${short(balance * 100)} % as long as the busiest. The neurons are divided among the threads in equal numbers, and each thread delivers the spikes that reach its own neurons.` }));
-  if (st.threads > 1 && waiting > 0.4) {
-    const perWindow = (longest / Math.max(1, p.windows)) * 1e6;
+  // Waiting has two causes: windows too short for their meeting's cost, or threads busy for
+  // unequal times (uneven work, or other programs sharing the processor).
+  const perWindow = (longest / Math.max(1, p.windows)) * 1e6;
+  if (st.threads > 1 && waiting > 0.4 && perWindow < 1000) {
     root.append(el('p', { class: 'advice', text: `The threads waited ${short(waiting * 100)} % of the time: each window took ${short(perWindow)} µs, and at that size the threads' meeting at its end costs as much as its work. Fewer threads, or a longer shortest delay (fewer windows), would serve this network better.` }));
+  } else if (st.threads > 1 && waiting > 0.25) {
+    root.append(el('p', { class: 'advice', text: `The threads waited ${short(waiting * 100)} % of the time, in windows of ${short(perWindow / 1000)} ms, long enough that their meeting costs little: they were busy for unequal times. Other programs sharing the processor do this, as do hyperthreads sharing a core; the same run on an idle machine, or on as many threads as there are cores, shows how much of it is the network's own.` }));
   }
 }
 
@@ -389,15 +396,18 @@ export function network(root, spec, catalogue) {
   });
   for (const [name, q] of pos) {
     node('circle', { cx: q.x, cy: q.y, r: q.r, fill: '#281d2c', stroke: q.colour, 'stroke-width': 2 });
-    // The name inside a large circle; beneath a small one.
-    const inside = q.r >= 40;
+    // The labels inside the circle when they fit; beneath it when they do not.
+    const sub = `${compact(q.p.size)} · ${q.p.model}`;
+    const inside = 2 * q.r - 8 >= 6.2 * Math.max(sub.length, name.length * 1.4);
     node('text', { x: q.x, y: inside ? q.y - 2 : q.y + q.r + 18, 'text-anchor': 'middle', class: 'd-name' }, name);
-    node('text', { x: q.x, y: inside ? q.y + 14 : q.y + q.r + 33, 'text-anchor': 'middle', class: 'd-sub' }, `${compact(q.p.size)} · ${q.p.model}`);
+    node('text', { x: q.x, y: inside ? q.y + 14 : q.y + q.r + 33, 'text-anchor': 'middle', class: 'd-sub' }, sub);
     const devs = spec.devices.filter((d) => d.target === name);
     devs.forEach((d, k) => {
       // Devices come in across the population's outward direction, clear of its own loop.
+      // From above, unless the population's own loop points up; then across its outward direction.
       const out = pops.length === 1 ? Math.PI / 2 : Math.atan2(q.y - cy, q.x - cx);
-      const ang = out - Math.PI / 2 + (k - (devs.length - 1) / 2) * 0.5;
+      const up = Math.abs(Math.sin(out) + 1) < 0.3;
+      const ang = (up ? out - Math.PI / 2 : -Math.PI / 2) + (k - (devs.length - 1) / 2) * 0.5;
       const dx = Math.cos(ang), dy = Math.sin(ang), d0 = q.r + 46;
       const shown = (q, u) => (Number.isFinite(toSI(q)) ? format(toSI(q), u) : String(q ?? ''));
       const what = d.model === 'poisson' ? `Poisson ${shown(d.rate, 'Hz')}` : d.model === 'dc' ? `current ${shown(d.amplitude, 'A')}` : d.model === 'sine' ? `sine ${shown(d.frequency, 'Hz')}` : d.model === 'spike_times' ? `${(d.times ?? []).length} spikes at times` : d.model.replace(/_/g, ' ');

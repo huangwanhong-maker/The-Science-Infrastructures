@@ -26,6 +26,13 @@ An integrative infrastructure for learning, using and researching all domains of
 </p>
 <p align="center"><i>The Brain Atlas: every part of the brain clickable for its anatomy, with sections, atlases, data, the head and its electrodes, and the mouse; and EEG, MEG and fMRI carried onto the brain.</i></p>
 
+<p align="center">
+<a href="docs/gallery.md"><img src="assets/gallery/snn-02-fast-oscillation.jpg" width="32%" alt="The fast oscillation of Brunel's network, spikes in narrow volleys, in the Spiking Simulator"></a>
+<a href="docs/gallery.md"><img src="assets/gallery/snn-06-classes-of-excitability.jpg" width="32%" alt="f-I curves of three neuron models, two rising continuously and one jumping, in the Spiking Simulator"></a>
+<a href="docs/gallery.md"><img src="assets/gallery/snn-07-quantum-emitters.jpg" width="32%" alt="Photons of quantum emitters as spikes, in the Spiking Simulator"></a>
+</p>
+<p align="center"><i>The Spiking Simulator: networks of classical and quantum spiking neurons, run by the neuroscience domain's C++ engine and shown with their statistics and the engine's profile.</i></p>
+
 ## Quick Start
 
 **Online, with nothing to install.** The three applications run on the project's server:
