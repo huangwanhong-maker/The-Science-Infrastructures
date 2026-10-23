@@ -78,13 +78,14 @@ This slice touches every tier at small scale. It reaches astronomy, geodesy, oce
 
 ## Phase 4. The Next Domains
 
-- **After the foundations,** morphe and physis (README §4.2), which the user set first. Then **in the order the user set**, each reusing what the one before made, chosen where their structures meet those already here (see [the idea on shared structures](ideas/2026-10-22-shared-structures-across-the-sciences.md)). Neuroscience came first (ADR 0028, ADR 0032).
+- **After the foundations,** morphe and physis (README §4.6), which the user set first. Then **in the order the user set**, each reusing what the one before made, chosen where their structures meet those already here (see [the idea on shared structures](ideas/2026-10-22-shared-structures-across-the-sciences.md)). Neuroscience came first (ADR 0028, ADR 0032).
   1. **Spiking neural networks,** a module of neuroscience: leaky integrate-and-fire neurons, synapses, network simulation, spike-timing-dependent plasticity, shown in the Brain Atlas.
   2. **Computational linguistics:** automata, context-free grammars, parsing, grammar inference, on morphe's formal structures.
   3. **Genomics:** sequence alignment, k-mers, assembly, variant analysis, reusing the sequence, grammar, graph and inference algorithms.
   4. **Molecular science:** molecular graphs, conformers, reaction networks, on physis's chemistry and thermodynamics.
   5. **Drug discovery,** a bridge over genomics and molecular science: target–compound evidence, molecular properties, pharmacological models.
 - **A foundation for the quantitative social sciences** (README §4.3): measurement, surveys, causal inference, panels, networks, games and social choice, agent-based models; its name and its boundary with the inference foundation to be decided.
-- **The rest of the map** (README §4.4), the social sciences and the humanities included, as the work reaches each.
+- **Then tiers 2 and 3** (README §4.6, proposed): the inference foundation and the bridges tides, air–sea and navigation, as Phases 1 and 3 plan them; then chemistry, evolution, cell biology, the cryosphere, geology, planetary science, ecology, the quantitative social methods, demography and epidemiology.
+- **The rest of the map** (README §4.4, tier 4), the social sciences and the humanities included, as the work reaches each.
 - **Place each in the order** by what it may depend on, with its README, `module.json`, code, checks and notes.
 - **A cross-index of structures:** for each shared structure, the places it appears in each domain.

@@ -44,7 +44,7 @@ height 4   climate                                                       (bridge
 | [air-sea](air-sea/) | bridge | Exchange of momentum, heat, water and gases at the sea surface; wind waves | meteorology, oceanography | planned |
 | [climate](climate/) | bridge | The coupled system, energy balance, climatic zones, variability, orbital forcing | meteorology, oceanography, geography, astronomy, air-sea | draft |
 
-Future domains join the same order: chemistry, biology and ecology, among others, each beside or above the domains it stands on. Neuroscience, the first beyond the Earth and the sky, stands beside metrology.
+Future domains join the same order, each beside or above the domains it stands on. The root README lists all fifty-five, with what each would stand on and its priority ([§4.4](../README.md#44-the-domains)), and the disciplines held as modules of them ([§4.5](../README.md#45-disciplines-held-as-modules)). Neuroscience, the first beyond the Earth and the sky, stands beside metrology.
 
 ## 4. The Contract of a Domain
 

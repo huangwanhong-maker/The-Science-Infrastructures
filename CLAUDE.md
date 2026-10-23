@@ -26,7 +26,7 @@ This is an integrative programme to learn, use and research all domains of scien
   - **Geodesy** supports the other Earth sciences.
   - **Geophysics** is the solid Earth: plate motion, earthquakes and the crust ([ADR 0024](development/decisions/0024-the-solid-earth.md)).
 - **Neuroscience** is the first domain beyond the Earth and the sky ([ADR 0028](development/decisions/0028-neuroscience-and-the-brain-atlas.md)): the brain's reference spaces, parcellations and maps, and the head with its electrodes, drawn by the Brain Atlas. It is a repository of its own, attached as a submodule.
-- **Further domains** join the same order as the work reaches them. Every science is meant to join, the social sciences and the humanities included; the README's §4 maps them by branch. The foundations come next: morphe, the algebraic foundation (category theory, algebra, topology, geometry), and physis, the foundation of theoretical physics. Then the next five domains, in order: spiking neural networks (a module of neuroscience), computational linguistics, genomics, molecular science, and drug discovery (a bridge over genomics and molecular science).
+- **Further domains** join the same order as the work reaches them. Every science is meant to join, the social sciences and the humanities included; the README's §4 lists them all once, as foundations, domains or modules, with a priority for each. The foundations come next: morphe, the algebraic foundation (category theory, algebra, topology, geometry), and physis, the foundation of theoretical physics. Then the next five domains, in order: spiking neural networks (a module of neuroscience), computational linguistics, genomics, molecular science, and drug discovery (a bridge over genomics and molecular science).
 - **No laboratories.** The word is retired as the name of what we are. A themed grouping of works, if ever needed, is a *programme*: a README and a roadmap, owning no code. Do not use "laboratory" for any part of the infrastructure; proper names (the Nevada Geodetic Laboratory) and the decision records keep it.
 
 Every artefact serves one of three activities, and says which:
@@ -345,7 +345,7 @@ A domain directory contains:
 7. **Languages of the documents.** English, with abstracts in Chinese and Japanese as in the README, or more.
 8. **Licence for prose.** MIT covers software; notes may suit CC BY 4.0.
 9. **First renderer technology** for the scene model.
-10. **The next domains:** the order is set (README §4.2): first the foundations morphe and physis, then spiking neural networks, computational linguistics, genomics, molecular science, drug discovery; each domain is placed in the order, with its repository (here or its own), when its work begins. Which modules of theoretical physics physis adds beyond those it plans (electromagnetism, quantum mechanics, statistical mechanics, field theory) is physis's decision to record.
+10. **The next domains:** the order is set (README §4.6): first the foundations morphe and physis, then spiking neural networks, computational linguistics, genomics, molecular science, drug discovery (tier 1, the user's); tiers 2 and 3 are proposed; each domain is placed in the order, with its repository (here or its own), when its work begins. Which modules of theoretical physics physis adds beyond those it plans (electromagnetism, quantum mechanics, statistical mechanics, field theory) is physis's decision to record.
 11. **The first laboratory's repository on GitHub:** archive it with a pointer here, or leave it.
 
 ## 9. Current State
