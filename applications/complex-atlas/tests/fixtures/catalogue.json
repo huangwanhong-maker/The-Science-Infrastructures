@@ -1,0 +1,380 @@
+{
+ "families": [
+  {
+   "id": "surface",
+   "title": "Orientable surface",
+   "group": "Surfaces",
+   "description": "The closed orientable surface of genus g: one 4g-gon glued by a₁ b₁ a₁⁻¹ b₁⁻¹ ⋯ (genus 0: the sphere as a disc glued by a a⁻¹).",
+   "params": [
+    {
+     "name": "genus",
+     "type": "int",
+     "default": 1,
+     "min": 0,
+     "max": 8
+    }
+   ]
+  },
+  {
+   "id": "nonorientable",
+   "title": "Non-orientable surface",
+   "group": "Surfaces",
+   "description": "The closed surface with k crosscaps: one 2k-gon glued by c₁ c₁ ⋯ c_k c_k (k = 1, the projective plane; k = 2, the Klein bottle).",
+   "params": [
+    {
+     "name": "crosscaps",
+     "type": "int",
+     "default": 2,
+     "min": 1,
+     "max": 8
+    }
+   ]
+  },
+  {
+   "id": "klein-bottle",
+   "title": "Klein bottle",
+   "group": "Surfaces",
+   "description": "A square glued by a b a⁻¹ b: one vertex, two edges, one 2-cell.",
+   "params": []
+  },
+  {
+   "id": "words",
+   "title": "Polygons glued by words",
+   "group": "Surfaces",
+   "description": "Any polygons, each a word: a lowercase letter is a side along the polygon, its capital a side against it; equal letters are one edge.",
+   "params": [
+    {
+     "name": "words",
+     "type": "text",
+     "default": "abAB"
+    }
+   ]
+  },
+  {
+   "id": "dunce-hat",
+   "title": "Dunce hat",
+   "group": "Homotopy",
+   "description": "A triangle glued by a a a⁻¹: contractible, yet without a free edge, so it does not collapse (Zeeman 1964).",
+   "params": []
+  },
+  {
+   "id": "sphere",
+   "title": "Sphere",
+   "group": "Cell structures",
+   "description": "The n-sphere as a point with one n-cell.",
+   "params": [
+    {
+     "name": "n",
+     "type": "int",
+     "default": 2,
+     "min": 1,
+     "max": 8
+    }
+   ]
+  },
+  {
+   "id": "real-projective-space",
+   "title": "Real projective space",
+   "group": "Cell structures",
+   "description": "ℝPⁿ with one cell in each dimension, ∂e_k = (1 + (−1)^k) e_{k−1}.",
+   "params": [
+    {
+     "name": "n",
+     "type": "int",
+     "default": 3,
+     "min": 1,
+     "max": 8
+    }
+   ]
+  },
+  {
+   "id": "complex-projective-space",
+   "title": "Complex projective space",
+   "group": "Cell structures",
+   "description": "ℂPⁿ with one cell in each even dimension.",
+   "params": [
+    {
+     "name": "n",
+     "type": "int",
+     "default": 2,
+     "min": 1,
+     "max": 4
+    }
+   ]
+  },
+  {
+   "id": "lens-space",
+   "title": "Lens space",
+   "group": "Cell structures",
+   "description": "L(p, q) with one cell in each dimension, the 2-cell glued by aᵖ: π₁ = ℤ/p.",
+   "params": [
+    {
+     "name": "p",
+     "type": "int",
+     "default": 5,
+     "min": 1,
+     "max": 12
+    }
+   ]
+  },
+  {
+   "id": "presentation",
+   "title": "Presentation complex",
+   "group": "Groups",
+   "description": "One vertex, a loop for each letter, a 2-cell for each relator: its π₁ is the presented group. Relators are words, separated by spaces.",
+   "params": [
+    {
+     "name": "relators",
+     "type": "text",
+     "default": "aa bbb ababababab"
+    }
+   ]
+  },
+  {
+   "id": "lattice-torus",
+   "title": "Lattice torus",
+   "group": "Lattices",
+   "description": "The periodic n × m square lattice: the torus as a product of circles, with its links and plaquettes, the arena of lattice gauge theory.",
+   "params": [
+    {
+     "name": "n",
+     "type": "int",
+     "default": 8,
+     "min": 1,
+     "max": 64
+    },
+    {
+     "name": "m",
+     "type": "int",
+     "default": 8,
+     "min": 1,
+     "max": 64
+    }
+   ]
+  },
+  {
+   "id": "lattice-disc",
+   "title": "Lattice disc",
+   "group": "Lattices",
+   "description": "The n × m square grid: a disc, on which the plaquettes of a gauge field are independent and Wilson loops obey an exact area law.",
+   "params": [
+    {
+     "name": "n",
+     "type": "int",
+     "default": 8,
+     "min": 1,
+     "max": 64
+    },
+    {
+     "name": "m",
+     "type": "int",
+     "default": 8,
+     "min": 1,
+     "max": 64
+    }
+   ]
+  },
+  {
+   "id": "lattice-cylinder",
+   "title": "Lattice cylinder",
+   "group": "Lattices",
+   "description": "A circle of n links times an interval of m: an annulus.",
+   "params": [
+    {
+     "name": "n",
+     "type": "int",
+     "default": 12,
+     "min": 1,
+     "max": 64
+    },
+    {
+     "name": "m",
+     "type": "int",
+     "default": 4,
+     "min": 1,
+     "max": 64
+    }
+   ]
+  },
+  {
+   "id": "lattice-3-torus",
+   "title": "Lattice 3-torus",
+   "group": "Lattices",
+   "description": "The periodic n × n × n cubic lattice, with its cubes.",
+   "params": [
+    {
+     "name": "n",
+     "type": "int",
+     "default": 3,
+     "min": 1,
+     "max": 10
+    }
+   ]
+  },
+  {
+   "id": "boundary-simplex",
+   "title": "Boundary of a simplex",
+   "group": "Triangulations",
+   "description": "∂Δⁿ, the (n−1)-sphere on n + 1 vertices.",
+   "params": [
+    {
+     "name": "n",
+     "type": "int",
+     "default": 3,
+     "min": 2,
+     "max": 7
+    }
+   ]
+  },
+  {
+   "id": "octahedron",
+   "title": "Octahedron",
+   "group": "Triangulations",
+   "description": "The boundary of the cross-polytope: a 2-sphere on 6 vertices.",
+   "params": []
+  },
+  {
+   "id": "torus-7",
+   "title": "Seven-vertex torus",
+   "group": "Triangulations",
+   "description": "The minimal triangulation of the torus (Möbius 1886; Császár 1949).",
+   "params": []
+  },
+  {
+   "id": "projective-plane-6",
+   "title": "Six-vertex projective plane",
+   "group": "Triangulations",
+   "description": "The minimal triangulation of ℝP², the icosahedron with antipodes identified.",
+   "params": []
+  },
+  {
+   "id": "three-sphere",
+   "title": "Suspended 3-sphere",
+   "group": "Triangulations",
+   "description": "The suspension of ∂Δ³: a 3-sphere on 6 vertices.",
+   "params": []
+  },
+  {
+   "id": "facets",
+   "title": "Simplicial complex from facets",
+   "group": "Triangulations",
+   "description": "Any simplicial complex, its facets as lists of vertices separated by semicolons.",
+   "params": [
+    {
+     "name": "facets",
+     "type": "text",
+     "default": "0 1 2; 0 2 3; 0 3 1; 1 2 3"
+    }
+   ]
+  },
+  {
+   "id": "dual-simplex-boundary",
+   "title": "Dual 2-complex of ∂Δⁿ",
+   "group": "Spin foams",
+   "description": "The 2-complex dual to the boundary of the n-simplex: a vertex per facet, an edge per ridge, a 2-cell around each codimension-2 face. For n = 4, the spin-foam 2-complex of the 3-sphere.",
+   "params": [
+    {
+     "name": "n",
+     "type": "int",
+     "default": 4,
+     "min": 3,
+     "max": 6
+    }
+   ]
+  },
+  {
+   "id": "dual-torus-7",
+   "title": "Dual of the seven-vertex torus",
+   "group": "Spin foams",
+   "description": "The hexagonal torus dual to the minimal triangulation.",
+   "params": []
+  },
+  {
+   "id": "melon",
+   "title": "Melonic graph",
+   "group": "Coloured graphs",
+   "description": "A melonic (D+1)-coloured graph: the elementary melon with k melons inserted at random. Its 2-complex is the dual 2-skeleton of a D-sphere; the leading order of a coloured tensor model.",
+   "params": [
+    {
+     "name": "D",
+     "type": "int",
+     "default": 3,
+     "min": 2,
+     "max": 5
+    },
+    {
+     "name": "insertions",
+     "type": "int",
+     "default": 3,
+     "min": 0,
+     "max": 40
+    },
+    {
+     "name": "seed",
+     "type": "int",
+     "default": 1,
+     "min": 1,
+     "max": 999999
+    }
+   ]
+  },
+  {
+   "id": "coloured-graph",
+   "title": "Random coloured graph",
+   "group": "Coloured graphs",
+   "description": "A random (D+1)-coloured bipartite graph with 2p vertices: a Feynman graph of a group field theory, shown as its 2-complex of bicoloured cycles.",
+   "params": [
+    {
+     "name": "D",
+     "type": "int",
+     "default": 3,
+     "min": 2,
+     "max": 5
+    },
+    {
+     "name": "p",
+     "type": "int",
+     "default": 3,
+     "min": 1,
+     "max": 12
+    },
+    {
+     "name": "seed",
+     "type": "int",
+     "default": 1,
+     "min": 1,
+     "max": 999999
+    }
+   ]
+  },
+  {
+   "id": "coloured-pseudomanifold",
+   "title": "Pseudomanifold of a coloured graph",
+   "group": "Coloured graphs",
+   "description": "The D-dimensional pseudomanifold a random coloured graph encodes, as a Δ-complex: k-cells are the components of the subgraphs on D − k colours.",
+   "params": [
+    {
+     "name": "D",
+     "type": "int",
+     "default": 3,
+     "min": 2,
+     "max": 4
+    },
+    {
+     "name": "p",
+     "type": "int",
+     "default": 3,
+     "min": 1,
+     "max": 10
+    },
+    {
+     "name": "seed",
+     "type": "int",
+     "default": 1,
+     "min": 1,
+     "max": 999999
+    }
+   ]
+  }
+ ]
+}

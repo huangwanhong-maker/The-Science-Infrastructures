@@ -17,14 +17,16 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 option(SCIENCE_CHECKS "Build the checks of every library" ON)
 set(CALX_CHECKS ${SCIENCE_CHECKS})
+set(MORPHE_CHECKS ${SCIENCE_CHECKS})
 set(PHYSIS_CHECKS ${SCIENCE_CHECKS})
 set(NEUROSCIENCE_CHECKS ${SCIENCE_CHECKS})
 if(SCIENCE_CHECKS)
   enable_testing()
 endif()
 
-# The foundations: calx and morphe stand alone (morphe has no C++ yet); physis uses calx.
+# The foundations: calx and morphe stand alone; physis uses both.
 add_subdirectory(foundations/calx)
+add_subdirectory(foundations/morphe)
 add_subdirectory(foundations/physis)
 
 # The domains with C++, in the order of the domains.

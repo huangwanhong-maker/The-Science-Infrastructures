@@ -1,0 +1,12 @@
+{
+ "value": 0.2499999999999997,
+ "colourings": 136,
+ "r": 4,
+ "edges": 10,
+ "w2": 4.000000000000001,
+ "sphere": 0.24999999999999994,
+ "triangulation": {
+  "vertices": 5,
+  "tetrahedra": 5
+ }
+}

@@ -1,0 +1,49 @@
+{
+ "complex": {
+  "name": "surface",
+  "title": "surface of genus 2",
+  "vertices": 1,
+  "edges": [
+   [
+    0,
+    0
+   ],
+   [
+    0,
+    0
+   ],
+   [
+    0,
+    0
+   ],
+   [
+    0,
+    0
+   ]
+  ],
+  "faces": [
+   {
+    "base": 0,
+    "boundary": [
+     1,
+     2,
+     -1,
+     -2,
+     3,
+     4,
+     -3,
+     -4
+    ]
+   }
+  ],
+  "cells": [],
+  "labels": {
+   "edges": [
+    "a1",
+    "b1",
+    "a2",
+    "b2"
+   ]
+  }
+ }
+}

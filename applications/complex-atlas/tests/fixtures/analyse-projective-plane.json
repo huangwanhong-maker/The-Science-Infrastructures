@@ -1,0 +1,154 @@
+{
+ "analysis": {
+  "dimension": 2,
+  "euler": 1,
+  "counts": [
+   1,
+   1,
+   1
+  ],
+  "components": 1,
+  "homology": [
+   {
+    "dimension": 0,
+    "rank": 1,
+    "torsion": [],
+    "generators": [
+     {
+      "order": 0,
+      "chain": [
+       [
+        0,
+        1
+       ]
+      ]
+     }
+    ],
+    "text": "ℤ"
+   },
+   {
+    "dimension": 1,
+    "rank": 0,
+    "torsion": [
+     2
+    ],
+    "generators": [
+     {
+      "order": 2,
+      "chain": [
+       [
+        0,
+        1
+       ]
+      ]
+     }
+    ],
+    "text": "ℤ/2"
+   },
+   {
+    "dimension": 2,
+    "rank": 0,
+    "torsion": [],
+    "generators": [],
+    "text": "0"
+   }
+  ],
+  "cohomology": [
+   {
+    "dimension": 0,
+    "rank": 1,
+    "torsion": []
+   },
+   {
+    "dimension": 1,
+    "rank": 0,
+    "torsion": []
+   },
+   {
+    "dimension": 2,
+    "rank": 0,
+    "torsion": [
+     2
+    ]
+   }
+  ],
+  "betti": {
+   "2": [
+    1,
+    1,
+    1
+   ],
+   "3": [
+    1,
+    0,
+    0
+   ]
+  },
+  "fundamental_group": {
+   "generators": [
+    "a"
+   ],
+   "relators": [
+    [
+     1,
+     1
+    ]
+   ],
+   "loops": [
+    [
+     1
+    ]
+   ],
+   "text": "⟨a | a a⟩",
+   "simplified": {
+    "generators": [
+     "a"
+    ],
+    "relators": [
+     [
+      1,
+      1
+     ]
+    ],
+    "loops": [
+     [
+      1
+     ]
+    ],
+    "text": "⟨a | a a⟩"
+   },
+   "abelianisation": {
+    "rank": 0,
+    "torsion": [
+     2
+    ],
+    "text": "ℤ/2"
+   }
+  },
+  "surface": {
+   "closed": true,
+   "orientable": false,
+   "genus": 0,
+   "crosscaps": 1,
+   "boundary_components": 0,
+   "euler": 1,
+   "name": "projective plane",
+   "normal_form": [
+    1,
+    1
+   ],
+   "orientation": []
+  },
+  "manifold": null,
+  "collapse": {
+   "collapsible": false,
+   "remaining": [
+    1,
+    1,
+    1
+   ],
+   "steps": 0
+  },
+  "coloured_graph": null
+ }
+}

@@ -1,6 +1,6 @@
 # The Mathematics of the Infrastructure
 
-*Status: draft, 2026-10-23.* This document maps the mathematics the sciences need onto the infrastructure's foundation libraries, sets the order among them and among their modules, checks the map against the whole of mathematics, and fixes how the libraries' C++ is laid out, named, built and checked. The decision is [ADR 0035](../development/decisions/0035-the-mathematical-foundations.md); each foundation records its part in its own decision log. Only the modules the first simulations need are written (§11); the rest of the map is the plan, `planned` until a domain needs it.
+*Status: draft, 2026-10-23.* This document maps the mathematics the sciences need onto the infrastructure's foundation libraries, sets the order among them and among their modules, checks the map against the whole of mathematics, and fixes how the libraries' C++ is laid out, named, built and checked. The decision is [ADR 0035](../development/decisions/0035-the-mathematical-foundations.md); each foundation records its part in its own decision log. Only the modules the first simulations need are written (§11), and since [ADR 0039](../development/decisions/0039-complexes-symmetry-and-fields.md) those of complexes, symmetry and fields; the rest of the map is the plan, `planned` until a domain needs it.
 
 ## 1. Principles of the Division
 
@@ -35,9 +35,9 @@ Each level may use every level beneath it, and none above.
 
 | Library | Namespace | Kind of mathematics | Depends on | State |
 |---|---|---|---|---|
-| morphe | `morphe` | Structures and their equivalences: exact, symbolic, discrete | — | designed |
+| morphe | `morphe` | Structures and their equivalences: exact, symbolic, discrete | — | designed; first slice written (arithmetic, algebra, combinatorics, topology) |
 | calx | `calx` | Numerical methods on floating-point numbers and arrays; the computation stack | — | designed; first modules written |
-| physis | `physis` | Units, geometry, analysis, dynamics, control, discretisation, and physical law | calx, morphe | designed; first modules written |
+| physis | `physis` | Units, geometry, analysis, dynamics, control, discretisation, and physical law | calx, morphe | designed; units, dynamics, quantum, symmetry, geometry (in part), spacetime, field theory, gauge, quantum gravity written |
 | inference (name open) | `inference` | Probability, stochastic processes, statistics, inference, learning | calx, morphe, physis | designed here (§6); no repository yet |
 | social methods (name open) | — | Measurement, surveys, econometrics, games, social choice, agent-based models | inference, morphe, calx | named in README §4.3 (§7) |
 
@@ -52,11 +52,11 @@ Each level may use every level beneath it, and none above.
 | `logic` *(new)* | Propositional, first-order and modal logic; set theory as a foundation; computability; the simply and dependently typed λ-calculi, proof terms and normalisation (Curry–Howard–Lambek); satisfiability | planned |
 | `categories` | Categories, functors, natural transformations; limits and colimits; adjunctions; monoidal and enriched categories; algebras and coalgebras of functors; toposes | planned |
 | `equivalence` | Canonical forms; partition refinement; bisimulation; morphisms of coalgebras | planned |
-| `arithmetic` | ℤ, ℚ, finite fields, algebraic numbers; polynomial rings; computational number theory (primes, factorisation, lattices of ℤⁿ) | planned |
-| `algebra` | Groups (finite, permutation, presented), rings, fields, modules, associative and Lie algebras over exact rings, representations; orders and lattices; universal algebra; homological algebra; **exact linear algebra** over ℤ, ℚ and finite fields (elimination, Hermite and Smith normal forms, kernels, determinants without rounding) | planned |
-| `combinatorics` *(new)* | Enumeration, generating functions, designs; **graphs** and hypergraphs as C-sets (paths, cuts, flows, matchings, colourings, isomorphism by refinement); matroids; exact combinatorial optimisation | planned |
-| `topology` | General topology of finite spaces; simplicial, cubical and CW complexes; homology and cohomology; persistence; fundamental groups; homotopy equivalence; combinatorial manifolds and knots | planned |
-| `algebraic_geometry` | Gröbner bases; varieties and schemes as far as computation reaches; real algebraic geometry | planned |
+| `arithmetic` | ℤ, ℚ, finite fields, algebraic numbers; polynomial rings; computational number theory (primes, factorisation, lattices of ℤⁿ) | **draft**: integers without bound, rationals, residues |
+| `algebra` | Groups (finite, permutation, presented), rings, fields, modules, associative and Lie algebras over exact rings, representations; orders and lattices; universal algebra; homological algebra; **exact linear algebra** over ℤ, ℚ and finite fields (elimination, Hermite and Smith normal forms, kernels, determinants without rounding) | **draft**: the Smith normal form, homology with generators, presented groups, finite groups and homomorphisms into them |
+| `combinatorics` *(new)* | Enumeration, generating functions, designs; **graphs** and hypergraphs as C-sets (paths, cuts, flows, matchings, colourings, isomorphism by refinement); matroids; exact combinatorial optimisation | **draft**: multigraphs, spanning forests |
+| `topology` | General topology of finite spaces; simplicial, cubical and CW complexes; homology and cohomology; persistence; fundamental groups; homotopy equivalence; combinatorial manifolds and knots; dual complexes; coloured graphs (crystallisations) | **draft**: CW complexes with attaching words, simplicial complexes, constructions, homology, π₁, surfaces, manifolds, collapses, dual 2-complexes, coloured graphs |
+| `algebraic_geometry` | Polynomial ideals and Gröbner bases (Buchberger, F4); elimination; dimension, Hilbert series, free resolutions; varieties over ℚ and finite fields; toric varieties; real algebraic geometry; tropical geometry; schemes as far as computation reaches | planned (its order of work: morphe decision 0004, §2.3) |
 | `formal` | Words and trees; automata, grammars and transducers; rewriting systems; transition systems and process calculi; bimorphisms | planned |
 
 Order: `logic`, `categories` and `arithmetic` stand alone; `equivalence` uses `categories`; `algebra` uses `arithmetic`, `categories`, `equivalence`; `combinatorics` uses `categories`, `equivalence`; `topology` uses `algebra`, `combinatorics`, `equivalence`; `algebraic_geometry` uses `arithmetic`, `algebra`; `formal` uses `categories`, `equivalence`, `logic`.
@@ -74,6 +74,7 @@ Order: `logic`, `categories` and `arithmetic` stand alone; `equivalence` uses `c
 | `transforms` | Fast Fourier transforms (real, complex, many-dimensional); discrete cosine and wavelet transforms; spherical-harmonic transforms | planned |
 | `signal` *(new)* | Digital filters (FIR, IIR, zero-phase), windows, convolution and correlation, resampling, spectral estimation by periodograms | planned |
 | `quadrature` | Integration on intervals (Gauss, Gauss–Kronrod, Clenshaw–Curtis), on the sphere, in many dimensions (cubature, Monte Carlo and quasi-Monte Carlo) | **draft**: adaptive Gauss–Kronrod (7, 15) |
+| `differentiation` *(new)* | Forward differentiation by Taylor arithmetic (jets of order one and two) of functions written as templates; automatic differentiation as a transformation of the IR stays calx's open decision | **draft**: `Jet<N>`, `Dual<N>`, gradients and Hessians |
 | `integrators` | Ordinary differential equations: explicit, embedded adaptive, implicit and IMEX; differential-algebraic and delay equations; stochastic differential equations (Euler–Maruyama, Milstein) | **draft**: Euler, Heun, RK4, Dormand–Prince 5(4) |
 | `solvers` | Roots of functions; nonlinear systems (Newton, Broyden); fixed points; continuation | **draft**: bracketed roots (Brent) |
 | `optimisation` *(new)* | Unconstrained (gradient, Newton, quasi-Newton, trust region); constrained (interior point, SQP); linear, quadratic and conic programming; stochastic and derivative-free methods; nonlinear least squares | planned |
@@ -86,7 +87,8 @@ Order: every numerics module may use `compute/` for bulk kernels; `integrators`,
 | Module | Content | Status |
 |---|---|---|
 | `units` | Dimensions as the free abelian group ℤ⁷ over the SI base units; quantities read and written with their units; CODATA constants, versioned | **draft**: dimensions and quantities |
-| `geometry` | Euclidean, affine and projective geometry; spherical and ellipsoidal geometry; rotations (SO(3), SE(3), quaternions); manifolds, metrics, connections, geodesics, curvature, differential forms; Lie groups and algebras acting on space; information geometry; map projections | planned |
+| `symmetry` *(new)* | Lie groups and algebras as physics uses them (U(1), SU(N), SO(N), Sp(N), Lorentz, Poincaré, SL(2, ℂ)); exponential maps, Haar measures, characters, the Weyl integration formula; representations, Clebsch–Gordan series and recoupling (3nj) symbols and their quantum deformations; symmetry breaking, Noether currents | **draft**: U(1), SU(2), SU(N), the Lorentz group and SL(2, ℂ), exact 3j, 6j, 9j, quantum 6j, Weyl integration |
+| `geometry` | Euclidean, affine and projective geometry; spherical and ellipsoidal geometry; rotations (SO(3), SE(3), quaternions, from `symmetry`); manifolds, metrics, connections, geodesics, curvature, differential forms; information geometry; map projections | **draft**: metrics, curvature by forward differentiation, geodesics |
 | `computational_geometry` *(new)* | Convex hulls, triangulations, Voronoi diagrams, meshes and their generation; spatial indices (k-d trees, R-trees); robust geometric predicates | planned |
 | `analysis` *(new)* | Real and complex analysis as computation needs it (conformal maps, asymptotics); function spaces and operators, spectral theory; Fourier and harmonic analysis on groups and spheres (spherical harmonics, Wigner D-functions); integral transforms and integral equations; calculus of variations | planned |
 | `dynamics` *(new)* | State spaces, vector fields and flows; linear systems and their exact propagators; hybrid systems (flow, guard, jump); discrete-time maps and difference equations; delay and stochastic dynamics; equilibria, stability, bifurcation, Lyapunov exponents, invariant measures | **draft**: linear propagators, hybrid systems |
@@ -94,9 +96,14 @@ Order: every numerics module may use `compute/` for bulk kernels; `integrators`,
 | `discretisation` | Field equations in space and time: finite differences, volumes and elements; spectral methods; boundary elements; discrete exterior calculus on morphe's complexes; geometric and Lie-group integrators. A discretised field equation is a dynamical system on a finite state (the method of lines). | planned; a JavaScript stand-in |
 | `quantum` *(new)* | Hilbert spaces, states and operators (pure and mixed); spins and qubits; unitary dynamics; open systems by the GKSL (Lindblad) master equation, vectorised as Liouvillians or in the affine coordinates of a generalised Bloch vector, integrated exactly as linear systems; quantum trajectories (Monte Carlo wave function: jumps at a hazard, as escape events); measurement; mean-field (product-state) closures | draft: the open two-level system and its trajectories |
 | `statistical_mechanics` *(new)* | Ensembles and partition functions; lattice and spin models (Ising, Potts, Heisenberg; with a transverse field, quantum); Glauber and Metropolis dynamics as master equations; mean-field theory and phase transitions | planned |
-| `mechanics` · `gravitation` · `thermodynamics` · `continuum` · `chemistry` · `radiation` | The laws of physics, as physis's architecture plans them; electromagnetism joins when a domain needs it (§8) | planned |
+| `spacetime` *(new)* | Spacetimes as objects: Minkowski space and causal structure; exact solutions in charts; horizons; discrete spacetimes (Regge geometry, causal sets, causal dynamical triangulations) | **draft**: Minkowski space, a catalogue of exact solutions, Regge geometry, causal sets |
+| `field_theory` *(new)* | Classical fields and Noether's theorem; lattice field theory on complexes; Monte Carlo and its statistics; perturbation theory (Feynman graphs, symmetry factors, integrals); free fields; renormalisation group; conformal and topological field theories; fields on curved spacetimes | **draft**: scalar fields on complexes, Markov-chain statistics, Feynman graphs, zero-dimensional field theory |
+| `gauge` *(new)* | Connections and curvature; lattice gauge theory on any 2-complex; Monte Carlo of gauge fields; Wilson and Polyakov loops; character and strong-coupling expansions; exact two-dimensional Yang–Mills; BF theory, flat connections; Chern–Simons | **draft**: gauge fields of finite groups, U(1), SU(2), SU(N) on CW complexes, updates, observables, Migdal–Witten |
+| `quantum_gravity` *(new)* | Spin networks; spin foams (Ponzano–Regge, Turaev–Viro, Barrett–Crane, EPRL); group field theory and tensor models; matrix models and random surfaces; causal dynamical triangulations; causal-set dynamics | **draft**: Turaev–Viro state sums, BF amplitudes, coloured tensor models, matrix-model gluings |
+| `electromagnetism` *(new)* | Maxwell's equations, potentials and gauges, radiation from sources, fields in media; on complexes by discrete exterior calculus | planned |
+| `mechanics` · `gravitation` · `thermodynamics` · `continuum` · `chemistry` · `radiation` | The laws of physics, as physis's architecture plans them | planned |
 
-Order: `units` stands alone; `geometry`, `analysis` and `dynamics` use `units`; `computational_geometry` uses `geometry`; `control` uses `dynamics`; `discretisation` uses `geometry`, `analysis` and `dynamics`; `quantum` uses `geometry` (its groups) and `dynamics` (an open system's flow is linear on its density matrix); `statistical_mechanics` uses `thermodynamics`, `dynamics` and `quantum`; the physics modules as physis's architecture lists them, `mechanics` using `dynamics` too.
+Order: `units` stands alone; `symmetry` uses calx and morphe `arithmetic`; `geometry` uses `units` and `symmetry`; `spacetime` uses `geometry` and morphe `topology`; `field_theory` uses `spacetime`; `gauge` uses `field_theory` and `symmetry`; `quantum_gravity` uses `gauge`; `electromagnetism` uses `geometry`, `discretisation` and `gauge` (physis decision 0005, §2.2); `analysis` and `dynamics` use `units`; `computational_geometry` uses `geometry`; `control` uses `dynamics`; `discretisation` uses `geometry`, `analysis` and `dynamics`; `quantum` uses `geometry` (its groups) and `dynamics` (an open system's flow is linear on its density matrix); `statistical_mechanics` uses `thermodynamics`, `dynamics` and `quantum`; the physics modules as physis's architecture lists them, `mechanics` using `dynamics` too.
 
 ## 6. Chance (inference, planned)
 
@@ -144,11 +151,11 @@ Every class of the Mathematics Subject Classification 2020 (zbMATH Open and Math
 | 12, 13 | Field theory and polynomials; commutative algebra | morphe `algebra`, `algebraic_geometry` |
 | 14 | Algebraic geometry | morphe `algebraic_geometry` |
 | 15 | Linear and multilinear algebra; matrix theory | morphe `algebra` (exact); calx `linalg` (numerical) |
-| 16, 17 | Associative rings and algebras; nonassociative rings and algebras | morphe `algebra`; Lie algebras of transformations in physis `geometry` |
+| 16, 17 | Associative rings and algebras; nonassociative rings and algebras | morphe `algebra`; Lie algebras of physical symmetries in physis `symmetry` |
 | 18 | Category theory; homological algebra | morphe `categories`, `algebra` |
 | 19 | K-theory | morphe `algebra`, `topology` (research only) |
 | 20 | Group theory and generalisations | morphe `algebra` |
-| 22 | Topological groups, Lie groups | physis `geometry` |
+| 22 | Topological groups, Lie groups | physis `symmetry` |
 | 26 | Real functions | physis `analysis`; calx `approximation` |
 | 28 | Measure and integration | inference `probability`; calx `quadrature` |
 | 30, 32 | Functions of one and several complex variables | physis `analysis`; calx `special_functions` |
@@ -179,11 +186,11 @@ Every class of the Mathematics Subject Classification 2020 (zbMATH Open and Math
 | 70 | Mechanics of particles and systems | physis `mechanics` |
 | 74 | Mechanics of deformable solids | physis `continuum` |
 | 76 | Fluid mechanics | physis `continuum` |
-| 78 | Optics, electromagnetic theory | physis `radiation`; an `electromagnetism` module when needed |
+| 78 | Optics, electromagnetic theory | physis `radiation`, `electromagnetism` (planned) |
 | 80 | Classical thermodynamics, heat transfer | physis `thermodynamics` |
-| 81 | Quantum theory | physis `quantum` |
+| 81 | Quantum theory | physis `quantum`; `field_theory`, `gauge` (81T, quantum field theory) |
 | 82 | Statistical mechanics, structure of matter | physis `statistical_mechanics`, `thermodynamics` |
-| 83 | Relativity and gravitational theory | physis `gravitation` |
+| 83 | Relativity and gravitational theory | physis `spacetime`, `gravitation`; `quantum_gravity` (83C45) |
 | 85, 86 | Astronomy and astrophysics; geophysics | the domains (astronomy; geophysics, oceanography, meteorology) |
 | 90 | Operations research, mathematical programming | calx `optimisation`; morphe `combinatorics`; inference `processes` (queues) |
 | 91 | Game theory, economics, social and behavioural sciences | the social methods (§7); the social-science domains |
@@ -202,6 +209,7 @@ Every class of the Mathematics Subject Classification 2020 (zbMATH Open and Math
 - **Optimisation** is calx's when continuous, morphe's when combinatorial and exact, physis's when it is the control of a dynamical system, inference's when it is the fitting of a model.
 - **Signals** are filtered and transformed by calx (`signal`, `transforms`) and estimated by inference (`time_series`).
 - **Quantum neurons** meet the classical machinery exactly: an open quantum system's density matrix (or a qubit's Bloch vector) flows linearly under the GKSL equation, so `physis/quantum` hands `physis/dynamics` a linear system whose propagator `calx/linalg` exponentiates; a quantum-jump unravelling fires at a hazard, as an escape-noise neuron does; Ising-like networks are `statistical_mechanics`' spin models with Glauber or Lindblad dynamics. The neuroscience domain's spiking networks have the first, a two-level emitter along exact quantum trajectories, and plan more (its survey of 2026-10-23).
+- **Complexes and fields** meet in physis: a scalar field is a 0-cochain on a morphe complex; a lattice gauge field a function from its 1-cells to a group of `symmetry`, whose holonomy around a 2-cell is the product along that cell's attaching word; the Feynman graphs of a group field theory are morphe's coloured graphs, whose bicoloured cycles bound the 2-cells of the dual 2-skeleton on which their amplitudes are BF or spin-foam state sums; a discrete spacetime is a simplicial complex with edge lengths (Regge) or a partial order (causal sets). The exact side (homology, fundamental groups, counting homomorphisms) is morphe's; the numerical side (Monte Carlo, recoupling in floating point, curvature) physis's (ADR 0039).
 - **Simulation** is the composition: a domain states its systems through `physis/dynamics`, integrates them with `calx/integrators` and `calx/linalg`, draws its noise from `calx/random`, runs in parallel on `calx/compute`, and is compared with data through inference.
 
 ## 10. The C++ of the Libraries
@@ -264,6 +272,8 @@ The spiking networks of the neuroscience domain are the first C++ of the infrast
 | Mean-field theory (Siegert's formula, fixed points) | `calx/special_functions`, `calx/quadrature`, `calx/solvers` |
 | Parameters with units | `physis/units` |
 | Checks | `calx/verification` |
+
+The second slice ([ADR 0039](../development/decisions/0039-complexes-symmetry-and-fields.md)) is the research on complexes, symmetry and fields: morphe's `arithmetic`, `algebra`, `combinatorics` and `topology`; calx's `differentiation`; physis's `symmetry`, `geometry` (metrics and curvature), `spacetime`, `field_theory`, `gauge` and `quantum_gravity`; and the Complex Atlas, which shows them.
 
 Everything else in this map is planned. The roadmap continues with morphe's arithmetic, algebra and topology toward discrete exterior calculus, and physis's shallow-water model (README §4.6); inference begins when a domain first needs its statistics.
 

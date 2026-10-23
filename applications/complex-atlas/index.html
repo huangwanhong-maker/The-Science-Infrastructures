@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Complex Atlas</title>
+  <meta name="description" content="Cell complexes, their invariants and the fields on them: CW complexes and triangulations realised in space, unfolded into nets, analysed exactly by the foundations' C++, and carrying gauge fields and state sums.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M6 24L16 5l10 19z' fill='%23c08081' fill-opacity='.35' stroke='%23c08081' stroke-width='1.8' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='5' r='2.2' fill='%23f2c27c'/%3E%3Ccircle cx='6' cy='24' r='2.2' fill='%23f2c27c'/%3E%3Ccircle cx='26' cy='24' r='2.2' fill='%23f2c27c'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" media="print" onload="this.media='all'"
+        href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..600&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module" src="src/app.js"></script>
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="mark" viewBox="0 0 32 32">
+        <path d="M6 24L16 5l10 19z" fill="#c08081" fill-opacity=".28" stroke="#c08081" stroke-width="1.6" stroke-linejoin="round"/>
+        <path d="M11 14.5l2.2 1.2M21 14.5l-2.2 1.2M16 24v-2.4" stroke="#e8c3dc" stroke-width="1.3" stroke-linecap="round"/>
+        <circle cx="16" cy="5" r="2" fill="#f2c27c"/>
+        <circle cx="6" cy="24" r="2" fill="#f2c27c"/>
+        <circle cx="26" cy="24" r="2" fill="#f2c27c"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <header class="top">
+    <div class="brand">
+      <svg class="mark"><use href="#mark"/></svg>
+      <div class="brand-text">
+        <span class="brand-name">Complex Atlas</span>
+        <span class="brand-sub">cell complexes, their invariants and the fields on them</span>
+      </div>
+    </div>
+    <nav class="views" role="tablist" aria-label="Views">
+      <button data-view="realisation" role="tab">Realisation</button>
+      <button data-view="net" role="tab">Net</button>
+      <button data-view="hasse" role="tab">Hasse diagram</button>
+    </nav>
+    <div class="top-right">
+      <span id="status" class="status" aria-live="polite"></span>
+      <span id="engine" class="engine">…</span>
+    </div>
+  </header>
+
+  <main>
+    <aside id="left" class="panel">
+      <h3>Catalogue</h3>
+      <div id="catalogue"></div>
+      <h3>Your complex</h3>
+      <div id="input" class="pad"></div>
+      <h3>Display</h3>
+      <div id="display" class="pad"></div>
+    </aside>
+
+    <section id="centre">
+      <div id="about" class="about"></div>
+      <div id="stage">
+        <div id="view-realisation" class="view"></div>
+        <svg id="view-net" class="view" hidden></svg>
+        <svg id="view-hasse" class="view" hidden></svg>
+        <div id="notice" class="notice" hidden></div>
+        <div id="hover" class="hover" hidden></div>
+        <div id="legend" class="legend" hidden></div>
+      </div>
+    </section>
+
+    <aside id="right" class="panel">
+      <nav class="tabs" role="tablist" aria-label="Panels">
+        <button data-panel="invariants" role="tab">Invariants</button>
+        <button data-panel="fields" role="tab">Fields</button>
+        <button data-panel="sums" role="tab">State sums</button>
+      </nav>
+      <div id="panel-invariants" class="panel-body"></div>
+      <div id="panel-fields" class="panel-body" hidden></div>
+      <div id="panel-sums" class="panel-body" hidden></div>
+    </aside>
+  </main>
+</body>
+</html>

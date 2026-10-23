@@ -75,9 +75,10 @@ Domains      height 4   climate
              height 1   geodesy
              height 0   metrology · neuroscience (a submodule)
                     │ use
-Foundations  physis           units · geometry · discretisation · mechanics · gravitation ·
-(foundations/,                thermodynamics · continuum · chemistry · radiation
- submodules) calx             compute stack · numerical methods
+Foundations  physis           units · symmetry · geometry · dynamics · quantum · discretisation ·
+(foundations/,                spacetime · field theory · gauge · quantum gravity · mechanics ·
+ submodules)                  gravitation · thermodynamics · continuum · chemistry · radiation
+             calx             compute stack · numerical methods
              morphe           arithmetic · categories · equivalence · algebra · topology ·
                               algebraic geometry · formal structures
              (inference)      estimation · filtering · assimilation · uncertainty · learning
@@ -207,9 +208,12 @@ The applications run in the browser, as ES modules without a build step. They im
 | Linear algebra, FFT, ODE integrator | calx: `numerics/` |
 | Exact arithmetic, groups, representations, lattices, presentations | morphe: `arithmetic`, `algebra` |
 | Categories, C-sets, bisimulation, automata, rewriting | morphe: `categories`, `equivalence`, `formal` |
-| Cell complexes, homology, Gröbner bases | morphe: `topology`, `algebraic_geometry` |
+| Cell complexes, homology, fundamental groups, coloured graphs, Gröbner bases | morphe: `topology`, `algebraic_geometry` |
 | Units and physical constants | physis: `units` |
-| Rotations, geodesics, map projections, differential geometry | physis: `geometry` |
+| Lie groups, their representations, recoupling (3nj) symbols | physis: `symmetry` |
+| Rotations, geodesics, curvature, map projections, differential geometry | physis: `geometry` |
+| Exact solutions of general relativity, causal structure, Regge geometry, causal sets | physis: `spacetime` |
+| Lattice fields, gauge fields on complexes, spin foams, group field theory | physis: `field_theory`, `gauge`, `quantum_gravity` |
 | The spherical-harmonic transform, PDE discretisation, discrete exterior calculus, geometric integrators | physis: `discretisation` |
 | n-body dynamics, potential theory, geophysical fluid dynamics, radiative transfer, reaction kinetics | physis |
 | Least squares, Kalman filters, 4D-Var, surrogate models | the inference foundation (planned) |

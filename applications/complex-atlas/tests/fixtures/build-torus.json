@@ -1,0 +1,35 @@
+{
+ "complex": {
+  "name": "torus",
+  "title": "abAB",
+  "vertices": 1,
+  "edges": [
+   [
+    0,
+    0
+   ],
+   [
+    0,
+    0
+   ]
+  ],
+  "faces": [
+   {
+    "base": 0,
+    "boundary": [
+     1,
+     2,
+     -1,
+     -2
+    ]
+   }
+  ],
+  "cells": [],
+  "labels": {
+   "edges": [
+    "a",
+    "b"
+   ]
+  }
+ }
+}

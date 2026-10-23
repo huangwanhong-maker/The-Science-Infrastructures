@@ -35,12 +35,14 @@ An integrative infrastructure for learning, using and researching all domains of
 
 ## Quick Start
 
-**Online, with nothing to install.** The three atlases run on the project's server; the fourth application does not:
+**Online, with nothing to install.** The three atlases run on our online server; the Spiking Simulator and the Complex Atlas do not:
 
 - **Earth Atlas:** http://173.212.213.207:9201/ — the atmosphere, the ocean, the land, the people and the solid Earth on one globe.
 - **Brain Atlas:** http://173.212.213.207:9202/ — the human brain in the round, every part with its anatomy; sections, atlases, data, the head and its electrodes, the mouse brain, and EEG, MEG and fMRI mapped onto the brain.
 - **Celestial Atlas:** http://173.212.213.207:9200/ — the Sun, the Moon, the planets, the stars and the galaxies, at any instant from 1849 to 2150.
 - **Spiking Simulator:** not run on our online server, whose resources the other applications already take much of — networks of spiking neurons, classical and quantum, composed in the page and run by the neuroscience domain's C++ engine. Each run is a simulation that takes seconds on every core of the machine serving it, so for now it runs on your own computer: see [the Spiking Simulator on your computer](#the-spiking-simulator-on-your-computer), four lines.
+
+- **Complex Atlas:** not run on our online server, whose resources the other applications already take much of — cell complexes, their invariants and the fields on them, computed by a C++ engine on the foundations morphe and physis; so for now it runs on your own computer: see [the Complex Atlas on your computer](#the-complex-atlas-on-your-computer).
 
 The Earth and Celestial Atlases link to each other: a place on the Earth leads to its sky, and a sky to its weather.
 
@@ -95,6 +97,15 @@ python applications/spiking-simulator/serve.py --open
 ```
 
 The third line builds the engine (a minute or two, once; the page offers to do it too), and the fourth opens the simulator at http://127.0.0.1:8830/. Choose one of the eight examples (Brunel's balanced network, the classes of excitability, quantum emitters, STDP and more) and press **Run**; its activity, statistics and the engine's profile follow in the tabs. Its [README](applications/spiking-simulator/README.md) tells the rest.
+
+<a id="the-complex-atlas-on-your-computer"></a>**The Complex Atlas on your computer.** It needs what the Spiking Simulator needs (Git, Python, g++), and no data:
+
+```
+python applications/complex-atlas/engine.py build
+python applications/complex-atlas/serve.py --open
+```
+
+The first line builds its engine (a minute or two, once; the page offers to do it too), the second opens the atlas at http://127.0.0.1:8850/. Choose a complex from the catalogue (a surface, a lattice torus, a triangulated 3-sphere, a melonic graph of a tensor model) or type your own as words (`abAB`) or facets (`0 1 2; 0 2 3; …`); read its invariants, click a generator to see it on the complex, run a gauge field in **Fields** or a Turaev–Viro sum in **State sums**. Its [README](applications/complex-atlas/README.md) tells the rest.
 
 *If something goes wrong.*
 
@@ -214,8 +225,8 @@ A priority such as 1.3 is the third place in tier 1. Within a tier, a domain com
 | Priority | Foundation | What it holds | Status |
 |---|---|---|---|
 | built | [**calx**](https://github.com/huangwanhong-maker/calx) | Computation: the retargetable stack, and numerical methods on floating-point numbers and arrays; with morphe, the theory of computation and information theory. Its C++ stack is roadmap Phase 0. | draft |
-| 1.1 | [**morphe**](https://github.com/huangwanhong-maker/morphe), the algebraic foundation | Mathematical structures and their equivalences. Next: arithmetic (ℤ, ℚ, finite fields, polynomial rings); algebra (groups, rings, modules, representations, lattices, homological algebra); category theory (functors, natural transformations, limits, monoidal structure, algebras and coalgebras of functors); topology (simplicial and CW complexes, homology and cohomology, persistent homology, fundamental groups); geometry (algebraic geometry with Gröbner bases and varieties; differential geometry with physis); equivalence (canonical forms, bisimulation); formal structures (words, trees, automata, grammars, rewriting) | draft |
-| 1.2 | [**physis**](https://github.com/huangwanhong-maker/physis), the foundation of theoretical physics | Geometry and the laws of physics, on morphe and calx. Next: units as a free abelian group; differential and Riemannian geometry and the rotation groups; Lagrangian and Hamiltonian mechanics; gravitation and general relativity; thermodynamics; continuum mechanics; radiative transfer; and, to be proposed in its own decision log, electromagnetism and optics, acoustics, plasma physics, quantum mechanics, statistical mechanics and field theory | draft |
+| 1.1 | [**morphe**](https://github.com/huangwanhong-maker/morphe), the algebraic foundation | Mathematical structures and their equivalences. Written: exact integers and rationals; the Smith normal form, homology with generators, presented and finite groups; graphs; CW and simplicial complexes with their homology, fundamental groups, surfaces, collapses, duals and coloured graphs ([ADR 0039](development/decisions/0039-complexes-symmetry-and-fields.md)). Next: arithmetic (ℤ, ℚ, finite fields, polynomial rings); algebra (groups, rings, modules, representations, lattices, homological algebra); category theory (functors, natural transformations, limits, monoidal structure, algebras and coalgebras of functors); topology (simplicial and CW complexes, homology and cohomology, persistent homology, fundamental groups); geometry (algebraic geometry with Gröbner bases and varieties; differential geometry with physis); equivalence (canonical forms, bisimulation); formal structures (words, trees, automata, grammars, rewriting) | draft |
+| 1.2 | [**physis**](https://github.com/huangwanhong-maker/physis), the foundation of theoretical physics | Geometry and the laws of physics, on morphe and calx. Written: units, dynamics, the open qubit; Lie groups and recoupling; metrics and curvature; exact spacetimes, Regge geometry and causal sets; lattice field theory and Feynman graphs; lattice gauge theory on 2-complexes; Turaev–Viro state sums, tensor and matrix models ([ADR 0039](development/decisions/0039-complexes-symmetry-and-fields.md)). Next: units as a free abelian group; differential and Riemannian geometry and the rotation groups; Lagrangian and Hamiltonian mechanics; gravitation and general relativity; thermodynamics; continuum mechanics; radiative transfer; and, to be proposed in its own decision log, electromagnetism and optics, acoustics, plasma physics, quantum mechanics, statistical mechanics and field theory | draft |
 | 2.1 | **inference** (name open) | Statistics and estimation, least squares and harmonic analysis, data assimilation, uncertainty, control, machine learning | planned |
 | 3.8 | **the quantitative social methods** (name and boundary with inference open) | Measurement (scales, reliability, item response theory); samples and surveys; causal inference (potential outcomes, directed acyclic graphs, matching, instruments, differences in differences, regression discontinuity); panels, event histories and durations; networks (centrality, communities, diffusion); strategy and choice (games and equilibria, social choice and voting, mechanism design); agent-based simulation | planned |
 
@@ -405,6 +416,8 @@ height 0   metrology · neuroscience · linguistics¹ · genomics¹ · molecular
 
 - The [Spiking Simulator](applications/spiking-simulator/README.md) composes networks of spiking neurons from twenty-two models, classical and quantum, and runs them in the neuroscience domain's C++ engine, exactly where the dynamics are linear and with the same spikes on any number of threads. Its examples include Brunel's balanced network in its four states, the classes of excitability, quantum emitters and STDP. It is not run on our online server, whose resources the other applications already take much of; it runs on your own computer, with g++ (in WSL on Windows), as [the Spiking Simulator on your computer](#the-spiking-simulator-on-your-computer) shows in four lines.
 
+- The [Complex Atlas](applications/complex-atlas/README.md) shows cell complexes, their invariants and the fields on them, from foundations written for it: a surface glued by its word, a lattice torus, a triangulated 3-sphere, the 2-complex of a Feynman graph of group field theory, or any complex typed in. It draws the complex in the round, as a net of polygons or as the diagram of its cells; reads its homology with generators drawn on it, its fundamental group, the kind of surface or manifold it is and whether it collapses; runs lattice gauge fields of ℤ_N, U(1), SU(2) and SU(N) on it, coloured by their holonomies and compared with the exact values of two-dimensional Yang–Mills; and sums the Turaev–Viro invariant of a 3-manifold, the Ponzano–Regge model of three-dimensional gravity made finite.
+
 The three atlases run online on the project's server, the [Celestial Atlas](http://173.212.213.207:9200/), the [Earth Atlas](http://173.212.213.207:9201/) and the [Brain Atlas](http://173.212.213.207:9202/), and on your own computer in a few lines (Quick Start, above). The [index of applications](applications/README.md) lists those planned.
 
 ## 6. Organisation of the Repository
@@ -418,7 +431,7 @@ The three atlases run online on the project's server, the [Celestial Atlas](http
 ├── visualization/   scene model · renderers · styles; provisional drawing helpers
 ├── observation/     instruments · field work · sensors
 ├── api/             the service and its clients in Python, C and C++, JavaScript
-├── applications/    celestial-atlas · earth-atlas · brain-atlas · spiking-simulator
+├── applications/    celestial-atlas · earth-atlas · brain-atlas · spiking-simulator · complex-atlas
 ├── research/        questions · experiments · papers
 ├── notebooks/       exploration and teaching
 ├── docs/            architecture · gallery
@@ -442,7 +455,7 @@ To run an application, follow the Quick Start at the top of this page; each appl
 
 ## 7. Status
 
-**As of 2026-10-23.** Four applications work: the three atlases, online and on any computer (Quick Start), and the Spiking Simulator ([ADR 0038](development/decisions/0038-the-spiking-simulator.md)), on any computer with g++. Their science is the provisional JavaScript of nine domains, of physis and of the visualization layer, tested against published references and closed-form answers in 422 checks. Each domain passes its checks on its own. Neuroscience, the first domain beyond the Earth and the sky, is a repository of its own attached as a submodule, with the Brain Atlas drawing it ([ADR 0028](development/decisions/0028-neuroscience-and-the-brain-atlas.md)). The Earth Atlas takes plug-ins: scripts for prediction, assimilation and analysis, loaded on request ([ADR 0027](development/decisions/0027-earth-atlas-plugins.md)). The first C++ is written: calx's and physis's first modules, on a [map of the mathematics](docs/mathematics.md) that places every area of mathematics in a foundation ([ADR 0035](development/decisions/0035-the-mathematical-foundations.md)), and the neuroscience domain's networks of spiking neurons, which simulate Brunel's network of 12,500 neurons and 15.6 million synapses at 2.6 times real time on a laptop, with the same spikes on any number of threads ([ADR 0036](development/decisions/0036-spiking-networks.md)); twenty-two neuron models, the first quantum one among them, are composed and run in the Spiking Simulator. The next steps are in the [roadmap](development/roadmap.md), in the order of §4.6:
+**As of 2026-10-23.** Five applications work: the three atlases, online and on any computer (Quick Start), and the Spiking Simulator ([ADR 0038](development/decisions/0038-the-spiking-simulator.md)) and the Complex Atlas ([ADR 0039](development/decisions/0039-complexes-symmetry-and-fields.md)), on any computer with g++. Their science is the provisional JavaScript of nine domains, of physis and of the visualization layer, tested against published references and closed-form answers in 422 checks. Each domain passes its checks on its own. Neuroscience, the first domain beyond the Earth and the sky, is a repository of its own attached as a submodule, with the Brain Atlas drawing it ([ADR 0028](development/decisions/0028-neuroscience-and-the-brain-atlas.md)). The Earth Atlas takes plug-ins: scripts for prediction, assimilation and analysis, loaded on request ([ADR 0027](development/decisions/0027-earth-atlas-plugins.md)). The first C++ is written: calx's and physis's first modules, on a [map of the mathematics](docs/mathematics.md) that places every area of mathematics in a foundation ([ADR 0035](development/decisions/0035-the-mathematical-foundations.md)), and the neuroscience domain's networks of spiking neurons, which simulate Brunel's network of 12,500 neurons and 15.6 million synapses at 2.6 times real time on a laptop, with the same spikes on any number of threads ([ADR 0036](development/decisions/0036-spiking-networks.md)); twenty-two neuron models, the first quantum one among them, are composed and run in the Spiking Simulator. The next steps are in the [roadmap](development/roadmap.md), in the order of §4.6:
 
 - Phase 0, the toolchain and the build;
 - tier 1: the foundations morphe, the algebraic foundation (category theory, algebra, topology, geometry), and physis, the foundation of theoretical physics; then spiking neural networks, computational linguistics, genomics, molecular science and drug discovery;

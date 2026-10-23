@@ -140,4 +140,93 @@ const { check, assert, done } = suite();
   assert('isosurface: nothing from an empty volume', empty.vertexCount === 0 && empty.triangleCount === 0);
 }
 
+// ---- cell complexes: words, facets, realisation, nets and Hasse diagrams ----------------------
+{
+  const { parseWords, parseFacets, checkComplex, eulerCharacteristic, cellCounts, realise, net, outerSides, hasse, cyclicColour, sequentialColour, divergingColour } = await import('../js/index.js');
+  // Words: corners identified as the sides force.
+  const torus = parseWords('abAB'), rp2 = parseWords('aa'), klein = parseWords('abAb'), disc = parseWords('abc'), sphere = parseWords('aA');
+  assert('complex: abAB is one vertex, two loops and a square attached along a b a⁻¹ b⁻¹',
+    torus.vertices === 1 && torus.edges.length === 2 && JSON.stringify(torus.faces[0].boundary) === '[1,2,-1,-2]');
+  assert('complex: the Euler characteristics of words (torus 0, RP² 1, Klein 0, disc 1, sphere 2)',
+    [torus, rp2, klein, disc, sphere].map(eulerCharacteristic).join() === '0,1,0,1,2');
+  const genus = [0, 1, 2, 3, 4].map((g) => eulerCharacteristic(g ? parseWords(Array.from({ length: g }, (_, i) => `a${i}b${i}A${i}B${i}`).join('')) : sphere));
+  assert('complex: χ = 2 − 2g for the standard words of genus 0 to 4', genus.join() === '2,0,-2,-4,-6', genus.join());
+  assert('complex: two polygons with no letter in common have two vertices', parseWords('abAB cdCD').vertices === 2);
+  assert('complex: "1" is a disc attached to a point', parseWords('1').faces[0].boundary.length === 0 && eulerCharacteristic(parseWords('1')) === 2);
+  // Facets: every face, oriented; ∂∂ = 0 in every dimension.
+  const sims = [1, 2, 3, 4, 5].map((n) => parseFacets(Array.from({ length: n + 1 }, (_, i) => i).join(' ')));
+  const binom = (n, k) => { let r = 1; for (let i = 1; i <= k; i++) r = (r * (n - k + i)) / i; return r; };
+  assert('complex: the n-simplex has C(n+1, k+1) cells of dimension k, n = 1 to 5',
+    sims.every((c, n) => cellCounts(c).every((m, k) => m === binom(n + 2, k + 1))), sims.map((c) => cellCounts(c).join('/')).join('  '));
+  assert('complex: every word of a simplex closes and ∂∂ = 0 in every dimension', sims.every((c) => checkComplex(c).length === 0), sims.map((c) => checkComplex(c).join('; ')).join(' | '));
+  const tet = parseFacets('0 1 2; 0 1 3; 0 2 3; 1 2 3');
+  assert('complex: the boundary of the tetrahedron, χ = 2, its triangles kept as simplices', eulerCharacteristic(tet) === 2 && tet.simplices.length === 4);
+  assert('complex: faces of facets are not kept as simplices', parseFacets('0 1 2; 0 1; 2').simplices.length === 1);
+  const t7 = parseFacets(Array.from({ length: 7 }, (_, i) => `${i} ${(i + 1) % 7} ${(i + 3) % 7}; ${i} ${(i + 2) % 7} ${(i + 3) % 7}`).join('; '));
+  const uses = new Map();
+  for (const f of t7.faces) for (const k of f.boundary) uses.set(Math.abs(k), (uses.get(Math.abs(k)) || 0) + 1);
+  assert('complex: the 7-vertex torus has 21 edges, each in two triangles, χ = 0', t7.edges.length === 21 && [...uses.values()].every((u) => u === 2) && eulerCharacteristic(t7) === 0);
+  assert('complex: a boundary that does not close is refused', checkComplex({ vertices: 2, edges: [[0, 1]], faces: [{ base: 0, boundary: [1] }] }).length === 1);
+  assert('complex: a 3-cell whose boundary has a boundary is refused',
+    checkComplex({ ...tet, cells: [[{ boundary: [[0, 1], [1, 1], [2, 1], [3, 1]] }]] }).some((p) => p.includes('boundary of its boundary')));
+  // Realisation: deterministic, in the unit ball, loops kept apart, given positions respected.
+  const g1 = realise(torus, { seed: 3 }), g2 = realise(torus, { seed: 3 });
+  assert('complex: a realisation is the same from the same seed', JSON.stringify(g1.vertices) === JSON.stringify(g2.vertices) && JSON.stringify(g1.edges[1].points) === JSON.stringify(g2.edges[1].points));
+  const inBall = (g) => [...g.vertices, ...g.edges.flatMap((e) => e.points)].every((p) => Math.hypot(...p) <= 1 + 1e-9) && g.faces.every((f) => { for (let i = 0; i < f.positions.length; i += 3) if (Math.hypot(f.positions[i], f.positions[i + 1], f.positions[i + 2]) > 1 + 1e-6) return false; return true; });
+  assert('complex: every point of a realisation lies in the unit ball', inBall(g1) && inBall(realise(t7)));
+  const a0 = g1.edges[0].arrow.at, a1 = g1.edges[1].arrow.at;
+  check('complex: the two loops of the torus are drawn apart (shortfall of their midpoints\' distance below 0.2)', Math.max(0, 0.2 - Math.hypot(a0[0] - a1[0], a0[1] - a1[1], a0[2] - a1[2])), 0);
+  assert('complex: a loop is a closed curve through its vertex', g1.edges.every((e) => Math.hypot(...e.points[0].map((x, i) => x - e.points.at(-1)[i])) < 1e-9 && Math.hypot(...e.points[0].map((x, i) => x - g1.vertices[0][i])) < 1e-9));
+  const square = { vertices: 4, edges: [[0, 1], [1, 2], [2, 3], [3, 0]], faces: [{ base: 0, boundary: [1, 2, 3, 4] }], positions: [[0, 0, 0], [2, 0, 0], [2, 1, 0], [0, 1, 0]] };
+  const gs = realise(square), d = (p, q) => Math.hypot(p[0] - q[0], p[1] - q[1], p[2] - q[2]);
+  check('complex: given positions are kept up to scale (ratio of two sides, 2)', d(gs.vertices[0], gs.vertices[1]) / d(gs.vertices[1], gs.vertices[2]) - 2, 1e-9);
+  const cap = realise(parseWords('1'));
+  assert('complex: a disc attached to a point is a balloon through it', cap.faces[0].balloon && cap.faces[0].indices.length > 0);
+  const counts = (g) => [g.vertices.length, g.edges.length, g.faces.length].join('/');
+  const n30 = 30, fac = [];
+  for (let i = 0; i < n30; i++) for (let j = 0; j < n30; j++) {
+    const a = i * n30 + j, b = i * n30 + ((j + 1) % n30), c = ((i + 1) % n30) * n30 + j, e = ((i + 1) % n30) * n30 + ((j + 1) % n30);
+    fac.push(`${a} ${b} ${e}`, `${a} ${e} ${c}`);
+  }
+  assert('complex: a large complex (a 30 × 30 triangulated torus) is laid out by its 1-skeleton, every cell drawn', counts(realise(parseFacets(fac.join(';')))) === `${n30 * n30}/${3 * n30 * n30}/${2 * n30 * n30}`);
+  // Nets: unit sides; glued sides lie on one another, alike oriented; no two polygons overlap.
+  const nets = [torus, klein, tet, t7, parseWords('abAB cdCD'), parseWords('abcdeABCDE')].map((c) => [c, net(c)]);
+  let side = 0, glue = 0;
+  for (const [, n] of nets) for (const p of n.polygons) for (const s of p.sides) {
+    if (p.kind === 'polygon') side = Math.max(side, Math.abs(Math.hypot(s.to[0] - s.from[0], s.to[1] - s.from[1]) - 1));
+    if (s.glued && s.mate) {
+      const t = n.polygons[s.mate[0]].sides[s.mate[1]];
+      glue = Math.max(glue, Math.hypot(s.tail[0] - t.tail[0], s.tail[1] - t.tail[1]), Math.hypot(s.head[0] - t.head[0], s.head[1] - t.head[1]));
+    }
+  }
+  check('complex: every side of a net polygon has unit length', side, 1e-9);
+  // Separating axes, written again here: two convex polygons of one piece share at most a boundary.
+  const apart = (A, B) => [A, B].some((P) => P.some((p, i) => {
+    const q = P[(i + 1) % P.length], nx = p[1] - q[1], ny = q[0] - p[0];
+    const proj = (Q) => Q.map((r) => r[0] * nx + r[1] * ny);
+    return Math.max(...proj(A)) <= Math.min(...proj(B)) + 1e-7 || Math.max(...proj(B)) <= Math.min(...proj(A)) + 1e-7;
+  }));
+  let overlaps = 0;
+  for (const [, n] of nets) {
+    const ps = n.polygons.filter((p) => p.kind === 'polygon');
+    for (let i = 0; i < ps.length; i++) for (let j = i + 1; j < ps.length; j++) if (ps[i].piece === ps[j].piece && !apart(ps[i].points, ps[j].points)) overlaps++;
+  }
+  check('complex: no two polygons of a piece of a net overlap (pairs)', overlaps, 0);
+  check('complex: glued sides coincide, tail on tail and head on head', glue, 1e-9);
+  const outer = outerSides(nets[0][1]);
+  assert('complex: the torus unfolds to its fundamental polygon a b a⁻¹ b⁻¹', nets[0][1].single && outer.length === 1 && outer[0].map((s) => s.sign * (s.edge + 1)).join() === '1,2,-1,-2');
+  const tn = nets[2][1], glued = tn.polygons.flatMap((p) => p.sides).filter((s) => s.glued).length;
+  assert('complex: the tetrahedron unfolds into one net, its outline one circle of six sides', tn.single && glued >= 6 && outerSides(tn).length === 1 && outerSides(tn)[0].length === 6);
+  assert('complex: the 7-vertex torus unfolds into one piece', nets[3][1].single, `${nets[3][1].pieces} pieces`);
+  assert('complex: two separate polygons are two pieces', nets[4][1].pieces === 2);
+  // Hasse diagrams: layers by dimension, links between neighbouring layers.
+  const h = hasse(tet);
+  assert('complex: the Hasse diagram of the tetrahedron has layers 4, 6, 4 and 2·6 + 3·4 links', h.layers.map((l) => l.length).join() === '4,6,4' && h.links.length === 24);
+  assert('complex: incidences of multiplicity two are kept (the projective plane meets its edge twice)', hasse(rp2).links.some((l) => l.dim === 2 && l.coefficient === 2));
+  // Colour maps.
+  const same = (a, b) => a.every((x, i) => Math.abs(x - b[i]) < 1e-9);
+  assert('complex: the cyclic colour map closes on itself', same(cyclicColour(0), cyclicColour(2 * Math.PI)) && same(cyclicColour(-1), cyclicColour(2 * Math.PI - 1)));
+  assert('complex: colours stay in the unit cube', [0, 0.3, 0.7, 1].every((t) => [sequentialColour(t), divergingColour(2 * t - 1), cyclicColour(6 * t)].every((c) => c.every((x) => x >= 0 && x <= 1))));
+}
+
 done();

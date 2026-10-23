@@ -1,0 +1,15 @@
+{
+  "title": "The Complex Atlas's engine",
+  "about": "The foundations' C++ for complexes (morphe's arithmetic, algebra and topology; physis's symmetry, gauge fields and state sums), compiled once with g++ 11 or later, natively or in WSL, into data/cache/engines/complex/. About a minute; it is compiled again when its sources change.",
+  "steps": [
+    {
+      "id": "engine",
+      "title": "The engine of complexes, compiled with g++",
+      "run": [
+        "applications/complex-atlas/engine.py",
+        "build"
+      ],
+      "done": "data/cache/engines/complex/build.json"
+    }
+  ]
+}

@@ -51,6 +51,7 @@ Decisions that concern only one library are recorded in that library's own `deve
 | [0036](0036-spiking-networks.md) | Networks of spiking neurons, and the C++ among the checks | Accepted; amends 0028 |
 | [0037](0037-release-notes.md) | Release notes at each commit | Accepted |
 | [0038](0038-the-spiking-simulator.md) | The Spiking Simulator | Accepted |
+| [0039](0039-complexes-symmetry-and-fields.md) | Complexes, symmetry and fields in the foundations; the Complex Atlas | Accepted, provisionally |
 
 ## 2. Template
 

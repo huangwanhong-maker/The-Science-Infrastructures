@@ -1,0 +1,183 @@
+{
+ "analysis": {
+  "dimension": 2,
+  "euler": 0,
+  "counts": [
+   1,
+   2,
+   1
+  ],
+  "components": 1,
+  "homology": [
+   {
+    "dimension": 0,
+    "rank": 1,
+    "torsion": [],
+    "generators": [
+     {
+      "order": 0,
+      "chain": [
+       [
+        0,
+        1
+       ]
+      ]
+     }
+    ],
+    "text": "ℤ"
+   },
+   {
+    "dimension": 1,
+    "rank": 2,
+    "torsion": [],
+    "generators": [
+     {
+      "order": 0,
+      "chain": [
+       [
+        0,
+        1
+       ]
+      ]
+     },
+     {
+      "order": 0,
+      "chain": [
+       [
+        1,
+        1
+       ]
+      ]
+     }
+    ],
+    "text": "ℤ^2"
+   },
+   {
+    "dimension": 2,
+    "rank": 1,
+    "torsion": [],
+    "generators": [
+     {
+      "order": 0,
+      "chain": [
+       [
+        0,
+        1
+       ]
+      ]
+     }
+    ],
+    "text": "ℤ"
+   }
+  ],
+  "cohomology": [
+   {
+    "dimension": 0,
+    "rank": 1,
+    "torsion": []
+   },
+   {
+    "dimension": 1,
+    "rank": 2,
+    "torsion": []
+   },
+   {
+    "dimension": 2,
+    "rank": 1,
+    "torsion": []
+   }
+  ],
+  "betti": {
+   "2": [
+    1,
+    2,
+    1
+   ],
+   "3": [
+    1,
+    2,
+    1
+   ]
+  },
+  "fundamental_group": {
+   "generators": [
+    "a",
+    "b"
+   ],
+   "relators": [
+    [
+     1,
+     2,
+     -1,
+     -2
+    ]
+   ],
+   "loops": [
+    [
+     1
+    ],
+    [
+     2
+    ]
+   ],
+   "text": "⟨a, b | a b a⁻¹ b⁻¹⟩",
+   "simplified": {
+    "generators": [
+     "a",
+     "b"
+    ],
+    "relators": [
+     [
+      1,
+      2,
+      -1,
+      -2
+     ]
+    ],
+    "loops": [
+     [
+      1
+     ],
+     [
+      2
+     ]
+    ],
+    "text": "⟨a, b | a b a⁻¹ b⁻¹⟩"
+   },
+   "abelianisation": {
+    "rank": 2,
+    "torsion": [],
+    "text": "ℤ^2"
+   }
+  },
+  "surface": {
+   "closed": true,
+   "orientable": true,
+   "genus": 1,
+   "crosscaps": 0,
+   "boundary_components": 0,
+   "euler": 0,
+   "name": "torus",
+   "normal_form": [
+    1,
+    2,
+    -1,
+    -2
+   ],
+   "orientation": [
+    1
+   ]
+  },
+  "manifold": null,
+  "collapse": {
+   "collapsible": false,
+   "remaining": [
+    1,
+    2,
+    1
+   ],
+   "steps": 0
+  },
+  "coloured_graph": null
+ }
+}
