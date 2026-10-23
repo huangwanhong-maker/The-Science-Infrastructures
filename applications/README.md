@@ -29,6 +29,7 @@ Every application says which of the three activities it serves:
 | [Brain Atlas](brain-atlas/) | use, learning | neuroscience | draft |
 | [Spiking Simulator](spiking-simulator/) | use, learning | neuroscience (its C++ engine) | draft |
 | [Complex Atlas](complex-atlas/) | learning, research | the foundations morphe and physis (its C++ engine) | draft |
+| [History Complex](history-complex/) | research, learning | history (its C++ engine), the foundation morphe | draft |
 | Orbital sandbox | learning | astronomy | planned |
 | Ephemeris calculator | use | metrology, astronomy | planned |
 | Map projections | learning | geography | planned |

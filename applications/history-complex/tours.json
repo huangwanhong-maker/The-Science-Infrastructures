@@ -1,0 +1,786 @@
+{
+  "about": "Guided tours of the canons, step by step in the foam. Each step sets the cut's date, what is followed, how the lenses are coloured, whether the occasions are opened, and the scale of time; a loop is named by its beings. The texts state what the canon records, which is not yet checked against its sources.",
+  "europe-1785-1828": [
+    {
+      "title": "A history as a foam",
+      "text": "Time rises. Each thread is a life, in the colour of its discipline: music in rose, the relations of states in blue, letters, philosophy, science and art between them. Each knot is an occasion where the threads of those present meet; each film between two threads is a tie between two of their meetings, a lens, a 2-cell of the history complex. Drag to turn the history, scroll to come closer.",
+      "state": {
+        "date": null,
+        "focus": null,
+        "mode": "discipline",
+        "opened": false,
+        "time": "calendar"
+      }
+    },
+    {
+      "title": "A friendship as a chain of lenses",
+      "text": "Haydn and Mozart: their tie is attested at the quartet evening of February 1785, at the dedication of September 1785 and at Haydn's farewell in December 1790, and ends with Mozart's death in December 1791. Haydn was in London, but the codebook makes him present at the death as bereaved, so that the last lens closes. Each lens is bounded by the two lives between two meetings.",
+      "state": {
+        "date": null,
+        "focus": {
+          "kind": "tie",
+          "id": "haydn~mozart"
+        },
+        "mode": "discipline",
+        "opened": false,
+        "time": "events"
+      }
+    },
+    {
+      "title": "Music meets politics: the Eroica",
+      "text": "Beethoven's third symphony, titled Bonaparte (1803/04), and the title struck out when the news came that Napoleon had made himself emperor (May 1804, after Ries). One lens, across which the tie flips from admiration to admiration withdrawn: its holonomy is −1.",
+      "state": {
+        "date": "1804-06",
+        "focus": {
+          "kind": "tie",
+          "id": "beethoven~napoleon"
+        },
+        "mode": "flips",
+        "opened": false,
+        "time": "calendar"
+      }
+    },
+    {
+      "title": "Erfurt, 1808: a frustrated triangle",
+      "text": "Opened, the occasion shows its presences and the rungs of the ties among them. At Erfurt Napoleon and Alexander are allies, Talleyrand serves Napoleon in public and counsels the tsar against him in secret: the three signs multiply to −1, and the triangle is frustrated, in vermilion. The record's frame is the historian's (codebook §6): a secret act counts where it is done.",
+      "state": {
+        "date": "1808-10-15",
+        "focus": {
+          "kind": "occasion",
+          "id": "o1808_erfurt"
+        },
+        "mode": "discipline",
+        "opened": true,
+        "time": "events"
+      }
+    },
+    {
+      "title": "The Congress of Vienna: the Saxon crisis",
+      "text": "November 1814. Metternich still stands with Prussia over Saxony and against Russia over Poland, while Prussia stands with Russia: the triangle of Alexander, Frederick William and Metternich is frustrated, and so is that of Frederick William, Metternich and Talleyrand. The cut is the network of the moment, the boundary of the history at that instant; its frustrated triangles are shaded.",
+      "state": {
+        "date": "1814-11-15",
+        "focus": {
+          "kind": "occasion",
+          "id": "o1814_congress"
+        },
+        "mode": "discipline",
+        "opened": true,
+        "time": "events"
+      }
+    },
+    {
+      "title": "The secret treaty resolves it",
+      "text": "On 3 January 1815 Austria, Britain and France bind themselves against Russia and Prussia: Metternich's tie to Frederick William turns negative, and both triangles are balanced. Between the opening of the Congress and the treaty, the three ties of each triangle form a closed shell, and the Bianchi identity holds on it: the frustration changes because an odd number of its lenses flip.",
+      "state": {
+        "date": "1815-01-03",
+        "focus": {
+          "kind": "occasion",
+          "id": "o1815_secret"
+        },
+        "mode": "flips",
+        "opened": true,
+        "time": "events"
+      }
+    },
+    {
+      "title": "The foam: where changes close",
+      "text": "Coloured by spin: the chance, in the theory fitted to the record, that each lens belongs to a spin foam, a closed configuration of changes in which every rung and every stretch of a life lies on an even number of its cells (the Gauss law). The foam gathers in the diplomacy of 1813 to 1815, where triangles of ties are carried from meeting to meeting. Elsewhere a tie changes alone, and its lenses are in no foam.",
+      "state": {
+        "date": null,
+        "focus": null,
+        "mode": "spin",
+        "opened": false,
+        "time": "events"
+      }
+    },
+    {
+      "title": "What the sources do not say",
+      "text": "Lenses with an unattested end, brighter where the reconstruction is less sure. A sign the sources do not give at a meeting is inferred from all the others at once: the persistence of its tie before and after, and the balance of every triangle it closes. The reconstruction is an ensemble, not a verdict.",
+      "state": {
+        "date": "1815-03-13",
+        "focus": null,
+        "mode": "inference",
+        "opened": true,
+        "time": "events"
+      }
+    },
+    {
+      "title": "A silence of the record",
+      "text": "A loop of H₁, drawn in mauve: Haydn and Salieri both lost Mozart in 1791, both taught Beethoven, and the canon records no tie between them. The loop is a circle of encounters that no tie fills. Frames may twist round it with nothing to measure them, so its Wilson loop vanishes. A historian may look there for a relation the canon is silent about.",
+      "state": {
+        "date": null,
+        "focus": null,
+        "mode": "discipline",
+        "opened": false,
+        "time": "events",
+        "loop": [
+          "haydn",
+          "beethoven",
+          "salieri"
+        ]
+      }
+    }
+  ],
+  "vienna-1890-1938": [
+    {
+      "title": "Vienna, where all six colours meet",
+      "text": "One city, five decades: music in rose, art in ochre, letters in violet, philosophy in olive, science in green and politics in blue, rising from the 1890s to the Anschluss. The threads cross more than in any other canon: an integrated history is one in which the beings carry several disciplines and the occasions gather them.",
+      "state": {
+        "date": null,
+        "focus": null,
+        "mode": "discipline",
+        "opened": false,
+        "time": "calendar"
+      }
+    },
+    {
+      "title": "The Beethoven exhibition: art meets music",
+      "text": "April 1902: the Secession's exhibition round Klinger's Beethoven, with Klimt's frieze. The canon ties Klimt to Mahler by the theme of the exhibition, and the founders of the Secession, carried together from 1897 to 1902 and 1905, make closed shells: triangles of ties held between two meetings of all three.",
+      "state": {
+        "date": null,
+        "focus": {
+          "kind": "occasion",
+          "id": "o1902_beethoven"
+        },
+        "mode": "discipline",
+        "opened": true,
+        "time": "events"
+      }
+    },
+    {
+      "title": "Mahler and the Court Opera",
+      "text": "Mahler's debut in May 1897 and his directorship from October, Zemlinsky's opera in 1900, and his last Fidelio in October 1907: the canon codes the last as the break. One lens of this tie flips: its holonomy is −1.",
+      "state": {
+        "date": null,
+        "focus": {
+          "kind": "tie",
+          "id": "mahler~court_opera"
+        },
+        "mode": "flips",
+        "opened": false,
+        "time": "events"
+      }
+    },
+    {
+      "title": "Schoenberg's school",
+      "text": "Schoenberg, Berg and Webern, from the first lessons of 1904 through the Skandalkonzert of 1913 and the Society for Private Musical Performances to 1921: three ties carried together from meeting to meeting. In the theory fitted to the record, the tie of Schoenberg and Berg keeps its sign across its life with a Wilson loop of about 0.45, where an isolated tie of the same persistence would keep 0.11: the triangle carries the memory.",
+      "state": {
+        "date": "1913-03-31",
+        "focus": {
+          "kind": "occasion",
+          "id": "o1913_skandal"
+        },
+        "mode": "discipline",
+        "opened": true,
+        "time": "events"
+      }
+    },
+    {
+      "title": "Freud and Mahler at Leiden",
+      "text": "August 1910: Freud and Mahler walk for four hours through Leiden. Their tie has one meeting and ends at Mahler's death in May 1911, where Freud is present as bereaved: one lens, from Leiden to the death, and the place in this canon where science and music meet.",
+      "state": {
+        "date": null,
+        "focus": {
+          "kind": "tie",
+          "id": "freud~mahler"
+        },
+        "mode": "discipline",
+        "opened": false,
+        "time": "events"
+      }
+    },
+    {
+      "title": "Wittgenstein's gift, 1914",
+      "text": "Wittgenstein offers Ludwig von Ficker a fortune to give to Austrian artists in need; Ficker takes him to meet Loos, and the gift reaches Trakl and Rilke. Letters and art meet here, through a philosopher.",
+      "state": {
+        "date": null,
+        "focus": {
+          "kind": "occasion",
+          "id": "o1914_donation"
+        },
+        "mode": "discipline",
+        "opened": true,
+        "time": "events"
+      }
+    },
+    {
+      "title": "Wittgenstein and the Circle",
+      "text": "1929: the manifesto of the Vienna Circle. The canon codes Wittgenstein's tie to the Circle as turning negative there, while Schlick stays bound to both: the triangle of Wittgenstein, Schlick and the Circle is frustrated, in vermilion. The cut shows the frustration of the moment; in the reconstruction it rises from 1929 to 1934.",
+      "state": {
+        "date": "1929-09-30",
+        "focus": {
+          "kind": "occasion",
+          "id": "o1929_manifesto"
+        },
+        "mode": "discipline",
+        "opened": true,
+        "time": "events"
+      }
+    },
+    {
+      "title": "Popper's Logik der Forschung",
+      "text": "Popper's book appears in the Circle's own series, edited by Schlick, and is coded as opposed to the Circle while Schlick welcomes it: a triangle whose three signs are all attested, and frustrated. Here the frustration is the record's, not the reconstruction's.",
+      "state": {
+        "date": "1934-12-31",
+        "focus": {
+          "kind": "occasion",
+          "id": "o1934_logik"
+        },
+        "mode": "discipline",
+        "opened": true,
+        "time": "events"
+      }
+    },
+    {
+      "title": "The foam of the Circle",
+      "text": "Coloured by spin: the lenses most likely to belong to a closed configuration of changes. In Vienna the foam gathers round the Circle in 1927 to 1929, where Wittgenstein, Schlick, Carnap, Waismann and the Circle meet together again and again.",
+      "state": {
+        "date": null,
+        "focus": null,
+        "mode": "spin",
+        "opened": false,
+        "time": "events"
+      }
+    },
+    {
+      "title": "1938",
+      "text": "February 1938, Schuschnigg summoned to the Berghof; March, the Anschluss; June, Freud leaves Vienna for London. The record of Vienna ends in emigration, which the canon follows only as far as Freud.",
+      "state": {
+        "date": "1938-03-13",
+        "focus": {
+          "kind": "occasion",
+          "id": "o1938_anschluss"
+        },
+        "mode": "discipline",
+        "opened": false,
+        "time": "events"
+      }
+    },
+    {
+      "title": "A silence of the record",
+      "text": "A loop of H₁: Ficker, Wittgenstein and Loos. Ficker took Wittgenstein to meet Loos in 1914, and Loos answered Der Brenner's inquiry of 1913, but the canon records no tie between Ficker and Loos. The circle of encounters is not filled: a place to look in the sources.",
+      "state": {
+        "date": null,
+        "focus": null,
+        "mode": "discipline",
+        "opened": false,
+        "time": "events",
+        "loop": [
+          "ficker",
+          "wittgenstein",
+          "loos"
+        ]
+      }
+    }
+  ],
+  "italy-1401-1564": [
+    {
+      "title": "Florence and Rome: art and its patrons",
+      "text": "From the competition for the Baptistery's doors in 1401 to Michelangelo's death in 1564: the threads of artists in ochre, of patrons, popes and governments in blue, and a few of letters and philosophy. Dates are Julian, as the sources write them; a Florentine date between January and 24 March is given in its modern year.",
+      "state": {
+        "date": null,
+        "focus": null,
+        "mode": "discipline",
+        "opened": false,
+        "time": "events"
+      }
+    },
+    {
+      "title": "Ghiberti and Brunelleschi",
+      "text": "The competition of 1401, each with a Sacrifice of Isaac; the models for the dome of 1418; the joint appointment of 1420; the lantern of 1436. The canon codes their rivalry negative wherever it is attested, and at the appointment of 1420, where the Opera del Duomo binds both, the triangle of the two rivals and the works is frustrated, with the rivalry's sign carried from 1418.",
+      "state": {
+        "date": null,
+        "focus": {
+          "kind": "occasion",
+          "id": "o1420_appointed"
+        },
+        "mode": "discipline",
+        "opened": true,
+        "time": "events"
+      }
+    },
+    {
+      "title": "The Medici and the Signoria",
+      "text": "Cosimo's exile in 1433 and return in 1434, the Pazzi conspiracy, the expulsion of 1494, the return of 1512, the expulsion of 1527 and the siege: the Signoria acts with each regime, and its tie to the house of the Medici flips again and again. In the theory fitted to the record its memory across ten lenses is gone: the Wilson loop of its life is zero.",
+      "state": {
+        "date": null,
+        "focus": {
+          "kind": "tie",
+          "id": "medici~signoria"
+        },
+        "mode": "flips",
+        "opened": false,
+        "time": "events"
+      }
+    },
+    {
+      "title": "The walls of the Sistine Chapel",
+      "text": "1481: Sixtus IV's contract with Botticelli, Ghirlandaio, Perugino and Rosselli; then the three paint Lorenzo's villa at Spedaletto. Painters, pope and patron carried together from meeting to meeting: here the foam of this canon gathers, the lenses most likely to be in a closed configuration.",
+      "state": {
+        "date": null,
+        "focus": {
+          "kind": "occasion",
+          "id": "o1481_sistine"
+        },
+        "mode": "spin",
+        "opened": false,
+        "time": "events"
+      }
+    },
+    {
+      "title": "Leonardo against Michelangelo",
+      "text": "Autumn 1504: Michelangelo is commissioned to paint the Battle of Cascina in the hall where Leonardo is painting Anghiari, both for Soderini's republic. Both serve Soderini, and they are rivals: the triangle is frustrated.",
+      "state": {
+        "date": "1504-12-31",
+        "focus": {
+          "kind": "occasion",
+          "id": "o1504_cascina"
+        },
+        "mode": "discipline",
+        "opened": true,
+        "time": "events"
+      }
+    },
+    {
+      "title": "Michelangelo and Julius II",
+      "text": "1505, the tomb; 1506, refused an audience, Michelangelo flees to Florence, and the next day Julius lays the first stone of Bramante's St Peter's; the same year he submits at Bologna. Two lenses that flip, there and back; then the ceiling of 1508 to 1512. In the theory the tie keeps its sign across its life with a Wilson loop of 0.41, where an isolated tie would keep 0.20.",
+      "state": {
+        "date": null,
+        "focus": {
+          "kind": "tie",
+          "id": "julius2~michelangelo"
+        },
+        "mode": "flips",
+        "opened": false,
+        "time": "events"
+      }
+    },
+    {
+      "title": "Raphael and Sebastiano, through Michelangelo",
+      "text": "Cardinal Giulio de' Medici commissions Raphael's Transfiguration against Sebastiano's Raising of Lazarus, for which Michelangelo draws: the triangle of Michelangelo, Raphael and the cardinal, later Clement VII, is frustrated, and all three of its signs are attested.",
+      "state": {
+        "date": null,
+        "focus": {
+          "kind": "occasion",
+          "id": "o1517_narbonne"
+        },
+        "mode": "discipline",
+        "opened": true,
+        "time": "events"
+      }
+    },
+    {
+      "title": "Machiavelli and the Medici",
+      "text": "Dismissed when the Medici return in 1512, imprisoned in 1513 and freed in the amnesty of Leo X, Machiavelli writes De principatibus meant for a Medici: the tie turns from negative to positive, and stays so through the dedication and the Florentine Histories.",
+      "state": {
+        "date": null,
+        "focus": {
+          "kind": "tie",
+          "id": "medici~machiavelli"
+        },
+        "mode": "flips",
+        "opened": false,
+        "time": "events"
+      }
+    },
+    {
+      "title": "A silence of the record",
+      "text": "A loop of H₁: Sixtus IV, Botticelli and Lorenzo. Botticelli works for both; the Pazzi conspiracy of 1478, which the pope stood behind, joins the pope and Lorenzo. But the canon records the pope's enmity with the Medici as a house, not with Lorenzo himself, and the circle stays open.",
+      "state": {
+        "date": null,
+        "focus": null,
+        "mode": "discipline",
+        "opened": false,
+        "time": "events",
+        "loop": [
+          "sixtus4",
+          "botticelli",
+          "lorenzo"
+        ]
+      }
+    }
+  ],
+  "europe-1871-1914": [
+    {
+      "title": "The powers, 1871–1914",
+      "text": "States as collective beings, with their sovereigns and ministers: from the peace of Frankfurt to the declarations of war of August 1914. Each film is a relation between two of them across two meetings, positive when they are allied or aligned, negative when they are at war or in a crisis against each other. This is the classic case of structural balance.",
+      "state": {
+        "date": null,
+        "focus": null,
+        "mode": "discipline",
+        "opened": false,
+        "time": "events"
+      }
+    },
+    {
+      "title": "Bismarck's system, 1887",
+      "text": "Germany is allied with Austria-Hungary in the Dual Alliance, and with Russia by the secret Reinsurance Treaty, while Austria-Hungary and Russia are set against each other over Bulgaria. Two allies of one power who are enemies of each other: at the end of 1887 the triangle of the three empires is frustrated, a system held together by secrecy.",
+      "state": {
+        "date": "1887-12-31",
+        "focus": {
+          "kind": "occasion",
+          "id": "o1887_reinsurance"
+        },
+        "mode": "discipline",
+        "opened": false,
+        "time": "events"
+      }
+    },
+    {
+      "title": "Germany and Russia",
+      "text": "The longest tie of the canon, sixteen attestations from the League of the Three Emperors to August 1914: it flips at the Dual Alliance, back at the Three Emperors' Alliance, against at the Lombard ban of 1887, for at the Triple Intervention and at Björkö, and against for good after Algeciras. In the theory fitted to the record its memory across twenty-one lenses is all but gone.",
+      "state": {
+        "date": null,
+        "focus": {
+          "kind": "tie",
+          "id": "germany~russia"
+        },
+        "mode": "flips",
+        "opened": false,
+        "time": "events"
+      }
+    },
+    {
+      "title": "The Franco-Russian alliance",
+      "text": "1892: the military convention signed by the chiefs of staff, ratified in 1894. Russia and France join; both are against Germany and Austria-Hungary, the Dual Alliance. The triangles of the two blocs are balanced, as two camps must be.",
+      "state": {
+        "date": "1894-12-31",
+        "focus": {
+          "kind": "occasion",
+          "id": "o1892_convention"
+        },
+        "mode": "discipline",
+        "opened": true,
+        "time": "events"
+      }
+    },
+    {
+      "title": "Fashoda, and the Entente",
+      "text": "France and Britain: against each other in Egypt in 1882 and at Fashoda in 1898, then Edward VII in Paris and Loubet in London in 1903, and the Entente Cordiale of April 1904. One lens of their tie flips, and the tie holds positive to the end.",
+      "state": {
+        "date": null,
+        "focus": {
+          "kind": "tie",
+          "id": "france~britain"
+        },
+        "mode": "flips",
+        "opened": false,
+        "time": "events"
+      }
+    },
+    {
+      "title": "The peak of frustration",
+      "text": "The end of 1905: Britain is the ally of France and Japan and the rival of Russia, at war with Japan; France is the ally of Russia. Fourteen of the twenty-six triangles of the moment are frustrated, the most in the canon. Structural balance predicts that so much frustration does not last.",
+      "state": {
+        "date": "1905-12-31",
+        "focus": null,
+        "mode": "discipline",
+        "opened": false,
+        "time": "events"
+      }
+    },
+    {
+      "title": "Algeciras: Germany isolated",
+      "text": "1906: at the conference on Morocco Germany has only Austria-Hungary at its side; Britain stands with France, and with Russia. Here the foam of this canon gathers: triangles of the powers carried from meeting to meeting, each lens likely to belong to a closed configuration of changes.",
+      "state": {
+        "date": null,
+        "focus": {
+          "kind": "occasion",
+          "id": "o1906_algeciras"
+        },
+        "mode": "spin",
+        "opened": false,
+        "time": "events"
+      }
+    },
+    {
+      "title": "1907: two camps",
+      "text": "The Anglo-Russian Convention of August 1907 settles Persia, Afghanistan and Tibet. At the end of the year only two of sixteen triangles are frustrated: the powers have nearly divided into two camps, the Triple Entente and the Triple Alliance. This is the fall of frustration that Antal, Krapivsky and Redner's dynamics of social balance describe.",
+      "state": {
+        "date": "1907-12-31",
+        "focus": {
+          "kind": "tie",
+          "id": "russia~britain"
+        },
+        "mode": "discipline",
+        "opened": false,
+        "time": "events"
+      }
+    },
+    {
+      "title": "Italy, the tie that fails",
+      "text": "Italy is bound to Austria-Hungary and Germany by the Triple Alliance from 1882, renewed in 1887 and 1902, and promises France neutrality in the same year. In August 1914 it declares that Austria-Hungary's war is not the defensive case of the treaty: the tie flips at the last.",
+      "state": {
+        "date": "1914-08-05",
+        "focus": {
+          "kind": "tie",
+          "id": "austria_hungary~italy"
+        },
+        "mode": "flips",
+        "opened": false,
+        "time": "events"
+      }
+    },
+    {
+      "title": "August 1914",
+      "text": "The declarations of war, from Austria-Hungary's on Serbia on 28 July to Britain's on 4 August. The cut is the network of the first week of August: two camps at war, balanced at the last, with Italy apart.",
+      "state": {
+        "date": "1914-08-05",
+        "focus": null,
+        "mode": "discipline",
+        "opened": true,
+        "time": "events"
+      }
+    }
+  ],
+  "science-1543-1727": [
+    {
+      "title": "The Scientific Revolution, 1543–1727",
+      "text": "From De revolutionibus and the death of Copernicus to the death of Newton: 33 beings, 100 occasions and 58 ties, almost all of them science. Its spine is two correspondences, Mersenne's in Paris and Oldenburg's in London, through which letters, objections and claims of priority passed; the Royal Society and the Académie stand among the beings as collective ones. Dates are written as their sources write them, England in Old Style: Newton died on 20 March 1726 in London's reckoning, 31 March 1727 in Paris's.",
+      "state": {
+        "date": null,
+        "focus": null,
+        "mode": "discipline",
+        "opened": false,
+        "time": "events"
+      }
+    },
+    {
+      "title": "Galileo and Urban VIII",
+      "text": "Cardinal Barberini took Galileo's side at the Grand Duke's table in 1611; as Urban VIII he received the dedication of the Assayer in 1623 and granted six audiences in 1624. The Dialogue of 1632 put the pope's favourite argument in the mouth of Simplicio, and the tie flips: the trial of 1633 follows. One flip across four lenses, between the audiences and the Dialogue.",
+      "state": {
+        "date": null,
+        "focus": {
+          "kind": "tie",
+          "id": "urban8~galileo"
+        },
+        "mode": "flips",
+        "opened": false,
+        "time": "events"
+      }
+    },
+    {
+      "title": "Through Mersenne: a frustrated triangle",
+      "text": "Fermat's objections to the Dioptrique (1637) and the dispute over his method of maxima and tangents (1638) both pass through Mersenne, the friend of both. Two friends of one man at odds: the triangle of Mersenne, Descartes and Fermat is frustrated at both occasions. Descartes's conciliatory letter of July 1638 balances it.",
+      "state": {
+        "date": "1638-06-30",
+        "focus": {
+          "kind": "occasion",
+          "id": "o1638_maxima"
+        },
+        "mode": "discipline",
+        "opened": true,
+        "time": "events"
+      }
+    },
+    {
+      "title": "A silence: Pascal and Fermat",
+      "text": "A loop of H₁, drawn in mauve. Pascal and Fermat are both present at Mersenne's death in 1648, bereaved of the correspondent they shared, and the canon ties them only from the summer of 1654, when their letters on the division of stakes began the calculus of probability. Between, the record is silent: a circle of encounters that no tie fills, whose Wilson loop vanishes.",
+      "state": {
+        "date": null,
+        "focus": null,
+        "mode": "discipline",
+        "opened": false,
+        "time": "events",
+        "loop": [
+          "pascal",
+          "fermat"
+        ]
+      }
+    },
+    {
+      "title": "1676: the letters for Leibniz",
+      "text": "Newton's two letters for Leibniz, the Epistola prior of June and the Epistola posterior of October, with the method of fluxions hidden in an anagram, both through Oldenburg. At the end of 1676 the network has 16 triangles and 5 are frustrated: Newton has asked to leave the Society after Hooke's critique and Huygens's objections, while the letters go on through its secretary. The reconstruction finds between 5 and 7. The frustration of the Scientific Revolution peaks here.",
+      "state": {
+        "date": "1676-12-31",
+        "focus": {
+          "kind": "occasion",
+          "id": "o1676_epistola_posterior"
+        },
+        "mode": "discipline",
+        "opened": true,
+        "time": "events"
+      }
+    },
+    {
+      "title": "Newton and Leibniz",
+      "text": "Fourteen lenses from the Epistola prior to Leibniz's death: positive through the letters of 1676 and 1677, the Principia's scholium of 1687 and the Acta of 1697, negative from the Society's committee of 1712, its report, the Charta volans and Newton's anonymous Account. One flip. In the theory fitted to the record the tie keeps 0.05 of its sign across its life, where an isolated tie would keep 0.006: the triangles it closes with the Society, Keill and Bernoulli carry its memory.",
+      "state": {
+        "date": null,
+        "focus": {
+          "kind": "tie",
+          "id": "newton~leibniz"
+        },
+        "mode": "flips",
+        "opened": false,
+        "time": "events"
+      }
+    },
+    {
+      "title": "1712: the Society judges",
+      "text": "The Society, under its president Newton, appoints a committee on the dispute, and its report, drafted by Newton himself, finds for Newton and Keill. At the end of 1712 the triangle of Newton, Leibniz and Johann Bernoulli is frustrated as last attested: Bernoulli is Leibniz's ally, and his tie with Newton was last attested in 1697, when he knew the anonymous solution as the lion by its claw. The reconstruction gives the triangle even odds. The Charta volans of 1713, citing Bernoulli against Newton, settles it.",
+      "state": {
+        "date": "1712-12-31",
+        "focus": {
+          "kind": "occasion",
+          "id": "o1712_report"
+        },
+        "mode": "discipline",
+        "opened": true,
+        "time": "events"
+      }
+    },
+    {
+      "title": "Flamsteed's observations",
+      "text": "Newton visits Flamsteed at Greenwich for lunar observations in 1694, and in 1695 they quarrel over them. In 1712 Halley, under Newton's direction, prints them against Flamsteed's will as the Historia coelestis, and in 1716 Flamsteed burns the unsold copies. The tie flips once, and the triangle of Newton, Halley and Flamsteed closes twice into a shell.",
+      "state": {
+        "date": null,
+        "focus": {
+          "kind": "tie",
+          "id": "newton~flamsteed"
+        },
+        "mode": "flips",
+        "opened": false,
+        "time": "events"
+      }
+    },
+    {
+      "title": "The foam, and power",
+      "text": "Lit by spin: the cells likeliest to lie in a spin foam of the theory fitted to this record, with persistence tanh β = 0.69 for science and balance tanh β_Δ = 0.5, and 44 independent foams. Without Leibniz's ties, the reconstruction of the 86 signs the record does not attest moves by 0.79 nats; without Fermat's, by 0.73; without the Royal Society's, by 0.59. Balance itself holds 7.3. These are properties of the fitted model, not claims about what history would have done.",
+      "state": {
+        "date": null,
+        "focus": null,
+        "mode": "spin",
+        "opened": false,
+        "time": "events"
+      }
+    }
+  ],
+  "athens-470-322bc": [
+    {
+      "title": "Athens, 470–322 BC",
+      "text": "From the boyhood of Socrates to the deaths of Aristotle and Demosthenes: 30 beings, 75 occasions and 48 ties. The city itself is a being, its assembly, courts and army, and many of its ties are with its own men. Dates are astronomical years of the Julian calendar, 399 BC written −0398. An Athenian year ran from midsummer to midsummer, so most occasions are a year, two years, or about one.",
+      "state": {
+        "date": null,
+        "focus": null,
+        "mode": "discipline",
+        "opened": false,
+        "time": "events"
+      }
+    },
+    {
+      "title": "The trial of Phidias",
+      "text": "Phidias, who oversaw the Parthenon and made the gold and ivory Athena, is prosecuted over the gold, in an attack aimed at Pericles. The city turns against Phidias, Pericles stands by him, and the triangle of Pericles, Phidias and Athens is frustrated as last attested. The reconstruction reads the trial as the sources do: balance makes the city's tie to Pericles negative there (−0.8), though the record last attests it at Samos, positive. No being holds more power over the reconstruction than Phidias, 1.1 nats.",
+      "state": {
+        "date": "-0436-06-30",
+        "focus": {
+          "kind": "occasion",
+          "id": "o438bc_phidias_trial"
+        },
+        "mode": "discipline",
+        "opened": true,
+        "time": "events"
+      }
+    },
+    {
+      "title": "The city and its leaders",
+      "text": "Alcibiades: elected general in 420, recalled from Sicily in 415 and fled to Sparta, returned in triumph in 407, removed after Notium in 406. Three flips in four lenses. Pericles was fined and re-elected, Demosthenes exiled and recalled. In this canon the ties of the city with its men flip more often than not, 13 times in 25 lenses: tanh β = −0.04, a tie without memory. The foam's amplitudes there are signed.",
+      "state": {
+        "date": null,
+        "focus": {
+          "kind": "tie",
+          "id": "alcibiades~athens"
+        },
+        "mode": "flips",
+        "opened": false,
+        "time": "events"
+      }
+    },
+    {
+      "title": "Socrates and the city",
+      "text": "Socrates saved Alcibiades at Potidaea and retreated steadily at Delium. As a prytanis after Arginusae he alone refused to put the generals to the vote. In 399 he stands trial for impiety and corrupting the young, and names Aristophanes' Clouds among his accusers. The city's tie to him flips once, at Arginusae, and stays negative to the hemlock.",
+      "state": {
+        "date": null,
+        "focus": {
+          "kind": "tie",
+          "id": "athens~socrates"
+        },
+        "mode": "flips",
+        "opened": false,
+        "time": "events"
+      }
+    },
+    {
+      "title": "Plato in Sicily",
+      "text": "Plato's second voyage, at Dion's call, to make a philosopher of the young Dionysius II; within a year Dionysius banishes Dion and keeps Plato at court. As last attested, the triangle of Plato, Dion and Dionysius II is frustrated: Plato's tie with the tyrant was last attested at his welcome, positive. The reconstruction must place one flip of that tie between the welcome of 367 and the quarrel of the third voyage in 361, and balance places it at Dion's exile. The frustration falls to 0.1, five years before the record says so.",
+      "state": {
+        "date": "-0365-12-31",
+        "focus": {
+          "kind": "occasion",
+          "id": "o366bc_dion_exiled"
+        },
+        "mode": "discipline",
+        "opened": true,
+        "time": "events"
+      }
+    },
+    {
+      "title": "A silence: the succession to Plato",
+      "text": "A loop of H₁. Aristotle and Speusippus are present at Plato's death in 347, when Speusippus, Plato's nephew, succeeds him at the head of the Academy. Aristotle leaves for Assos with Xenocrates, and Xenocrates succeeds Speusippus in 339. The canon records no tie between Aristotle and Speusippus, rivals for the succession, nor between Speusippus and Xenocrates: a circle of encounters that no tie fills.",
+      "state": {
+        "date": null,
+        "focus": null,
+        "mode": "discipline",
+        "opened": false,
+        "time": "events",
+        "loop": [
+          "aristotle",
+          "xenocrates",
+          "speusippus"
+        ]
+      }
+    },
+    {
+      "title": "Demosthenes against Philip",
+      "text": "The First Philippic (351), the embassy and the Peace of Philocrates (346), the Third Philippic (341), Chaeronea (338). Demosthenes' tie with Philip flips twice, and the city's flips with it. The triangle of Demosthenes, Philip and Athens closes three shells in a row, and across each the number of flips is even, so the triangle stays balanced throughout: the city and its orator turn together.",
+      "state": {
+        "date": null,
+        "focus": {
+          "kind": "tie",
+          "id": "demosthenes~philip2"
+        },
+        "mode": "flips",
+        "opened": false,
+        "time": "events"
+      }
+    },
+    {
+      "title": "Philip's wedding",
+      "text": "In 337 BC, at Philip's wedding to Cleopatra, Alexander quarrels with his father and leaves Macedon. At the end of the year the triangle of Aristotle, Philip and Alexander is frustrated: the philosopher is tied to the king who called him and to the son he taught, and they are at odds. A year earlier, after Chaeronea, it was balanced. The cut is read in the Julian calendar, as Athens's dates are.",
+      "state": {
+        "date": "-0336-12-31",
+        "focus": {
+          "kind": "tie",
+          "id": "philip2~alexander"
+        },
+        "mode": "flips",
+        "opened": false,
+        "time": "events"
+      }
+    },
+    {
+      "title": "The death of Alexander",
+      "text": "June 323 BC, dated to the day by the Babylonian astronomers. Demosthenes is in exile after the affair of Harpalus, so at Alexander's death the three ties of Alexander, Demosthenes and Athens are all negative, and their triangle is frustrated: three mutual enemies cannot be balanced. Within months Athens recalls Demosthenes and Aristotle leaves for Chalcis; both die in 322.",
+      "state": {
+        "date": null,
+        "focus": {
+          "kind": "occasion",
+          "id": "o323bc_alexander_dies"
+        },
+        "mode": "discipline",
+        "opened": true,
+        "time": "events"
+      }
+    }
+  ]
+}

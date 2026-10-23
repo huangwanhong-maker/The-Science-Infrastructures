@@ -13,4 +13,5 @@ A running record, for readers, of what each commit made possible or better, in t
 
 | Date | Commits |
 |---|---|
+| [2026-10-24](2026-10-24.md) | The history domain and the History Complex |
 | [2026-10-23](2026-10-23.md) | The generation of spacetime; spin foams, vertex by vertex; complexes, symmetry and fields; the Complex Atlas; the simulator in the Quick Start; spiking networks in the gallery; the simulator's visualizer and profiler; the Spiking Simulator; a quantum neuron; seven new neuron models; the mathematical foundations and the first C++; spiking networks; biosignals on the brain; the Brain Atlas rebuilt; the API; observations, scores and hazards |

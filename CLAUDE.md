@@ -26,6 +26,7 @@ This is an integrative programme to learn, use and research all domains of scien
   - **Geodesy** supports the other Earth sciences.
   - **Geophysics** is the solid Earth: plate motion, earthquakes and the crust ([ADR 0024](development/decisions/0024-the-solid-earth.md)).
 - **Neuroscience** is the first domain beyond the Earth and the sky ([ADR 0028](development/decisions/0028-neuroscience-and-the-brain-atlas.md)): the brain's reference spaces, parcellations and maps, and the head with its electrodes, drawn by the Brain Atlas. It is a repository of its own, attached as a submodule.
+- **History** is the first domain of the humanities ([ADR 0041](development/decisions/0041-the-history-domain.md)), built at the user's request for the History Complex. It covers records of histories coded by a codebook, their chronology across calendars, the 2-complex a record makes, and the spin foam of its signed ties.
 - **Further domains** join the same order as the work reaches them. Every science is meant to join, the social sciences and the humanities included; the README's §4 lists them all once, as foundations, domains or modules, with a priority for each. The foundations come next: morphe, the algebraic foundation (category theory, algebra, topology, geometry), and physis, the foundation of theoretical physics, whose first slices of complexes, symmetry and fields are written ([ADR 0039](development/decisions/0039-complexes-symmetry-and-fields.md)). Then the next five domains, in order: spiking neural networks (a module of neuroscience), computational linguistics, genomics, molecular science, and drug discovery (a bridge over genomics and molecular science).
 - **No laboratories.** The word is retired as the name of what we are. A themed grouping of works, if ever needed, is a *programme*: a README and a roadmap, owning no code. Do not use "laboratory" for any part of the infrastructure; proper names (the Nevada Geodetic Laboratory) and the decision records keep it.
 
@@ -90,7 +91,7 @@ This section summarises [docs/architecture.md](docs/architecture.md). Read that 
 |---|---|---|---|
 | The Science Infrastructures | `.` | Domains, shared edges, works, documents, process | the foundations |
 | calx | `foundations/calx` | Retargetable computation stack; numerical methods on floating-point numbers and arrays. C++ written: random, linalg, integrators, special functions, quadrature, solvers, differentiation, verification, the scheduler's thread pool | — |
-| morphe | `foundations/morphe` | Mathematical structures and their equivalences: logic, arithmetic, algebra, combinatorics, categories, topology, algebraic geometry, formal structures. C++ written: arithmetic (integers without bound, rationals), algebra (the Smith normal form, homology with generators, presented and finite groups), combinatorics (graphs), topology (CW and simplicial complexes, π₁, surfaces, collapses, dual 2-complexes, coloured graphs) | — |
+| morphe | `foundations/morphe` | Mathematical structures and their equivalences: logic, arithmetic, algebra, combinatorics, categories, topology, algebraic geometry, formal structures. C++ written: arithmetic (integers without bound, rationals), algebra (the Smith normal form, homology with generators, presented and finite groups), combinatorics (graphs), topology (CW and simplicial complexes, π₁, surfaces, collapses, dual 2-complexes, coloured graphs, persistent homology over ℤ/2) | — |
 | physis | `foundations/physis` | Units, geometry, analysis, dynamics, control, discretisation, and physical law: mechanics, gravitation, thermodynamics, continuum, chemistry, radiation. C++ written: units, dynamics, quantum (the open two-level system), symmetry (Lie groups, recoupling), geometry (metrics, curvature), spacetime (exact solutions, Regge geometry, causal sets), field theory (lattice fields, invariant theories of every rank and their large-N solutions), gauge (lattice gauge theory on 2-complexes), quantum gravity (Turaev–Viro, group field theories, spin foams, random geometries, condensates, tensor and matrix models); a provisional JavaScript stand-in for discretisation | calx, morphe |
 | neuroscience | `domains/neuroscience` | A domain in its own repository (ADR 0028): the brain's reference spaces, parcellations, maps and the head, its signals, and networks of spiking neurons in C++ (`snn/`) | calx, physis (declared; no domain) |
 
@@ -103,7 +104,7 @@ height 4   climate
 height 3   tides · navigation · air-sea
 height 2   astronomy · geophysics · geography · oceanography · meteorology
 height 1   geodesy
-height 0   metrology · neuroscience
+height 0   metrology · neuroscience · history
 ```
 
 A bridge is a domain with several fields beneath it. A new domain is placed in the order by what it may depend on.
@@ -221,12 +222,13 @@ These conventions are shared with the foundation libraries.
 │   ├── meteorology/   dynamics · our models · cyclones · wind
 │   ├── tides/ · navigation/ · air-sea/     bridges (planned)
 │   ├── climate/       bridge: climate classes · energy balance · orbital forcing
-│   └── neuroscience/  reference spaces · parcellations · maps · the head (git submodule, ADR 0028)
+│   ├── neuroscience/  reference spaces · parcellations · maps · the head (git submodule, ADR 0028)
+│   └── history/       the record and its chronology · the history complex · its readings and spin foam · canons (ADR 0041)
 ├── data/              dataset registry · acquisition · formats · products · provenance
 ├── visualization/     scene model · renderers · styles (ADR 0005); provisional js/
 ├── observation/       instruments · field work · sensors
 ├── api/               the service and its clients: Python · C and C++ · JavaScript (ADR 0030)
-├── applications/      one folder per application: celestial-atlas · earth-atlas · brain-atlas · spiking-simulator · complex-atlas
+├── applications/      one folder per application: celestial-atlas · earth-atlas · brain-atlas · spiking-simulator · complex-atlas · history-complex
 ├── research/          questions · experiments · papers
 ├── notebooks/         exploration and teaching
 ├── docs/              architecture · mathematics · gallery (later: glossary · references)
@@ -267,7 +269,7 @@ A domain directory contains:
 
 - Record decisions that shape structure, conventions or tooling in `development/decisions/NNNN-slug.md`, using the template in the index.
 - Never rewrite a record. A new record supersedes or amends it, and the old record's status is updated to point to the new one. Paths in old records are as they were written; ADR 0026 maps them to the present.
-- Records accepted so far: 0001–0040. Records 0001–0024 were written in the first laboratory, which the infrastructure absorbed; 0025 founded this repository.
+- Records accepted so far: 0001–0041. Records 0001–0024 were written in the first laboratory, which the infrastructure absorbed; 0025 founded this repository.
 
 ### 6.4 Release Notes
 
@@ -319,13 +321,14 @@ A domain directory contains:
   - Load three.js from jsDelivr, pinned to an exact version (0.170.0).
   - Serve locally with Python's standard library. Each application's server mounts `domains/`, `foundations/` and `visualization/` beside its page, and the data cache at `/data/`; it reports the application's data recipe (`recipe.json`) at `/setup` and runs it on the page's request.
   - Test with Node (v22 is installed).
-  - Each application has its own local server: the Celestial Atlas on port 8770, the Earth Atlas on 8790, the Brain Atlas on 8810, the Spiking Simulator on 8830, the Complex Atlas on 8850.
-  - The Spiking Simulator's server runs the neuroscience domain's C++ engine, built by its recipe with g++ (natively, or in WSL) into `data/cache/engines/snn/` ([ADR 0038](development/decisions/0038-the-spiking-simulator.md)). The Complex Atlas's server runs an engine of its own on morphe and physis, built the same way into `data/cache/engines/complex/` ([ADR 0039](development/decisions/0039-complexes-symmetry-and-fields.md)).
+  - Each application has its own local server: the Celestial Atlas on port 8770, the Earth Atlas on 8790, the Brain Atlas on 8810, the Spiking Simulator on 8830, the Complex Atlas on 8850, the History Complex on 8870.
+  - The Spiking Simulator's server runs the neuroscience domain's C++ engine, built by its recipe with g++ (natively, or in WSL) into `data/cache/engines/snn/` ([ADR 0038](development/decisions/0038-the-spiking-simulator.md)). The Complex Atlas's server runs an engine of its own on morphe and physis, built the same way into `data/cache/engines/complex/` ([ADR 0039](development/decisions/0039-complexes-symmetry-and-fields.md)). The History Complex's runs one on the history domain and morphe, built into `data/cache/engines/history/` ([ADR 0041](development/decisions/0041-the-history-domain.md)).
   - A public instance runs on the user's server, `eu_region_server` (173.212.213.207): the Celestial Atlas on port 9200, the Earth Atlas on 9201, in the tmux session `science`, served with `--host 0.0.0.0 --sibling`; the Brain Atlas on 9202, in the window `brain-atlas`, served with `--host 0.0.0.0` after its recipe. The READMEs link to it; keep the links current if it moves.
 - **Visual style:**
   - The Celestial Atlas uses Dusty Orchid (#CA8DBE) as its main colour, chosen by the user: plum nights, orchid accents and orchid-tinted paper for charts.
   - The Earth Atlas shares that palette for now (ADR 0014), with data in perceptually uniform colour maps (cmocean, and our own orchid map); the user may give it a colour of its own.
   - The Complex Atlas uses Old Rose (#C08081), provisionally, until the user chooses its colour.
+  - The History Complex uses a faded mauve (#9C6B85) on parchment, provisionally; its foam is drawn on a plum night.
   - All interfaces use serif type (Source Serif 4).
   - Each application may carry its own main colour within the warm, gentle family the user prefers.
 - **Version control.**
@@ -361,13 +364,15 @@ A domain directory contains:
 
 ## 9. Current State
 
-As of 2026-10-23:
+As of 2026-10-24:
 
 - **The structure of ADR 0026 is in place.** The first laboratory's history is joined to this repository, and the foundations are submodules under `foundations/`.
-- **The domains.** Nine domains have code: metrology, geodesy, astronomy, geophysics, geography, oceanography, meteorology, climate and neuroscience. Tides, navigation and air–sea are planned. All the code is provisional JavaScript, with 422 checks against published references and closed-form answers. With the foundations (their C++ among them), the edges and the applications, the whole run is 1828 checks in twenty-one suites. Every domain passes its checks alone.
+- **The domains.** Ten domains have code: metrology, geodesy, astronomy, geophysics, geography, oceanography, meteorology, climate, neuroscience and history. Tides, navigation and air–sea are planned. The domains of the Earth and the sky are provisional JavaScript, with 422 checks against published references and closed-form answers; neuroscience's networks of spiking neurons and the whole of the history domain are C++, and their suites run 274 and 242 checks. With the foundations (their C++ among them), the edges and the applications, the whole run is 2246 checks in twenty-three suites. Every domain passes its checks alone.
 - **The Brain Atlas** (`applications/brain-atlas`, [ADR 0028](development/decisions/0028-neuroscience-and-the-brain-atlas.md), [ADR 0032](development/decisions/0032-the-anatomy-of-the-brain-atlas.md)) shows the human brain in the round from an anatomy product (`data/products/brain_anatomy.py`): the cortex by gyrus, the deep nuclei, ventricles and fibre bundles, every part with a card from the domain's knowledge base (152 structures, with references). It cuts the brain and shows sections, colours the cortex by Julich-Brain or Schaefer, maps data by structure and by coordinate, places the 10–20 electrodes on the scalp and carries their values onto the cortex, scales the brain to a subject's head, and shows the Allen mouse brain; five guided tours. Its Signals mode ([ADR 0034](development/decisions/0034-biosignals-on-the-brain.md)) carries EEG onto the cortex through a three-shell forward model and sLORETA (band power, the potential at an instant, contrasts of conditions, with the traces playing beneath), shows one current's EEG potential and MEG field side by side, and reads fMRI maps through the cortex, smoothed and with their peaks named.
 - **The Spiking Simulator** (`applications/spiking-simulator`, [ADR 0038](development/decisions/0038-the-spiking-simulator.md)) composes networks of spiking neurons from the engine's catalogue of twenty-two models, classical and quantum, edits them as the engine's own JSON specification, and runs them in the C++ engine on the server: eight examples (an adapting neuron, Brunel's four states, the classes of excitability in one run, quantum emitters, STDP). Its visualizer and profiler draw a run's raster and rates, its statistics (rates, CV and LV, Fano factors, synchrony χ, spectra, f–I curves), states, weights and network, and the engine's profile phase by phase and thread by thread; the statistics and the profile are the engine's own (`snn/analysis.hpp`).
 - **The Complex Atlas** (`applications/complex-atlas`, [ADR 0039](development/decisions/0039-complexes-symmetry-and-fields.md)) shows cell complexes, their invariants and the fields on them: twenty-five families (surfaces glued by words, projective and lens spaces, presentation complexes, lattices, triangulations, dual 2-complexes, coloured graphs) or the user's own words, facets or JSON; three views (a realisation in three dimensions, the net of polygons, the diagram of cells); homology with generators drawn on the complex, π₁ raw and simplified, the classification of surfaces, collapses, manifolds and Gurau degrees; lattice gauge fields of ℤ_N, U(1), SU(2) and SU(N) by Monte Carlo against Migdal–Witten's exact values; and Turaev–Viro state sums. Its engine is C++ on morphe and physis, run by its server.
+- **The History Complex** (`applications/history-complex`, [ADR 0041](development/decisions/0041-the-history-domain.md)) builds histories into 2-complexes from the history domain's canons: occasions are vertices, the lives of beings edges, and each tie between two of its meetings a lens, a 2-cell. Six views: the foam in three dimensions (lives rising through time, cut at any date, opened into the refined complex K̂, coloured by discipline, spin, flips or inference, with guided tours of each canon), the loom, the moment (the spin network at a date and its reconstruction), the complex (loops, shells, the other complexes, persistent homology in time), the record, and the readings (persistence and balance fitted to the record, the labels of the spin foam, Wilson loops, power, SU(2) kinematics). Six canons, each with a guided tour: Athens 470–322 BC, Florence and Rome 1401–1564, the Scientific Revolution 1543–1727, Europe 1785–1828, the European alliances 1871–1914 and Vienna 1890–1938, and all of them joined. Its engine is C++ on the history domain, morphe and calx, run by its server.
+- **The history domain** ([ADR 0041](development/decisions/0041-the-history-domain.md)), the first of the humanities, is C++ from the start: records coded by a codebook (v1), chronology across the Gregorian, Julian and Old Style calendars (a reader's dates in the historians' convention, Julian before 1582), the join of records (an id identifies across canons only where they agree who it is, by Wikidata item or name), the history complex and its readings (persistence, flips, frustrated triangles, closed shells, moments), and the spin foam of the signed ties at ℤ₂ (the theory note, §6): the Gibbs weight on K̂, its character expansion over the ℤ/2 2-cycles, spins, the Gauss law, Wilson loops, the posterior and power, sampled by heat bath with cluster moves and checked against exact enumeration and the GKS inequality; and other complexes of a record (shells filled, Dowker's complex with Atkin's Q-analysis, the time filtration). The canons are seeds drafted by a language model, unchecked; `data/products/history_check.py` checks them against Wikidata. morphe gained persistent homology for it.
 - **The Celestial Atlas** (`applications/celestial-atlas`, [ADR 0011](development/decisions/0011-first-application-celestial-atlas.md)) is a web application with five views:
   - the Solar System;
   - the stellar neighbourhood, from HYG or Gaia;

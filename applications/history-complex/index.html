@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>History Complex</title>
+  <meta name="description" content="Histories recorded as occasions, beings and ties, built into a 2-complex: its topology computed exactly, its signed ties read as a ℤ₂ gauge field, its record shown beside its sources.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M4 10h24M4 22h24' stroke='%239c6b85' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M9 10C13 10 13 22 17 22M17 10C21 10 21 22 25 22' fill='none' stroke='%233a2c33' stroke-width='1.4'/%3E%3Ccircle cx='9' cy='10' r='2.4' fill='%23c2457e'/%3E%3Ccircle cx='17' cy='22' r='2.4' fill='%232f6fb5'/%3E%3Ccircle cx='25' cy='22' r='2.4' fill='%23b5711c'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" media="print" onload="this.media='all'"
+        href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..600&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module" src="src/app.js"></script>
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M4 10h24M4 22h24" stroke="#9c6b85" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M9 10C13 10 13 22 17 22M17 10C21 10 21 22 25 22" fill="none" stroke="#3a2c33" stroke-width="1.2"/>
+        <circle cx="9" cy="10" r="2.3" fill="#c2457e"/><circle cx="17" cy="22" r="2.3" fill="#2f6fb5"/><circle cx="25" cy="22" r="2.3" fill="#b5711c"/>
+      </svg>
+      <div class="brand-text">
+        <span class="brand-name">History Complex</span>
+        <span class="brand-sub">occasions, lives and the ties between them</span>
+      </div>
+    </div>
+    <nav class="views" role="tablist" aria-label="Views">
+      <button data-view="foam" role="tab">Foam</button>
+      <button data-view="loom" role="tab">Loom</button>
+      <button data-view="moment" role="tab">Moment</button>
+      <button data-view="complex" role="tab">Complex</button>
+      <button data-view="record" role="tab">Record</button>
+      <button data-view="readings" role="tab">Readings</button>
+    </nav>
+    <div class="top-right">
+      <span id="status" class="status" aria-live="polite"></span>
+      <label class="canon-label">Canon <select id="canon" aria-label="The canon"></select></label>
+      <span id="engine" class="engine">…</span>
+    </div>
+  </header>
+
+  <main>
+    <section id="view-loom" class="view-loom">
+      <div id="loom-tools" class="loom-tools"></div>
+      <div class="loom-body">
+        <div id="loom-stage" class="loom-stage"></div>
+        <aside id="card" class="card-panel" aria-live="polite"></aside>
+      </div>
+    </section>
+    <section id="view-foam" class="view-foam" hidden>
+      <div id="foam-tools" class="loom-tools foam-tools"></div>
+      <div class="loom-body">
+        <div id="foam-stage" class="foam-stage"></div>
+        <aside id="foam-card" class="card-panel" aria-live="polite"></aside>
+      </div>
+    </section>
+    <section id="view-moment" class="page" hidden></section>
+    <section id="view-complex" class="page" hidden></section>
+    <section id="view-record" class="page" hidden></section>
+    <section id="view-readings" class="page" hidden></section>
+    <div id="notice" class="notice" hidden></div>
+  </main>
+  <div id="hover" class="hover" hidden></div>
+</body>
+</html>

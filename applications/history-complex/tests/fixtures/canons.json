@@ -1,0 +1,84 @@
+{
+ "canons": [
+  {
+   "kind": "canon",
+   "id": "athens-470-322bc",
+   "title": "Athens, 470–322 BC",
+   "about": "Classical facts of Athens from the boyhood of Socrates to the deaths of Aristotle and Demosthenes: philosophy foremost (Socrates and his pupils, the sophists, the Academy and the Lyceum), with the politics and wars that framed it, the theatre that mocked it, and the art of Pericles' Athens. Dates are years BC written as astronomical years in the proleptic Julian calendar (399 BC is -0398); an Athenian year ran from midsummer to midsummer, so most dates are years, intervals of two years, or approximate. Its selection is that of the surviving literature: what Plato, Xenophon, Thucydides, Aristotle's biographers, Plutarch and Diogenes Laertius chose to tell, centred on a few famous men of one city; women, slaves, metics other than the famous, and the rest of Greece appear only where these authors bring them in, and some occasions rest on late anecdote, which the confidences say. A seed canon, drafted from general knowledge by a language model, each assertion naming the ancient or modern source it is to be checked against; none is checked yet.",
+   "codebook": 1,
+   "period": "-0469/-0321",
+   "status": "seed",
+   "drafted_by": "model:claude-opus-5-5",
+   "drafted": "2026-10-24",
+   "file": "athens-470-322bc.jsonl"
+  },
+  {
+   "kind": "canon",
+   "id": "europe-1785-1828",
+   "title": "Europe, 1785–1828",
+   "about": "Classical facts of an age where music, letters, philosophy, science, art and the relations of states meet: from Mozart's quartets for Haydn to Schubert's death, through the wars of Napoleon and the Congress of Vienna. A seed canon, to test the method: drafted from general knowledge by a language model, each assertion naming the standard reference it is to be checked against; none is checked yet.",
+   "codebook": 1,
+   "period": "1785/1828",
+   "status": "seed",
+   "drafted_by": "model:claude-opus-5-5",
+   "drafted": "2026-10-24",
+   "file": "europe-1785-1828.jsonl"
+  },
+  {
+   "kind": "canon",
+   "id": "europe-1871-1914",
+   "title": "The European alliances, 1871–1914",
+   "about": "Classical facts of the alliances and crises of the European powers from the peace of Frankfurt (1871) to the declarations of war of July and August 1914: states as collective beings, with their sovereigns and ministers. It is the classic case of structural balance, whose alliances Antal, Krapivsky and Redner (Physical Review E 72, 036121, 2005) follow; here the signs are coded occasion by occasion from what the states and statesmen do, not chosen to make the network balance. A seed canon, drafted from general knowledge by a language model; every assertion names the standard reference it is to be checked against, and none is checked yet. Its selection is diplomatic history's: the great powers and a few Balkan states, their treaties, crises and wars, and the men who signed; peoples, parliaments, opinion, finance and the colonial world appear only where a treaty or a crisis names them, and the smaller states (Belgium, Romania, Greece, Montenegro) are left out. Signs between states: +1 allied or aligned at the occasion; -1 at war, a peace dictated by the victor, a declared crisis between them, or one the target of the other's treaty (role target). All dates are Gregorian; Russian events, which Russia dated by the Julian calendar until 1918, are given in the Gregorian dates of the Western sources.",
+   "codebook": 1,
+   "period": "1871/1914",
+   "status": "seed",
+   "drafted_by": "model:claude-opus-5-5",
+   "drafted": "2026-10-24",
+   "file": "europe-1871-1914.jsonl"
+  },
+  {
+   "kind": "canon",
+   "id": "italy-1401-1564",
+   "title": "Florence and Rome, 1401–1564",
+   "about": "Classical facts of Florence and Rome from the competition for the Baptistery doors (1401) to Michelangelo's death (1564): art foremost, with its patrons, the politics of the Medici, the republic and the popes, and the letters and philosophy around them. A seed canon, drafted from general knowledge by a language model; every assertion names the standard reference it is to be checked against, and none is checked yet. Its selection is the canon of art history since Vasari: Florence first, famous men and their great commissions, the patrons as that history sees them; workshops, women, Venice and the rest of Italy are thin or absent, and where one of Vasari's or Condivi's anecdotes carries a sign the note says so. Dates are Julian, as the sources write them; a date that Florence wrote in its own style (the year beginning on 25 March) between January and 24 March is given in the modern year, and the note says so. Collective beings: the Signoria stands for the government of Florence through its successive regimes, the Medici for the family as a political house, the Calimala and the Opera del Duomo for the guild and the cathedral works that commissioned.",
+   "codebook": 1,
+   "period": "1401/1564",
+   "status": "seed",
+   "drafted_by": "model:claude-opus-5-5",
+   "drafted": "2026-10-24",
+   "file": "italy-1401-1564.jsonl"
+  },
+  {
+   "kind": "canon",
+   "id": "science-1543-1727",
+   "title": "The Scientific Revolution, 1543–1727",
+   "about": "Classical facts of the Scientific Revolution, from De revolutionibus and the death of Copernicus to the death of Newton: science foremost, with its philosophy, its patrons and its politics; the great correspondences (Mersenne's, Oldenburg's), the trials of Galileo, the founding of the Royal Society and the Académie, and the quarrels over priority. Dates are written as their sources write them: England in Old Style (julian-march, the legal year from 25 March) until 1752, the Catholic continent in the Gregorian calendar from 1582, Protestant Germany and Denmark in the Julian until 1700. Its selection is that of the standard biographies: famous men of print and letters, almost all in western Europe; artisans, instrument makers, assistants, women other than a queen, and science outside Europe are absent, and the record is densest where the letters survive. A seed canon, drafted from general knowledge by a language model, each assertion naming the standard reference it is to be checked against; none is checked yet.",
+   "codebook": 1,
+   "period": "1543/1727",
+   "status": "seed",
+   "drafted_by": "model:claude-opus-5-5",
+   "drafted": "2026-10-24",
+   "file": "science-1543-1727.jsonl"
+  },
+  {
+   "kind": "canon",
+   "id": "vienna-1890-1938",
+   "title": "Vienna, 1890–1938",
+   "about": "Classical facts of Vienna from the 1890s to the Anschluss, the integrated history par excellence, where music, art, letters, philosophy, science and politics meet in one city: from the schoolboy Hofmannsthal reading his verse to Schnitzler to Freud's departure for London in June 1938. A seed canon, drafted from general knowledge by a language model, each assertion naming the standard reference it is to be checked against; none is checked yet. Its selection bias, stated plainly: it follows the canonical intellectual history of Vienna 1900 (Schorske, Janik and Toulmin, Kandel), and so the famous, the male, the bourgeois and the written; the Vienna of workers, of Czech and other migrants, of most women, of popular culture and of Red Vienna's politics is almost absent, and the record's loops and shells gather round a few celebrated circles.",
+   "codebook": 1,
+   "period": "1890/1938",
+   "status": "seed",
+   "drafted_by": "model:claude-opus-5-5",
+   "drafted": "2026-10-24",
+   "file": "vienna-1890-1938.jsonl"
+  },
+  {
+   "kind": "canon",
+   "id": "integrated",
+   "title": "All canons, joined",
+   "integrated": true,
+   "about": "Every canon of the domain in one record, glued along the beings, occasions and ties they share.",
+   "period": "-0469/1938"
+  }
+ ]
+}

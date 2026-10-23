@@ -53,6 +53,7 @@ Decisions that concern only one library are recorded in that library's own `deve
 | [0038](0038-the-spiking-simulator.md) | The Spiking Simulator | Accepted |
 | [0039](0039-complexes-symmetry-and-fields.md) | Complexes, symmetry and fields in the foundations; the Complex Atlas | Accepted, provisionally |
 | [0040](0040-the-generation-of-spacetime.md) | The generation of spacetime by field theories; spin foams in the Complex Atlas | Accepted, provisionally |
+| [0041](0041-the-history-domain.md) | The history domain and the History Complex | Accepted |
 
 ## 2. Template
 

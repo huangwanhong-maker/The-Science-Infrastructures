@@ -73,7 +73,7 @@ Domains      height 4   climate
 (domains/)   height 3   tides · navigation · air-sea
              height 2   astronomy · geophysics · geography · oceanography · meteorology
              height 1   geodesy
-             height 0   metrology · neuroscience (a submodule)
+             height 0   metrology · neuroscience (a submodule) · history
                     │ use
 Foundations  physis           units · symmetry · geometry · dynamics · quantum · discretisation ·
 (foundations/,                spacetime · field theory · gauge · quantum gravity · mechanics ·
@@ -228,6 +228,7 @@ The applications run in the browser, as ES modules without a build step. They im
 | Bulk formulae for air–sea fluxes, wind waves | `domains/air-sea/` |
 | Energy-balance models, orbital forcing of insolation, climate classification | `domains/climate/` |
 | Reference spaces of the brain, parcellations and their maps, the head and the 10–20 system, readers of NIfTI and NRRD | `domains/neuroscience/` |
+| Records of histories, their chronology and calendars, the history complex and its signed ties | `domains/history/` |
 | A new science, such as chemistry or ecology | a new domain in `domains/`, placed in the order |
 | Downloading and registering DE440 or a tide-gauge record | `data/` |
 | Telescope or sensor control | `observation/` |

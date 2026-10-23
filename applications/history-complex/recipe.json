@@ -1,0 +1,15 @@
+{
+  "title": "The History Complex's engine",
+  "about": "The history domain's C++ (the record and its chronology, the construction of the complex, the readings of its signed ties) with morphe's homology and fundamental group, compiled once with g++ 11 or later, natively or in WSL, into data/cache/engines/history/. About a minute; it is compiled again when its sources change.",
+  "steps": [
+    {
+      "id": "engine",
+      "title": "The engine of histories, compiled with g++",
+      "run": [
+        "applications/history-complex/engine.py",
+        "build"
+      ],
+      "done": "data/cache/engines/history/build.json"
+    }
+  ]
+}

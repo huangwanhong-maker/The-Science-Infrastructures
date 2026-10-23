@@ -23,3 +23,4 @@ This is the cheapest place to write a thought down. An idea here may be wrong, a
 | 2026-10-22 | [A primitive-equation model, our next model](2026-10-22-primitive-equation-model.md) | seed |
 | 2026-10-22 | [Shared structures across the sciences](2026-10-22-shared-structures-across-the-sciences.md) | seed |
 | 2026-10-23 | [The research arc of prediction, a plan](2026-10-23-the-research-arc.md) | seed |
+| 2026-10-23 | [The History Complex: histories as spin foams, from the record to the formalism](2026-10-23-history-complex.md) | seed; promoted in part ([ADR 0041](../decisions/0041-the-history-domain.md)) |
