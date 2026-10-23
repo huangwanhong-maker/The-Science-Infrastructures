@@ -13,4 +13,4 @@ A running record, for readers, of what each commit made possible or better, in t
 
 | Date | Commits |
 |---|---|
-| [2026-10-23](2026-10-23.md) | Seven new neuron models; the mathematical foundations and the first C++; spiking networks; biosignals on the brain; the Brain Atlas rebuilt; the API; observations, scores and hazards |
+| [2026-10-23](2026-10-23.md) | A quantum neuron; seven new neuron models; the mathematical foundations and the first C++; spiking networks; biosignals on the brain; the Brain Atlas rebuilt; the API; observations, scores and hazards |
