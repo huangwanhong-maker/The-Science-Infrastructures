@@ -1,0 +1,132 @@
+{
+ "theory": "scalar",
+ "order": 2,
+ "graphs": [
+  {
+   "id": 3,
+   "coloured_graph": {
+    "colours": 1,
+    "p": 4,
+    "sigma": [
+     [
+      0,
+      1,
+      2,
+      3
+     ]
+    ]
+   },
+   "counts": [
+    2
+   ],
+   "connected": false,
+   "n_power": 0,
+   "n_power_scaled": 0,
+   "degree": null,
+   "genus": null,
+   "automorphisms": 8,
+   "weight": "2",
+   "amplitude": null
+  },
+  {
+   "id": 19,
+   "coloured_graph": {
+    "colours": 1,
+    "p": 4,
+    "sigma": [
+     [
+      0,
+      2,
+      1,
+      3
+     ]
+    ]
+   },
+   "counts": [
+    2
+   ],
+   "connected": true,
+   "n_power": 0,
+   "n_power_scaled": 0,
+   "degree": null,
+   "genus": null,
+   "automorphisms": 2,
+   "weight": "8",
+   "amplitude": null
+  },
+  {
+   "id": 23,
+   "coloured_graph": {
+    "colours": 1,
+    "p": 4,
+    "sigma": [
+     [
+      2,
+      3,
+      0,
+      1
+     ]
+    ]
+   },
+   "counts": [
+    2
+   ],
+   "connected": true,
+   "n_power": 0,
+   "n_power_scaled": 0,
+   "degree": null,
+   "genus": null,
+   "automorphisms": 8,
+   "weight": "2",
+   "amplitude": null
+  }
+ ],
+ "total": 24,
+ "truncated": false,
+ "series": {
+  "Z": [
+   {
+    "order": 1,
+    "terms": [
+     {
+      "power": 0,
+      "coeff": "-2"
+     }
+    ]
+   },
+   {
+    "order": 2,
+    "terms": [
+     {
+      "power": 0,
+      "coeff": "12"
+     }
+    ]
+   }
+  ],
+  "F": [
+   {
+    "order": 1,
+    "terms": [
+     {
+      "power": 0,
+      "coeff": "-2"
+     }
+    ]
+   },
+   {
+    "order": 2,
+    "terms": [
+     {
+      "power": 0,
+      "coeff": "10"
+     }
+    ]
+   }
+  ]
+ },
+ "leading": {
+  "power": 0,
+  "coeff": "10"
+ }
+}

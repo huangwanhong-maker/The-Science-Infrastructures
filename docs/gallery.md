@@ -2,13 +2,13 @@
 
 *Status: draft, 2026-10-23.*
 
-These are screenshots of the infrastructure's applications, the three atlases taken on 22 October 2026 from their local servers with the data of that day, the Spiking Simulator on 23 October.
+These are screenshots of the infrastructure's applications, the three atlases taken on 22 October 2026 from their local servers with the data of that day, the Spiking Simulator and the Complex Atlas on 23 October.
 
 - Both are web applications without a build step.
 - Their science is the provisional JavaScript of the domains they draw on, tested against published references and closed-form answers in 422 checks.
 - Each caption says what is shown, where the data come from, and how the picture is made.
 
-Click an image to see it at full size. To run the applications yourself, see the READMEs of the [Earth Atlas](../applications/earth-atlas/README.md), the [Celestial Atlas](../applications/celestial-atlas/README.md) and the [Brain Atlas](../applications/brain-atlas/README.md).
+Click an image to see it at full size. To run the applications yourself, see the READMEs of the [Earth Atlas](../applications/earth-atlas/README.md), the [Celestial Atlas](../applications/celestial-atlas/README.md), the [Brain Atlas](../applications/brain-atlas/README.md), the [Spiking Simulator](../applications/spiking-simulator/README.md) and the [Complex Atlas](../applications/complex-atlas/README.md).
 
 ## 1. The Earth Atlas
 
@@ -335,7 +335,34 @@ Networks of spiking neurons composed from the neuroscience domain's twenty-two m
 </tr>
 </table>
 
-## 5. Credits
+## 5. The Complex Atlas
+
+Cell complexes, their invariants and the fields on them, and the generation of spacetime by field theories, from the foundations morphe and physis through the atlas's C++ engine ([ADR 0039](../development/decisions/0039-complexes-symmetry-and-fields.md), [ADR 0040](../development/decisions/0040-the-generation-of-spacetime.md)). Every number in the captions is the engine's own, computed on 23 October 2026 on the development machine; the runs are seeded, so each picture comes back the same.
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/complex-01-gauge-torus.jpg"><img src="../assets/gallery/complex-01-gauge-torus.jpg" alt="A U(1) gauge field on a 12 × 12 lattice torus, its links coloured by angle, with the mean plaquette against the exact value"></a><br><b>A gauge field on a lattice torus</b>: U(1) on the 12 × 12 periodic lattice at β = 2, by heat bath and overrelaxation, 400 sweeps after 100. The links are coloured by their angle and the plaquettes by Re U. The mean plaquette, 0.6956 ± 0.0019, agrees with the exact value of two-dimensional Yang–Mills on a torus, 0.69777 (Migdal 1975; Witten 1991). The topological charge is an integer, −1, and the two Polyakov loops along the generators of π₁ vanish within their errors, as the centre symmetry requires.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/complex-02-genus-two-net.jpg"><img src="../assets/gallery/complex-02-genus-two-net.jpg" alt="The surface of genus 2 as an octagon glued by a1 b1 a1⁻¹ b1⁻¹ a2 b2 a2⁻¹ b2⁻¹, the loop a1 highlighted"></a><br><b>The surface of genus 2</b> as one octagon glued by its word a₁ b₁ a₁⁻¹ b₁⁻¹ a₂ b₂ a₂⁻¹ b₂⁻¹: one vertex, four edges, one face, χ = −2. Its homology ℤ, ℤ⁴, ℤ and its fundamental group come from morphe's exact computation; the generator a₁ is drawn as its loop, the two sides it glues lit together.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/complex-03-torus-seven-generator.jpg"><img src="../assets/gallery/complex-03-torus-seven-generator.jpg" alt="The seven-vertex torus unfolded into a hexagonal net, with a generator of its first homology drawn"></a><br><b>The seven-vertex torus</b>, the minimal triangulation (Möbius 1886; Császár 1949), unfolded into its net: fourteen triangles in a hexagon whose sides are glued in pairs. A generator of H₁ = ℤ² is drawn in gold. The fundamental group simplifies from fifteen generators to ⟨e14, e18 | e14 e18 e14⁻¹ e18⁻¹⟩.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/complex-04-feynman-graphs.jpg"><img src="../assets/gallery/complex-04-feynman-graphs.jpg" alt="The Feynman graphs of the complex matrix model at second order, with the series of Z and log Z in N"></a><br><b>A field theory's Feynman graphs</b>: the matrix model S = tr MM† + λ tr (MM†)² at second order, in the Generation mode. Its 24 Wick contractions fall into 8 graphs, 5 of them connected, each a 3-coloured graph (a ribbon graph) weighted N to its faces. The series are exact: Z = 1 − 2N³λ + (2N⁶ + 9N⁴ + N²)λ² + … and log Z = −2N³λ + (9N⁴ + N²)λ² + …. The planar graphs, which dominate, are ringed in gold.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/complex-05-planar-limit.jpg"><img src="../assets/gallery/complex-05-planar-limit.jpg" alt="The eigenvalue density of the quartic matrix model and its planar free energy with the critical coupling"></a><br><b>The planar limit</b>: at large N only planar graphs survive, and the eigenvalues settle into the density of Brézin, Itzykson, Parisi and Zuber (1978), here at g = 0.02 for V = M²/2 + gM⁴. The planar free energy ends at g_c = −1/48. There the planar surfaces grow without bound: the continuum of two-dimensional quantum gravity, with string susceptibility γ = −1/2. The engine reads −0.4999995 from 400 exact coefficients.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/complex-06-coloured-graphs.jpg"><img src="../assets/gallery/complex-06-coloured-graphs.jpg" alt="The connected Feynman graphs of the coloured simplicial tensor model at third order, ordered by power of N and Gurau degree"></a><br><b>Tensor models generate pseudomanifolds</b>: the coloured simplicial model in dimension 3 at third order has 41 connected Feynman graphs, each a 4-coloured graph triangulating a 3-dimensional pseudomanifold. The leading term, (22/3)N¹², sums the melonic graphs of Gurau degree ω = 0: 22 is the Fuss–Catalan number, divided by 3!. Graphs of degree 1 and 2 follow at N¹¹ and N¹⁰.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/complex-07-spin-foam.jpg"><img src="../assets/gallery/complex-07-spin-foam.jpg" alt="A spin foam of Boulatov's group field theory with spins on its faces and one vertex opened onto its spin network and quantum tetrahedron"></a><br><b>A spin foam, vertex by vertex</b>: a Feynman graph of Boulatov's group field theory becomes the 2-complex of a triangulated 3-sphere. Its spins are sampled at r = 5 with weight |A|, its faces coloured by spin. Vertex v₀ is opened: its boundary spin network (the tetrahedral graph and its six spins) and its quantum tetrahedron, edges j + ½, volume 0.1136. Its quantum 6j symbol is −0.618 (−1/φ), against the Ponzano–Regge asymptotic −0.479. Summed over all spins, the amplitudes give the Turaev–Viro invariant 0.138197 = w⁻², that of S³.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/complex-08-condensate-bounce.jpg"><img src="../assets/gallery/complex-08-condensate-bounce.jpg" alt="The volume of a group-field-theory condensate bouncing in relational time, and its effective Friedmann equation"></a><br><b>A condensate's universe bounces</b>: many quanta of a group field theory in one state, a mean field σ_j(φ) for spin ½ in the relational time of a massless scalar (Oriti, Sindoni and Wilson-Ewing 2016). Far from φ = 0 its volume follows classical FLRW, V ∝ exp(±√(12πG) φ), dashed. Where the classical volume would vanish, it bounces at V = 0.11516, when the matter density reaches ρ_c = 37.699. Right, the effective Friedmann equation: classical 4πG/3 at low density, zero at ρ_c.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/complex-09-random-quadrangulation.jpg"><img src="../assets/gallery/complex-09-random-quadrangulation.jpg" alt="A random planar quadrangulation of 400 faces, with its spectral and Hausdorff dimensions"></a><br><b>The continuum of the planar limit</b>: a uniform random planar quadrangulation of 400 faces, drawn by the Cori–Vauquelin–Schaeffer bijection (Le Gall 2013; Miermont 2013). As the size grows, these converge to the Brownian map, of spectral dimension 2 and Hausdorff dimension 4. At this size the plateaus read d_s ≈ 2.39 and d_H ≈ 2.54: distances grow only as n^{1/4}, so d_H approaches 4 slowly.</td>
+<td></td>
+</tr>
+</table>
+
+## 6. Credits
 
 The screenshots are the infrastructure's, under its MIT licence, except the three that show Pangu-Weather's forecasts (§1.3: earth-15, earth-16 and earth-17). Those are shared under CC BY-NC-SA 4.0, the licence of the model's parameters: for learning and research, not for commercial use. The data in all of them keep their own licences.
 
@@ -377,7 +404,7 @@ The screenshots are the infrastructure's, under its MIT licence, except the thre
 | EEG | EEG Motor Movement/Imagery Dataset (Schalk et al. 2004), PhysioNet | ODC Attribution 1.0 |
 | fMRI maps | Individual Brain Charting (Pinho et al. 2018), via NeuroVault | CC0 |
 
-## 6. Making the Screenshots
+## 7. Making the Screenshots
 
 The screenshots were taken with headless Chrome at 1600 × 1000 pixels, driven over the DevTools protocol, and saved as JPEG.
 
@@ -393,3 +420,5 @@ http://127.0.0.1:8790/#p=globe&c=-32,36,3.25&s=wind.10m@gfs-forecast:speed&f=win
 - `t`: the instant, in UTC.
 
 The Spiking Simulator's pictures, at 1500 × 950 pixels, were taken in the same way, each from a link that opens an example, runs it and opens a view, for example `http://127.0.0.1:8830/#preset=brunel-si-fast&run=1&from=300&to=360`: `preset` names the example, `run=1` runs it, `tab` opens a view, `from` and `to` (in ms) the span of the activity shown, and `threads` the threads used. The runs are deterministic, so each picture comes back the same.
+
+The Complex Atlas's pictures, at 1500 × 950 pixels, were taken the same way from links that open a complex, a theory or a passage, for example `http://127.0.0.1:8850/#family=lattice-torus&n=12&m=12` (then **Run** in Fields), `#family=surface&genus=2` (the Net view), `#mode=generation&theory=matrix&order=2&stage=graphs`, `#mode=generation&theory=coloured-simplicial&order=3&stage=graphs` and `#mode=generation&theory=gft-boulatov&order=2&stage=graphs` (then a graph's **Its spin foam** and a vertex), and the passages of the Generation mode for the condensate and the quadrangulation. The engine's runs are seeded, so each picture comes back the same.

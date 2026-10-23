@@ -32,7 +32,7 @@ Until the scene model and the renderers exist, the parts of the two atlases' dra
 | `units.js` | The units in which quantities are shown, and numbers written for reading |
 | `tiles.js` | The tiles of an equirectangular map service that cover a region at a resolution |
 | `isosurface.js` | A surface at a level of a volume (a brain, a region), as a triangle mesh, by surface nets |
-| `complex.js` | Cell complexes drawn: a CW complex realised in space by stress majorisation, its 2-cells unfolded into a net, its cells as a Hasse diagram; surface words and facets read into Complex JSON; warm cyclic, sequential and diverging colour maps |
+| `complex.js` | Cell complexes drawn: a CW complex realised in space by stress majorisation, its 2-cells unfolded into a net, its cells as a Hasse diagram; surface words and facets read into Complex JSON; coloured graphs (the Feynman graphs of tensor models and group field theories) drawn in the plane and turned into their 2-complexes; a tetrahedron set in space from its six edge lengths (the quantum tetrahedra of spin foams); warm cyclic, sequential and diverging colour maps, and a colour for each index of a coloured graph |
 
 Their checks run with `node visualization/tests/run-tests.mjs`.
 

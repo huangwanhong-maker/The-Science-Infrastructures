@@ -1,0 +1,100 @@
+{
+ "theory": "matrix",
+ "order": 1,
+ "graphs": [
+  {
+   "id": 0,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 2,
+    "sigma": [
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ]
+   },
+   "counts": [
+    1
+   ],
+   "connected": true,
+   "n_power": 3,
+   "n_power_scaled": 2,
+   "degree": null,
+   "genus": 0,
+   "automorphisms": 2,
+   "weight": "1",
+   "amplitude": null
+  },
+  {
+   "id": 1,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 2,
+    "sigma": [
+     [
+      1,
+      0
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ]
+   },
+   "counts": [
+    1
+   ],
+   "connected": true,
+   "n_power": 3,
+   "n_power_scaled": 2,
+   "degree": null,
+   "genus": 0,
+   "automorphisms": 2,
+   "weight": "1",
+   "amplitude": null
+  }
+ ],
+ "total": 2,
+ "truncated": false,
+ "series": {
+  "Z": [
+   {
+    "order": 1,
+    "terms": [
+     {
+      "power": 3,
+      "coeff": "-2"
+     }
+    ]
+   }
+  ],
+  "F": [
+   {
+    "order": 1,
+    "terms": [
+     {
+      "power": 3,
+      "coeff": "-2"
+     }
+    ]
+   }
+  ]
+ },
+ "leading": {
+  "power": 3,
+  "coeff": "-2"
+ }
+}

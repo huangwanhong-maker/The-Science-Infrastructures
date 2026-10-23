@@ -3,8 +3,10 @@
 // The page holds one complex (Complex JSON: README.md, the protocol). It comes from the engine's
 // catalogue, from the examples, or from the user (words, facets or JSON, read in input.js). It is
 // drawn in three views, all computed here in the page (visualization/js/complex.js): realised in
-// space, unfolded into a net, and as a Hasse diagram. Its invariants, a gauge field on it and a
-// state sum come from the engine, through the server; the views do not need the engine.
+// space, unfolded into a net, and as a Hasse diagram. Its invariants, a gauge field on it, a state
+// sum, a spin foam and its emergent dimensions come from the engine, through the server; the
+// views do not need the engine. The Generation mode (generation.js) walks the generation of
+// spacetime by a field theory, from its action to the continuum, and hands its complexes here.
 
 import * as api from './api.js';
 import { el, clear } from './dom.js';
@@ -15,10 +17,13 @@ import { drawHasse, HASSE_LIMIT } from './views/hasse.js';
 import { renderInvariants } from './invariants.js';
 import { renderFields } from './fields.js';
 import { renderSums } from './statesums.js';
+import { renderFoam, renderInset, foamOverlay, foamForm, spinColour } from './spinfoam.js';
+import { renderDimensions } from './dimensions.js';
+import { mountGeneration } from './generation.js';
 import { renderCatalogue } from './catalogue.js';
 import { readComplex } from './input.js';
 import { EXAMPLES } from './examples.js';
-import { cellName, wordText, countsText, number } from './format.js';
+import { cellName, wordText, countsText, number, spinText } from './format.js';
 
 const $ = (id) => document.getElementById(id);
 const STORE = 'complex-atlas:v1';
@@ -30,17 +35,22 @@ const state = {
   analysis: null, analysisState: null,
   fields: null, fieldsShown: true, fieldsRunning: false, fieldsError: null,
   sums: null, sumsRunning: false, sumsError: null,
+  foam: null, foamRunning: false, foamError: null,
+  dims: null, dimsRunning: false, dimsError: null,
   selection: null,
-  view: 'realisation', panel: 'invariants',
+  mode: 'complexes', view: 'realisation', panel: 'invariants',
   style: { vertexSize: 1, edgeWidth: 2.5, arrowSize: 1, faceOpacity: 0.38, rings: 3, labels: true, arrows: true, positions: true, seed: 1 },
   input: { text: 'abAB', kind: 'auto' },
 };
 let realisation = null;
 let token = 0;
+let generation = null;
+let generationLoaded = false;
 
 function save() {
   try {
-    localStorage.setItem(STORE, JSON.stringify({ style: state.style, view: state.view, panel: state.panel, input: state.input, source: state.source }));
+    const source = state.source && JSON.stringify(state.source).length < 200000 ? state.source : null;
+    localStorage.setItem(STORE, JSON.stringify({ style: state.style, view: state.view, panel: state.panel, input: state.input, source }));
   } catch { /* storage unavailable */ }
 }
 function restore() {
@@ -59,18 +69,43 @@ async function start() {
   }
   for (const b of document.querySelectorAll('.views button')) b.onclick = () => { state.view = b.dataset.view; save(); tabs(); draw(); };
   for (const b of document.querySelectorAll('.tabs button')) b.onclick = () => { state.panel = b.dataset.panel; save(); tabs(); };
+  for (const b of document.querySelectorAll('.modes button')) b.onclick = () => setMode(b.dataset.mode);
+  generation = mountGeneration({
+    left: $('gen-left'), board: $('gen-board'), api, status,
+    onOpen: (complex, about) => { setMode('complexes'); setComplex(complex, { text: JSON.stringify(complex), kind: 'json', about }); },
+    onFoam: (complex, about) => { setMode('complexes'); setComplex(complex, { text: JSON.stringify(complex), kind: 'json', about }); state.panel = 'foam'; tabs(); runFoam({ ...foamForm }); },
+  });
   tabs();
   renderInput();
   renderDisplay();
   await connect();
-  // The first complex: from the address (#example=, #family=, #words=, #facets=), or as left.
+  // The first complex: from the address (#example=, #family=, #words=, #facets=), or as left;
+  // #mode=generation&theory=…&order=…&stage=… opens the Generation mode; &foam=1 lays a spin foam.
   const hash = new URLSearchParams(location.hash.slice(1));
+  const reserved = new Set(['family', 'foam', 'mode', 'theory', 'order', 'stage']);
   const source = hash.get('example') ? { example: hash.get('example') }
-    : hash.get('family') ? { family: hash.get('family'), params: Object.fromEntries([...hash].filter(([k]) => k !== 'family').map(([k, v]) => [k, Number.isNaN(Number(v)) ? v : Number(v)])) }
+    : hash.get('family') ? { family: hash.get('family'), params: Object.fromEntries([...hash].filter(([k]) => !reserved.has(k)).map(([k, v]) => [k, Number.isNaN(Number(v)) ? v : Number(v)])) }
     : hash.get('words') ? { text: hash.get('words'), kind: 'words' }
     : hash.get('facets') ? { text: hash.get('facets'), kind: 'facets' }
     : saved?.source || { example: 'torus' };
   await load(source);
+  if (hash.get('foam')) { state.panel = 'foam'; tabs(); runFoam({ ...foamForm }); }
+  if (hash.get('mode') === 'generation') {
+    await setMode('generation');
+    generation.choose(hash.get('theory') || 'matrix', { order: Number(hash.get('order')) || undefined, stage: hash.get('stage') || undefined, expand: hash.has('order') });
+  }
+}
+
+// The two modes: the complexes (views and panels) and the generation of spacetime.
+async function setMode(mode) {
+  state.mode = mode;
+  document.body.classList.toggle('generation', mode === 'generation');
+  $('generation').toggleAttribute('hidden', mode !== 'generation');
+  for (const b of document.querySelectorAll('.modes button')) b.setAttribute('aria-selected', String(b.dataset.mode === mode));
+  if (mode === 'generation') {
+    if (!generationLoaded) { generationLoaded = true; await generation.load(); if (!generation.theoryId) generation.choose('matrix'); }
+    generation.shown();
+  } else { realisation?.resize(); draw(); }
 }
 
 async function connect() {
@@ -139,7 +174,7 @@ async function load(source) {
   }
 }
 
-function setComplex(complex, source) {
+function setComplex(complex, source, { keepFoam = false } = {}) {
   state.complex = complex;
   state.names = edgeNames(complex);
   state.about = source.about || '';
@@ -148,7 +183,11 @@ function setComplex(complex, source) {
   state.analysis = null;
   state.fields = state.sums = null;
   state.fieldsError = state.sumsError = null;
+  if (!keepFoam) { state.foam = null; state.foamError = null; }
+  state.dims = null;
+  state.dimsError = null;
   state.selection = null;
+  renderInset($('inset'), { vertex: null });
   save();
   renderAbout();
   draw(true);
@@ -179,7 +218,8 @@ function tabs() {
   for (const b of document.querySelectorAll('.tabs button')) b.setAttribute('aria-selected', String(b.dataset.panel === state.panel));
   // toggleAttribute, since an <svg> has no hidden property.
   for (const v of ['realisation', 'net', 'hasse']) $(`view-${v}`).toggleAttribute('hidden', v !== state.view);
-  for (const p of ['invariants', 'fields', 'sums']) $(`panel-${p}`).toggleAttribute('hidden', p !== state.panel);
+  for (const p of ['invariants', 'fields', 'sums', 'foam']) $(`panel-${p}`).toggleAttribute('hidden', p !== state.panel);
+  for (const b of document.querySelectorAll('.modes button')) b.setAttribute('aria-selected', String(b.dataset.mode === state.mode));
 }
 
 function renderAbout() {
@@ -190,6 +230,7 @@ function renderAbout() {
 }
 
 const shownFields = () => (state.fieldsShown && state.fields ? state.fields : null);
+const foamActive = () => Boolean(state.foam?.active && state.foam.result);
 
 function draw(fit = false) {
   const c = state.complex;
@@ -205,9 +246,10 @@ function draw(fit = false) {
       const ms = performance.now() - t0;
       if (ms > 400) status(`laid out in ${(ms / 1000).toFixed(1)} s`);
     }
-    if (!realisation) realisation = new Realisation($('view-realisation'), { onHover });
+    if (!realisation) realisation = new Realisation($('view-realisation'), { onHover, onPick: pick });
     realisation.setNames(state.names);
     realisation.fields = shownFields();
+    realisation.overlay = foamActive() ? foamOverlay(state.foam.result) : null;
     realisation.selection = state.selection;
     realisation.show(c, state.geometry, state.style, fit);
   } else if (state.view === 'net') {
@@ -245,6 +287,14 @@ function hover(what) {
     const face = c.faces[what.index];
     text = `face ${cellName(2, what.index)}: ∂ = ${wordText(face.boundary, state.names, { powers: false })}`;
     if (f?.plaquettes) text += ` · Re tr U / N = ${number(f.plaquettes[what.index], 3)}`;
+    if (foamActive()) {
+      const r = state.foam.result, e = r.face_edge?.[what.index];
+      text = `face ${cellName(2, what.index)}: spin j = ${spinText(r.face_spins[what.index])}, length ${number(r.face_spins[what.index] / 2 + 0.5, 3)}${Array.isArray(e) ? `, dual to the edge ${e.join('–')}` : ''}`;
+    }
+  }
+  if (what.dim === 0 && foamActive()) {
+    const v = state.foam.result.vertices[what.index];
+    if (v) text = `vertex v${what.index}: a tetrahedron, {6j} = ${number(v.amplitude, 4)}; click to open it`;
   }
   h.textContent = text;
   h.hidden = false;
@@ -253,6 +303,16 @@ function hover(what) {
 function legend() {
   const box = $('legend');
   const f = shownFields();
+  if (foamActive() && state.view === 'realisation') {
+    const max = Math.max(1, ...state.foam.result.face_spins);
+    const canvas = el('canvas', { width: 120, height: 10 });
+    const ctx = canvas.getContext('2d');
+    for (let x = 0; x < 120; x++) { ctx.fillStyle = cssColour(spinColour((x / 119) * max, max)); ctx.fillRect(x, 0, 1, 10); }
+    clear(box).append(el('div', { class: 'ramp' }, el('span', { text: 'spin j' }), el('span', { text: '0' }), canvas, el('span', { text: spinText(max) })),
+      el('div', { class: 'ramp' }, el('span', { text: 'vertices: |{6j}| by size; gold +, lilac −' })));
+    box.hidden = false;
+    return;
+  }
   if (!f) { box.hidden = true; return; }
   const ramp = (fn, label, from, to) => {
     const canvas = el('canvas', { width: 120, height: 10 });
@@ -271,10 +331,33 @@ function select(selection) {
   renderPanels();
 }
 
+// A click on the realisation: a vertex of a spin foam opens its tetrahedron.
+function pick(what) {
+  if (!foamActive()) return;
+  if (what?.dim === 0 && state.foam.result.vertices[what.index]) openVertex(what.index);
+}
+function openVertex(i) {
+  state.foam.selectedVertex = i;
+  const r = state.foam.result;
+  renderInset($('inset'), { vertex: i === null || i === undefined ? null : r.vertices[i], index: i, max: Math.max(1, ...r.face_spins), onClose: () => openVertex(null) });
+  if (i !== null && i !== undefined) select({ kind: 'cell', dim: 0, index: i, key: ['foam-vertex', i] });
+  else renderPanels();
+}
+
 // ---- the panels ----------------------------------------------------------------------------------
 function renderPanels() {
   const c = state.complex;
   renderInvariants($('panel-invariants'), { complex: c, analysis: state.analysis, names: state.names, selection: state.selection, onSelect: select, state: state.analysisState });
+  if (c && ready()) {
+    const dims = el('div', { class: 'dims' });
+    renderDimensions(dims, { complex: c, result: state.dims, running: state.dimsRunning, error: state.dimsError, onRun: runDimensions });
+    $('panel-invariants').append(dims);
+  }
+  renderFoam($('panel-foam'), {
+    complex: c, foam: state.foam?.result, active: foamActive(), running: state.foamRunning, error: state.foamError,
+    selected: state.foam?.selectedVertex ?? null, onRun: runFoam, onVertex: openVertex,
+    onBack: () => { const fm = state.foam; fm.active = false; setComplex(fm.source.complex, { ...fm.source.source, about: fm.source.about }, { keepFoam: true }); },
+  });
   renderFields($('panel-fields'), {
     complex: c, analysis: state.analysis, names: state.names, result: state.fields, running: state.fieldsRunning, error: state.fieldsError,
     showing: state.fieldsShown, selection: state.selection, onSelect: select,
@@ -285,7 +368,7 @@ function renderPanels() {
   if (!ready() && c) {
     const note = () => el('div', {}, el('p', { class: 'note', text: state.engine ? 'The engine is not built on this computer yet.' : 'The server does not answer.' }),
       state.engine ? el('button', { class: 'button', onclick: offerBuild }, 'Build the engine') : null);
-    for (const id of ['panel-invariants', 'panel-fields', 'panel-sums']) $(id).append(note());
+    for (const id of ['panel-invariants', 'panel-fields', 'panel-sums', 'panel-foam']) $(id).append(note());
   }
 }
 
@@ -311,6 +394,37 @@ async function runGauge(params) {
   }
   state.fieldsRunning = false;
   redrawColours();
+}
+
+async function runFoam(form) {
+  if (!ready()) return offerBuild();
+  const source = { complex: state.complex, source: state.source, about: state.about };
+  state.foamRunning = true;
+  state.foamError = null;
+  renderPanels();
+  try {
+    const result = await api.spinFoam({ complex: state.complex, r: form.r, mode: form.mode, two_j: form.two_j, sweeps: form.sweeps, seed: form.seed });
+    state.foam = { result, source, active: true, selectedVertex: null };
+    state.foamRunning = false;
+    setComplex(result.foam, { text: JSON.stringify(result.foam), kind: 'json', about: `The spin foam of ${source.complex.title || source.complex.name || 'the complex'}: its dual 2-complex, each face carrying a spin (an edge of the triangulation, of length j + ½), each vertex a tetrahedron with its 6j symbol at r = ${result.r ?? form.r}. Click a vertex to open it.` }, { keepFoam: true });
+    state.view = 'realisation';
+    tabs();
+    draw(true);
+  } catch (error) {
+    state.foamError = error.message;
+    state.foamRunning = false;
+    renderPanels();
+  }
+}
+
+async function runDimensions(graph) {
+  if (!ready()) return offerBuild();
+  state.dimsRunning = true;
+  state.dimsError = null;
+  renderPanels();
+  try { state.dims = await api.dimensions(state.complex, graph); } catch (error) { state.dimsError = error.message; }
+  state.dimsRunning = false;
+  renderPanels();
 }
 
 async function runSums(r) {

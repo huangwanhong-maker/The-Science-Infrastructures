@@ -1,0 +1,70 @@
+{
+ "theory": "coloured-simplicial",
+ "order": 1,
+ "graphs": [
+  {
+   "id": 0,
+   "coloured_graph": {
+    "colours": 4,
+    "p": 1,
+    "sigma": [
+     [
+      0
+     ],
+     [
+      0
+     ],
+     [
+      0
+     ],
+     [
+      0
+     ]
+    ]
+   },
+   "counts": [
+    1
+   ],
+   "connected": true,
+   "n_power": 6,
+   "n_power_scaled": 3,
+   "degree": 0,
+   "genus": null,
+   "automorphisms": 1,
+   "weight": "1",
+   "amplitude": null
+  }
+ ],
+ "total": 1,
+ "truncated": false,
+ "series": {
+  "Z": [
+   {
+    "order": 1,
+    "terms": [
+     {
+      "power": 6,
+      "coeff": "1"
+     }
+    ],
+    "variable": "λλ̄"
+   }
+  ],
+  "F": [
+   {
+    "order": 1,
+    "terms": [
+     {
+      "power": 6,
+      "coeff": "1"
+     }
+    ],
+    "variable": "λλ̄"
+   }
+  ]
+ },
+ "leading": {
+  "power": 6,
+  "coeff": "1"
+ }
+}

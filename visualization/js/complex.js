@@ -986,3 +986,121 @@ export const divergingColour = (t) => divergingRamp((t + 1) / 2);
 // For telling cells apart: ten warm, distinct hues.
 const CATEGORICAL = ['#e0a3b6', '#e9b872', '#9fc2b8', '#b9a2e0', '#e48f78', '#c9d38a', '#8fb3dd', '#d987c6', '#f0cf9a', '#a6d6c4'];
 export const categoricalColour = (i) => hexRgb(CATEGORICAL[((i % CATEGORICAL.length) + CATEGORICAL.length) % CATEGORICAL.length]);
+
+// ---- coloured graphs and quantum simplices ----------------------------------------------------------
+//
+// A coloured graph (the Feynman graphs and bubbles of tensor models and group field theories,
+// morphe's ColouredGraph) is {colours, p, sigma}: p black vertices (the fields φ) and p white
+// ones (φ̄), and for each colour c a permutation sigma[c] joining black b to white sigma[c][b].
+// Vertices are numbered black 0..p-1, white p..2p-1; the edge of colour c at black b is the
+// edge c p + b.
+
+// The colour of index c of a coloured graph: colour 0, the propagators of a Feynman graph, a pale
+// hairline cream; the others the warm categorical hues.
+export const indexColour = (c, { propagator = true } = {}) => (propagator && c === 0 ? hexRgb('#efe4d8') : categoricalColour(propagator ? c - 1 : c));
+
+// The 2-complex of a coloured graph: its vertices and edges, and a 2-cell bounded by each
+// bicoloured cycle, the faces of colours i < j as the cycles of sigma_j⁻¹ sigma_i, each from
+// its first black vertex along colour i and back along colour j. The numbering is morphe's
+// ColouredGraph::two_complex(), so that the engine's answers and this agree cell by cell.
+export function colouredGraphComplex(cg) {
+  const { colours, p, sigma } = cg;
+  const edges = [], names = [];
+  for (let c = 0; c < colours; c++) for (let b = 0; b < p; b++) { edges.push([b, p + sigma[c][b]]); names.push(`c${c}.${b + 1}`); }
+  const faces = [];
+  for (let i = 0; i < colours; i++) for (let j = i + 1; j < colours; j++) {
+    const inv = new Array(p);
+    for (let b = 0; b < p; b++) inv[sigma[j][b]] = b;
+    const seen = new Uint8Array(p);
+    for (let b0 = 0; b0 < p; b0++) {
+      if (seen[b0]) continue;
+      const cyc = [];
+      for (let b = b0; !seen[b]; b = inv[sigma[i][b]]) { seen[b] = 1; cyc.push(b); }
+      const boundary = [];
+      cyc.forEach((b, k) => { boundary.push(i * p + b + 1, -(j * p + cyc[(k + 1) % cyc.length] + 1)); });
+      faces.push({ base: cyc[0], boundary });
+    }
+  }
+  return { name: 'coloured graph', title: `2-complex of a ${colours}-coloured graph`, vertices: 2 * p, edges, faces, cells: [], labels: { edges: names }, coloured_graph: { colours, p, sigma } };
+}
+
+// A drawing of a small coloured graph in the plane: the vertices laid out by stress
+// majorisation of their graph distances (as realise() does, then seen along the two principal
+// axes), the parallel edges of a pair bent apart. Returns {nodes: [{x, y, black}], edges:
+// [{u, v, colour, bend}]} with x and y in [0, 1].
+export function colouredGraphLayout(cg, { seed = 1 } = {}) {
+  const { colours, p, sigma } = cg, n = 2 * p;
+  const adj = Array.from({ length: n }, () => []);
+  const edges = [];
+  for (let c = 0; c < colours; c++) for (let b = 0; b < p; b++) {
+    const w = p + sigma[c][b];
+    edges.push({ u: b, v: w, colour: c, bend: 0 });
+    if (!adj[b].includes(w)) { adj[b].push(w); adj[w].push(b); }
+  }
+  let nodes;
+  if (n === 2) nodes = [[0, 0], [1, 0]];
+  else {
+    const X = layoutGraph(adj, 300, seeded(seed));
+    // The two principal axes of the points.
+    const m = [0, 0, 0];
+    for (const x of X) for (let k = 0; k < 3; k++) m[k] += x[k] / n;
+    const C = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+    for (const x of X) for (let a = 0; a < 3; a++) for (let b = 0; b < 3; b++) C[a][b] += (x[a] - m[a]) * (x[b] - m[b]);
+    const axis = (skip) => {
+      let v = skip ? [skip[1], -skip[0], 0.3] : [1, 0.4, 0.2];
+      for (let it = 0; it < 60; it++) {
+        let w = [0, 1, 2].map((a) => C[a][0] * v[0] + C[a][1] * v[1] + C[a][2] * v[2]);
+        if (skip) { const d = w[0] * skip[0] + w[1] * skip[1] + w[2] * skip[2]; w = w.map((x, k) => x - d * skip[k]); }
+        const len = Math.hypot(...w) || 1;
+        v = w.map((x) => x / len);
+      }
+      return v;
+    };
+    const a1 = axis(null), a2 = axis(a1);
+    nodes = X.map((x) => [0, 1].map((k) => { const a = k ? a2 : a1; return (x[0] - m[0]) * a[0] + (x[1] - m[1]) * a[1] + (x[2] - m[2]) * a[2]; }));
+    // Stress majorisation in the plane itself, from the projection, so that no two vertices
+    // that the projection brought together stay together (pairs in different components are
+    // left to the projection).
+    const all = Array.from({ length: n }, (_, i) => i), D = distances(adj, all);
+    for (let it = 0; it < 300; it++) {
+      for (let i = 0; i < n; i++) {
+        let sx = 0, sy = 0, den = 0;
+        for (let j = 0; j < n; j++) {
+          const d = D[i * n + j];
+          if (j === i || d === 65535) continue;
+          const w = 1 / (d * d);
+          let dx = nodes[i][0] - nodes[j][0], dy = nodes[i][1] - nodes[j][1];
+          let len = Math.hypot(dx, dy);
+          if (len < 1e-9) { dx = Math.cos(i + j); dy = Math.sin(i + j); len = 1; }
+          sx += w * (nodes[j][0] + (d / len) * dx); sy += w * (nodes[j][1] + (d / len) * dy); den += w;
+        }
+        if (den) nodes[i] = [sx / den, sy / den];
+      }
+    }
+  }
+  const xs = nodes.map((q) => q[0]), ys = nodes.map((q) => q[1]);
+  const x0 = Math.min(...xs), y0 = Math.min(...ys), span = Math.max(Math.max(...xs) - x0, Math.max(...ys) - y0) || 1;
+  const ox = (1 - (Math.max(...xs) - x0) / span) / 2, oy = (1 - (Math.max(...ys) - y0) / span) / 2;
+  // Bends: the k-th of m edges between one pair spread symmetrically about the straight line.
+  const groups = new Map();
+  for (const e of edges) { const key = `${e.u}:${e.v}`; (groups.get(key) || groups.set(key, []).get(key)).push(e); }
+  for (const list of groups.values()) list.forEach((e, k) => { e.bend = list.length > 1 ? (k - (list.length - 1) / 2) / Math.max(1, list.length - 1) : 0; });
+  return { nodes: nodes.map((q, i) => ({ x: ox + (q[0] - x0) / span, y: oy + (q[1] - y0) / span, black: i < p })), edges };
+}
+
+// A tetrahedron with edge lengths [l01, l02, l03, l12, l13, l23], set in space: vertex 0 at the
+// origin, 1 on the x axis, 2 in the xy plane, 3 above it, then centred. When the lengths admit
+// no Euclidean tetrahedron (the Cayley-Menger determinant is not positive) the last vertex is
+// left in the plane and `euclidean` is false.
+export function embedTetrahedron(lengths) {
+  const [a, b, c, d, e, f] = lengths;
+  const p0 = [0, 0, 0], p1 = [a, 0, 0];
+  const x2 = (a * a + b * b - d * d) / (2 * a), y2 = Math.sqrt(Math.max(0, b * b - x2 * x2));
+  const x3 = (a * a + c * c - e * e) / (2 * a);
+  const y3 = y2 > 1e-12 ? (b * b + c * c - f * f - 2 * x2 * x3) / (2 * y2) : 0;
+  const z2 = c * c - x3 * x3 - y3 * y3;
+  const euclidean = y2 > 1e-12 && z2 > 1e-12;
+  const pts = [p0, p1, [x2, y2, 0], [x3, y3, Math.sqrt(Math.max(0, z2))]];
+  const m = [0, 1, 2].map((k) => pts.reduce((s, q) => s + q[k], 0) / 4);
+  return { positions: pts.map((q) => q.map((x, k) => x - m[k])), euclidean, volume: euclidean ? (a * y2 * Math.sqrt(z2)) / 6 : 0 };
+}

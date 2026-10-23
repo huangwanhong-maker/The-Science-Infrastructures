@@ -1,6 +1,8 @@
 // Checks of what is the Complex Atlas's own: how it writes groups, words and presentations; what
 // it reads as a complex; its examples; the fixtures it can show without the engine (each a whole
-// complex, each analysis obeying the Euler-Poincaré formula); its page and server; and, when the
+// complex, each analysis obeying the Euler-Poincaré formula), and those of the generation of
+// spacetime (graphs weighted by N to their faces, a density of mass 1, a condensate classical at low
+// density, spin foams whose vertices carry their faces' spins); its page and server; and, when the
 // engine is built, every family of the catalogue built and analysed by the engine itself. The
 // drawing is checked with the visualization layer; the mathematics with morphe and physis.
 // Run from the repository root:  node applications/complex-atlas/tests/run-tests.mjs
@@ -16,7 +18,7 @@ import { kindOf, readComplex } from '../src/input.js';
 import { EXAMPLES } from '../src/examples.js';
 import { selectionSets } from '../src/selection.js';
 
-const { assert, skip, done } = suite();
+const { assert, check, skip, done } = suite();
 const APP = resolve(ROOT, 'applications/complex-atlas');
 const FIX = join(APP, 'tests/fixtures');
 const read = (p) => JSON.parse(readFileSync(p, 'utf8'));
@@ -95,6 +97,107 @@ const read = (p) => JSON.parse(readFileSync(p, 'utf8'));
   assert('atlas: a loop marks its edges and their ends', marks.edges.size === 2 && marks.edges.get(0) === 1 && marks.vertices.size >= 2);
 }
 
+// ---- the generation of spacetime: theories, expansions, large N, condensates, geometries, spin foams ----
+{
+  const { colouredGraphComplex, colouredGraphLayout } = await import('../../../visualization/js/index.js');
+  const files = new Set(readdirSync(FIX));
+  const has = (name) => files.has(`${name}.json`);
+  // The faces of colours i, j of a coloured graph: the cycles of sigma_j⁻¹ sigma_i.
+  const faces = (cg, i, j) => {
+    const inv = []; cg.sigma[j].forEach((w, b) => { inv[w] = b; });
+    const seen = new Uint8Array(cg.p); let n = 0;
+    for (let b0 = 0; b0 < cg.p; b0++) { if (seen[b0]) continue; n++; for (let b = b0; !seen[b]; b = inv[cg.sigma[i][b]]) seen[b] = 1; }
+    return n;
+  };
+  const permutation = (s, p) => s.length === p && new Set(s).size === p && s.every((x) => Number.isInteger(x) && x >= 0 && x < p);
+  const wholeGraph = (cg) => cg && Number.isInteger(cg.colours) && cg.sigma.length === cg.colours && cg.sigma.every((s) => permutation(s, cg.p));
+  if (!has('theories')) skip('atlas: the generation fixtures: none yet');
+  else {
+    const T = read(join(FIX, 'theories.json')).theories;
+    const ids = ['scalar', 'vector', 'matrix', 'tensor-melonic', 'tensor-wheel', 'coloured-simplicial', 'gft-boulatov', 'gft-ooguri', 'gft-melonic'];
+    assert('atlas: the theories are the nine of the protocol, each with its action, family, rank and bubbles',
+      ids.every((id) => T.some((t) => t.id === id)) && T.every((t) => t.title && t.action && ['QFT', 'GFT'].includes(t.family) && Number.isInteger(t.rank) && Array.isArray(t.params) && Array.isArray(t.bubbles) && t.bubbles.every((b) => b.name && wholeGraph(b.coloured_graph))),
+      T.map((t) => t.id).join(', '));
+    const byId = Object.fromEntries(T.map((t) => [t.id, t]));
+    // Expansions: every graph a coloured graph whose N-power is its count of faces: of colours
+    // (0, i) when the theory has bubbles (colour 0 the propagators), of all pairs when it has none.
+    const problems = [];
+    let expansions = 0;
+    for (const f of files) {
+      const m = f.match(/^expand-(.+)-(\d+)\.json$/);
+      if (!m) continue;
+      expansions++;
+      const t = byId[m[1]], x = read(join(FIX, f));
+      if (!t || !Array.isArray(x.graphs) || !x.series?.Z || !x.series?.F) { problems.push(`${f}: shape`); continue; }
+      for (const gr of x.graphs) {
+        const cg = gr.coloured_graph;
+        if (!wholeGraph(cg)) { problems.push(`${f} ${gr.id}: not a coloured graph`); continue; }
+        let F = 0;
+        if (t.bubbles.length) for (let i = 1; i < cg.colours; i++) F += faces(cg, 0, i);
+        else for (let i = 0; i < cg.colours; i++) for (let j = i + 1; j < cg.colours; j++) F += faces(cg, i, j);
+        if (F !== gr.n_power) problems.push(`${f} ${gr.id}: N^${gr.n_power}, faces ${F}`);
+        if (typeof gr.weight !== 'string' || !/^-?\d+(\/\d+)?$/.test(gr.weight)) problems.push(`${f} ${gr.id}: weight ${gr.weight}`);
+        if (cg.colours >= 2 && checkComplex(colouredGraphComplex(cg)).length) problems.push(`${f} ${gr.id}: its 2-complex is not whole`);
+        const L = colouredGraphLayout(cg);
+        if (!L.nodes.every((n) => Number.isFinite(n.x) && Number.isFinite(n.y))) problems.push(`${f} ${gr.id}: not drawn`);
+      }
+      if (x.series.Z.length !== Number(m[2]) || !x.series.Z.every((s) => Array.isArray(s.terms))) problems.push(`${f}: series to order ${x.series.Z.length}`);
+    }
+    assert('atlas: every Feynman graph of the fixtures is a coloured graph weighted by N to its faces, drawn, its 2-complex whole', expansions >= 4 && !problems.length, problems.slice(0, 6).join('; '));
+    if (has('expand-matrix-1')) {
+      const z = read(join(FIX, 'expand-matrix-1.json')).series.Z[0].terms;
+      assert('atlas: the matrix model at first order: Z = 1 − λ⟨tr (MM†)²⟩ = 1 − 2N³ λ', z.length === 1 && z[0].power === 3 && z[0].coeff === '-2', JSON.stringify(z));
+    }
+    if (has('expand-vector-2')) {
+      // ⟨(φ̄·φ)⁴⟩ = N(N+1)(N+2)(N+3): Z at λ² = ½ (N⁴ + 6N³ + 11N² + 6N).
+      const z = read(join(FIX, 'expand-vector-2.json')).series.Z[1].terms.map((t) => `${t.power}:${t.coeff}`).join(' ');
+      assert('atlas: the vector model at second order is the moment N(N+1)(N+2)(N+3)/2 of a complex Gaussian vector', z === '4:1/2 3:3 2:11/2 1:3', z);
+    }
+  }
+  if (has('large-n-matrix')) {
+    const L = read(join(FIX, 'large-n-matrix.json'));
+    const { x, rho } = L.density;
+    let mass = 0;
+    for (let i = 1; i < x.length; i++) mass += 0.5 * (rho[i] + rho[i - 1]) * (x[i] - x[i - 1]);
+    check('atlas: the eigenvalue density of the matrix model has total mass 1', mass - 1, 2e-3);
+    assert('atlas: the planar matrix model has a critical coupling below zero and γ = −1/2', L.critical.g_c < 0 && Math.abs(L.critical.gamma + 0.5) < 1e-12);
+  }
+  if (has('condensate')) {
+    const C = read(join(FIX, 'condensate.json'));
+    const n = C.phi.length, f = C.friedmann;
+    const lo = f.rho.indexOf(Math.min(...f.rho));
+    assert('atlas: the condensate\'s curves are one per time and its effective Friedmann equation becomes classical at low density',
+      [C.V, C.H, C.rho, C.classical.V].every((a) => a.length === n) && Math.abs(f.H2[lo] - f.classical_H2[lo]) < 0.02 * f.classical_H2[lo], `${f.H2[lo]} vs ${f.classical_H2[lo]}`);
+    if (C.bounce) assert('atlas: at the bounce the volume is least and the expansion stops (H = V′/3V = 0)', Math.min(...C.V) >= C.bounce.V * (1 - 1e-9) && Math.min(...C.H.map(Math.abs)) < 0.05 * Math.max(...C.H.map(Math.abs)));
+  }
+  for (const kind of ['quadrangulation', 'melonic']) {
+    if (!has(`random-geometry-${kind}`)) continue;
+    const c = read(join(FIX, `random-geometry-${kind}.json`)).complex;
+    const ok = checkComplex(c).length === 0 && (kind !== 'quadrangulation' || (c.faces.every((f) => f.boundary.length === 4) && eulerCharacteristic(c) === 2));
+    assert(`atlas: the random ${kind} of the fixtures is whole${kind === 'quadrangulation' ? ', of squares, a sphere' : ''}`, ok, checkComplex(c).join('; '));
+    if (has(`dimensions-${c.name}`)) {
+      const d = read(join(FIX, `dimensions-${c.name}.json`));
+      assert(`atlas: the dimensions of the random ${kind}: as many values as times and radii, all finite`,
+        d.spectral.t.length === d.spectral.ds.length && d.hausdorff.r.length === d.hausdorff.dh.length && [...d.spectral.ds, ...d.hausdorff.dh].every(Number.isFinite));
+    }
+  }
+  const foams = [...files].filter((f) => f.startsWith('spin-foam-'));
+  if (!foams.length) skip('atlas: spin foams of the fixtures: none yet');
+  else {
+    const wrong = [];
+    for (const f of foams) {
+      const r = read(join(FIX, f));
+      if (checkComplex(r.foam).length) { wrong.push(`${f}: the foam is not whole`); continue; }
+      if (r.face_spins.length !== r.foam.faces.length) wrong.push(`${f}: ${r.face_spins.length} spins, ${r.foam.faces.length} faces`);
+      for (const [i, v] of r.vertices.entries()) {
+        if (v.faces.length !== 6 || v.spins.some((s, k) => s !== r.face_spins[v.faces[k]])) wrong.push(`${f} v${i}: its spins are not its faces'`);
+        if (v.tetrahedron?.lengths && v.tetrahedron.lengths.some((l, k) => Math.abs(l - (v.spins[k] / 2 + 0.5)) > 1e-12)) wrong.push(`${f} v${i}: lengths are not j + ½`);
+      }
+    }
+    assert('atlas: every spin foam of the fixtures is a whole 2-complex, a spin per face, each vertex six of them, edges of length j + ½', !wrong.length, wrong.slice(0, 5).join('; '));
+  }
+}
+
 // ---- the page and the server ------------------------------------------------------------------------
 {
   const html = readFileSync(join(APP, 'index.html'), 'utf8');
@@ -144,6 +247,24 @@ const read = (p) => JSON.parse(readFileSync(p, 'utf8'));
       if (a.euler !== eulerCharacteristic(b.complex) || ranks !== a.euler) wrong.push(`${f.id}: χ ${a.euler}, Σ(−1)^k rank ${ranks}`);
     }
     assert('atlas: every family built by the engine is a whole complex, and its analysis obeys Euler-Poincaré', !wrong.length, wrong.join('; '));
+    // The generation of spacetime, where the engine has it.
+    const th = ask({ op: 'theories' });
+    if (!th.theories) skip(`atlas: the engine's theories: ${th.error || 'none'}`);
+    else {
+      assert('atlas: the engine gives its theories, each with an action, a family and bubbles', th.theories.length >= 4 && th.theories.every((t) => t.id && t.action && t.family && Array.isArray(t.bubbles)));
+      const x = ask({ op: 'expand', theory: 'matrix', params: {}, order: 2 });
+      if (!x.graphs) skip(`atlas: the engine's expansion of the matrix model: ${x.error || 'none'}`);
+      else {
+        const { colouredGraphComplex } = await import('../../../visualization/js/index.js');
+        const bad = x.graphs.filter((gr) => checkComplex(colouredGraphComplex(gr.coloured_graph)).length);
+        assert('atlas: the engine expands the matrix model to order 2 into coloured graphs whose 2-complexes are whole', x.graphs.length > 0 && !bad.length, `${bad.length} not whole`);
+      }
+      const b = ask({ op: 'build', family: 'boundary-simplex', params: { n: 4 } });
+      const sf = b.complex ? ask({ op: 'spin_foam', complex: b.complex, r: 5, mode: 'uniform', two_j: 2, sweeps: 10, seed: 1 }) : { error: 'no ∂Δ⁴' };
+      if (!sf.foam) skip(`atlas: the engine's spin foam of ∂Δ⁴: ${sf.error || 'none'}`);
+      else assert('atlas: the engine lays a spin foam on ∂Δ⁴: 5 vertices of 6 faces each, the spins of a vertex those of its faces',
+        sf.vertices.length === 5 && sf.vertices.every((v) => v.faces.length === 6 && v.spins.every((s, k) => s === sf.face_spins[v.faces[k]])) && checkComplex(sf.foam).length === 0);
+    }
   }
 }
 

@@ -1,0 +1,204 @@
+{
+ "theory": "tensor-wheel",
+ "order": 1,
+ "graphs": [
+  {
+   "id": 3,
+   "coloured_graph": {
+    "colours": 4,
+    "p": 3,
+    "sigma": [
+     [
+      0,
+      2,
+      1
+     ],
+     [
+      0,
+      1,
+      2
+     ],
+     [
+      1,
+      2,
+      0
+     ],
+     [
+      2,
+      0,
+      1
+     ]
+    ]
+   },
+   "counts": [
+    1
+   ],
+   "connected": true,
+   "n_power": 6,
+   "n_power_scaled": 2,
+   "degree": 3,
+   "genus": null,
+   "automorphisms": 1,
+   "weight": "3",
+   "amplitude": null
+  },
+  {
+   "id": 0,
+   "coloured_graph": {
+    "colours": 4,
+    "p": 3,
+    "sigma": [
+     [
+      0,
+      1,
+      2
+     ],
+     [
+      0,
+      1,
+      2
+     ],
+     [
+      1,
+      2,
+      0
+     ],
+     [
+      2,
+      0,
+      1
+     ]
+    ]
+   },
+   "counts": [
+    1
+   ],
+   "connected": true,
+   "n_power": 5,
+   "n_power_scaled": 1,
+   "degree": 4,
+   "genus": null,
+   "automorphisms": 3,
+   "weight": "1",
+   "amplitude": null
+  },
+  {
+   "id": 4,
+   "coloured_graph": {
+    "colours": 4,
+    "p": 3,
+    "sigma": [
+     [
+      1,
+      2,
+      0
+     ],
+     [
+      0,
+      1,
+      2
+     ],
+     [
+      1,
+      2,
+      0
+     ],
+     [
+      2,
+      0,
+      1
+     ]
+    ]
+   },
+   "counts": [
+    1
+   ],
+   "connected": true,
+   "n_power": 5,
+   "n_power_scaled": 1,
+   "degree": 4,
+   "genus": null,
+   "automorphisms": 3,
+   "weight": "1",
+   "amplitude": null
+  },
+  {
+   "id": 5,
+   "coloured_graph": {
+    "colours": 4,
+    "p": 3,
+    "sigma": [
+     [
+      2,
+      0,
+      1
+     ],
+     [
+      0,
+      1,
+      2
+     ],
+     [
+      1,
+      2,
+      0
+     ],
+     [
+      2,
+      0,
+      1
+     ]
+    ]
+   },
+   "counts": [
+    1
+   ],
+   "connected": true,
+   "n_power": 5,
+   "n_power_scaled": 1,
+   "degree": 4,
+   "genus": null,
+   "automorphisms": 3,
+   "weight": "1",
+   "amplitude": null
+  }
+ ],
+ "total": 6,
+ "truncated": false,
+ "series": {
+  "Z": [
+   {
+    "order": 1,
+    "terms": [
+     {
+      "power": 6,
+      "coeff": "-3"
+     },
+     {
+      "power": 5,
+      "coeff": "-3"
+     }
+    ]
+   }
+  ],
+  "F": [
+   {
+    "order": 1,
+    "terms": [
+     {
+      "power": 6,
+      "coeff": "-3"
+     },
+     {
+      "power": 5,
+      "coeff": "-3"
+     }
+    ]
+   }
+  ]
+ },
+ "leading": {
+  "power": 6,
+  "coeff": "-3"
+ }
+}

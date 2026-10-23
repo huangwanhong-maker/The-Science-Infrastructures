@@ -229,4 +229,40 @@ const { check, assert, done } = suite();
   assert('complex: colours stay in the unit cube', [0, 0.3, 0.7, 1].every((t) => [sequentialColour(t), divergingColour(2 * t - 1), cyclicColour(6 * t)].every((c) => c.every((x) => x >= 0 && x <= 1))));
 }
 
+// ---- coloured graphs and quantum simplices ----------------------------------------------------------
+{
+  const { colouredGraphComplex, colouredGraphLayout, embedTetrahedron, indexColour, checkComplex, eulerCharacteristic, cellCounts } = await import('../js/index.js');
+  // The elementary melon of four colours: 2 vertices, 4 edges, 6 bigons (one per pair of colours).
+  const melon = colouredGraphComplex({ colours: 4, p: 1, sigma: [[0], [0], [0], [0]] });
+  assert('complex: the 2-complex of the 4-coloured melon has 2 vertices, 4 edges, 6 faces, χ = 4, and is whole',
+    cellCounts(melon).join() === '2,4,6' && eulerCharacteristic(melon) === 4 && checkComplex(melon).length === 0);
+  // A random 4-coloured graph: one face per cycle of sigma_j⁻¹ sigma_i, each a closed path alternating colours.
+  const random = seeded(7);
+  const perm = (p) => { const s = [...Array(p).keys()]; for (let i = p - 1; i > 0; i--) { const j = Math.floor(random() * (i + 1)); [s[i], s[j]] = [s[j], s[i]]; } return s; };
+  let bad = 0;
+  for (let t = 0; t < 30; t++) {
+    const p = 1 + (t % 6), cg = { colours: 3 + (t % 3), p, sigma: [] };
+    for (let c = 0; c < cg.colours; c++) cg.sigma.push(c ? perm(p) : [...Array(p).keys()]);
+    const X = colouredGraphComplex(cg);
+    // Every edge of colour c lies on (colours − 1) faces, once each.
+    const uses = new Array(X.edges.length).fill(0);
+    for (const f of X.faces) for (const k of f.boundary) uses[Math.abs(k) - 1]++;
+    if (checkComplex(X).length || uses.some((u) => u !== cg.colours - 1)) bad++;
+  }
+  assert('complex: the 2-complexes of 30 random coloured graphs are whole, each edge on (colours − 1) faces', bad === 0, `${bad} wrong`);
+  const L = colouredGraphLayout({ colours: 5, p: 4, sigma: [[0, 1, 2, 3], [1, 0, 3, 2], [0, 1, 2, 3], [2, 3, 0, 1], [0, 1, 3, 2]] });
+  let near = Infinity;
+  for (let i = 0; i < L.nodes.length; i++) for (let j = 0; j < i; j++) near = Math.min(near, Math.hypot(L.nodes[i].x - L.nodes[j].x, L.nodes[i].y - L.nodes[j].y));
+  assert('complex: a coloured graph is drawn in the unit square with its vertices apart and its parallel edges bent apart',
+    L.nodes.every((n) => n.x >= 0 && n.x <= 1 && n.y >= 0 && n.y <= 1) && near > 0.1 && L.edges.filter((e) => e.u === 0 && e.v === 4).map((e) => e.bend).join() === '-0.5,0,0.5', `nearest ${near}`);
+  const regular = embedTetrahedron([1, 1, 1, 1, 1, 1]);
+  const d = (a, b) => Math.hypot(...a.map((x, k) => x - b[k]));
+  const pairs = [[0, 1], [0, 2], [0, 3], [1, 2], [1, 3], [2, 3]];
+  const lengths = [1.5, 2, 2.5, 1.8, 2.2, 1.7], T = embedTetrahedron(lengths);
+  check('complex: a tetrahedron set in space from its edge lengths keeps them', Math.max(...pairs.map(([a, b], k) => Math.abs(d(T.positions[a], T.positions[b]) - lengths[k]))), 1e-9);
+  check('complex: the regular tetrahedron of unit edge has volume 1/(6√2)', regular.volume - 1 / (6 * Math.SQRT2), 1e-12);
+  assert('complex: lengths that admit no tetrahedron are flagged', !embedTetrahedron([1, 1, 1, 1, 1, 3]).euclidean && regular.euclidean);
+  assert('complex: colour 0 of a Feynman graph is the propagators\' pale cream, the others warm hues', indexColour(0).every((x) => x > 0.8) && indexColour(1).join() !== indexColour(2).join());
+}
+
 done();

@@ -1,0 +1,73 @@
+{
+ "theory": "gft-ooguri",
+ "order": 1,
+ "graphs": [
+  {
+   "id": 0,
+   "coloured_graph": {
+    "colours": 5,
+    "p": 1,
+    "sigma": [
+     [
+      0
+     ],
+     [
+      0
+     ],
+     [
+      0
+     ],
+     [
+      0
+     ],
+     [
+      0
+     ]
+    ]
+   },
+   "counts": [
+    1
+   ],
+   "connected": true,
+   "n_power": 10,
+   "n_power_scaled": 4,
+   "degree": 0,
+   "genus": null,
+   "automorphisms": 1,
+   "weight": "1",
+   "amplitude": 64
+  }
+ ],
+ "total": 1,
+ "truncated": false,
+ "series": {
+  "Z": [
+   {
+    "order": 1,
+    "terms": [
+     {
+      "power": 10,
+      "coeff": "1"
+     }
+    ],
+    "variable": "λλ̄"
+   }
+  ],
+  "F": [
+   {
+    "order": 1,
+    "terms": [
+     {
+      "power": 10,
+      "coeff": "1"
+     }
+    ],
+    "variable": "λλ̄"
+   }
+  ]
+ },
+ "leading": {
+  "power": 10,
+  "coeff": "1"
+ }
+}

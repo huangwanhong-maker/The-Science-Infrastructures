@@ -1,0 +1,1596 @@
+{
+ "theory": "matrix",
+ "order": 3,
+ "graphs": [
+  {
+   "id": 0,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": false,
+   "n_power": 9,
+   "n_power_scaled": 6,
+   "degree": null,
+   "genus": 0,
+   "automorphisms": 48,
+   "weight": "1/6",
+   "amplitude": null
+  },
+  {
+   "id": 3,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      0,
+      1,
+      2,
+      3,
+      5,
+      4
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": false,
+   "n_power": 9,
+   "n_power_scaled": 6,
+   "degree": null,
+   "genus": 0,
+   "automorphisms": 16,
+   "weight": "1/2",
+   "amplitude": null
+  },
+  {
+   "id": 42,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      0,
+      1,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": false,
+   "n_power": 9,
+   "n_power_scaled": 6,
+   "degree": null,
+   "genus": 0,
+   "automorphisms": 16,
+   "weight": "1/2",
+   "amplitude": null
+  },
+  {
+   "id": 455,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": false,
+   "n_power": 9,
+   "n_power_scaled": 6,
+   "degree": null,
+   "genus": 0,
+   "automorphisms": 48,
+   "weight": "1/6",
+   "amplitude": null
+  },
+  {
+   "id": 15,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      0,
+      1,
+      2,
+      4,
+      3,
+      5
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": false,
+   "n_power": 7,
+   "n_power_scaled": 4,
+   "degree": null,
+   "genus": 0,
+   "automorphisms": 4,
+   "weight": "2",
+   "amplitude": null
+  },
+  {
+   "id": 39,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      0,
+      1,
+      2,
+      4,
+      5,
+      3
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": false,
+   "n_power": 7,
+   "n_power_scaled": 4,
+   "degree": null,
+   "genus": 0,
+   "automorphisms": 2,
+   "weight": "4",
+   "amplitude": null
+  },
+  {
+   "id": 54,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      0,
+      1,
+      3,
+      4,
+      5,
+      2
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": false,
+   "n_power": 7,
+   "n_power_scaled": 4,
+   "degree": null,
+   "genus": 0,
+   "automorphisms": 4,
+   "weight": "2",
+   "amplitude": null
+  },
+  {
+   "id": 60,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      0,
+      1,
+      4,
+      5,
+      2,
+      3
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": false,
+   "n_power": 7,
+   "n_power_scaled": 4,
+   "degree": null,
+   "genus": 0,
+   "automorphisms": 8,
+   "weight": "1",
+   "amplitude": null
+  },
+  {
+   "id": 78,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      0,
+      2,
+      1,
+      3,
+      5,
+      4
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": false,
+   "n_power": 7,
+   "n_power_scaled": 4,
+   "degree": null,
+   "genus": 0,
+   "automorphisms": 4,
+   "weight": "2",
+   "amplitude": null
+  },
+  {
+   "id": 174,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      0,
+      2,
+      3,
+      1,
+      5,
+      4
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": false,
+   "n_power": 7,
+   "n_power_scaled": 4,
+   "degree": null,
+   "genus": 0,
+   "automorphisms": 2,
+   "weight": "4",
+   "amplitude": null
+  },
+  {
+   "id": 467,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      1,
+      0,
+      3,
+      4,
+      5,
+      2
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": false,
+   "n_power": 7,
+   "n_power_scaled": 4,
+   "degree": null,
+   "genus": 0,
+   "automorphisms": 4,
+   "weight": "2",
+   "amplitude": null
+  },
+  {
+   "id": 473,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      1,
+      0,
+      4,
+      5,
+      2,
+      3
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": false,
+   "n_power": 7,
+   "n_power_scaled": 4,
+   "degree": null,
+   "genus": 0,
+   "automorphisms": 8,
+   "weight": "1",
+   "amplitude": null
+  },
+  {
+   "id": 66,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      0,
+      1,
+      4,
+      5,
+      3,
+      2
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": false,
+   "n_power": 5,
+   "n_power_scaled": 2,
+   "degree": null,
+   "genus": 1,
+   "automorphisms": 8,
+   "weight": "1",
+   "amplitude": null
+  },
+  {
+   "id": 102,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      0,
+      2,
+      1,
+      4,
+      3,
+      5
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": true,
+   "n_power": 5,
+   "n_power_scaled": 2,
+   "degree": null,
+   "genus": 0,
+   "automorphisms": 2,
+   "weight": "4",
+   "amplitude": null
+  },
+  {
+   "id": 150,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      0,
+      2,
+      1,
+      4,
+      5,
+      3
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": true,
+   "n_power": 5,
+   "n_power_scaled": 2,
+   "degree": null,
+   "genus": 0,
+   "automorphisms": 1,
+   "weight": "8",
+   "amplitude": null
+  },
+  {
+   "id": 222,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      0,
+      2,
+      3,
+      4,
+      1,
+      5
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": true,
+   "n_power": 5,
+   "n_power_scaled": 2,
+   "degree": null,
+   "genus": 0,
+   "automorphisms": 1,
+   "weight": "8",
+   "amplitude": null
+  },
+  {
+   "id": 270,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      0,
+      2,
+      3,
+      4,
+      5,
+      1
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": true,
+   "n_power": 5,
+   "n_power_scaled": 2,
+   "degree": null,
+   "genus": 0,
+   "automorphisms": 1,
+   "weight": "8",
+   "amplitude": null
+  },
+  {
+   "id": 294,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      0,
+      2,
+      4,
+      1,
+      3,
+      5
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": true,
+   "n_power": 5,
+   "n_power_scaled": 2,
+   "degree": null,
+   "genus": 0,
+   "automorphisms": 2,
+   "weight": "4",
+   "amplitude": null
+  },
+  {
+   "id": 342,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      0,
+      2,
+      4,
+      1,
+      5,
+      3
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": true,
+   "n_power": 5,
+   "n_power_scaled": 2,
+   "degree": null,
+   "genus": 0,
+   "automorphisms": 1,
+   "weight": "8",
+   "amplitude": null
+  },
+  {
+   "id": 358,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      0,
+      2,
+      4,
+      3,
+      1,
+      5
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": true,
+   "n_power": 5,
+   "n_power_scaled": 2,
+   "degree": null,
+   "genus": 0,
+   "automorphisms": 3,
+   "weight": "8/3",
+   "amplitude": null
+  },
+  {
+   "id": 406,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      0,
+      2,
+      4,
+      5,
+      1,
+      3
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": true,
+   "n_power": 5,
+   "n_power_scaled": 2,
+   "degree": null,
+   "genus": 0,
+   "automorphisms": 1,
+   "weight": "8",
+   "amplitude": null
+  },
+  {
+   "id": 479,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      1,
+      0,
+      4,
+      5,
+      3,
+      2
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": false,
+   "n_power": 5,
+   "n_power_scaled": 2,
+   "degree": null,
+   "genus": 1,
+   "automorphisms": 8,
+   "weight": "1",
+   "amplitude": null
+  },
+  {
+   "id": 503,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      1,
+      2,
+      0,
+      4,
+      5,
+      3
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": true,
+   "n_power": 5,
+   "n_power_scaled": 2,
+   "degree": null,
+   "genus": 0,
+   "automorphisms": 2,
+   "weight": "4",
+   "amplitude": null
+  },
+  {
+   "id": 519,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      1,
+      2,
+      3,
+      4,
+      5,
+      0
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": true,
+   "n_power": 5,
+   "n_power_scaled": 2,
+   "degree": null,
+   "genus": 0,
+   "automorphisms": 3,
+   "weight": "8/3",
+   "amplitude": null
+  },
+  {
+   "id": 543,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      1,
+      2,
+      4,
+      0,
+      5,
+      3
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": true,
+   "n_power": 5,
+   "n_power_scaled": 2,
+   "degree": null,
+   "genus": 0,
+   "automorphisms": 2,
+   "weight": "4",
+   "amplitude": null
+  },
+  {
+   "id": 591,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      1,
+      2,
+      4,
+      5,
+      0,
+      3
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": true,
+   "n_power": 5,
+   "n_power_scaled": 2,
+   "degree": null,
+   "genus": 0,
+   "automorphisms": 1,
+   "weight": "8",
+   "amplitude": null
+  },
+  {
+   "id": 663,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      2,
+      4,
+      0,
+      5,
+      1,
+      3
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": true,
+   "n_power": 5,
+   "n_power_scaled": 2,
+   "degree": null,
+   "genus": 0,
+   "automorphisms": 6,
+   "weight": "4/3",
+   "amplitude": null
+  },
+  {
+   "id": 719,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      2,
+      4,
+      5,
+      1,
+      3,
+      0
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": true,
+   "n_power": 5,
+   "n_power_scaled": 2,
+   "degree": null,
+   "genus": 0,
+   "automorphisms": 6,
+   "weight": "4/3",
+   "amplitude": null
+  },
+  {
+   "id": 454,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      0,
+      2,
+      4,
+      5,
+      3,
+      1
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": true,
+   "n_power": 3,
+   "n_power_scaled": 0,
+   "degree": null,
+   "genus": 1,
+   "automorphisms": 1,
+   "weight": "8",
+   "amplitude": null
+  },
+  {
+   "id": 639,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      1,
+      2,
+      4,
+      5,
+      3,
+      0
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": true,
+   "n_power": 3,
+   "n_power_scaled": 0,
+   "degree": null,
+   "genus": 1,
+   "automorphisms": 1,
+   "weight": "8",
+   "amplitude": null
+  },
+  {
+   "id": 647,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      2,
+      3,
+      4,
+      5,
+      0,
+      1
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": true,
+   "n_power": 3,
+   "n_power_scaled": 0,
+   "degree": null,
+   "genus": 1,
+   "automorphisms": 6,
+   "weight": "4/3",
+   "amplitude": null
+  },
+  {
+   "id": 655,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      2,
+      3,
+      4,
+      5,
+      1,
+      0
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": true,
+   "n_power": 3,
+   "n_power_scaled": 0,
+   "degree": null,
+   "genus": 1,
+   "automorphisms": 6,
+   "weight": "4/3",
+   "amplitude": null
+  },
+  {
+   "id": 687,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      2,
+      4,
+      0,
+      5,
+      3,
+      1
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": true,
+   "n_power": 3,
+   "n_power_scaled": 0,
+   "degree": null,
+   "genus": 1,
+   "automorphisms": 2,
+   "weight": "4",
+   "amplitude": null
+  },
+  {
+   "id": 711,
+   "coloured_graph": {
+    "colours": 3,
+    "p": 6,
+    "sigma": [
+     [
+      2,
+      4,
+      1,
+      5,
+      3,
+      0
+     ],
+     [
+      1,
+      0,
+      3,
+      2,
+      5,
+      4
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ]
+   },
+   "counts": [
+    3
+   ],
+   "connected": true,
+   "n_power": 3,
+   "n_power_scaled": 0,
+   "degree": null,
+   "genus": 1,
+   "automorphisms": 2,
+   "weight": "4",
+   "amplitude": null
+  }
+ ],
+ "total": 720,
+ "truncated": false,
+ "series": {
+  "Z": [
+   {
+    "order": 1,
+    "terms": [
+     {
+      "power": 3,
+      "coeff": "-2"
+     }
+    ]
+   },
+   {
+    "order": 2,
+    "terms": [
+     {
+      "power": 6,
+      "coeff": "2"
+     },
+     {
+      "power": 4,
+      "coeff": "9"
+     },
+     {
+      "power": 2,
+      "coeff": "1"
+     }
+    ]
+   },
+   {
+    "order": 3,
+    "terms": [
+     {
+      "power": 9,
+      "coeff": "-4/3"
+     },
+     {
+      "power": 7,
+      "coeff": "-18"
+     },
+     {
+      "power": 5,
+      "coeff": "-74"
+     },
+     {
+      "power": 3,
+      "coeff": "-80/3"
+     }
+    ]
+   }
+  ],
+  "F": [
+   {
+    "order": 1,
+    "terms": [
+     {
+      "power": 3,
+      "coeff": "-2"
+     }
+    ]
+   },
+   {
+    "order": 2,
+    "terms": [
+     {
+      "power": 4,
+      "coeff": "9"
+     },
+     {
+      "power": 2,
+      "coeff": "1"
+     }
+    ]
+   },
+   {
+    "order": 3,
+    "terms": [
+     {
+      "power": 5,
+      "coeff": "-72"
+     },
+     {
+      "power": 3,
+      "coeff": "-80/3"
+     }
+    ]
+   }
+  ]
+ },
+ "leading": {
+  "power": 5,
+  "coeff": "-72"
+ }
+}

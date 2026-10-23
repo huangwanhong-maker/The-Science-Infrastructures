@@ -1,0 +1,100 @@
+{
+ "theory": "vector",
+ "order": 1,
+ "graphs": [
+  {
+   "id": 0,
+   "coloured_graph": {
+    "colours": 2,
+    "p": 2,
+    "sigma": [
+     [
+      0,
+      1
+     ],
+     [
+      0,
+      1
+     ]
+    ]
+   },
+   "counts": [
+    1
+   ],
+   "connected": true,
+   "n_power": 2,
+   "n_power_scaled": 1,
+   "degree": null,
+   "genus": null,
+   "automorphisms": 2,
+   "weight": "1",
+   "amplitude": null
+  },
+  {
+   "id": 1,
+   "coloured_graph": {
+    "colours": 2,
+    "p": 2,
+    "sigma": [
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ]
+   },
+   "counts": [
+    1
+   ],
+   "connected": true,
+   "n_power": 1,
+   "n_power_scaled": 0,
+   "degree": null,
+   "genus": null,
+   "automorphisms": 2,
+   "weight": "1",
+   "amplitude": null
+  }
+ ],
+ "total": 2,
+ "truncated": false,
+ "series": {
+  "Z": [
+   {
+    "order": 1,
+    "terms": [
+     {
+      "power": 2,
+      "coeff": "-1"
+     },
+     {
+      "power": 1,
+      "coeff": "-1"
+     }
+    ]
+   }
+  ],
+  "F": [
+   {
+    "order": 1,
+    "terms": [
+     {
+      "power": 2,
+      "coeff": "-1"
+     },
+     {
+      "power": 1,
+      "coeff": "-1"
+     }
+    ]
+   }
+  ]
+ },
+ "leading": {
+  "power": 2,
+  "coeff": "-1"
+ }
+}

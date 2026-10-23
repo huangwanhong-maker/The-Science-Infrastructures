@@ -1,0 +1,272 @@
+{
+ "theory": "tensor-melonic",
+ "order": 1,
+ "graphs": [
+  {
+   "id": 0,
+   "coloured_graph": {
+    "colours": 4,
+    "p": 2,
+    "sigma": [
+     [
+      0,
+      1
+     ],
+     [
+      0,
+      1
+     ],
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      0
+     ]
+    ]
+   },
+   "counts": [
+    0,
+    0,
+    1
+   ],
+   "connected": true,
+   "n_power": 5,
+   "n_power_scaled": 3,
+   "degree": 0,
+   "genus": null,
+   "automorphisms": 2,
+   "weight": "1",
+   "amplitude": null
+  },
+  {
+   "id": 2,
+   "coloured_graph": {
+    "colours": 4,
+    "p": 2,
+    "sigma": [
+     [
+      0,
+      1
+     ],
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ]
+   },
+   "counts": [
+    0,
+    1,
+    0
+   ],
+   "connected": true,
+   "n_power": 5,
+   "n_power_scaled": 3,
+   "degree": 0,
+   "genus": null,
+   "automorphisms": 2,
+   "weight": "1",
+   "amplitude": null
+  },
+  {
+   "id": 4,
+   "coloured_graph": {
+    "colours": 4,
+    "p": 2,
+    "sigma": [
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ],
+     [
+      0,
+      1
+     ]
+    ]
+   },
+   "counts": [
+    1,
+    0,
+    0
+   ],
+   "connected": true,
+   "n_power": 5,
+   "n_power_scaled": 3,
+   "degree": 0,
+   "genus": null,
+   "automorphisms": 2,
+   "weight": "1",
+   "amplitude": null
+  },
+  {
+   "id": 1,
+   "coloured_graph": {
+    "colours": 4,
+    "p": 2,
+    "sigma": [
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ],
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      0
+     ]
+    ]
+   },
+   "counts": [
+    0,
+    0,
+    1
+   ],
+   "connected": true,
+   "n_power": 4,
+   "n_power_scaled": 2,
+   "degree": 1,
+   "genus": null,
+   "automorphisms": 2,
+   "weight": "1",
+   "amplitude": null
+  },
+  {
+   "id": 3,
+   "coloured_graph": {
+    "colours": 4,
+    "p": 2,
+    "sigma": [
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ]
+   },
+   "counts": [
+    0,
+    1,
+    0
+   ],
+   "connected": true,
+   "n_power": 4,
+   "n_power_scaled": 2,
+   "degree": 1,
+   "genus": null,
+   "automorphisms": 2,
+   "weight": "1",
+   "amplitude": null
+  },
+  {
+   "id": 5,
+   "coloured_graph": {
+    "colours": 4,
+    "p": 2,
+    "sigma": [
+     [
+      1,
+      0
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ],
+     [
+      0,
+      1
+     ]
+    ]
+   },
+   "counts": [
+    1,
+    0,
+    0
+   ],
+   "connected": true,
+   "n_power": 4,
+   "n_power_scaled": 2,
+   "degree": 1,
+   "genus": null,
+   "automorphisms": 2,
+   "weight": "1",
+   "amplitude": null
+  }
+ ],
+ "total": 6,
+ "truncated": false,
+ "series": {
+  "Z": [
+   {
+    "order": 1,
+    "terms": [
+     {
+      "power": 5,
+      "coeff": "-3"
+     },
+     {
+      "power": 4,
+      "coeff": "-3"
+     }
+    ]
+   }
+  ],
+  "F": [
+   {
+    "order": 1,
+    "terms": [
+     {
+      "power": 5,
+      "coeff": "-3"
+     },
+     {
+      "power": 4,
+      "coeff": "-3"
+     }
+    ]
+   }
+  ]
+ },
+ "leading": {
+  "power": 5,
+  "coeff": "-3"
+ }
+}

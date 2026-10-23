@@ -17,6 +17,8 @@
 
 #include "complexes.hpp"
 #include "fields.hpp"
+#include "generation.hpp"
+#include "theories.hpp"
 
 int main() {
   using science::Json;
@@ -31,6 +33,14 @@ int main() {
     else if (op == "analyse") answer = Json::object({{"analysis", atlas::analyse(atlas::from_json(request["complex"]))}});
     else if (op == "gauge") answer = atlas::gauge(atlas::from_json(request["complex"]), request);
     else if (op == "turaev_viro") answer = atlas::turaev_viro(atlas::from_json(request["complex"]), request);
+    else if (op == "theories") answer = atlas::theories();
+    else if (op == "expand") answer = atlas::expand(request);
+    else if (op == "large_n") answer = atlas::large_n(request);
+    else if (op == "graph_complex") answer = atlas::graph_complex(request);
+    else if (op == "condensate") answer = atlas::condensate(request);
+    else if (op == "dimensions") answer = atlas::dimensions(atlas::from_json(request["complex"]), request);
+    else if (op == "random_geometry") answer = atlas::random_geometry(request);
+    else if (op == "spin_foam") answer = atlas::spin_foam(atlas::from_json(request["complex"]), request);
     else throw std::invalid_argument("no operation \"" + op + "\"");
     std::cout << answer.dump() << "\n";
     return 0;

@@ -1,7 +1,9 @@
 // The realisation: a complex in space with three.js. Its faces are translucent discs (realise()
 // in visualization/js/complex.js), its edges curves of a chosen width with an arrow for their
 // direction, its vertices small spheres; a field colours the edges by the angle of their link
-// variables and the faces by their plaquettes; a selection (a chain or a loop) is drawn over it.
+// variables and the faces by their plaquettes; an overlay (a spin foam: faces coloured and
+// labelled by their spins, vertices sized and coloured by their amplitudes) takes precedence; a
+// selection (a chain or a loop) is drawn over it. A click on a cell is reported to onPick.
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -19,9 +21,10 @@ const MARK = new THREE.Color('#f6cf7e');
 const MARK_NEG = new THREE.Color('#b9a2e0');
 
 export class Realisation {
-  constructor(host, { onHover } = {}) {
+  constructor(host, { onHover, onPick } = {}) {
     this.host = host;
     this.onHover = onHover;
+    this.onPick = onPick;
     this.renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
     this.renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
     this.renderer.setClearColor(0x000000, 0);
@@ -49,6 +52,16 @@ export class Realisation {
       this.pointer = new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
     });
     this.renderer.domElement.addEventListener('pointerleave', () => { this.pointer = null; this.onHover?.(null); });
+    // A click (a press and release without dragging) picks the cell under the pointer.
+    this.renderer.domElement.addEventListener('pointerdown', (e) => { this.pressed = [e.clientX, e.clientY]; });
+    this.renderer.domElement.addEventListener('pointerup', (e) => {
+      if (!this.pressed || !this.onPick) return;
+      const moved = Math.hypot(e.clientX - this.pressed[0], e.clientY - this.pressed[1]);
+      this.pressed = null;
+      if (moved > 4) return;
+      const r = this.renderer.domElement.getBoundingClientRect();
+      this.onPick(this.cellAt(new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1)));
+    });
     new ResizeObserver(() => this.resize()).observe(host);
     this.resize();
     const loop = () => {
@@ -81,6 +94,8 @@ export class Realisation {
   }
   setStyle(style) { this.style = style; this.rebuild(); }
   setFields(fields) { this.fields = fields; this.rebuild(); }
+  // overlay: {faceColours: [[r, g, b]], faceLabels: [text], vertexColours: [[r, g, b]], vertexScales: [s]}, or null.
+  setOverlay(overlay) { this.overlay = overlay; this.rebuild(); }
   setNames(names) { this.names = names; }
   highlight(selection) { this.selection = selection; this.rebuild(); }
 
@@ -102,13 +117,14 @@ export class Realisation {
     const unit = Math.max(0.02, Math.min(0.3, g.unit || 0.2));
     const fields = this.fields && this.fields.link_angle?.length === c.edges.length ? this.fields : null;
     const marks = selectionSets(this.selection, c);
+    const ov = this.overlay && this.overlay.faceColours?.length === (c.faces || []).length ? this.overlay : null;
 
     // Faces, one mesh; the triangles of each face remembered for picking.
     const pos = [], col = [], idx = [];
     this.faceOfTriangle = [];
     g.faces.forEach((f, i) => {
       const base = pos.length / 3;
-      const colour = fields && fields.plaquettes?.[i] !== undefined ? new THREE.Color(...divergingColour(fields.plaquettes[i])) : FACE;
+      const colour = ov ? new THREE.Color(...ov.faceColours[i]) : fields && fields.plaquettes?.[i] !== undefined ? new THREE.Color(...divergingColour(fields.plaquettes[i])) : FACE;
       for (let j = 0; j < f.positions.length; j++) pos.push(f.positions[j]);
       for (let j = 0; j < f.positions.length / 3; j++) col.push(colour.r, colour.g, colour.b);
       for (let j = 0; j < f.indices.length; j++) idx.push(base + f.indices[j]);
@@ -120,7 +136,7 @@ export class Realisation {
       geo.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
       geo.setIndex(idx);
       geo.computeVertexNormals();
-      const mat = new THREE.MeshStandardMaterial({ vertexColors: true, transparent: true, opacity: st.faceOpacity, side: THREE.DoubleSide, depthWrite: false, roughness: 0.75, metalness: 0 });
+      const mat = new THREE.MeshStandardMaterial({ vertexColors: true, transparent: true, opacity: ov ? Math.max(st.faceOpacity, 0.55) : st.faceOpacity, side: THREE.DoubleSide, depthWrite: false, roughness: 0.75, metalness: 0 });
       this.faceMesh = new THREE.Mesh(geo, mat);
       this.faceMesh.renderOrder = 1;
       this.group.add(this.faceMesh);
@@ -207,10 +223,10 @@ export class Realisation {
       this.vertexMesh = new THREE.InstancedMesh(sphere, new THREE.MeshStandardMaterial({ roughness: 0.45 }), g.vertices.length);
       const m4 = new THREE.Matrix4();
       g.vertices.forEach((p, i) => {
-        const big = marks.vertices.has(i) ? 1.8 : 1;
+        const big = (marks.vertices.has(i) ? 1.8 : 1) * (ov?.vertexScales?.[i] ?? 1);
         m4.compose(new THREE.Vector3(...p), new THREE.Quaternion(), new THREE.Vector3(r * big, r * big, r * big));
         this.vertexMesh.setMatrixAt(i, m4);
-        this.vertexMesh.setColorAt(i, marks.vertices.has(i) ? MARK : VERTEX);
+        this.vertexMesh.setColorAt(i, marks.vertices.has(i) ? MARK : ov?.vertexColours?.[i] ? new THREE.Color(...ov.vertexColours[i]) : VERTEX);
       });
       this.vertexMesh.renderOrder = 6;
       this.group.add(this.vertexMesh);
@@ -227,13 +243,28 @@ export class Realisation {
         o.position.set(...at);
         this.group.add(o);
       };
-      if (g.edges.length <= 80) g.edges.forEach((e, i) => {
+      // On a spin foam the faces carry the labels (their spins), and the edges' names are left out.
+      if (!ov && g.edges.length <= 80) g.edges.forEach((e, i) => {
         const off = new THREE.Vector3(...e.arrow.at).normalize().multiplyScalar(unit * 0.25);
         label(names[i] ?? `e${i + 1}`, [e.arrow.at[0] + off.x, e.arrow.at[1] + off.y, e.arrow.at[2] + off.z], 'edge');
       });
       if (g.vertices.length <= 60) g.vertices.forEach((p, i) => label(`v${i}`, [p[0], p[1] + unit * 0.22, p[2]], 'vertex'));
-      if (g.faces.length <= 40) g.faces.forEach((f, i) => label(`f${i + 1}`, f.centre, 'face'));
+      if (ov?.faceLabels) { if (g.faces.length <= 160) g.faces.forEach((f, i) => label(ov.faceLabels[i], f.centre, 'face spin')); }
+      else if (g.faces.length <= 40) g.faces.forEach((f, i) => label(`f${i + 1}`, f.centre, 'face'));
     }
+  }
+
+  // The cell under a point of the canvas (normalised coordinates): {dim, index} or null.
+  cellAt(point) {
+    this.raycaster.setFromCamera(point, this.camera);
+    this.raycaster.params.Line2 = { threshold: 6 };
+    const targets = [this.vertexMesh, this.edgeLines, this.faceMesh].filter(Boolean);
+    const hit = this.raycaster.intersectObjects(targets, false)[0];
+    if (!hit) return null;
+    if (hit.object === this.vertexMesh) return { dim: 0, index: hit.instanceId };
+    if (hit.object === this.edgeLines) return { dim: 1, index: this.edgeOfSegment[hit.faceIndex] };
+    if (hit.object === this.faceMesh) return { dim: 2, index: this.faceOfTriangle[hit.faceIndex] };
+    return null;
   }
 
   // What lies under the pointer, reported to onHover once per change.

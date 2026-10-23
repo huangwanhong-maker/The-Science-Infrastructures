@@ -1,0 +1,60 @@
+{
+ "theory": "scalar",
+ "order": 1,
+ "graphs": [
+  {
+   "id": 1,
+   "coloured_graph": {
+    "colours": 1,
+    "p": 2,
+    "sigma": [
+     [
+      0,
+      1
+     ]
+    ]
+   },
+   "counts": [
+    1
+   ],
+   "connected": true,
+   "n_power": 0,
+   "n_power_scaled": 0,
+   "degree": null,
+   "genus": null,
+   "automorphisms": 2,
+   "weight": "2",
+   "amplitude": null
+  }
+ ],
+ "total": 2,
+ "truncated": false,
+ "series": {
+  "Z": [
+   {
+    "order": 1,
+    "terms": [
+     {
+      "power": 0,
+      "coeff": "-2"
+     }
+    ]
+   }
+  ],
+  "F": [
+   {
+    "order": 1,
+    "terms": [
+     {
+      "power": 0,
+      "coeff": "-2"
+     }
+    ]
+   }
+  ]
+ },
+ "leading": {
+  "power": 0,
+  "coeff": "-2"
+ }
+}

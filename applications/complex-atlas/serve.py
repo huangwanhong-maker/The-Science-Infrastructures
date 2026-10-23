@@ -11,6 +11,14 @@ foundations' C++, morphe's topology and physis's gauge fields and state sums):
     POST /api/analyse                    {"complex"}: its invariants
     POST /api/gauge                      {"complex", "group", "beta", ...}: a gauge field on it, by Monte Carlo
     POST /api/turaev-viro                {"complex", "r"}: the Turaev-Viro state sum of a 3-manifold
+    GET  /api/theories                   the field theories that generate spacetimes (physis decision 0006)
+    POST /api/expand                     {"theory", "params", "order"}: its Feynman graphs and series
+    POST /api/graph-complex              {"coloured_graph", "view"}: the 2-complex or pseudomanifold of a graph
+    POST /api/large-n                    {"theory", "params"}: its large-N phase
+    POST /api/condensate                 {"spins", "G", "phi", "points"}: a GFT condensate's cosmology
+    POST /api/random-geometry            {"kind", "size", "D", "seed"}: a random quadrangulation or melonic graph
+    POST /api/dimensions                 {"complex", "graph", ...}: its spectral and Hausdorff dimensions
+    POST /api/spin-foam                  {"complex", "r", "mode", ...}: a spin foam on a 3-manifold's dual
     POST /api/cancel                     stop the computations in progress
 
 The engine is built by the application's recipe (``recipe.json``), which the page may run:
@@ -64,10 +72,18 @@ RECIPE = None
 WRITES = {"allowed": True, "token": None}
 # The limits of a request: the cells of a complex, the sweeps of a Monte Carlo run, the order
 # of a state sum, the wall time of each kind of request.
-LIMITS = {"cells": 250_000, "sweeps": 200_000, "r": 9, "seconds": {"build": 60.0, "analyse": 120.0, "gauge": 300.0, "turaev_viro": 300.0}}
+LIMITS = {"cells": 250_000, "sweeps": 200_000, "r": 9, "order": 6, "size": 20_000,
+          "seconds": {"build": 60.0, "analyse": 120.0, "gauge": 300.0, "turaev_viro": 300.0, "theories": 30.0, "expand": 180.0,
+                      "graph_complex": 30.0, "large_n": 60.0, "condensate": 60.0, "random_geometry": 60.0, "dimensions": 120.0,
+                      "spin_foam": 300.0}}
 RUNNING: set = set()
 SLOTS = threading.BoundedSemaphore(3)
-OPS = {"/api/build": "build", "/api/analyse": "analyse", "/api/gauge": "gauge", "/api/turaev-viro": "turaev_viro"}
+OPS = {"/api/build": "build", "/api/analyse": "analyse", "/api/gauge": "gauge", "/api/turaev-viro": "turaev_viro",
+       # The generation of spacetime by field theories (physis decision 0006): theories and their expansion,
+       # the complexes of Feynman graphs, large N and condensates, random geometries, dimensions, spin foams.
+       "/api/theories": "theories", "/api/expand": "expand", "/api/graph-complex": "graph_complex", "/api/large-n": "large_n",
+       "/api/condensate": "condensate", "/api/random-geometry": "random_geometry", "/api/dimensions": "dimensions",
+       "/api/spin-foam": "spin_foam"}
 
 
 def recipe_job():
@@ -114,13 +130,34 @@ def refuse_beyond_limits(op: str, body: dict) -> str | None:
             return "sweeps and thermalisation are whole numbers"
         if sweeps > LIMITS["sweeps"]:
             return f"{sweeps:,} sweeps: this server runs at most {LIMITS['sweeps']:,}"
-    if op == "turaev_viro":
+    if op in ("turaev_viro", "spin_foam"):
         try:
             r = int(body.get("r", 0))
         except (TypeError, ValueError):
             return "r is a whole number"
         if r > LIMITS["r"]:
             return f"r = {r}: this server sums at most to r = {LIMITS['r']}"
+    if op == "spin_foam":
+        try:
+            sweeps = int(body.get("sweeps", 0))
+        except (TypeError, ValueError):
+            return "sweeps are a whole number"
+        if sweeps > LIMITS["sweeps"]:
+            return f"{sweeps:,} sweeps: this server runs at most {LIMITS['sweeps']:,}"
+    if op == "expand":
+        try:
+            order = int(body.get("order", 0))
+        except (TypeError, ValueError):
+            return "the order is a whole number"
+        if order > LIMITS["order"]:
+            return f"order {order}: this server expands at most to order {LIMITS['order']}"
+    if op == "random_geometry":
+        try:
+            size = int(body.get("size", 0))
+        except (TypeError, ValueError):
+            return "the size is a whole number"
+        if size > LIMITS["size"]:
+            return f"size {size:,}: this server makes geometries of at most {LIMITS['size']:,}"
     return None
 
 
@@ -145,6 +182,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             return self.reply_json(c if c is not None else {"message": "the engine is not built"}, 200 if c is not None else 503)
         if url.path == "/setup":
             return self.reply_json(*self.recipe_request(url))
+        if url.path == "/api/theories":
+            return self.engine_request("theories", {})
         return super().do_GET()
 
     def do_POST(self) -> None:
@@ -160,23 +199,26 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             return self.engine_request(OPS[url.path])
         self.send_error(404)
 
-    def engine_request(self, op: str) -> None:
-        length = int(self.headers.get("Content-Length", "0") or 0)
-        if length > 32 * 1024 * 1024:
-            return self.reply_json({"message": "the request is too large"}, 413)
-        try:
-            body = json.loads(self.rfile.read(length).decode("utf-8") or "{}")
-            if not isinstance(body, dict):
-                raise ValueError("a request is a JSON object")
-        except ValueError as error:
-            return self.reply_json({"message": f"not a request: {error}"}, 400)
+    def engine_request(self, op: str, body: dict | None = None) -> None:
+        if body is None:
+            length = int(self.headers.get("Content-Length", "0") or 0)
+            if length > 32 * 1024 * 1024:
+                return self.reply_json({"message": "the request is too large"}, 413)
+            try:
+                body = json.loads(self.rfile.read(length).decode("utf-8") or "{}")
+                if not isinstance(body, dict):
+                    raise ValueError("a request is a JSON object")
+            except ValueError as error:
+                return self.reply_json({"message": f"not a request: {error}"}, 400)
         reason = refuse_beyond_limits(op, body)
         if reason:
             return self.reply_json({"message": reason}, 400)
         state = engine.status()
         if not state["current"]:
             return self.reply_json({"message": "the engine is not built from the present sources: build it first", "engine": state}, 503)
-        if not SLOTS.acquire(blocking=False):
+        # A page fires several requests at once (a theory's expansion, its large-N phase, a foam):
+        # each waits its turn for one of the engine's slots rather than failing.
+        if not SLOTS.acquire(timeout=120):
             return self.reply_json({"message": "the engine is busy with other requests; try again in a moment"}, 409)
         try:
             run = engine.Run(json.dumps({**body, "op": op}))
@@ -247,7 +289,10 @@ def main(argv: list[str]) -> int:
     public = args.host not in ("127.0.0.1", "localhost", "::1")
     if public:
         WRITES.update(allowed=bool(args.token), token=args.token)
-        LIMITS.update(cells=30_000, sweeps=20_000, r=7, seconds={"build": 20.0, "analyse": 30.0, "gauge": 60.0, "turaev_viro": 60.0})
+        LIMITS.update(cells=30_000, sweeps=20_000, r=7, order=4, size=4_000,
+                      seconds={"build": 20.0, "analyse": 30.0, "gauge": 60.0, "turaev_viro": 60.0, "theories": 10.0, "expand": 60.0,
+                               "graph_complex": 10.0, "large_n": 20.0, "condensate": 20.0, "random_geometry": 20.0,
+                               "dimensions": 40.0, "spin_foam": 60.0})
     if args.max_cells is not None:
         LIMITS["cells"] = args.max_cells
     if args.max_sweeps is not None:

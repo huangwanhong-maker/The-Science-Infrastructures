@@ -33,6 +33,18 @@ An integrative infrastructure for learning, using and researching all domains of
 </p>
 <p align="center"><i>The Spiking Simulator: networks of classical and quantum spiking neurons, run by the neuroscience domain's C++ engine and shown with their statistics and the engine's profile.</i></p>
 
+<p align="center">
+<a href="docs/gallery.md"><img src="assets/gallery/complex-07-spin-foam.jpg" width="32%" alt="A spin foam of Boulatov's group field theory, one vertex opened onto its spin network and quantum tetrahedron, in the Complex Atlas"></a>
+<a href="docs/gallery.md"><img src="assets/gallery/complex-04-feynman-graphs.jpg" width="32%" alt="The Feynman graphs of the matrix model with the series of Z and log Z in N, in the Complex Atlas"></a>
+<a href="docs/gallery.md"><img src="assets/gallery/complex-08-condensate-bounce.jpg" width="32%" alt="A group-field-theory condensate whose universe bounces instead of beginning in a big bang, in the Complex Atlas"></a>
+</p>
+<p align="center">
+<a href="docs/gallery.md"><img src="assets/gallery/complex-01-gauge-torus.jpg" width="32%" alt="A U(1) gauge field on a lattice torus against the exact two-dimensional Yang–Mills value, in the Complex Atlas"></a>
+<a href="docs/gallery.md"><img src="assets/gallery/complex-06-coloured-graphs.jpg" width="32%" alt="The Feynman graphs of a coloured tensor model by power of N and Gurau degree, in the Complex Atlas"></a>
+<a href="docs/gallery.md"><img src="assets/gallery/complex-02-genus-two-net.jpg" width="32%" alt="The surface of genus 2 as an octagon, a loop of its fundamental group drawn, in the Complex Atlas"></a>
+</p>
+<p align="center"><i>The Complex Atlas: cell complexes with their exact invariants and the gauge fields on them, and the generation of spacetime by field theories, quantum and group field theories alike, from an action through its Feynman graphs and spin foams to the condensed phase and the continuum.</i></p>
+
 ## Quick Start
 
 **Online, with nothing to install.** The three atlases run on our online server; the Spiking Simulator and the Complex Atlas do not:
@@ -416,7 +428,7 @@ height 0   metrology · neuroscience · linguistics¹ · genomics¹ · molecular
 
 - The [Spiking Simulator](applications/spiking-simulator/README.md) composes networks of spiking neurons from twenty-two models, classical and quantum, and runs them in the neuroscience domain's C++ engine, exactly where the dynamics are linear and with the same spikes on any number of threads. Its examples include Brunel's balanced network in its four states, the classes of excitability, quantum emitters and STDP. It is not run on our online server, whose resources the other applications already take much of; it runs on your own computer, with g++ (in WSL on Windows), as [the Spiking Simulator on your computer](#the-spiking-simulator-on-your-computer) shows in four lines.
 
-- The [Complex Atlas](applications/complex-atlas/README.md) shows cell complexes, their invariants and the fields on them, from foundations written for it: a surface glued by its word, a lattice torus, a triangulated 3-sphere, the 2-complex of a Feynman graph of group field theory, or any complex typed in. It draws the complex in the round, as a net of polygons or as the diagram of its cells; reads its homology with generators drawn on it, its fundamental group, the kind of surface or manifold it is and whether it collapses; runs lattice gauge fields of ℤ_N, U(1), SU(2) and SU(N) on it, coloured by their holonomies and compared with the exact values of two-dimensional Yang–Mills; and sums the Turaev–Viro invariant of a 3-manifold, the Ponzano–Regge model of three-dimensional gravity made finite.
+- The [Complex Atlas](applications/complex-atlas/README.md) shows cell complexes, their invariants and the fields on them, from foundations written for it: a surface glued by its word, a lattice torus, a triangulated 3-sphere, the 2-complex of a Feynman graph of group field theory, or any complex typed in. It draws the complex in the round, as a net of polygons or as the diagram of its cells; reads its homology with generators drawn on it, its fundamental group, the kind of surface or manifold it is and whether it collapses; runs lattice gauge fields of ℤ_N, U(1), SU(2) and SU(N) on it, coloured by their holonomies and compared with the exact values of two-dimensional Yang–Mills; and sums the Turaev–Viro invariant of a 3-manifold, the Ponzano–Regge model of three-dimensional gravity made finite. Its Generation mode follows a field theory, quantum or group field theory, from its action through its Feynman graphs, the discrete spacetimes and spin foams they are, and the large-N or condensed phase, to the continuum: the planar matrix model and its 2D gravity, tensor models and their branched polymers, Boulatov's spin foams opened vertex by vertex onto their quantum tetrahedra, and a condensate whose universe bounces instead of beginning in a big bang ([ADR 0040](development/decisions/0040-the-generation-of-spacetime.md)).
 
 The three atlases run online on the project's server, the [Celestial Atlas](http://173.212.213.207:9200/), the [Earth Atlas](http://173.212.213.207:9201/) and the [Brain Atlas](http://173.212.213.207:9202/), and on your own computer in a few lines (Quick Start, above). The [index of applications](applications/README.md) lists those planned.
 

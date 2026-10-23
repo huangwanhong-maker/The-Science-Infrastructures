@@ -92,3 +92,17 @@ export function number(x, digits = 4) {
   return text.replace('-', '−');
 }
 export const withError = (x, e) => (e ? `${number(x)} ± ${number(e, 2)}` : number(x));
+
+// A spin from twice its value: 0, ½, 1, 3/2, …
+export const spinText = (twoJ) => (twoJ % 2 ? (twoJ === 1 ? '½' : `${twoJ}/2`) : String(twoJ / 2));
+
+// A polynomial in N from its terms [{power, coeff: 'p/q'}], highest power first: "2N³ + N".
+export function polynomialText(terms, variable = 'N') {
+  if (!terms?.length) return '0';
+  return terms.map((t, i) => {
+    const neg = String(t.coeff).startsWith('-'), c = String(t.coeff).replace(/^-/, '');
+    const coeff = c === '1' && t.power ? '' : c.includes('/') && t.power ? `(${c})` : c;
+    const body = `${coeff}${t.power ? `${variable}${t.power === 1 ? '' : superscript(t.power)}` : ''}` || '1';
+    return i === 0 ? (neg ? `−${body}` : body) : ` ${neg ? '−' : '+'} ${body}`;
+  }).join('');
+}

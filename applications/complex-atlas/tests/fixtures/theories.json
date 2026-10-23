@@ -1,0 +1,399 @@
+{
+ "theories": [
+  {
+   "id": "scalar",
+   "title": "Complex scalar",
+   "family": "QFT",
+   "rank": 0,
+   "description": "A complex scalar with a (φ̄φ)^k interaction, zero-dimensional: its Feynman graphs are plain graphs, matchings of φ with φ̄.",
+   "action": "S[φ] = φ̄φ + λ (φ̄φ)^k",
+   "params": [
+    {
+     "name": "k",
+     "type": "int",
+     "default": 2,
+     "min": 1,
+     "max": 4
+    }
+   ],
+   "bubbles": [
+    {
+     "name": "(φ̄φ)^2",
+     "coloured_graph": {
+      "colours": 0,
+      "p": 2,
+      "sigma": []
+     },
+     "scaling": 0
+    }
+   ]
+  },
+  {
+   "id": "vector",
+   "title": "Vector model",
+   "family": "QFT",
+   "rank": 1,
+   "description": "A U(N)-invariant vector with (φ̄·φ)^k: each closed index line gives N; at large N the cactus graphs dominate and a gap equation sums them.",
+   "action": "S[φ] = φ̄·φ + λ (φ̄·φ)^k",
+   "params": [
+    {
+     "name": "k",
+     "type": "int",
+     "default": 2,
+     "min": 1,
+     "max": 4
+    }
+   ],
+   "bubbles": [
+    {
+     "name": "(φ̄·φ)^2",
+     "coloured_graph": {
+      "colours": 1,
+      "p": 2,
+      "sigma": [
+       [
+        0,
+        1
+       ]
+      ]
+     },
+     "scaling": 1
+    }
+   ]
+  },
+  {
+   "id": "matrix",
+   "title": "Matrix model",
+   "family": "QFT",
+   "rank": 2,
+   "description": "A complex N × N matrix with tr (MM†)^k: its Feynman graphs are ribbon graphs, surfaces of genus g weighted N^{2−2g}; the planar ones dominate, and at the critical coupling they become continuous 2D quantum gravity.",
+   "action": "S[M] = tr MM† + λ tr (MM†)^k",
+   "params": [
+    {
+     "name": "k",
+     "type": "int",
+     "default": 2,
+     "min": 1,
+     "max": 4
+    }
+   ],
+   "bubbles": [
+    {
+     "name": "tr (MM†)^2",
+     "coloured_graph": {
+      "colours": 2,
+      "p": 2,
+      "sigma": [
+       [
+        1,
+        0
+       ],
+       [
+        0,
+        1
+       ]
+      ]
+     },
+     "scaling": 1
+    }
+   ]
+  },
+  {
+   "id": "tensor-melonic",
+   "title": "Quartic melonic tensor model",
+   "family": "QFT",
+   "rank": 3,
+   "description": "A tensor of rank d with the quartic melonic bubble of every colour: Feynman graphs are (d+1)-coloured graphs, pseudomanifolds weighted by their Gurau degree; the melonic ones dominate and resum into branched polymers.",
+   "action": "S[φ] = φ̄·φ + λ N^{1−d} Σ_c I_{melon,c}(φ, φ̄)",
+   "params": [
+    {
+     "name": "rank",
+     "type": "int",
+     "default": 3,
+     "min": 3,
+     "max": 5
+    }
+   ],
+   "bubbles": [
+    {
+     "name": "melon of colour 1",
+     "coloured_graph": {
+      "colours": 3,
+      "p": 2,
+      "sigma": [
+       [
+        1,
+        0
+       ],
+       [
+        0,
+        1
+       ],
+       [
+        0,
+        1
+       ]
+      ]
+     },
+     "scaling": 2
+    },
+    {
+     "name": "melon of colour 2",
+     "coloured_graph": {
+      "colours": 3,
+      "p": 2,
+      "sigma": [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        0
+       ],
+       [
+        0,
+        1
+       ]
+      ]
+     },
+     "scaling": 2
+    },
+    {
+     "name": "melon of colour 3",
+     "coloured_graph": {
+      "colours": 3,
+      "p": 2,
+      "sigma": [
+       [
+        0,
+        1
+       ],
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        0
+       ]
+      ]
+     },
+     "scaling": 2
+    }
+   ]
+  },
+  {
+   "id": "tensor-wheel",
+   "title": "Sextic wheel tensor model",
+   "family": "QFT",
+   "rank": 3,
+   "description": "A rank-3 tensor with the wheel K₃,₃, a sextic bubble that is not melonic.",
+   "action": "S[φ] = φ̄·φ + λ I_{K₃,₃}(φ, φ̄)",
+   "params": [],
+   "bubbles": [
+    {
+     "name": "K₃,₃",
+     "coloured_graph": {
+      "colours": 3,
+      "p": 3,
+      "sigma": [
+       [
+        0,
+        1,
+        2
+       ],
+       [
+        1,
+        2,
+        0
+       ],
+       [
+        2,
+        0,
+        1
+       ]
+      ]
+     },
+     "scaling": 4
+    }
+   ]
+  },
+  {
+   "id": "tensor-necklace",
+   "title": "Quartic necklace tensor model",
+   "family": "QFT",
+   "rank": 3,
+   "description": "A rank-3 tensor with the quartic necklace.",
+   "action": "S[φ] = φ̄·φ + λ I_{necklace}(φ, φ̄)",
+   "params": [],
+   "bubbles": [
+    {
+     "name": "necklace",
+     "coloured_graph": {
+      "colours": 3,
+      "p": 3,
+      "sigma": [
+       [
+        0,
+        1,
+        2
+       ],
+       [
+        1,
+        2,
+        0
+       ],
+       [
+        1,
+        2,
+        0
+       ]
+      ]
+     },
+     "scaling": 4
+    }
+   ]
+  },
+  {
+   "id": "coloured-simplicial",
+   "title": "Coloured simplicial tensor model",
+   "family": "QFT",
+   "rank": 3,
+   "description": "D + 1 tensors whose interaction is a D-simplex: every Feynman graph is a (D+1)-coloured graph and triangulates a D-dimensional pseudomanifold (Gurau 2011).",
+   "action": "S[φ] = Σ_c φ̄_c·φ_c + λ φ_0 ⋯ φ_D + λ̄ φ̄_0 ⋯ φ̄_D",
+   "params": [
+    {
+     "name": "D",
+     "type": "int",
+     "default": 3,
+     "min": 2,
+     "max": 4
+    }
+   ],
+   "bubbles": []
+  },
+  {
+   "id": "gft-boulatov",
+   "title": "Boulatov's group field theory",
+   "family": "GFT",
+   "rank": 3,
+   "description": "Fields on G³ with the gauge projection and the tetrahedral interaction: Feynman graphs are 4-coloured, their 2-complexes spin foams of three-dimensional gravity (Boulatov 1992); amplitudes here for a finite group.",
+   "action": "S[φ] = Σ_c ∫ φ̄_c P φ_c + λ ∫ φ_0 φ_1 φ_2 φ_3 + c.c.,  φ_c : G³ → ℂ",
+   "params": [
+    {
+     "name": "group",
+     "type": "text",
+     "default": "Z2"
+    }
+   ],
+   "bubbles": []
+  },
+  {
+   "id": "gft-ooguri",
+   "title": "Ooguri's group field theory",
+   "family": "GFT",
+   "rank": 4,
+   "description": "Fields on G⁴ with the 4-simplex interaction: Feynman graphs are 5-coloured, their 2-complexes the spin foams of four-dimensional BF theory (Ooguri 1992); amplitudes for a finite group.",
+   "action": "S[φ] = Σ_c ∫ φ̄_c P φ_c + λ ∫ φ_0 ⋯ φ_4 + c.c.,  φ_c : G⁴ → ℂ",
+   "params": [
+    {
+     "name": "group",
+     "type": "text",
+     "default": "Z2"
+    }
+   ],
+   "bubbles": []
+  },
+  {
+   "id": "gft-melonic",
+   "title": "Quartic melonic group field theory",
+   "family": "GFT",
+   "rank": 3,
+   "description": "A tensorial group field theory: fields on G^d with the gauge projection and quartic melonic bubbles; its condensed phase is the setting of GFT cosmology.",
+   "action": "S[φ] = ∫ φ̄ P φ + λ Σ_c ∫ I_{melon,c}(φ, φ̄),  φ : G^d → ℂ",
+   "params": [
+    {
+     "name": "rank",
+     "type": "int",
+     "default": 3,
+     "min": 3,
+     "max": 5
+    },
+    {
+     "name": "group",
+     "type": "text",
+     "default": "Z2"
+    }
+   ],
+   "bubbles": [
+    {
+     "name": "melon of colour 1",
+     "coloured_graph": {
+      "colours": 3,
+      "p": 2,
+      "sigma": [
+       [
+        1,
+        0
+       ],
+       [
+        0,
+        1
+       ],
+       [
+        0,
+        1
+       ]
+      ]
+     },
+     "scaling": 2
+    },
+    {
+     "name": "melon of colour 2",
+     "coloured_graph": {
+      "colours": 3,
+      "p": 2,
+      "sigma": [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        0
+       ],
+       [
+        0,
+        1
+       ]
+      ]
+     },
+     "scaling": 2
+    },
+    {
+     "name": "melon of colour 3",
+     "coloured_graph": {
+      "colours": 3,
+      "p": 2,
+      "sigma": [
+       [
+        0,
+        1
+       ],
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        0
+       ]
+      ]
+     },
+     "scaling": 2
+    }
+   ]
+  }
+ ]
+}
