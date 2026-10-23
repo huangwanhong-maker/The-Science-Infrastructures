@@ -1,0 +1,15 @@
+{
+  "title": "The Spiking Simulator's engine",
+  "about": "The C++ simulator of the neuroscience domain (snn), compiled once with g++ 11 or later, natively or in WSL, into data/cache/engines/snn/. About a minute; it is compiled again when its sources change.",
+  "steps": [
+    {
+      "id": "engine",
+      "title": "The simulation engine (snn), compiled with g++",
+      "run": [
+        "applications/spiking-simulator/engine.py",
+        "build"
+      ],
+      "done": "data/cache/engines/snn/build.json"
+    }
+  ]
+}

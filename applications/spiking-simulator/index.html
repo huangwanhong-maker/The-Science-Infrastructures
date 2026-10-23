@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Spiking Simulator</title>
+  <meta name="description" content="Networks of spiking neurons, composed from a catalogue of models, classical and quantum, and run exactly and in parallel by the neuroscience domain's C++ engine.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M3 22h5l2-3 2 3h2l3-17 3 23 2-6h7' fill='none' stroke='%23ca8dbe' stroke-width='2' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" media="print" onload="this.media='all'"
+        href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..600&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="src/app.js"></script>
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="mark" viewBox="0 0 32 32">
+        <path d="M3 22h5l2-3 2 3h2l3-17 3 23 2-6h7" fill="none" stroke="#ca8dbe" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="17" cy="5" r="1.6" fill="#e8c3dc"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <header class="top">
+    <div class="brand">
+      <svg class="mark"><use href="#mark"/></svg>
+      <div class="brand-text">
+        <span class="brand-name">Spiking Simulator</span>
+        <span class="brand-sub">networks of spiking neurons, exactly and in parallel</span>
+      </div>
+    </div>
+    <select id="preset" aria-label="Examples"></select>
+    <div class="top-right">
+      <span id="status" class="status" aria-live="polite"></span>
+      <select id="threads" aria-label="Threads"><option value="">all cores</option></select>
+      <button id="stop" class="button" hidden>Stop</button>
+      <button id="run" class="button primary" title="Run (Ctrl+Enter)">Run</button>
+      <span id="engine" class="engine">…</span>
+    </div>
+  </header>
+
+  <main>
+    <aside id="left" class="panel">
+      <div id="problems" class="problems" hidden></div>
+      <div id="editor"></div>
+    </aside>
+
+    <section id="centre">
+      <div id="about" class="about"></div>
+      <nav class="tabs" role="tablist">
+        <button data-tab="results" role="tab">Results</button>
+        <button data-tab="spec" role="tab">Specification</button>
+      </nav>
+      <div id="tab-results" class="tab"><div id="results"></div></div>
+      <div id="tab-spec" class="tab" hidden>
+        <p class="note">The network as the engine reads it: quantities with their units, distributions as <code>{"uniform": ["0 mV", "20 mV"]}</code>. Edit it here and apply it, or save it and run it from the command line with <code>snn run</code>.</p>
+        <textarea id="spec-text" spellcheck="false" aria-label="The specification as JSON"></textarea>
+        <div class="actions">
+          <button id="spec-apply" class="button primary">Apply</button>
+          <button id="spec-download" class="button">Download</button>
+          <label class="button">Open a file<input id="spec-open" type="file" accept=".json,application/json" hidden></label>
+          <span id="spec-error" class="error"></span>
+        </div>
+      </div>
+    </section>
+
+    <aside id="right" class="panel">
+      <div id="catalogue"></div>
+    </aside>
+  </main>
+</body>
+</html>

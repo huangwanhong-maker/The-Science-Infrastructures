@@ -377,7 +377,14 @@ height 0   metrology · neuroscience · linguistics¹ · genomics¹ · molecular
 
 - The [Brain Atlas](applications/brain-atlas/README.md) shows the human brain in the round, its cortex by gyrus and its deep nuclei, ventricles and fibre bundles drawn as surfaces, every part clickable for its anatomy: where it lies, what it does, what it connects, what supplies it and what follows when it fails. It cuts the brain and shows it in sections, colours the cortex by Julich-Brain's areas or Schaefer's networks, maps data by structure and by coordinate, places the electrodes of the 10–20 system on the scalp and carries their values onto the cortex, scales the brain to a subject's head, and shows the mouse brain in the Allen framework.
 
-All three run online on the project's server, the [Celestial Atlas](http://173.212.213.207:9200/), the [Earth Atlas](http://173.212.213.207:9201/) and the [Brain Atlas](http://173.212.213.207:9202/), and on your own computer in a few lines (Quick Start, above). The [index of applications](applications/README.md) lists those planned.
+- The [Spiking Simulator](applications/spiking-simulator/README.md) composes networks of spiking neurons from twenty-two models, classical and quantum, and runs them in the neuroscience domain's C++ engine, exactly where the dynamics are linear and with the same spikes on any number of threads. Its examples include Brunel's balanced network in its four states, the classes of excitability, quantum emitters and STDP. It builds its engine with g++ (in WSL on Windows) and opens at http://127.0.0.1:8830/:
+
+  ```
+  python data/acquisition/recipe.py applications/spiking-simulator/recipe.json
+  python applications/spiking-simulator/serve.py --open
+  ```
+
+The three atlases run online on the project's server, the [Celestial Atlas](http://173.212.213.207:9200/), the [Earth Atlas](http://173.212.213.207:9201/) and the [Brain Atlas](http://173.212.213.207:9202/), and on your own computer in a few lines (Quick Start, above). The [index of applications](applications/README.md) lists those planned.
 
 ## 6. Organisation of the Repository
 
@@ -390,7 +397,7 @@ All three run online on the project's server, the [Celestial Atlas](http://173.2
 ├── visualization/   scene model · renderers · styles; provisional drawing helpers
 ├── observation/     instruments · field work · sensors
 ├── api/             the service and its clients in Python, C and C++, JavaScript
-├── applications/    celestial-atlas · earth-atlas · brain-atlas
+├── applications/    celestial-atlas · earth-atlas · brain-atlas · spiking-simulator
 ├── research/        questions · experiments · papers
 ├── notebooks/       exploration and teaching
 ├── docs/            architecture · gallery
@@ -414,7 +421,7 @@ To run an application, follow the Quick Start at the top of this page; each appl
 
 ## 7. Status
 
-**As of 2026-10-23.** Three applications work, online and on any computer (Quick Start). Their science is the provisional JavaScript of nine domains, of physis and of the visualization layer, tested against published references and closed-form answers in 422 checks. Each domain passes its checks on its own. Neuroscience, the first domain beyond the Earth and the sky, is a repository of its own attached as a submodule, with the Brain Atlas drawing it ([ADR 0028](development/decisions/0028-neuroscience-and-the-brain-atlas.md)). The Earth Atlas takes plug-ins: scripts for prediction, assimilation and analysis, loaded on request ([ADR 0027](development/decisions/0027-earth-atlas-plugins.md)). The first C++ is written: calx's and physis's first modules, on a [map of the mathematics](docs/mathematics.md) that places every area of mathematics in a foundation ([ADR 0035](development/decisions/0035-the-mathematical-foundations.md)), and the neuroscience domain's networks of spiking neurons, which simulate Brunel's network of 12,500 neurons and 15.6 million synapses at 2.6 times real time on a laptop, with the same spikes on any number of threads ([ADR 0036](development/decisions/0036-spiking-networks.md)). The next steps are in the [roadmap](development/roadmap.md), in the order of §4.6:
+**As of 2026-10-23.** Four applications work: the three atlases, online and on any computer (Quick Start), and the Spiking Simulator ([ADR 0038](development/decisions/0038-the-spiking-simulator.md)), on any computer with g++. Their science is the provisional JavaScript of nine domains, of physis and of the visualization layer, tested against published references and closed-form answers in 422 checks. Each domain passes its checks on its own. Neuroscience, the first domain beyond the Earth and the sky, is a repository of its own attached as a submodule, with the Brain Atlas drawing it ([ADR 0028](development/decisions/0028-neuroscience-and-the-brain-atlas.md)). The Earth Atlas takes plug-ins: scripts for prediction, assimilation and analysis, loaded on request ([ADR 0027](development/decisions/0027-earth-atlas-plugins.md)). The first C++ is written: calx's and physis's first modules, on a [map of the mathematics](docs/mathematics.md) that places every area of mathematics in a foundation ([ADR 0035](development/decisions/0035-the-mathematical-foundations.md)), and the neuroscience domain's networks of spiking neurons, which simulate Brunel's network of 12,500 neurons and 15.6 million synapses at 2.6 times real time on a laptop, with the same spikes on any number of threads ([ADR 0036](development/decisions/0036-spiking-networks.md)); twenty-two neuron models, the first quantum one among them, are composed and run in the Spiking Simulator. The next steps are in the [roadmap](development/roadmap.md), in the order of §4.6:
 
 - Phase 0, the toolchain and the build;
 - tier 1: the foundations morphe, the algebraic foundation (category theory, algebra, topology, geometry), and physis, the foundation of theoretical physics; then spiking neural networks, computational linguistics, genomics, molecular science and drug discovery;

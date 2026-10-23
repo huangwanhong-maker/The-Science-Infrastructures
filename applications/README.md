@@ -27,6 +27,7 @@ Every application says which of the three activities it serves:
 | [Celestial Atlas](celestial-atlas/) — [online](http://173.212.213.207:9200/) | use, learning | metrology, astronomy, geodesy | draft |
 | [Earth Atlas](earth-atlas/) — [online](http://173.212.213.207:9201/) | use, learning | geography, meteorology, oceanography, geophysics, geodesy, astronomy, climate | draft |
 | [Brain Atlas](brain-atlas/) | use, learning | neuroscience | draft |
+| [Spiking Simulator](spiking-simulator/) | use, learning | neuroscience (its C++ engine) | draft |
 | Orbital sandbox | learning | astronomy | planned |
 | Ephemeris calculator | use | metrology, astronomy | planned |
 | Map projections | learning | geography | planned |

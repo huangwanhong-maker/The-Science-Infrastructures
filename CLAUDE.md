@@ -226,7 +226,7 @@ These conventions are shared with the foundation libraries.
 ├── visualization/     scene model · renderers · styles (ADR 0005); provisional js/
 ├── observation/       instruments · field work · sensors
 ├── api/               the service and its clients: Python · C and C++ · JavaScript (ADR 0030)
-├── applications/      one folder per application: celestial-atlas · earth-atlas · brain-atlas
+├── applications/      one folder per application: celestial-atlas · earth-atlas · brain-atlas · spiking-simulator
 ├── research/          questions · experiments · papers
 ├── notebooks/         exploration and teaching
 ├── docs/              architecture · mathematics · gallery (later: glossary · references)
@@ -267,7 +267,7 @@ A domain directory contains:
 
 - Record decisions that shape structure, conventions or tooling in `development/decisions/NNNN-slug.md`, using the template in the index.
 - Never rewrite a record. A new record supersedes or amends it, and the old record's status is updated to point to the new one. Paths in old records are as they were written; ADR 0026 maps them to the present.
-- Records accepted so far: 0001–0037. Records 0001–0024 were written in the first laboratory, which the infrastructure absorbed; 0025 founded this repository.
+- Records accepted so far: 0001–0038. Records 0001–0024 were written in the first laboratory, which the infrastructure absorbed; 0025 founded this repository.
 
 ### 6.4 Release Notes
 
@@ -319,7 +319,8 @@ A domain directory contains:
   - Load three.js from jsDelivr, pinned to an exact version (0.170.0).
   - Serve locally with Python's standard library. Each application's server mounts `domains/`, `foundations/` and `visualization/` beside its page, and the data cache at `/data/`; it reports the application's data recipe (`recipe.json`) at `/setup` and runs it on the page's request.
   - Test with Node (v22 is installed).
-  - Each application has its own local server: the Celestial Atlas on port 8770, the Earth Atlas on 8790, the Brain Atlas on 8810.
+  - Each application has its own local server: the Celestial Atlas on port 8770, the Earth Atlas on 8790, the Brain Atlas on 8810, the Spiking Simulator on 8830.
+  - The Spiking Simulator's server runs the neuroscience domain's C++ engine, built by its recipe with g++ (natively, or in WSL) into `data/cache/engines/snn/` ([ADR 0038](development/decisions/0038-the-spiking-simulator.md)).
   - A public instance runs on the user's server, `eu_region_server` (173.212.213.207): the Celestial Atlas on port 9200, the Earth Atlas on 9201, in the tmux session `science`, served with `--host 0.0.0.0 --sibling`; the Brain Atlas on 9202, in the window `brain-atlas`, served with `--host 0.0.0.0` after its recipe. The READMEs link to it; keep the links current if it moves.
 - **Visual style:**
   - The Celestial Atlas uses Dusty Orchid (#CA8DBE) as its main colour, chosen by the user: plum nights, orchid accents and orchid-tinted paper for charts.
@@ -362,8 +363,9 @@ A domain directory contains:
 As of 2026-10-23:
 
 - **The structure of ADR 0026 is in place.** The first laboratory's history is joined to this repository, and the foundations are submodules under `foundations/`.
-- **The domains.** Nine domains have code: metrology, geodesy, astronomy, geophysics, geography, oceanography, meteorology, climate and neuroscience. Tides, navigation and air–sea are planned. All the code is provisional JavaScript, with 422 checks against published references and closed-form answers. With the foundations (their C++ among them), the edges and the applications, the whole run is 1275 checks in eighteen suites. Every domain passes its checks alone.
+- **The domains.** Nine domains have code: metrology, geodesy, astronomy, geophysics, geography, oceanography, meteorology, climate and neuroscience. Tides, navigation and air–sea are planned. All the code is provisional JavaScript, with 422 checks against published references and closed-form answers. With the foundations (their C++ among them), the edges and the applications, the whole run is 1300 checks in nineteen suites. Every domain passes its checks alone.
 - **The Brain Atlas** (`applications/brain-atlas`, [ADR 0028](development/decisions/0028-neuroscience-and-the-brain-atlas.md), [ADR 0032](development/decisions/0032-the-anatomy-of-the-brain-atlas.md)) shows the human brain in the round from an anatomy product (`data/products/brain_anatomy.py`): the cortex by gyrus, the deep nuclei, ventricles and fibre bundles, every part with a card from the domain's knowledge base (152 structures, with references). It cuts the brain and shows sections, colours the cortex by Julich-Brain or Schaefer, maps data by structure and by coordinate, places the 10–20 electrodes on the scalp and carries their values onto the cortex, scales the brain to a subject's head, and shows the Allen mouse brain; five guided tours. Its Signals mode ([ADR 0034](development/decisions/0034-biosignals-on-the-brain.md)) carries EEG onto the cortex through a three-shell forward model and sLORETA (band power, the potential at an instant, contrasts of conditions, with the traces playing beneath), shows one current's EEG potential and MEG field side by side, and reads fMRI maps through the cortex, smoothed and with their peaks named.
+- **The Spiking Simulator** (`applications/spiking-simulator`, [ADR 0038](development/decisions/0038-the-spiking-simulator.md)) composes networks of spiking neurons from the engine's catalogue of twenty-two models, classical and quantum, edits them as the engine's own JSON specification, and runs them in the C++ engine on the server: eight examples (an adapting neuron, Brunel's four states, the classes of excitability in one run, quantum emitters, STDP). The visualizer and profiler come next, then simulations for the gallery.
 - **The Celestial Atlas** (`applications/celestial-atlas`, [ADR 0011](development/decisions/0011-first-application-celestial-atlas.md)) is a web application with five views:
   - the Solar System;
   - the stellar neighbourhood, from HYG or Gaia;

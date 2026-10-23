@@ -50,6 +50,7 @@ Decisions that concern only one library are recorded in that library's own `deve
 | [0035](0035-the-mathematical-foundations.md) | The mathematical foundations: a map, an order, and the first C++ | Accepted, provisionally |
 | [0036](0036-spiking-networks.md) | Networks of spiking neurons, and the C++ among the checks | Accepted; amends 0028 |
 | [0037](0037-release-notes.md) | Release notes at each commit | Accepted |
+| [0038](0038-the-spiking-simulator.md) | The Spiking Simulator | Accepted |
 
 ## 2. Template
 
