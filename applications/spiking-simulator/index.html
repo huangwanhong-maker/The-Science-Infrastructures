@@ -50,10 +50,22 @@
     <section id="centre">
       <div id="about" class="about"></div>
       <nav class="tabs" role="tablist">
-        <button data-tab="results" role="tab">Results</button>
+        <button data-tab="activity" role="tab">Activity</button>
+        <button data-tab="statistics" role="tab">Statistics</button>
+        <button data-tab="states" role="tab">States</button>
+        <button data-tab="weights" role="tab">Weights</button>
+        <button data-tab="profile" role="tab">Profile</button>
+        <button data-tab="network" role="tab">Network</button>
+        <button data-tab="results" role="tab">Summary</button>
         <button data-tab="spec" role="tab">Specification</button>
       </nav>
-      <div id="tab-results" class="tab"><div id="results"></div></div>
+      <div id="tab-activity" class="tab"><div id="activity"></div></div>
+      <div id="tab-statistics" class="tab" hidden><div id="statistics"></div></div>
+      <div id="tab-states" class="tab" hidden><div id="states"></div></div>
+      <div id="tab-weights" class="tab" hidden><div id="weights"></div></div>
+      <div id="tab-profile" class="tab" hidden><div id="profile"></div></div>
+      <div id="tab-network" class="tab" hidden><div id="network"></div></div>
+      <div id="tab-results" class="tab" hidden><div id="results"></div></div>
       <div id="tab-spec" class="tab" hidden>
         <p class="note">The network as the engine reads it: quantities with their units, distributions as <code>{"uniform": ["0 mV", "20 mV"]}</code>. Edit it here and apply it, or save it and run it from the command line with <code>snn run</code>.</p>
         <textarea id="spec-text" spellcheck="false" aria-label="The specification as JSON"></textarea>

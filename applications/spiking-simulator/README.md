@@ -13,6 +13,7 @@ It is apart from the Brain Atlas, which draws the brain's anatomy and signals; t
 - **A specification is the network.** The page holds one specification, the very JSON the engine reads (`domains/neuroscience/snn/include/neuroscience/snn/spec.hpp`): settings, populations, projections, devices, recorders. The editor changes it field by field; the Specification tab shows it as text, to edit, save or open. A network saved here runs unchanged with `snn run`.
 - **Quantities keep their units.** A field takes "20 ms", "0.1 mV" or "8 kHz", a bare number where the quantity has no dimension, or a distribution, `{"uniform": ["0 mV", "20 mV"]}`. The engine checks every dimension against the model's and says what it refuses.
 - **The engine runs on the server.** The page sends the specification to its server, which runs the engine as a separate program and returns its results: spike times and senders, binned rates, recorded states with their units, weights, and the engine's own figures (run time, spikes, synaptic events).
+- **A run is shown and profiled.** Its spikes are drawn as a raster over the population rates; its activity is described population by population (rates, the irregularity of intervals as CV and LV, the Fano factor of counts, Golomb's synchrony χ, correlations, and the rhythm from the spectrum of the rate), with the distributions behind them and, where each neuron had its own current, the f–I curve; recorded states and weights are traced; the network is drawn. The statistics are the engine's own, computed and checked in the domain's C++ (`snn/analysis.hpp`), and so is the profile: where the engine's time went, phase by phase and thread by thread, with advice when a network is too small for its threads.
 - **The engine is built here.** It is compiled once with g++ (11 or later), natively or in WSL on Windows, into `data/cache/engines/snn/`, and compiled again when its sources change; the application's recipe does it, from the command line or from the page.
 
 ## 3. Use
@@ -22,7 +23,7 @@ python data/acquisition/recipe.py applications/spiking-simulator/recipe.json   #
 python applications/spiking-simulator/serve.py --open
 ```
 
-It opens at http://127.0.0.1:8830/. Choose an example, or compose a network: add populations from the catalogue on the right, connect them, drive them and record them on the left, and run (Ctrl+Enter). A link `#preset=brunel-ai&run=1` opens an example and runs it.
+It opens at http://127.0.0.1:8830/. Choose an example, or compose a network: add populations from the catalogue on the right, connect them, drive them and record them on the left, and run (Ctrl+Enter). The run's views are tabs: Activity (drag across a chart to look closer in time, double-click to see all of it), Statistics, States, Weights, Profile, Network, Summary (and its files), Specification. A link `#preset=brunel-ai&run=1` opens an example and runs it.
 
 The examples:
 
@@ -43,7 +44,9 @@ The examples:
 | `recipe.json` | The one step that builds the engine |
 | `src/spec.js` | The specification: its parts, references kept whole on renaming and removal, the problems found before a run |
 | `src/units.js` | Quantities shown with their prefixes and written as the engine reads them |
-| `src/editor.js`, `src/catalogue.js`, `src/results.js` | The editor, the catalogue of models, the results of a run |
+| `src/editor.js`, `src/catalogue.js`, `src/results.js` | The editor, the catalogue of models, the summary of a run |
+| `src/views.js` | The visualizer and profiler: activity, statistics, states, weights, the engine's profile, the network |
+| `src/charts.js` | Charts on canvas: scales, ticks, hairline axes, lines, bands, bars, dots, a crosshair with its tooltip, a range dragged to look closer |
 | `src/presets.js` | The examples |
 | `src/palette.js` | The populations' colours, validated for colour-blind readers on the page's surface |
 | `tests/run-tests.mjs` | Its checks |
@@ -54,10 +57,10 @@ On this computer a run may have 250,000 neurons, 60 s of simulated time and 15 m
 
 ## 6. Checks
 
-`node applications/spiking-simulator/tests/run-tests.mjs`: quantities shown and read; the specification's references kept whole when populations and projections are renamed or removed; every example whole, and every model, parameter, component and receptor it names present in the engine's catalogue; and, when the engine is built, every example run by the engine with its neurons firing. The science is checked with the neuroscience domain (its `snn` module).
+`node applications/spiking-simulator/tests/run-tests.mjs`: quantities shown and read; the charts' ticks and scales; the specification's references kept whole when populations and projections are renamed or removed; every example whole, and every model, parameter, component and receptor it names present in the engine's catalogue; and, when the engine is built, every example run by the engine with its neurons firing, its activity described neuron by neuron and its profile given thread by thread. The science is checked with the neuroscience domain (its `snn` module).
 
 ## 7. Open Questions
 
-1. **The visualizer and profiler:** rasters, rates, traces, weights and the network drawn; the statistics of the activity (rates, intervals, irregularity, synchrony, spectra) and the engine's own profile (where its time goes, across threads). Next.
-2. **A run that reports as it goes,** for long simulations.
+1. **A run that reports as it goes,** for long simulations, and results too large to send whole (rasters thinned on the server).
+2. **Comparisons:** two runs side by side, or a parameter swept across runs.
 3. **Python bindings** of the engine, beside the command line and this page.

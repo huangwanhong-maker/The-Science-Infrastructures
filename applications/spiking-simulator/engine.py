@@ -3,9 +3,10 @@
 The engine is the domain's command-line tool (``domains/neuroscience/snn/tools/snn.cpp``),
 header-only C++20 on calx and physis. It is compiled here by g++ 11 or later: natively
 where there is one, and otherwise in WSL (Windows without a compiler), into
-``data/cache/engines/snn/``. Beside the program it keeps ``build.json``, with the hash of
-every source it was built from (a change to any header makes it stale), and
-``models.json``, the catalogue of models that the page reads.
+``data/cache/engines/snn/``. Beside the program it keeps ``build.json``, with the files it
+was compiled from (as the compiler lists them) and the hash of each, so that a change to any
+of them, and to nothing else, makes it stale; and ``models.json``, the catalogue of models
+that the page reads.
 
 A run is the tool reading a specification (JSON, quantities with their units) on its
 standard input and writing its results (JSON, SI units) on its standard output; the
@@ -24,6 +25,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -47,15 +49,44 @@ def include_dirs() -> list[Path]:
     return dirs
 
 
-def digest() -> str:
-    """The hash of the engine's sources: every header it may include, and the tool itself."""
+def digest(files: list[str]) -> str | None:
+    """The hash of the files (relative to the repository), or None if one is missing."""
     h = hashlib.sha256()
-    files = sorted({f for d in include_dirs() for f in d.rglob("*.hpp")} | {SOURCE})
-    for f in files:
-        h.update(f.relative_to(ROOT).as_posix().encode())
+    for rel in sorted(files):
+        f = ROOT / rel
+        if not f.is_file():
+            return None
+        h.update(rel.encode())
         h.update(b"\0")
         h.update(f.read_bytes())
     return h.hexdigest()
+
+
+def native_path(p: str) -> Path:
+    """/mnt/c/Users/x -> C:/Users/x (a path the compiler in WSL wrote)."""
+    if p.startswith("/mnt/") and len(p) > 6 and p[6] == "/":
+        return Path(f"{p[5].upper()}:/{p[7:]}")
+    return Path(p)
+
+
+def dependencies(kind: str, flags: list[str]) -> list[str]:
+    """The files the engine is compiled from, as the compiler lists them (-MM), relative to the
+    repository."""
+    r = subprocess.run(command(kind, ["g++", *flags, "-MM", path_for(kind, SOURCE)]), capture_output=True, text=True)
+    if r.returncode != 0:
+        raise RuntimeError(r.stderr[-2000:])
+    # make's syntax: a continued line ends in a backslash, and a space in a path is escaped by one.
+    text = r.stdout.replace("\\\n", " ")
+    text = text.split(":", 1)[1] if ":" in text else ""
+    words = [w.replace("\\ ", " ") for w in re.findall(r"(?:\\ |\S)+", text)]
+    out = set()
+    for w in words:
+        p = native_path(w) if kind == "wsl" else Path(w)
+        try:
+            out.add(p.resolve().relative_to(ROOT.resolve()).as_posix())
+        except ValueError:
+            pass  # a file outside the repository (the standard library)
+    return sorted(out)
 
 
 def wsl_path(p: Path) -> str:
@@ -101,9 +132,9 @@ def read_build() -> dict | None:
 def status() -> dict:
     """Whether the engine is built, and from the present sources."""
     b = read_build()
-    built = b is not None and PROGRAM.exists()
+    built = b is not None and PROGRAM.exists() and isinstance(b.get("files"), list)
     out = {"built": built, "toolchain": b.get("toolchain") if b else None, "built_at": b.get("built_at") if b else None}
-    out["current"] = built and b.get("sources") == digest()
+    out["current"] = built and b.get("sources") is not None and b.get("sources") == digest(b["files"])
     return out
 
 
@@ -117,10 +148,18 @@ def build(force: bool = False, log=print) -> bool:
         log("No C++ compiler: install g++ 11 or later (on Windows, in WSL).")
         return False
     OUT.mkdir(parents=True, exist_ok=True)
-    sources = digest()
-    args = ["g++", "-std=c++20", "-O3", "-march=native", "-pthread", "-DNDEBUG"]
-    args += [f"-I{path_for(kind, d)}" for d in include_dirs()]
-    args += [path_for(kind, SOURCE), "-o", path_for(kind, PROGRAM)]
+    flags = ["-std=c++20", "-O3", "-march=native", "-pthread", "-DNDEBUG", *[f"-I{path_for(kind, d)}" for d in include_dirs()]]
+    try:
+        files = dependencies(kind, flags)
+    except RuntimeError as error:
+        log(str(error))
+        log("The engine's sources do not compile.")
+        return False
+    sources = digest(files)
+    if not files or sources is None:
+        log("The compiler listed no sources of the engine inside the repository.")
+        return False
+    args = ["g++", *flags, path_for(kind, SOURCE), "-o", path_for(kind, PROGRAM)]
     log(f"Compiling the engine with g++ ({kind}); this takes a minute or two.")
     t0 = time.time()
     r = subprocess.run(command(kind, args), capture_output=True, text=True)
@@ -134,8 +173,8 @@ def build(force: bool = False, log=print) -> bool:
         return False
     (OUT / "models.json").write_text(m.stdout, encoding="utf-8")
     v = subprocess.run(command(kind, [path_for(kind, PROGRAM), "version"]), capture_output=True, text=True)
-    record = {"sources": sources, "toolchain": kind, "version": v.stdout.strip(), "built_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-              "seconds": round(time.time() - t0, 1), "flags": args[1:6]}
+    record = {"sources": sources, "files": files, "toolchain": kind, "version": v.stdout.strip(),
+              "built_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "seconds": round(time.time() - t0, 1), "flags": flags[:5]}
     (OUT / "build.json").write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
     log(f"Built in {record['seconds']} s: {PROGRAM}")
     return True

@@ -11,13 +11,14 @@ import { el, clear } from './dom.js';
 import { renderEditor } from './editor.js';
 import { PRESETS, preset } from './presets.js';
 import { renderResults } from './results.js';
+import * as views from './views.js';
 import { clone, empty, forEngine, problems, addPopulation, neurons, normalise } from './spec.js';
 import { seconds } from './units.js';
 
 const $ = (id) => document.getElementById(id);
 const STORE = 'spiking-simulator:spec';
 
-const state = { spec: null, catalogue: null, results: null, running: false, selected: 'lif_psc_exp', presetId: null };
+const state = { spec: null, ran: null, catalogue: null, results: null, running: false, selected: 'lif_psc_exp', presetId: null, figures: [] };
 
 function save() {
   try { localStorage.setItem(STORE, JSON.stringify({ spec: state.spec, preset: state.presetId })); } catch { /* storage unavailable */ }
@@ -46,14 +47,14 @@ async function start() {
 }
 
 function offerBuild(engine) {
-  const main = clear($('results'));
+  const main = clear($('activity'));
   const log = el('pre', { class: 'log' });
   const button = el('button', { class: 'button primary', onclick: () => build(button, log) }, engine.built ? 'Build it again' : 'Build the engine');
   main.append(el('div', { class: 'empty' },
     el('p', { class: 'lead', text: engine.built ? 'The engine was built from older sources.' : 'The engine has not been built on this computer.' }),
     el('p', { class: 'note', text: 'It is the neuroscience domain\'s C++ simulator, compiled once with g++ (natively, or in WSL on Windows). It takes a minute or two.' }),
     button, log));
-  showTab('results');
+  showTab('activity');
 }
 
 async function build(button, log) {
@@ -126,14 +127,34 @@ function draw() {
   drawAbout();
   drawSpec();
   drawProblems();
-  renderResults($('results'), state.results, { spec: state.spec, onDownload: download });
+  drawViews();
+}
+
+// The views of the last run, drawn from the specification as it was run; the network's diagram
+// from the specification as it is now.
+function drawViews() {
+  for (const f of state.figures) f.destroy();
+  state.figures = [];
+  renderResults($('results'), state.results, { spec: state.ran, onDownload: download });
+  const ids = ['activity', 'statistics', 'states', 'weights', 'profile'];
+  if (!state.results) {
+    for (const id of ids) clear($(id)).append(el('div', { class: 'empty' }, el('p', { class: 'lead', text: id === 'activity' ? 'Run the network to see its activity.' : 'Run the network first.' }),
+      id === 'activity' ? el('p', { class: 'note', text: 'Choose an example above, or compose a network on the left from the models on the right; Run, or Ctrl+Enter, sends it to the engine.' }) : null));
+  } else {
+    views.activity($('activity'), state.results, state.ran, state.figures);
+    views.statistics($('statistics'), state.results, state.ran, state.figures, state.catalogue);
+    views.states($('states'), state.results, state.ran, state.figures);
+    views.weights($('weights'), state.results, state.ran, state.figures, state.catalogue);
+    views.profile($('profile'), state.results);
+  }
+  views.network($('network'), state.spec, state.catalogue);
 }
 
 function changed(redraw) {
   state.presetId = null;
   save();
   if (redraw) draw();
-  else { drawSpec(); drawProblems(); }
+  else { drawSpec(); drawProblems(); views.network($('network'), state.spec, state.catalogue); }
 }
 
 function drawAbout() {
@@ -173,10 +194,12 @@ async function run() {
   document.body.classList.add('running');
   try {
     const threads = Number($('threads').value) || undefined;
-    state.results = await api.run(forEngine(state.spec), threads);
+    const ran = clone(state.spec);
+    state.results = await api.run(forEngine(ran), threads);
+    state.ran = ran;
     status.textContent = `done in ${((performance.now() - t0) / 1000).toFixed(1)} s`;
-    renderResults($('results'), state.results, { spec: state.spec, onDownload: download });
-    showTab('results');
+    drawViews();
+    showTab('activity');
   } catch (error) {
     status.textContent = error.status === 499 ? 'stopped' : '';
     if (error.status !== 499) clear($('results')).append(el('div', { class: 'empty' }, el('p', { class: 'lead error', text: `The engine refused: ${error.message}` })));
@@ -233,5 +256,5 @@ function wire() {
 }
 
 wire();
-showTab('results');
+showTab('activity');
 start();

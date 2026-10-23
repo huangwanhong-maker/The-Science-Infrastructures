@@ -234,6 +234,15 @@ def main(argv: list[str]) -> int:
     if not engine.status()["current"]:
         print("The engine is not built from the present sources. Build it from the page, or run:\n"
               "  python data/acquisition/recipe.py applications/spiking-simulator/recipe.json", file=sys.stderr)
+    # WSL stops its machine when none of its programs runs, and the next run would wait for it to
+    # start again: while this server runs, one idle program keeps it up.
+    keeper = None
+    if (engine.read_build() or {}).get("toolchain") == "wsl":
+        try:
+            import subprocess
+            keeper = subprocess.Popen(["wsl", "--exec", "sleep", "infinity"], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except OSError:
+            keeper = None
     server = Server((args.host, args.port), Handler)
     url = f"http://127.0.0.1:{args.port}/"
     where = url if not public else f"{url} and on {args.host}"
@@ -244,6 +253,9 @@ def main(argv: list[str]) -> int:
         server.serve_forever()
     except KeyboardInterrupt:
         pass
+    finally:
+        if keeper:
+            keeper.terminate()
     return 0
 
 

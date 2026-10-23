@@ -56,6 +56,14 @@ export function renderEditor(root, spec, catalogue, { onChange, onStructure, onF
     quantity('resolution', () => spec.resolution, (v) => { spec.resolution = v; }, 's', 'the step h of the grid of time'),
     integer('seed', () => spec.seed, (v) => { spec.seed = v; }, { doc: 'the seed of every random stream' }),
     choice('integrator', INTEGRATORS.map((m) => [m, m === 'default' ? "each model's own" : m]), () => spec.integrator ?? 'default', (v) => { if (v === 'default') delete spec.integrator; else spec.integrator = v; })));
+  const an = spec.analysis ?? {};
+  const setA = (k) => (v) => { spec.analysis ??= {}; if (v === null) delete spec.analysis[k]; else spec.analysis[k] = v; if (!Object.keys(spec.analysis).length) delete spec.analysis; };
+  run.body.append(el('details', { class: 'more' }, el('summary', {}, 'analysis', Object.keys(an).length ? el('span', { class: 'count', text: ` ${Object.keys(an).length} set` }) : null),
+    el('div', { class: 'grid' },
+      quantity('from', () => spec.analysis?.from, setA('from'), 's', 'the statistics leave out what comes before (a transient)', '0 s'),
+      quantity('rate bin', () => spec.analysis?.bin, setA('bin'), 's', 'the population rate and its spectrum', '1 ms'),
+      quantity('count window', () => spec.analysis?.window, setA('window'), 's', 'Fano factors and correlations of counts', '100 ms'),
+      quantity('synchrony bin', () => spec.analysis?.sync_bin, setA('sync_bin'), 's', "Golomb's chi", '5 ms'))));
   root.append(run.node);
 
   // ---- populations ----

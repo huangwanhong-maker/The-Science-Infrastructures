@@ -15,6 +15,8 @@ import { format, parseField, wellFormed, seconds, hint } from '../src/units.js';
 import { empty, addPopulation, renamePopulation, removePopulation, removeProjection, problems, forEngine, setRule, ruleOf, clone, normalise } from '../src/spec.js';
 import { PRESETS } from '../src/presets.js';
 import { POPULATION_COLOURS } from '../src/palette.js';
+import { ticks, decades, scale, extent } from '../src/charts.js';
+import { toSI } from '../src/views.js';
 
 const { assert, skip, done } = suite();
 const APP = resolve(ROOT, 'applications/spiking-simulator');
@@ -33,6 +35,18 @@ const APP = resolve(ROOT, 'applications/spiking-simulator');
     !wellFormed('3', 's') && wellFormed('3', '1') && !wellFormed('fast', 's') && wellFormed('2.5e-3 s', 's') && !wellFormed('{bad', 's'));
   assert('simulator: durations are read in seconds', seconds('500 ms') === 0.5 && seconds('2 s') === 2 && seconds(1.5) === 1.5 && Number.isNaN(seconds('soon')));
   assert('simulator: the engine\'s compound units read as neuroscience writes them', hint('kg^-2 m^-4 s^6 A^3') === 'nS/mV' && hint('1') === 'a number');
+}
+
+// ---- the charts ------------------------------------------------------------------------------------------
+{
+  const same = (a, b) => a.length === b.length && a.every((v, i) => Math.abs(v - b[i]) < 1e-12);
+  assert('simulator: ticks at 1, 2 or 5 times a power of ten', same(ticks(0, 1, 5), [0, 0.2, 0.4, 0.6, 0.8, 1]) && same(ticks(-3, 7, 5), [-2, 0, 2, 4, 6]) && same(ticks(0, 500, 5), [0, 100, 200, 300, 400, 500]), JSON.stringify(ticks(0, 1, 5)));
+  assert('simulator: decades between two positive values', same(decades(1, 1000), [1, 10, 100, 1000]) && same(decades(0.003, 0.2), [0.01, 0.1]));
+  const lin = scale([0, 10], [100, 300]), log = scale([1, 100], [0, 200], true);
+  assert('simulator: scales map and invert, linearly and logarithmically', lin(5) === 200 && Math.abs(lin.invert(250) - 7.5) < 1e-12 && Math.abs(log(10) - 100) < 1e-12 && Math.abs(log.invert(200) - 100) < 1e-9);
+  const e = extent([3, 1, NaN, 2], { zero: true });
+  assert('simulator: an extent covers the finite values, and zero when asked', e[0] === 0 && e[1] > 3 && e[1] < 3.2, JSON.stringify(e));
+  assert('simulator: quantities as specifications write them, in SI units', toSI('40 pA') === 4e-11 && Math.abs(toSI('3 nA') - 3e-9) < 1e-24 && toSI(5) === 5 && toSI('1.5 ms') === 1.5e-3 && Number.isNaN(toSI('fast')));
 }
 
 // ---- the specification ------------------------------------------------------------------------------
@@ -108,6 +122,7 @@ const catalogue = existsSync(catalogueFile) ? new Map(JSON.parse(readFileSync(ca
   else {
     const dir = mkdtempSync(join(tmpdir(), 'spiking-simulator-'));
     try {
+      let described = 0, profiled = 0;
       for (const p of PRESETS) {
         // A short run of each: enough for every population to fire.
         const s = forEngine(p.spec());
@@ -121,7 +136,14 @@ const catalogue = existsSync(catalogueFile) ? new Map(JSON.parse(readFileSync(ca
         assert(`simulator: the example "${p.title}" runs in the engine and its neurons fire`,
           r.status === 0 && res && Math.abs(res.time - 0.3) < 1e-9 && recorded > 0 && res.populations.length === s.populations.length,
           r.status === 0 ? `${recorded} recorded spikes in ${res?.statistics.run_seconds.toFixed(2)} s` : (r.stderr || '').trim().split('\n').pop());
+        if (res) {
+          const prof = res.statistics.profile;
+          if (res.analysis.length === res.spikes.length && res.analysis.every((a) => a.rates.length === a.count && Number.isFinite(a.rate_mean))) described++;
+          if (prof && prof.threads.length === 4 && prof.windows > 0 && prof.update + prof.deliver > 0) profiled++;
+        }
       }
+      assert('simulator: every run describes each spike recorder\'s activity, neuron by neuron', described === PRESETS.length, `${described} of ${PRESETS.length}`);
+      assert('simulator: every run gives the engine\'s profile, thread by thread', profiled === PRESETS.length, `${profiled} of ${PRESETS.length}`);
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }

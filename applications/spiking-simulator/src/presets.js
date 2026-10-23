@@ -9,7 +9,7 @@ const ramp = (n, a, b, unit, digits = 4) => Array.from({ length: n }, (_, i) => 
 // and C_I = C_E / 4 inhibitory inputs of J = 0.1 mV and -g J, after D = 1.5 ms, and external
 // Poisson input at eta nu_thr per synapse, nu_thr = theta / (J C_E tau) the rate that alone
 // would bring the mean potential to threshold. Its four states (Fig. 8) differ in g and eta.
-function brunel({ g, eta, duration = '1 s', scale = 1, bin = '0.5 ms' }) {
+function brunel({ g, eta, duration = '1 s', scale = 1, bin = '0.5 ms', analysis = { from: '100 ms' } }) {
   const NE = Math.round(10000 * scale), NI = Math.round(2500 * scale), CE = Math.round(NE / 10), CI = Math.round(CE / 4);
   const J = 0.1, theta = 20, tau = 20e-3;
   const nuThr = theta / (J * CE * tau);   // Hz
@@ -17,7 +17,7 @@ function brunel({ g, eta, duration = '1 s', scale = 1, bin = '0.5 ms' }) {
   const pop = (name, size) => ({ name, model: 'lif_psc_delta', size, parameters: neuron, initial: { V: { uniform: ['0 mV', '20 mV'] } } });
   const proj = (source, target, C, w) => ({ source, target, receptor: 'delta', rule: { fixed_indegree: C, autapses: false }, weight: `${Number(w.toPrecision(6))} mV`, delay: '1.5 ms' });
   return {
-    duration, resolution: '0.1 ms', seed: 1,
+    duration, resolution: '0.1 ms', seed: 1, analysis,
     populations: [pop('E', NE), pop('I', NI)],
     projections: [proj('E', 'E', CE, J), proj('I', 'E', CI, -g * J), proj('E', 'I', CE, J), proj('I', 'I', CI, -g * J)],
     devices: ['E', 'I'].map((t) => ({ model: 'poisson', target: t, rate: `${Number((eta * nuThr * CE).toPrecision(6))} Hz`, receptor: 'delta', weight: `${J} mV` })),
@@ -62,20 +62,20 @@ export const PRESETS = [
     id: 'brunel-si-fast',
     title: "Brunel's network: fast oscillation",
     about: 'Strong inhibition and strong drive (g = 6, eta = 4): the population oscillates fast, near 180 Hz, while each neuron fires irregularly and seldom, skipping most cycles (Brunel 2000, Fig. 8B).',
-    spec: () => brunel({ g: 6, eta: 4, duration: '500 ms', bin: '0.25 ms' }),
+    spec: () => brunel({ g: 6, eta: 4, duration: '500 ms', bin: '0.25 ms', analysis: { from: '100 ms', bin: '0.25 ms', sync_bin: '1 ms' } }),
   },
   {
     id: 'brunel-si-slow',
     title: "Brunel's network: slow oscillation",
     about: 'Inhibition dominant and weak drive (g = 4.5, eta = 0.9): a slow oscillation of the population, the neurons firing in irregular bursts (Brunel 2000, Fig. 8D).',
-    spec: () => brunel({ g: 4.5, eta: 0.9, duration: '1 s', bin: '1 ms' }),
+    spec: () => brunel({ g: 4.5, eta: 0.9, duration: '2 s', bin: '1 ms', analysis: { from: '200 ms', bin: '2 ms', sync_bin: '5 ms' } }),
   },
   {
     id: 'excitability',
     title: 'Classes of excitability, in one run',
     about: 'Four populations, each neuron given its own constant current, rising along the population: the firing rate against the current is each model\'s f-I curve. Wang and Buzsáki\'s interneuron and Morris and Lecar\'s SNIC set begin to fire at any low rate (class 1); Hodgkin and Huxley\'s axon and Morris and Lecar\'s Hopf set begin at a finite rate (class 2) (Hodgkin 1948; Rinzel and Ermentrout 1998).',
     spec: () => ({
-      duration: '3 s', resolution: '0.05 ms', seed: 1,
+      duration: '3 s', resolution: '0.05 ms', seed: 1, analysis: { from: '500 ms' },
       populations: [
         { name: 'Wang-Buzsáki', model: 'wang_buzsaki', size: 120, bias: ramp(120, 0, 100, 'pA') },
         { name: 'Morris-Lecar SNIC', model: 'morris_lecar', size: 120, parameters: { g_Ca: '400 nS', V_3: '12 mV', V_4: '17.4 mV', phi: '66.6667 Hz' }, bias: ramp(120, 3, 6, 'nA') },
@@ -95,7 +95,7 @@ export const PRESETS = [
     title: 'Quantum emitters',
     about: 'Two-level emitters followed along exact quantum trajectories; each detected photon is a spike. The driven ones, starting together in their ground state, emit with a damped Rabi oscillation that settles to the master equation\'s rate; the undriven ones are excited by a pi pulse every 100 ms and then decay at gamma. No emitter ever gives two photons at once (antibunching).',
     spec: () => ({
-      duration: '600 ms', resolution: '0.1 ms', seed: 1,
+      duration: '600 ms', resolution: '0.1 ms', seed: 1, analysis: { bin: '1 ms', window: '50 ms', sync_bin: '1 ms' },
       populations: [
         { name: 'driven', model: 'quantum_emitter', size: 2000, parameters: { Omega: '400 Hz', gamma: '100 Hz' } },
         { name: 'pulsed', model: 'quantum_emitter', size: 2000, parameters: { Omega: '0 Hz', gamma: '100 Hz' } },
