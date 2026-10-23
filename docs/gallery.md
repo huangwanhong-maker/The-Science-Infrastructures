@@ -310,7 +310,7 @@ The Signals mode carries recordings of the living brain onto the template: EEG t
 
 ## 4. The Spiking Simulator
 
-Networks of spiking neurons composed from the neuroscience domain's twenty-two models, classical and quantum, and run by its C++ engine: exact where the dynamics are linear, the same spikes on any number of threads ([ADR 0038](../development/decisions/0038-the-spiking-simulator.md)). Each picture is one of the simulator's examples, run on 23 October 2026 on the development machine (four cores, WSL) and shown by its visualizer; every number in a caption is the run's own, from the engine's analysis over the window it states.
+Networks of spiking neurons composed from the neuroscience domain's twenty-two models, classical and quantum, and run by its C++ engine: exact where the dynamics are linear, the same spikes on any number of threads ([ADR 0038](../development/decisions/0038-the-spiking-simulator.md)). Each picture is one of the simulator's examples, run on 23 October 2026 on the development machine (four cores, WSL) and shown by its visualizer; every number in a caption is the run's own, from the engine's analysis over the window it states. The simulator is not online; to run these examples yourself, see [the Spiking Simulator on your computer](../README.md#the-spiking-simulator-on-your-computer) in the README's Quick Start.
 
 <table>
 <tr>

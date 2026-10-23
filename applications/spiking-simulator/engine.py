@@ -151,10 +151,15 @@ def build(force: bool = False, log=print) -> bool:
     flags = ["-std=c++20", "-O3", "-march=native", "-pthread", "-DNDEBUG", *[f"-I{path_for(kind, d)}" for d in include_dirs()]]
     try:
         files = dependencies(kind, flags)
-    except RuntimeError as error:
-        log(str(error))
-        log("The engine's sources do not compile.")
-        return False
+    except RuntimeError:
+        # A compiler that does not know -march=native (Clang on some processors) builds without it.
+        flags.remove("-march=native")
+        try:
+            files = dependencies(kind, flags)
+        except RuntimeError as error:
+            log(str(error))
+            log("The engine's sources do not compile.")
+            return False
     sources = digest(files)
     if not files or sources is None:
         log("The compiler listed no sources of the engine inside the repository.")

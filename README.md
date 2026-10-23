@@ -35,11 +35,12 @@ An integrative infrastructure for learning, using and researching all domains of
 
 ## Quick Start
 
-**Online, with nothing to install.** The three applications run on the project's server:
+**Online, with nothing to install.** The three atlases run on the project's server; the fourth application does not:
 
 - **Earth Atlas:** http://173.212.213.207:9201/ — the atmosphere, the ocean, the land, the people and the solid Earth on one globe.
 - **Brain Atlas:** http://173.212.213.207:9202/ — the human brain in the round, every part with its anatomy; sections, atlases, data, the head and its electrodes, the mouse brain, and EEG, MEG and fMRI mapped onto the brain.
 - **Celestial Atlas:** http://173.212.213.207:9200/ — the Sun, the Moon, the planets, the stars and the galaxies, at any instant from 1849 to 2150.
+- **Spiking Simulator:** not run on the server, whose resources are too limited for it — networks of spiking neurons, classical and quantum, composed in the page and run by the neuroscience domain's C++ engine. Each run is a simulation that takes seconds on every core of the machine serving it, so it runs on your own computer: see [the Spiking Simulator on your computer](#the-spiking-simulator-on-your-computer), four lines.
 
 The Earth and Celestial Atlases link to each other: a place on the Earth leads to its sky, and a sky to its weather.
 
@@ -78,11 +79,29 @@ python applications/brain-atlas/serve.py --open
 
 It opens at http://127.0.0.1:8810/.
 
+<a id="the-spiking-simulator-on-your-computer"></a>**The Spiking Simulator on your computer.** It needs [Git](https://git-scm.com/), [Python 3.12 or later](https://www.python.org/downloads/) and a C++ compiler, `g++` (GCC 11 or later); no data and no Python packages. First the compiler, once:
+
+- **Linux:** `sudo apt install g++` (or your distribution's GCC).
+- **Windows:** WSL with g++ in it. In PowerShell as administrator, `wsl --install`, restart, open the *Ubuntu* app and run `sudo apt install g++`. The simulator finds it there by itself.
+- **macOS:** untried; the `g++` of Apple's command-line tools (`xcode-select --install`) may serve.
+
+Then, in a terminal (on macOS and Linux, write `python3`; skip the first two lines if you have the repository already):
+
+```
+git clone --recurse-submodules https://github.com/huangwanhong-maker/The-Science-Infrastructures.git
+cd The-Science-Infrastructures
+python data/acquisition/recipe.py applications/spiking-simulator/recipe.json
+python applications/spiking-simulator/serve.py --open
+```
+
+The third line builds the engine (a minute or two, once; the page offers to do it too), and the fourth opens the simulator at http://127.0.0.1:8830/. Choose one of the eight examples (Brunel's balanced network, the classes of excitability, quantum emitters, STDP and more) and press **Run**; its activity, statistics and the engine's profile follow in the tabs. Its [README](applications/spiking-simulator/README.md) tells the rest.
+
 *If something goes wrong.*
 
 - **A data step failed** (a data server was down, or a network blocked it). Everything else still works: open the page, click **Data** at the top right, and fetch the missing steps there with one click, now or later. Running the recipe again does the same; it skips what is already there, and `--status` lists the steps.
 - **`python` is not found,** or Windows opens the Store: install Python from python.org with *Add python.exe to PATH*, open a new terminal, and start again at the third line.
 - **`foundations/` is empty:** the clone was made without submodules. Run `git submodule update --init`.
+- **The Spiking Simulator says there is no engine:** it found no g++. Install one as above (on Windows, in WSL), then build again, from the page or with the recipe.
 - **The port is taken:** add `--port 8791` (or any free port) to the last line.
 - **Serving other computers:** add `--host 0.0.0.0`, and `--sibling URL` with the other atlas's address so that the links between them work. Each atlas's README has the details.
 
@@ -384,12 +403,7 @@ height 0   metrology · neuroscience · linguistics¹ · genomics¹ · molecular
 
 - The [Brain Atlas](applications/brain-atlas/README.md) shows the human brain in the round, its cortex by gyrus and its deep nuclei, ventricles and fibre bundles drawn as surfaces, every part clickable for its anatomy: where it lies, what it does, what it connects, what supplies it and what follows when it fails. It cuts the brain and shows it in sections, colours the cortex by Julich-Brain's areas or Schaefer's networks, maps data by structure and by coordinate, places the electrodes of the 10–20 system on the scalp and carries their values onto the cortex, scales the brain to a subject's head, and shows the mouse brain in the Allen framework.
 
-- The [Spiking Simulator](applications/spiking-simulator/README.md) composes networks of spiking neurons from twenty-two models, classical and quantum, and runs them in the neuroscience domain's C++ engine, exactly where the dynamics are linear and with the same spikes on any number of threads. Its examples include Brunel's balanced network in its four states, the classes of excitability, quantum emitters and STDP. It builds its engine with g++ (in WSL on Windows) and opens at http://127.0.0.1:8830/:
-
-  ```
-  python data/acquisition/recipe.py applications/spiking-simulator/recipe.json
-  python applications/spiking-simulator/serve.py --open
-  ```
+- The [Spiking Simulator](applications/spiking-simulator/README.md) composes networks of spiking neurons from twenty-two models, classical and quantum, and runs them in the neuroscience domain's C++ engine, exactly where the dynamics are linear and with the same spikes on any number of threads. Its examples include Brunel's balanced network in its four states, the classes of excitability, quantum emitters and STDP. It is not online, the server's resources being too limited for it; it runs on your own computer, with g++ (in WSL on Windows), as [the Spiking Simulator on your computer](#the-spiking-simulator-on-your-computer) shows in four lines.
 
 The three atlases run online on the project's server, the [Celestial Atlas](http://173.212.213.207:9200/), the [Earth Atlas](http://173.212.213.207:9201/) and the [Brain Atlas](http://173.212.213.207:9202/), and on your own computer in a few lines (Quick Start, above). The [index of applications](applications/README.md) lists those planned.
 
