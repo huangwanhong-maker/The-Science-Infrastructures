@@ -79,7 +79,7 @@ This slice touches every tier at small scale. It reaches astronomy, geodesy, oce
 ## Phase 4. The Next Domains
 
 - **After the foundations,** morphe and physis (README §4.6), which the user set first. Then **in the order the user set**, each reusing what the one before made, chosen where their structures meet those already here (see [the idea on shared structures](ideas/2026-10-22-shared-structures-across-the-sciences.md)). Neuroscience came first (ADR 0028, ADR 0032).
-  1. **Spiking neural networks,** a module of neuroscience: leaky integrate-and-fire neurons, synapses, network simulation, spike-timing-dependent plasticity, shown in the Brain Atlas.
+  1. **Spiking neural networks,** a module of neuroscience in C++ on the foundations (`snn`, ADR 0036): *begun 2026-10-23* with fourteen neuron models, plasticity, a parallel engine and its mean-field checks. Next, from the [survey](https://github.com/huangwanhong-maker/neuroscience/blob/main/development/ideas/2026-10-23-a-survey-of-spiking-models.md): recent neuron models, online learning rules (e-prop, three-factor), quantum neurons (open-system qubits, open quantum Hopfield networks), Python bindings, and an application of their own, apart from the Brain Atlas.
   2. **Computational linguistics:** automata, context-free grammars, parsing, grammar inference, on morphe's formal structures.
   3. **Genomics:** sequence alignment, k-mers, assembly, variant analysis, reusing the sequence, grammar, graph and inference algorithms.
   4. **Molecular science:** molecular graphs, conformers, reaction networks, on physis's chemistry and thermodynamics.

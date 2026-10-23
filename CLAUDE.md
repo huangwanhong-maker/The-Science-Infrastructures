@@ -13,7 +13,7 @@ This file can be revised: when a decision recorded here changes, update this fil
 This is an integrative programme to learn, use and research all domains of science, in theory and in practice, as one connected body of knowledge.
 
 - **Three tiers** ([ADR 0026](development/decisions/0026-domains-as-libraries.md)):
-  - **Foundations:** calx (computation and numerical methods), morphe (mathematical structures and their equivalences), physis (geometry and theoretical physics), and two planned libraries: one for inference, one for the methods of the quantitative social sciences (measurement, surveys, causal inference, networks, games and social choice, agent-based models). They hold laws and methods that name no object in nature.
+  - **Foundations:** calx (computation and numerical methods), morphe (mathematical structures and their equivalences), physis (units, geometry, analysis, dynamics and theoretical physics), and two planned libraries: one for inference, one for the methods of the quantitative social sciences (measurement, surveys, causal inference, networks, games and social choice, agent-based models). They hold laws and methods that name no object in nature. Their mathematics is mapped, area by area against the whole Mathematics Subject Classification, in [docs/mathematics.md](docs/mathematics.md) ([ADR 0035](development/decisions/0035-the-mathematical-foundations.md)); a module is written when a domain needs it.
   - **Domains:** one library per science, holding its objects and their models. A domain is a field or a bridge between fields.
   - **Works:** applications, research and notebooks, organised by purpose, each composing the domains it needs.
 - **Shared edges** touch the world for every work: data, visualization, observation, and the API through which other programs reach the infrastructure (ADR 0030).
@@ -89,10 +89,10 @@ This section summarises [docs/architecture.md](docs/architecture.md). Read that 
 | Repository | Path | Scope | Depends on |
 |---|---|---|---|
 | The Science Infrastructures | `.` | Domains, shared edges, works, documents, process | the foundations |
-| calx | `foundations/calx` | Retargetable computation stack; numerical methods on floating-point numbers and arrays | — |
-| morphe | `foundations/morphe` | Mathematical structures and their equivalences: arithmetic, algebra, categories, topology, algebraic geometry, formal structures | — |
-| physis | `foundations/physis` | Geometry and theoretical physics: units, geometry, discretisation, mechanics, gravitation, thermodynamics, continuum, chemistry, radiation; a provisional JavaScript stand-in for discretisation | calx, morphe |
-| neuroscience | `domains/neuroscience` | A domain in its own repository (ADR 0028): the brain's reference spaces, parcellations, maps and the head | calx, physis (declared; no domain) |
+| calx | `foundations/calx` | Retargetable computation stack; numerical methods on floating-point numbers and arrays. C++ written: random, linalg, integrators, special functions, quadrature, solvers, verification, the scheduler's thread pool | — |
+| morphe | `foundations/morphe` | Mathematical structures and their equivalences: logic, arithmetic, algebra, combinatorics, categories, topology, algebraic geometry, formal structures (planned) | — |
+| physis | `foundations/physis` | Units, geometry, analysis, dynamics, control, discretisation, and physical law: mechanics, gravitation, thermodynamics, continuum, chemistry, radiation. C++ written: units, dynamics; a provisional JavaScript stand-in for discretisation | calx, morphe |
+| neuroscience | `domains/neuroscience` | A domain in its own repository (ADR 0028): the brain's reference spaces, parcellations, maps and the head, its signals, and networks of spiking neurons in C++ (`snn/`) | calx, physis (declared; no domain) |
 
 The foundations and the neuroscience domain are git submodules. A domain or application that grows large, or gains collaborators of its own, may be extracted with its history into its own repository (ADR 0026, the graduation rule); neuroscience was created so at the user's request.
 
@@ -229,9 +229,10 @@ These conventions are shared with the foundation libraries.
 ├── applications/      one folder per application: celestial-atlas · earth-atlas · brain-atlas
 ├── research/          questions · experiments · papers
 ├── notebooks/         exploration and teaching
-├── docs/              architecture · gallery (later: glossary · references)
-├── development/       decisions · ideas · roadmap (ADR 0009) · tools
-└── assets/            images · fonts · style tokens
+├── docs/              architecture · mathematics · gallery (later: glossary · references)
+├── development/       decisions · ideas · release-notes · roadmap (ADR 0009) · tools
+├── assets/            images · fonts · style tokens
+└── CMakeLists.txt     the C++ of the foundations and the domains, in their order (ADR 0035)
 ```
 
 - Every directory has a README giving its purpose, its planned modules with their status, and its dependencies.
@@ -266,9 +267,15 @@ A domain directory contains:
 
 - Record decisions that shape structure, conventions or tooling in `development/decisions/NNNN-slug.md`, using the template in the index.
 - Never rewrite a record. A new record supersedes or amends it, and the old record's status is updated to point to the new one. Paths in old records are as they were written; ADR 0026 maps them to the present.
-- Records accepted so far: 0001–0034. Records 0001–0024 were written in the first laboratory, which the infrastructure absorbed; 0025 founded this repository.
+- Records accepted so far: 0001–0037. Records 0001–0024 were written in the first laboratory, which the infrastructure absorbed; 0025 founded this repository.
 
-### 6.4 Change Discipline
+### 6.4 Release Notes
+
+- At each commit, add to `development/release-notes/YYYY-MM-DD.md` of each repository committed (one file per day, one short section per commit, newest first) a clear, concise summary in plain prose of what is new, what one can now do and what works better, and index the day in that folder's README ([ADR 0037](development/decisions/0037-release-notes.md)).
+- Not a list of changed files or functions: the git log keeps those.
+- Not between commits.
+
+### 6.5 Change Discipline
 
 - Before restructuring directories, adding or renaming a domain, moving a foundation, or changing a convention in this file, propose the change and wait for the user's agreement.
 - Keep each change to one concept.
@@ -279,22 +286,23 @@ A domain directory contains:
   - the glossary, if it introduces notation.
 - If this file no longer matches the repository, say so and propose a fix.
 
-### 6.5 Checks
+### 6.6 Checks
 
-- `node development/tools/run-tests.mjs` checks the dependency rules, runs every suite (foundations, domains in their order, visualization, the data library's Python checks in `data/tests/`, the API, applications), then runs each domain alone with its down-set. Run it before every commit that touches code.
+- `node development/tools/run-tests.mjs` checks the dependency rules, runs every suite (the foundations' C++, built with CMake here or in WSL; the foundations' JavaScript; the domains in their order, each with its C++; visualization, the data library's Python checks in `data/tests/`, the API, applications), then runs each domain alone with its down-set. Run it before every commit that touches code.
+- C++ checks are programs on calx's `verification`, registered with CTest; `development/tools/checks.mjs` builds a CMake project and counts them (`cppChecks`), keeping its builds in `~/.cache/science-build/`. One library's C++ alone: `node development/tools/run-cpp.mjs foundations/calx foundations/calx`.
 - A domain's own suite: `node domains/<name>/tests/run-tests.mjs`.
 - Check the applications visually by driving headless Chrome over the DevTools protocol, with an absolute `--user-data-dir`.
 
-### 6.6 Working with the Foundations
+### 6.7 Working with the Foundations
 
 - **Submodule commits.** Edit a foundation in place under `foundations/<name>` and commit there first. Then commit the updated submodule pointer here. Commit only the pointer, by path, when other changes are staged. The same holds for the neuroscience domain under `domains/neuroscience`.
 - **Commit order.** calx and morphe first, then physis, then neuroscience, then this repository.
 - **Each foundation's own CLAUDE.md** governs work inside it.
 - **Links between repositories.** Use absolute GitHub URLs.
-- **Shared conventions.** The writing style, status vocabulary, and decision and idea conventions are shared by every repository. Change them in all of them together.
+- **Shared conventions.** The writing style, status vocabulary, and decision, idea and release-note conventions are shared by every repository. Change them in all of them together.
 - **Pushing.** Push only with the user's agreement.
 
-### 6.7 Collaboration Style
+### 6.8 Collaboration Style
 
 - The principal investigator is fluent in abstract algebra and formal language theory. Prefer precise mathematical formulations.
 - This is also a learning project. When introducing physics or conventions specific to a domain, give the reasoning behind them and cite their source.
@@ -303,7 +311,8 @@ A domain directory contains:
 ## 7. Technology
 
 - **Decided** ([ADR 0003](development/decisions/0003-cpp-computational-core.md)): C++ for computational code, in the foundations and the domains, wherever possible. Python or another suitable language for data acquisition, orchestration, notebooks, machine learning and visualization.
-- **Provisional** (to be confirmed in roadmap Phase 0): C++20, CMake, nanobind for Python bindings, a C++ test framework, pytest, and Python 3.12 or later.
+- **Provisional** (in use since [ADR 0035](development/decisions/0035-the-mathematical-foundations.md), to be confirmed in roadmap Phase 0): C++20 without extensions; CMake 3.20 or later, each library a project and each module a target `<library>::<module>`, composed by the root `CMakeLists.txt`; GCC 11 or later (in WSL on the development machine, GCC 13 on the server); checks on calx's `verification` rather than a borrowed test framework; nanobind for Python bindings (not yet); pytest; Python 3.12 or later.
+- **Own and borrowed implementations** ([docs/mathematics.md §10.3](docs/mathematics.md)): the libraries own their interfaces; mature, licence-compatible libraries may sit behind them (Eigen, OpenBLAS, pocketfft, SUNDIALS), and Python work uses NumPy and SciPy directly; our own C++ is written where it serves several devices, exploits structure, gives control (reproducible streams, declared precision) or is how a method is learnt.
 - **Provisional JavaScript.** Until the C++ exists, the domains' code is ES modules in their `js/`, as is physis's stand-in for discretisation (physis ADR 0003); the C++ must pass the same checks.
 - **Web applications:**
   - Use ES modules without a build step.
@@ -336,8 +345,8 @@ A domain directory contains:
 
 ## 8. Open Decisions
 
-1. **The C++ namespaces of the domains**, and of the infrastructure as a whole.
-2. **C++ toolchain** on Windows (MSVC, clang/LLVM or WSL), together with the build and packaging tools.
+1. **The C++ namespaces of the domains**, and of the infrastructure as a whole. *Provisionally* `<library>::<module>` and `<domain>::<module>` (ADR 0035).
+2. **C++ toolchain** on Windows (MSVC, clang/LLVM or WSL), together with the build and packaging tools. *Provisionally* GCC in WSL with CMake (ADR 0035).
 3. **The inference foundation:** its name and its first module; and the foundation for the quantitative social sciences: its name, and its boundary with the inference foundation.
 4. **Automatic differentiation** in calx, which would be built as an IR transformation.
 5. **Precision policy details** (calx).
@@ -377,4 +386,4 @@ As of 2026-10-23:
   - **Products** are of fourteen kinds, listed in an index that applications read.
   - **Data requested on demand** go through each application's server.
 - **The Earth Atlas as a forecasting system** ([ADR 0031](development/decisions/0031-observations-scores-and-hazards.md)): observations (METAR, NDBC buoys, the user's sensors through `observation/sensors`), forecasts kept and scored on a schedule (`data/acquisition/schedule.py`, `applications/earth-atlas/schedule.json`), ECMWF's open forecasts (IFS, AIFS, ENS probabilities), hazard plug-ins (fire weather, heat, heavy rain, tsunami travel times, aftershocks, volcanic ash), people and regions with exposure, drainage, Sentinel-2 NDVI, and assimilation of real observations. The research arc (inference foundation, C++ toolchain, a primitive-equation model with a real assimilation cycle) is planned in `development/ideas/2026-10-23-the-research-arc.md` and deferred.
-- **There is no C++ code yet.** The next step is roadmap Phase 0.
+- **The first C++** ([ADR 0035](development/decisions/0035-the-mathematical-foundations.md), [ADR 0036](development/decisions/0036-spiking-networks.md)): calx's first numerical modules (61 checks), physis's units and dynamics (14), and the neuroscience domain's networks of spiking neurons, `snn` (59): fourteen neuron models as hybrid systems, plasticity, a parallel engine giving the same spikes on any number of threads, JSON specifications and a command-line simulator, checked against closed forms, firing patterns and mean-field theory; Brunel's network of 12,500 neurons runs a second in 2.6 s on eight threads. The mathematics of the foundations is mapped in [docs/mathematics.md](docs/mathematics.md); the next spiking models, quantum ones among them, are planned from a verified survey.

@@ -180,12 +180,17 @@ A C++ module, in a foundation or a domain, has this layout:
 ```
 <module>/
 ├── README.md                     purpose, status, dependencies, references, open questions
-├── include/<namespace>/<module>/ public headers (calx, morphe, physis; the domains' namespace is not yet named)
-├── src/                          implementation
-├── tests/                        unit tests
+├── CMakeLists.txt                the target <library>::<module>, and its checks
+├── include/<library>/<module>/   public headers: #include <calx/random/stream.hpp>, <neuroscience/snn/snn.hpp>
+├── src/                          implementation, when the module is compiled
+├── tests/                        checks: programs on calx's verification, registered with CTest
 ├── bindings/python/              Python bindings (optional)
 └── benchmarks/                   performance measurements (optional)
 ```
+
+- **Names** (provisional, ADR 0035): the namespace follows the headers, `calx::random`, `physis::dynamics`, and a domain's C++ is `<domain>::<module>` (`neuroscience::snn`).
+- **Build:** CMake 3.20 or later and C++20; every library is a project, and the root `CMakeLists.txt` composes them in their order. A domain's `CMakeLists.txt` adds the foundations beneath it from `../../foundations` when no larger project has.
+- **Where each area of mathematics goes,** and when to borrow a library rather than write one, is [docs/mathematics.md](mathematics.md).
 
 Until a module has content, it exists only as a `planned` row in its parent README.
 

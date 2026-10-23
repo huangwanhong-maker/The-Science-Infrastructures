@@ -36,19 +36,15 @@ for (const d of asked) {
   below.forEach((e) => (module(e).foundations || []).forEach(addFoundation));
   const dir = mkdtempSync(join(tmpdir(), `alone-${d}-`));
   try {
-    for (const e of below) {
-      for (const part of ['js', 'tests', 'theory', 'module.json']) {
-        const from = join(ROOT, 'domains', e, part);
-        if (existsSync(from)) cpSync(from, join(dir, 'domains', e, part), { recursive: true });
-      }
-    }
-    for (const f of foundations) {
-      const from = join(ROOT, 'foundations', f, 'js');
-      if (existsSync(from)) cpSync(from, join(dir, 'foundations', f, 'js'), { recursive: true });
-    }
+    // Each domain and foundation whole, its C++ with it, but not its history.
+    const whole = (from, to) => cpSync(from, to, { recursive: true, filter: (src) => !/[\\/]\.git([\\/]|$)/.test(src) });
+    for (const e of below) whole(join(ROOT, 'domains', e), join(dir, 'domains', e));
+    for (const f of foundations) whole(join(ROOT, 'foundations', f), join(dir, 'foundations', f));
     cpSync(join(ROOT, 'development', 'tools', 'checks.mjs'), join(dir, 'development', 'tools', 'checks.mjs'));
     const r = spawnSync(process.execPath, [join(dir, 'domains', d, 'tests', 'run-tests.mjs')], {
-      cwd: dir, encoding: 'utf8', env: { ...process.env, SCIENCE_CACHE: join(ROOT, 'data', 'cache') },
+      cwd: dir, encoding: 'utf8', maxBuffer: 1 << 26,
+      // The copy's C++ is built in a directory removed afterwards (checks.mjs, cppChecks).
+      env: { ...process.env, SCIENCE_CACHE: join(ROOT, 'data', 'cache'), SCIENCE_BUILD_EPHEMERAL: '1' },
     });
     const m = (r.stdout + r.stderr).match(/(\d+) of (\d+) checks passed\./);
     const ok = r.status === 0 && m && m[1] === m[2];
