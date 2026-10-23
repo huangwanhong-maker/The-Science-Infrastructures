@@ -55,7 +55,7 @@ The examples:
 
 ## 5. Limits
 
-The simulator is not run on our online server: a run is a simulation computed by the machine that serves it, and that server's resources are too limited for public use. It runs on one's own computer (the infrastructure's README, Quick Start). Should it be served to others, these are the limits that apply.
+The simulator is not run on our online server: a run is a simulation computed by the machine that serves it, on every core, and the other applications already take much of that server's resources. It runs on one's own computer (the infrastructure's README, Quick Start). Should it be served to others, these are the limits that apply.
 
 On this computer a run may have 250,000 neurons, 60 s of simulated time and 15 minutes of computing, on every core. On a public address the server allows 50,000 neurons, 10 s and one minute, on at most four threads, and builds the engine only for the holder of its token (`--token`); each limit can be set (`--max-neurons`, `--max-duration`, `--max-seconds`). One run at a time; Stop ends it.
 
