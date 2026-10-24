@@ -1,0 +1,50 @@
+{
+  "id": "oecd-bimts",
+  "kind": "http",
+  "domain": "economics",
+  "title": "Balanced International Merchandise Trade Statistics: the goods each economy exports to each other, by year",
+  "provider": "OECD, Statistics and Data Directorate: BIMTS, the HS2017 2-digit dataflow, total of all goods, through the OECD's SDMX API",
+  "credit": "OECD BIMTS, CC BY 4.0",
+  "licence": "CC BY 4.0 (the OECD's terms and conditions for its data)",
+  "citation": "OECD, Balanced International Merchandise Trade Statistics (BIMTS), dataflow OECD.SDD.TPS:DSD_BIMTS@DF_BIMTS_HS2017_2D version 1.1, https://data-explorer.oecd.org",
+  "format": "CSV (SDMX csvfile): REF_AREA the exporter, COUNTERPART_AREA the importer (ISO 3166-1 alpha-3, with OECD aggregates), TIME_PERIOD the year, OBS_VALUE in millions of US dollars at market exchange rates (UNIT_MULT 6). Balanced values reconcile each pair's exporter and importer reports; B_ADJ_RX also adjusts for re-exports, attributing goods passed through a hub to their origin.",
+  "coverage": "about 200 economies as reporters and partners, 2010 to 2024 (one request of about 50 MB for all years)",
+  "used_by": [
+    "applications/economy-atlas"
+  ],
+  "requests": [
+    {
+      "url": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.TPS,DSD_BIMTS@DF_BIMTS_HS2017_2D,1.1/..X.C._Z._T.A.USD_EXC.{adjustment}?startPeriod={first_year}&endPeriod={last_year}&format=csvfile",
+      "file": "bimts.csv"
+    }
+  ],
+  "parameters": {
+    "first_year": {
+      "type": "int",
+      "default": 2010,
+      "min": 2010,
+      "max": 2100,
+      "description": "First year"
+    },
+    "last_year": {
+      "type": "int",
+      "default": 2024,
+      "min": 2010,
+      "max": 2100,
+      "description": "Last year"
+    },
+    "adjustment": {
+      "type": "str",
+      "default": "B_ADJ_RX",
+      "pattern": "B|B_ADJ_RX",
+      "description": "B, balanced values; B_ADJ_RX, balanced values adjusted for re-exports"
+    }
+  },
+  "profiles": {
+    "total-goods": {
+      "description": "All goods, balanced and adjusted for re-exports, 2010-2024",
+      "parameters": {}
+    }
+  },
+  "default_profile": "total-goods"
+}

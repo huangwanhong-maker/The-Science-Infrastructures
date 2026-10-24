@@ -18,7 +18,7 @@ Let D be the set of domains, and let d → e mean that domain d may depend on do
 - **Works compose domains.** An application or a study uses a set S of domains, and so needs the order ideal ↓S = ⋃_{d∈S} ↓d. Two works may share domains freely: the domains are covered by the works, not partitioned among them.
 
 ```
-height 0   metrology · neuroscience · history · genomics
+height 0   metrology · neuroscience · history · genomics · economics
 height 1   geodesy · evolution
 height 2   astronomy · geophysics · geography · oceanography · meteorology
 height 3   tides · navigation · air-sea                                  (bridges)
@@ -35,6 +35,7 @@ height 4   climate                                                       (bridge
 | [neuroscience](neuroscience/) | field | The brain: reference spaces, parcellations and maps, the head and its electrodes; later surfaces, connectivity, neurons, signals (a submodule) | — | draft |
 | [history](history/) | field | Records of histories by a codebook; chronology and calendars; the history complex, its topology and its signed ties as a ℤ₂ field, their spin foam computed exactly on physis; the history as a field theory (ADR 0041, 0042) | — | draft |
 | [genomics](genomics/) | field | Genomes and their sequences: alphabets, formats and genetic codes; alignment as a semiring sum and its fast schedules; indexes and sketches; k-mers and assembly; mapping and variants; HMMs and annotation; multiple alignment; expression; simulation with its truth (ADR 0043) | — | draft |
+| [economics](economics/) | field | Value carried between positions and through time: transfer networks, their loop deficits and prices; the circulation of flows on a network with faces; production as a circular flow; the spacetime complex of a record of transactions; places and the faces of a map (ADR 0044) | — | draft |
 | [geodesy](geodesy/) | field | The figure of the Earth, its gravity field and rotation, reference systems; places, distances, directions | metrology | draft |
 | [evolution](evolution/) | field | Phylogeny (distances, trees, likelihood, parsimony, the bootstrap, dating), population genetics (the coalescent, Wright–Fisher, diversity, linkage, structure), selection (dN/dS, McDonald–Kreitman) (ADR 0043) | genomics | draft |
 | [astronomy](astronomy/) | field | Positional astronomy, ephemerides, the rotation of the bodies, galaxies; later astrophysics and cosmology | metrology, geodesy | draft |

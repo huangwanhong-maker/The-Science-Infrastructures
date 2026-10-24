@@ -1,0 +1,11 @@
+{
+  "name": "economics",
+  "kind": "field",
+  "status": "draft",
+  "depends": [],
+  "foundations": [
+    "calx",
+    "morphe",
+    "physis"
+  ]
+}

@@ -11,11 +11,16 @@
 // meeting of its beings within its life it has a rung: its sign there, attested, or carried
 // from its last attestation (the latent value of the theory note §3, which the readings weigh
 // by the persistence of the tie's colour).
+//
+// The complex itself is morphe's worldline complex of the record's encounters (the occasions in
+// time, those present at each, and each tie's meetings within its life): the construction names
+// no object of history, so it is written there, and the domain supplies what is the record's.
 
 #pragma once
 
 #include <history/record/record.hpp>
 #include <morphe/topology/cw_complex.hpp>
+#include <morphe/topology/worldlines.hpp>
 
 #include <array>
 #include <cstddef>
@@ -56,6 +61,8 @@ struct HistoryComplex {
   std::vector<Lens> lenses;                        // face f
   std::vector<std::vector<std::size_t>> lenses_of; // each tie's faces in time
   morphe::topology::CWComplex cw;
+  morphe::topology::Encounters encounters;       // the record as morphe reads it: vertices, presences, meetings
+  morphe::topology::WorldlineComplex worldlines;  // morphe's construction, of which cw is the complex
   std::vector<Problem> problems;                   // the construction's own warnings
 
   bool flip(std::size_t f) const {
@@ -68,13 +75,7 @@ namespace detail {
 
 // The edges of a being's worldline from occasion p to occasion q (p before q).
 inline std::vector<std::size_t> path(const HistoryComplex& K, std::size_t being, std::size_t p, std::size_t q) {
-  const auto& w = K.worldline[being];
-  std::size_t i = 0, j = 0;
-  for (std::size_t k = 0; k < w.size(); k++) {
-    if (w[k] == p) i = k;
-    if (w[k] == q) j = k;
-  }
-  return {K.segments_of[being].begin() + static_cast<std::ptrdiff_t>(i), K.segments_of[being].begin() + static_cast<std::ptrdiff_t>(j)};
+  return K.worldlines.path(being, K.vertex[p], K.vertex[q]);
 }
 
 }  // namespace detail
@@ -93,27 +94,31 @@ inline HistoryComplex construct(const Record& record) {
   K.vertex.assign(r.occasions.size(), 0);
   for (std::size_t v = 0; v < K.order.size(); v++) K.vertex[K.order[v]] = v;
 
-  // Edges: each being's consecutive occasions.
+  // The encounters: the occasions in time and those present at each. morphe's worldline
+  // complex gives each being's worldline and its segments.
+  K.encounters.participants = r.beings.size();
+  for (std::size_t o : K.order) {
+    std::vector<std::size_t> here;
+    for (const auto& p : r.occasions[o].present) here.push_back(p.being);
+    K.encounters.present.push_back(std::move(here));
+  }
+  K.worldlines = morphe::topology::worldline_complex(K.encounters);
   K.worldline.assign(r.beings.size(), {});
-  for (std::size_t o : K.order)
-    for (const auto& p : r.occasions[o].present) K.worldline[p.being].push_back(o);
-  K.segments_of.assign(r.beings.size(), {});
-  for (std::size_t b = 0; b < r.beings.size(); b++) {
-    const auto& w = K.worldline[b];
-    for (std::size_t k = 0; k + 1 < w.size(); k++) {
-      K.segments_of[b].push_back(K.segments.size());
-      K.segments.push_back({b, w[k], w[k + 1]});
-      // Two occasions of one being that overlap in time are ordered by the file (codebook §4).
-      if (r.occasions[w[k + 1]].date.first <= r.occasions[w[k]].date.last)
-        K.problems.push_back({false, r.beings[b].id,
-                              "the order of \"" + r.occasions[w[k]].id + "\" and \"" + r.occasions[w[k + 1]].id + "\" rests on the file: their dates overlap"});
-    }
+  for (std::size_t b = 0; b < r.beings.size(); b++)
+    for (std::size_t v : K.worldlines.worldline[b]) K.worldline[b].push_back(K.order[v]);
+  K.segments_of = K.worldlines.segments_of;
+  for (const auto& s : K.worldlines.segments) {
+    K.segments.push_back({s.participant, K.order[s.from], K.order[s.to]});
+    // Two occasions of one being that overlap in time are ordered by the file (codebook §4).
+    const auto& from = r.occasions[K.order[s.from]];
+    const auto& to = r.occasions[K.order[s.to]];
+    if (to.date.first <= from.date.last)
+      K.problems.push_back({false, r.beings[s.participant].id, "the order of \"" + from.id + "\" and \"" + to.id + "\" rests on the file: their dates overlap"});
   }
 
-  // Each tie's life, its rungs at the meetings within it, and its lenses.
+  // Each tie's life, and its rungs at the meetings within it.
   K.life.assign(r.ties.size(), {0, 0});
   K.rungs.assign(r.ties.size(), {});
-  K.lenses_of.assign(r.ties.size(), {});
   for (std::size_t t = 0; t < r.ties.size(); t++) {
     const Tie& tie = r.ties[t];
     if (tie.attested.empty()) continue;
@@ -141,29 +146,22 @@ inline HistoryComplex construct(const Record& record) {
       carried = g;
       K.rungs[t].push_back(g);
     }
-    for (std::size_t k = 0; k + 1 < K.rungs[t].size(); k++) {
-      K.lenses_of[t].push_back(K.lenses.size());
-      K.lenses.push_back({t, K.rungs[t][k].occasion, K.rungs[t][k + 1].occasion, k, k + 1});
-    }
   }
 
-  // The CW complex.
-  auto& X = K.cw;
-  X.name = r.canon.id.empty() ? "history" : r.canon.id;
-  X.vertices = K.order.size();
-  for (const auto& s : K.segments) {
-    X.edges.push_back({K.vertex[s.from], K.vertex[s.to]});
-    X.edge_names.push_back(r.beings[s.being].id);
+  // The lenses and the CW complex: morphe's worldline complex with the ties' meetings.
+  for (std::size_t t = 0; t < r.ties.size(); t++) {
+    morphe::topology::Encounters::Pair pair;
+    pair.a = r.ties[t].a;
+    pair.b = r.ties[t].b;
+    for (const auto& g : K.rungs[t]) pair.meetings.push_back(K.vertex[g.occasion]);
+    K.encounters.pairs.push_back(std::move(pair));
   }
-  for (const auto& L : K.lenses) {
-    const Tie& tie = r.ties[L.tie];
-    morphe::topology::Face f;
-    f.base = K.vertex[L.from];
-    for (std::size_t e : detail::path(K, tie.a, L.from, L.to)) f.boundary.push_back({e, 1});
-    const auto back = detail::path(K, tie.b, L.from, L.to);
-    for (auto it = back.rbegin(); it != back.rend(); ++it) f.boundary.push_back({*it, -1});
-    X.faces.push_back(std::move(f));
-  }
+  K.worldlines = morphe::topology::worldline_complex(K.encounters);
+  K.lenses_of = K.worldlines.lenses_of;
+  for (const auto& L : K.worldlines.lenses) K.lenses.push_back({L.pair, K.order[L.from], K.order[L.to], L.k, L.k + 1});
+  K.cw = K.worldlines.cw;
+  K.cw.name = r.canon.id.empty() ? "history" : r.canon.id;
+  for (const auto& sg : K.segments) K.cw.edge_names.push_back(r.beings[sg.being].id);
   return K;
 }
 

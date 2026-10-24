@@ -1,0 +1,48 @@
+{
+  "id": "bis-policy-rates",
+  "kind": "http",
+  "domain": "economics",
+  "title": "Central bank policy rates, monthly, end of period",
+  "provider": "Bank for International Settlements, BIS Data Portal (dataset WS_CBPOL), SDMX API v2",
+  "credit": "BIS",
+  "licence": "Use unrestricted with the BIS cited as the source, not implying endorsement and without additional charge (BIS Data Portal terms)",
+  "citation": "Bank for International Settlements, Central bank policy rates (WS_CBPOL), https://data.bis.org",
+  "format": "CSV: REF_AREA (ISO 3166-1 alpha-2; XM the euro area), TIME_PERIOD (YYYY-MM), OBS_VALUE the policy rate in per cent a year at the end of the month",
+  "coverage": "about forty central banks, monthly, most since the 1990s",
+  "used_by": [
+    "applications/economy-atlas"
+  ],
+  "requests": [
+    {
+      "url": "https://stats.bis.org/api/v2/data/dataflow/BIS/WS_CBPOL/1.0/M.{areas}?startPeriod={first_month}&endPeriod={last_month}&format=csv",
+      "file": "policy.csv"
+    }
+  ],
+  "parameters": {
+    "areas": {
+      "type": "str",
+      "default": "XM+US+JP+GB+CH+SE+NO+DK+PL+CZ+HU+AU+CA+NZ+CN+IN+KR+BR+MX+ZA+TR",
+      "pattern": "[A-Z]{2}(\\+[A-Z]{2})*",
+      "description": "BIS reference areas joined by +"
+    },
+    "first_month": {
+      "type": "str",
+      "default": "2015-01",
+      "pattern": "[0-9]{4}-[0-9]{2}",
+      "description": "First month, YYYY-MM"
+    },
+    "last_month": {
+      "type": "str",
+      "default": "2026-06",
+      "pattern": "[0-9]{4}-[0-9]{2}",
+      "description": "Last month, YYYY-MM"
+    }
+  },
+  "profiles": {
+    "major": {
+      "description": "The euro area and the twenty economies of the ECB profile, monthly, 2015 to mid-2026",
+      "parameters": {}
+    }
+  },
+  "default_profile": "major"
+}

@@ -25,6 +25,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -49,12 +50,27 @@ def include_dirs() -> list[Path]:
     return [d for d in dirs if d.is_dir()]
 
 
+INCLUDE = re.compile(r'^\s*#\s*include\s*[<"]([^>"]+)[>"]', re.M)
+
+
 def sources() -> list[Path]:
-    """Every file the engine may be built from: the headers it may include, and its own sources."""
-    files = {f for d in include_dirs() for f in d.rglob("*.hpp")}
-    if (APP / "engine").is_dir():
-        files |= {f for f in (APP / "engine").rglob("*") if f.suffix in (".cpp", ".hpp")}
-    return sorted(files)
+    """The files the engine is built from: its source and the project headers it includes, transitively,
+    so that work elsewhere in the foundations does not make it stale."""
+    dirs = include_dirs()
+    seen: set[Path] = set()
+    todo = [SOURCE] if SOURCE.exists() else []
+    while todo:
+        f = todo.pop()
+        if f in seen:
+            continue
+        seen.add(f)
+        for name in INCLUDE.findall(f.read_text(encoding="utf-8", errors="replace")):
+            for d in [f.parent, *dirs]:
+                candidate = d / name
+                if candidate.is_file():
+                    todo.append(candidate.resolve())
+                    break
+    return sorted(seen)
 
 
 def digest() -> str:

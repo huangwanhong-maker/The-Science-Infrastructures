@@ -54,7 +54,7 @@ An integrative infrastructure for learning, using and researching all domains of
 
 ## Quick Start
 
-**Online, with nothing to install.** The three atlases run on our online server; the Spiking Simulator, the Complex Atlas, the History Complex and the Genome Atlas do not:
+**Online, with nothing to install.** The three atlases run on our online server; the Spiking Simulator, the Complex Atlas, the History Complex, the Genome Atlas and the Economy Atlas do not:
 
 - **Earth Atlas:** http://173.212.213.207:9201/ — the atmosphere, the ocean, the land, the people and the solid Earth on one globe.
 - **Brain Atlas:** http://173.212.213.207:9202/ — the human brain in the round, every part with its anatomy; sections, atlases, data, the head and its electrodes, the mouse brain, and EEG, MEG and fMRI mapped onto the brain.
@@ -66,6 +66,8 @@ An integrative infrastructure for learning, using and researching all domains of
 - **History Complex:** not run on our online server either — histories recorded as occasions, beings and ties, built into a 2-complex whose topology and signed ties a C++ engine on the history domain reads; it runs on your own computer: see [the History Complex on your computer](#the-history-complex-on-your-computer).
 
 - **Genome Atlas:** not run on our online server either — genomes mapped, aligned, indexed, read, assembled, quantified and placed on their trees by a C++ engine on the genomics and evolution domains, kept alive as workers that share out large jobs; it runs on your own computer, and can enlist others: see [the Genome Atlas on your computer](#the-genome-atlas-on-your-computer).
+
+- **Economy Atlas:** not run on our online server either — the world's trade split into exchange, drive and circulation on a map, currencies held and exchanged as a spacetime whose curvature is the departure from a price system, production as a circular flow, and the loop deficits of transfer networks, computed by a C++ engine on the economics domain; it runs on your own computer: see [the Economy Atlas on your computer](#the-economy-atlas-on-your-computer).
 
 The Earth and Celestial Atlases link to each other: a place on the Earth leads to its sky, and a sky to its weather.
 
@@ -148,6 +150,15 @@ python applications/genome-atlas/serve.py --open
 
 The first line builds its engine for your processor (a few minutes, once) and fetches the genomes; the second opens it at http://127.0.0.1:8890/ on *Escherichia coli*: its circular map, its origin of replication found from the skew, its genes found from the sequence alone. Then align two sequences and watch each algorithm's footprint on the edit graph, read and call a diploid, assemble a genome from its reads, place primate mitochondria on their tree, and in **Run** watch a job spread over the workers. Its [README](applications/genome-atlas/README.md) tells the rest, including how to add workers on other machines.
 
+<a id="the-economy-atlas-on-your-computer"></a>**The Economy Atlas on your computer.** It needs the same (Git, Python, g++), and about 60 MB of public data from the OECD, the ECB and the BIS:
+
+```
+python data/acquisition/recipe.py applications/economy-atlas/recipe.json
+python applications/economy-atlas/serve.py --open
+```
+
+The first line builds its engine and fetches the data (a few minutes, once); the second opens it at http://127.0.0.1:8910/ on the world's trade in 2024. Countries are coloured by how much value their trade draws in or sends out; arcs are the largest net flows; eddies turn where trade circulates among neighbours. Then follow twenty currencies month by month against the euro, solve an input–output table, or build a circuit of transfers and read its loop deficits. Its [README](applications/economy-atlas/README.md) tells the rest.
+
 *If something goes wrong.*
 
 - **A data step failed** (a data server was down, or a network blocked it). Everything else still works: open the page, click **Data** at the top right, and fetch the missing steps there with one click, now or later. Running the recipe again does the same; it skips what is already there, and `--status` lists the steps.
@@ -226,8 +237,8 @@ The domains are ordered by what each may depend on:
 height 4   climate
 height 3   tides · navigation · air-sea
 height 2   astronomy · geophysics · geography · oceanography · meteorology
-height 1   geodesy
-height 0   metrology · neuroscience
+height 1   geodesy · evolution
+height 0   metrology · neuroscience · history · genomics · economics
            ─────────────────────────────── foundations: physis ─► calx, morphe
 ```
 
@@ -340,7 +351,7 @@ Fifty-five domains, ten of them built. A name links to the domain's directory wh
 | Domain | Kind | Stands on | Scope | Priority |
 |---|---|---|---|---|
 | demography | field | — | Births, deaths, migration, populations by age | 3.9 |
-| economics | field | — | Production, markets, money, growth, inequality | 4 |
+| [economics](domains/economics/) | field | — | Value carried between positions and through time: transfer networks and their loop deficits, the circulation of flows on a map, production as a circular flow, the spacetime of transactions (ADR 0044); later markets, money, growth, inequality | built |
 | sociology | field | — | Groups, institutions, social networks, stratification | 4 |
 | political-science | field | — | States, elections, conflict, policy | 4 |
 | anthropology | field | evolution | Cultures, kinship, human variation | 4 |
@@ -421,7 +432,7 @@ height 4   climate
 height 3   tides² · navigation² · air-sea² · geology³ · planetary-science³
 height 2   astronomy · geophysics · geography · oceanography · meteorology · cryosphere³
 height 1   geodesy · drug-discovery¹ · chemistry³ · evolution³ · cell-biology³ · epidemiology³
-height 0   metrology · neuroscience · history · linguistics¹ · genomics¹ · molecular-science¹ · demography³
+height 0   metrology · neuroscience · history · economics · linguistics¹ · genomics¹ · molecular-science¹ · demography³
 ```
 
 *Rationale.*
@@ -463,6 +474,8 @@ height 0   metrology · neuroscience · history · linguistics¹ · genomics¹ �
 
 - The [Genome Atlas](applications/genome-atlas/README.md) draws genomes and computes with them, on the genomics and evolution domains ([ADR 0043](development/decisions/0043-the-genome-infrastructure.md)). It maps a genome in the round, finds its origin of replication from the skew and its genes, CpG islands and repeats from the sequence alone. It aligns two sequences as what an alignment is, a path through an edit graph whose score is a sum over paths in a semiring, and draws the footprint of each algorithm that computes it (the full matrix, a band, the wavefronts of equal penalty, bit vectors, vector lanes), every one held to the generic sum; in other semirings the same graph counts the alignments, gives each pair its probability, or yields every optimal alignment of every scoring at once as a polygon and its normal fan. It indexes genomes by suffix arrays and the Burrows–Wheeler transform; reads a diploid, maps the reads, calls the variants and scores the calls against the truth; assembles a genome from its reads on a de Bruijn graph cleaned step by step; quantifies an RNA-seq sample and tests what changed between conditions; places genes and genomes on their trees by distances, likelihood and sketches, and measures the selection on a gene; and simulates populations. Its engine is kept alive as workers, here and on other machines, among which large jobs are cut into shards whose answer does not depend on how they were cut; the browser's GPU scores alignments beside them.
 
+- The [Economy Atlas](applications/economy-atlas/README.md) draws value carried between places and through time, on the economics domain ([ADR 0044](development/decisions/0044-value-in-space-and-time.md)). A leg of a transfer network carries a transport, the value registered for each unit surrendered; re-describing value changes every transport but no loop's product, whose deficit is the share of value lost going round, and every deficit vanishes exactly when a price system exists. On the map, the world's trade in goods is split into reciprocal exchange and net flows, and the net flows, each link conducting its gross trade and on the triangles of neighbouring economies, into a driven part, up a single potential from the economies that send value to those that draw it, local eddies round the triangles, and global circulation through distant links. In spacetime, twenty currencies are held at their central banks' rates and exchanged with the euro month by month: every month's loop has a curvature, the departure from uncovered interest parity, and the atlas measures how much of the exchange rates' curvature the rates of holding remove: month by month, almost none. It also solves input–output tables as circular flows and reads the circuits of the user's paper on loop deficits.
+
 The three atlases run online on the project's server, the [Celestial Atlas](http://173.212.213.207:9200/), the [Earth Atlas](http://173.212.213.207:9201/) and the [Brain Atlas](http://173.212.213.207:9202/), and on your own computer in a few lines (Quick Start, above). The [index of applications](applications/README.md) lists those planned.
 
 ## 6. Organisation of the Repository
@@ -472,13 +485,13 @@ The three atlases run online on the project's server, the [Celestial Atlas](http
 ├── foundations/     calx · morphe · physis (git submodules); inference planned
 ├── domains/         metrology · geodesy · astronomy · geophysics · geography · oceanography ·
 │                    meteorology · tides · navigation · air-sea · climate · neuroscience (submodule) ·
-│                    history · genomics · evolution
+│                    history · genomics · evolution · economics
 ├── data/            registry · acquisition · formats · products · requests on demand
 ├── visualization/   scene model · renderers · styles; provisional drawing helpers
 ├── observation/     instruments · field work · sensors
 ├── api/             the service and its clients in Python, C and C++, JavaScript
 ├── applications/    celestial-atlas · earth-atlas · brain-atlas · spiking-simulator · complex-atlas ·
-│                    history-complex · genome-atlas
+│                    history-complex · genome-atlas · economy-atlas
 ├── research/        questions · experiments · papers
 ├── notebooks/       exploration and teaching
 ├── docs/            architecture · gallery

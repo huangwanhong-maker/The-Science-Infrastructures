@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Economy Atlas</title>
+  <meta name="description" content="Value carried between places and through time: the world's trade split into exchange, drive and circulation on a map; currencies held and exchanged as a spacetime complex whose curvature is the departure from a price system; production as a circular flow; and the loop deficits of transfer networks.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='11' fill='none' stroke='%23a8743a' stroke-width='1.6'/%3E%3Cpath d='M9 19C12 9 20 9 23 13' fill='none' stroke='%2333291f' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M23 13l.4-3.4M23 13l-3.3.6' stroke='%2333291f' stroke-width='1.5' stroke-linecap='round'/%3E%3Ccircle cx='9' cy='19' r='2.4' fill='%23c0703a'/%3E%3Ccircle cx='23' cy='13' r='2.4' fill='%234f7a8a'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" media="print" onload="this.media='all'"
+        href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..600&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="src/app.js"></script>
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+        <circle cx="16" cy="16" r="11" fill="none" stroke="#a8743a" stroke-width="1.4"/>
+        <path d="M9 19C12 9 20 9 23 13" fill="none" stroke="#33291f" stroke-width="1.3" stroke-linecap="round"/>
+        <path d="M23 13l.4-3.4M23 13l-3.3.6" stroke="#33291f" stroke-width="1.3" stroke-linecap="round"/>
+        <circle cx="9" cy="19" r="2.3" fill="#c0703a"/><circle cx="23" cy="13" r="2.3" fill="#4f7a8a"/>
+      </svg>
+      <div class="brand-text">
+        <span class="brand-name">Economy Atlas</span>
+        <span class="brand-sub">value carried between places and through time</span>
+      </div>
+    </div>
+    <nav class="views" role="tablist" aria-label="Views">
+      <button data-view="map" role="tab">Map</button>
+      <button data-view="spacetime" role="tab">Spacetime</button>
+      <button data-view="production" role="tab">Production</button>
+      <button data-view="circuits" role="tab">Circuits</button>
+    </nav>
+    <div class="top-right">
+      <span class="status" id="status"></span>
+      <span class="engine" id="engine" title="The engine: the economics domain's C++">engine</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="setup" id="setup" hidden>
+      <div class="setup-card">
+        <h2>The engine and the data are not all made yet</h2>
+        <p>The atlas computes with the economics domain's C++, compiled once here with g++ (natively, or in WSL), and draws the OECD's trade between economies, the ECB's exchange rates and the BIS's policy rates, fetched into the data cache. The recipe makes them in a few minutes.</p>
+        <ol class="steps" id="setup-steps"></ol>
+        <div class="setup-actions"><button class="primary" id="setup-run">Make them</button><span class="note" id="setup-note"></span></div>
+      </div>
+    </section>
+
+    <section class="view" data-view="map" hidden>
+      <div class="map-layout">
+        <div class="map-stage">
+          <svg id="map" class="map" role="img" aria-label="The world's trade on an Equal Earth map"></svg>
+          <div class="map-controls">
+            <label>Year <input type="range" id="year" min="2010" max="2024" step="1" value="2024"><output id="year-out">2024</output></label>
+            <label><input type="checkbox" id="show-faces" checked> the map's triangles</label>
+            <label>Arcs <select id="arc-part">
+              <option value="all">all net flows</option>
+              <option value="driven">driven</option>
+              <option value="circulating">circulating</option>
+            </select></label>
+            <label>Shown <select id="arc-count"><option>60</option><option selected>150</option><option>400</option></select></label>
+          </div>
+          <div class="legend" id="map-legend"></div>
+        </div>
+        <aside class="panel" id="map-panel"></aside>
+      </div>
+    </section>
+
+    <section class="view" data-view="spacetime" hidden>
+      <div class="st-layout">
+        <div class="st-main">
+          <div class="st-controls">
+            <label>From <select id="st-first"></select></label>
+            <label>to <select id="st-last"></select></label>
+            <span class="note" id="st-note"></span>
+          </div>
+          <svg id="st-sheet" class="st-sheet" role="img" aria-label="The curvature of every lens, currency by month"></svg>
+          <svg id="st-lines" class="st-lines" role="img" aria-label="The cumulative excess return of the euro over each currency"></svg>
+        </div>
+        <aside class="panel" id="st-panel"></aside>
+      </div>
+    </section>
+
+    <section class="view" data-view="production" hidden>
+      <div class="pr-layout">
+        <div class="pr-main" id="pr-main"></div>
+        <aside class="panel" id="pr-panel"></aside>
+      </div>
+    </section>
+
+    <section class="view" data-view="circuits" hidden>
+      <div class="ci-layout">
+        <div class="ci-main" id="ci-main"></div>
+        <aside class="panel" id="ci-panel"></aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="credits" id="credits">Trade: OECD BIMTS (CC BY 4.0) · exchange rates: ECB · policy rates: BIS · countries: Natural Earth · computed by the economics domain of The Science Infrastructures</footer>
+</body>
+</html>

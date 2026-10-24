@@ -1,0 +1,67 @@
+{
+  "title": "The Economy Atlas's engine and data",
+  "about": "The economics domain's C++ compiled with g++ 11 or later (natively or in WSL) into data/cache/engines/economy/, and the data the atlas draws: the OECD's balanced bilateral trade (about 50 MB), Natural Earth's countries, the ECB's exchange rates and the BIS's policy rates, built into two products. A few minutes in all.",
+  "steps": [
+    {
+      "id": "engine",
+      "title": "The engine of value, compiled with g++",
+      "run": [
+        "applications/economy-atlas/engine.py",
+        "build"
+      ],
+      "done": "data/cache/engines/economy/build.json"
+    },
+    {
+      "id": "oecd-bimts",
+      "title": "The OECD's balanced trade in goods between economies, 2010-2024",
+      "run": [
+        "data/acquisition/fetch.py",
+        "oecd-bimts"
+      ],
+      "done": "data/cache/oecd-bimts/**/retrieval.json"
+    },
+    {
+      "id": "natural-earth-50m",
+      "title": "Natural Earth's countries, coasts and places",
+      "run": [
+        "data/acquisition/fetch.py",
+        "natural-earth-50m"
+      ],
+      "done": "data/cache/natural-earth-50m/retrieval.json"
+    },
+    {
+      "id": "trade-flows",
+      "title": "The trade-flows product: flows by year, with a place for each economy",
+      "run": [
+        "data/products/trade_flows.py"
+      ],
+      "done": "data/cache/products/trade-flows.json"
+    },
+    {
+      "id": "ecb-exr",
+      "title": "The ECB's monthly exchange rates against the euro",
+      "run": [
+        "data/acquisition/fetch.py",
+        "ecb-exr"
+      ],
+      "done": "data/cache/ecb-exr/**/retrieval.json"
+    },
+    {
+      "id": "bis-policy-rates",
+      "title": "The BIS's central bank policy rates",
+      "run": [
+        "data/acquisition/fetch.py",
+        "bis-policy-rates"
+      ],
+      "done": "data/cache/bis-policy-rates/**/retrieval.json"
+    },
+    {
+      "id": "currency-spacetime",
+      "title": "The currency-spacetime product: currencies held and exchanged, month by month",
+      "run": [
+        "data/products/currency_record.py"
+      ],
+      "done": "data/cache/products/currency-spacetime.json"
+    }
+  ]
+}

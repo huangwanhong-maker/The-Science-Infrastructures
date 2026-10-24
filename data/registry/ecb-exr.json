@@ -1,0 +1,52 @@
+{
+  "id": "ecb-exr",
+  "kind": "http",
+  "domain": "economics",
+  "title": "Euro foreign exchange reference rates (monthly averages of the units of each currency per euro) and the ECB's deposit facility rate",
+  "provider": "European Central Bank, ECB Data Portal (dataset EXR), SDMX API",
+  "credit": "ECB",
+  "licence": "Reuse permitted with the source acknowledged (ECB Data Portal terms of use)",
+  "citation": "European Central Bank, Euro foreign exchange reference rates (EXR), monthly averages (EXR.M.<currency>.EUR.SP00.A), and key interest rates, deposit facility, dates of change (FM.B.U2.EUR.4F.KR.DFR.LEV), https://data.ecb.europa.eu",
+  "format": "CSV (csvdata). exr.csv: CURRENCY, TIME_PERIOD (YYYY-MM), OBS_VALUE the units of the currency per euro, the average of the month's daily reference rates. dfr.csv: TIME_PERIOD (YYYY-MM-DD), the date from which the deposit facility rate OBS_VALUE (per cent a year) applies",
+  "coverage": "the currencies of the ECB's reference rates, from 1999 (some later); the rouble's rate is suspended since March 2022; the deposit facility rate from 1999, every change",
+  "used_by": [
+    "applications/economy-atlas"
+  ],
+  "requests": [
+    {
+      "url": "https://data-api.ecb.europa.eu/service/data/EXR/M.{currencies}.EUR.SP00.A?startPeriod={first_month}&endPeriod={last_month}&format=csvdata",
+      "file": "exr.csv"
+    },
+    {
+      "url": "https://data-api.ecb.europa.eu/service/data/FM/B.U2.EUR.4F.KR.DFR.LEV?format=csvdata",
+      "file": "dfr.csv"
+    }
+  ],
+  "parameters": {
+    "currencies": {
+      "type": "str",
+      "default": "USD+JPY+GBP+CHF+SEK+NOK+DKK+PLN+CZK+HUF+AUD+CAD+NZD+CNY+INR+KRW+BRL+MXN+ZAR+TRY",
+      "pattern": "[A-Z]{3}(\\+[A-Z]{3})*",
+      "description": "ISO 4217 codes joined by +"
+    },
+    "first_month": {
+      "type": "str",
+      "default": "2015-01",
+      "pattern": "[0-9]{4}-[0-9]{2}",
+      "description": "First month, YYYY-MM"
+    },
+    "last_month": {
+      "type": "str",
+      "default": "2026-06",
+      "pattern": "[0-9]{4}-[0-9]{2}",
+      "description": "Last month, YYYY-MM"
+    }
+  },
+  "profiles": {
+    "major": {
+      "description": "Twenty currencies against the euro, monthly, 2015 to mid-2026, and the deposit facility rate",
+      "parameters": {}
+    }
+  },
+  "default_profile": "major"
+}
