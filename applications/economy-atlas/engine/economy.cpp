@@ -6,6 +6,7 @@
 //
 //   {"op": "map", "flows": path, "year": y}           the world's trade in a year: reciprocal exchange,
 //                                                      and the net flows' driven, local and global parts
+//   {"op": "timeline", "flows": path}                  the same shares for every year of the product
 //   {"op": "spacetime", "record": path, "first": "YYYY-MM", "last": "YYYY-MM"}
 //                                                      currencies held and exchanged: curvature, prices
 //   {"op": "production", "table": {...}}               a table's Leontief model and its circular flow
@@ -58,41 +59,80 @@ double round_to(double x, double unit) { return std::round(x / unit) * unit; }
 
 // ---- the map ---------------------------------------------------------------------------------------
 
-Json map(const Json& request) {
-  const Json product = read_file(text(request, "flows"));
-  const auto& years = product["years"].as_array();
-  const int year = request.has("year") ? static_cast<int>(request["year"].as_number()) : static_cast<int>(years.back().as_number());
+// One year of a product of flows, decomposed: reciprocal exchange and net transfer, and the net
+// flows on the map's faces. Each link's conductance is its gross trade, so the driven net flow
+// between two places is their gross trade times their difference in attraction (α is then a share
+// of gross trade, without unit); neighbours with no recorded trade are joined at the resolution of
+// the record, the least gross trade recorded. Fewer than four places make no map: their flows are
+// decomposed on their links alone.
+struct Year {
+  int year = 0;
+  std::size_t n = 0;
+  std::vector<double> exports, imports;
+  economics::NetTransfer net;
+  economics::MapFaces faces;
+  economics::TransferNetwork filled;
+  economics::FlowCirculation C;
+  double least = 0;
+};
+
+Year analyse(const Json& product, int year) {
   const Json& flows = product["flows"][std::to_string(year)];
   if (!flows.is_array()) throw std::invalid_argument("no flows for " + std::to_string(year));
   const auto& economies = product["economies"].as_array();
-  const std::size_t n = economies.size();
+  Year Y;
+  Y.year = year;
+  Y.n = economies.size();
   economics::TransferNetwork trade;
   std::vector<economics::Place> places;
   for (const auto& e : economies) {
     trade.positions.push_back(e["iso3"].as_string());
     places.push_back({e["iso3"].as_string(), e["latitude"].as_number() * degree, e["longitude"].as_number() * degree});
   }
-  std::vector<double> exports(n, 0.0), imports(n, 0.0);
+  Y.exports.assign(Y.n, 0.0);
+  Y.imports.assign(Y.n, 0.0);
   for (const auto& f : flows.as_array()) {
     const auto i = static_cast<std::size_t>(f[0].as_number()), j = static_cast<std::size_t>(f[1].as_number());
+    if (i >= Y.n || j >= Y.n) throw std::invalid_argument("a flow between places the product does not have");
     const double v = f[2].as_number();
     trade.legs.push_back({i, j, 1.0, v, "goods"});
-    exports[i] += v;
-    imports[j] += v;
+    Y.exports[i] += v;
+    Y.imports[j] += v;
   }
-  // Reciprocal exchange, and the net flows on the map's faces. Each link's conductance is its gross
-  // trade, so the driven net flow between two economies is their gross trade times their
-  // difference in attraction (α is then a share of gross trade, without unit); neighbours with no
-  // recorded trade are joined at the resolution of the record, the least gross trade recorded.
-  const auto net = economics::net_transfer(trade);
-  economics::MapFaces faces;
-  const auto filled = economics::with_map_faces(net.network, places, &faces);
-  double least = 0;
-  for (double g : net.gross)
-    if (g > 0 && (least == 0 || g < least)) least = g;
-  economics::Cochain conductance = net.gross;
-  conductance.resize(filled.legs.size(), least);
-  const auto C = economics::circulation(filled, conductance);
+  Y.net = economics::net_transfer(trade);
+  Y.filled = Y.n >= 4 ? economics::with_map_faces(Y.net.network, places, &Y.faces) : Y.net.network;
+  for (double g : Y.net.gross)
+    if (g > 0 && (Y.least == 0 || g < Y.least)) Y.least = g;
+  economics::Cochain conductance = Y.net.gross;
+  conductance.resize(Y.filled.legs.size(), Y.least > 0 ? Y.least : 1.0);
+  Y.C = economics::circulation(Y.filled, conductance);
+  return Y;
+}
+
+Json totals(const Year& Y) {
+  return Json(Obj{{"total", Json(Y.net.total)}, {"reciprocal", Json(Y.net.reciprocal)}, {"net", Json(Y.net.net)},
+                  {"driven", Json(Y.C.driven)}, {"local", Json(Y.C.local)}, {"global", Json(Y.C.global)}});
+}
+
+int year_of(const Json& request, const Json& product) {
+  const auto& years = product["years"].as_array();
+  if (years.empty()) throw std::invalid_argument("the product has no years");
+  return request.has("year") ? static_cast<int>(request["year"].as_number()) : static_cast<int>(years.back().as_number());
+}
+
+Json map(const Json& request) {
+  const Json product = read_file(text(request, "flows"));
+  const Year Y = analyse(product, year_of(request, product));
+  const int year = Y.year;
+  const auto& economies = product["economies"].as_array();
+  const std::size_t n = Y.n;
+  const auto& exports = Y.exports;
+  const auto& imports = Y.imports;
+  const auto& net = Y.net;
+  const auto& faces = Y.faces;
+  const auto& filled = Y.filled;
+  const auto& C = Y.C;
+  const double least = Y.least;
   // Each economy's circulating share: of the driven and circulating flows on its links, taken in
   // absolute value, the part that circulates (bounded by 1, unlike their ratio to the net flow,
   // which the two parts may each exceed when they run against each other).
@@ -127,12 +167,24 @@ Json map(const Json& request) {
                   {"economies", Json(std::move(out))},
                   {"legs", Json(std::move(legs))},
                   {"triangles", Json(std::move(triangles))},
-                  {"totals", Json(Obj{{"total", Json(net.total)}, {"reciprocal", Json(net.reciprocal)}, {"net", Json(net.net)},
-                                      {"driven", Json(C.driven)}, {"local", Json(C.local)}, {"global", Json(C.global)}})},
+                  {"totals", totals(Y)},
                   {"faces", Json(Obj{{"triangles", Json(faces.triangles.size())}, {"neutral_legs", Json(faces.neutral_legs)}, {"covers_sphere", Json(faces.covers_sphere)},
                                      {"neutral_conductance", Json(least)}})},
                   {"method", Json(C.parts.drop.sparse ? "sparse" : "dense")},
                   {"source", product["source"]}});
+}
+
+// Every year of a product, its shares only: the strip of years beneath the map.
+Json timeline(const Json& request) {
+  const Json product = read_file(text(request, "flows"));
+  Arr out;
+  for (const auto& y : product["years"].as_array()) {
+    const Year Y = analyse(product, static_cast<int>(y.as_number()));
+    Json t = totals(Y);
+    t.set("year", Json(Y.year));
+    out.push_back(std::move(t));
+  }
+  return Json(Obj{{"years", Json(std::move(out))}, {"unit", product["unit"]}});
 }
 
 // ---- spacetime -------------------------------------------------------------------------------------
@@ -146,26 +198,30 @@ Json spacetime(const Json& request) {
   for (std::size_t m = 0; m < months.size(); m++)
     if (months[m].as_string() >= first && months[m].as_string() <= last) span.push_back(m);
   if (span.size() < 2) throw std::invalid_argument("a span of at least two months");
-  // The currencies with a complete record over the span (the euro first): a rate each month and a
-  // policy rate each month.
+  // The currencies with a complete record over the span (the base first, the euro unless the record
+  // names another): a rate against the base each month and a policy rate each month.
+  const std::string base = product.has("base") ? product["base"].as_string() : "EUR";
   std::vector<std::string> codes, names;
   std::vector<std::string> wanted;
   if (const Json* w = request.find("currencies"); w && w->is_array())
     for (const auto& c : w->as_array()) wanted.push_back(c.as_string());
-  for (const auto& c : product["currencies"].as_array()) {
-    const std::string code = c["code"].as_string();
-    if (!wanted.empty() && code != "EUR" && std::find(wanted.begin(), wanted.end(), code) == wanted.end()) continue;
-    bool complete = true;
-    for (std::size_t m : span) {
-      complete = complete && !product["policy"][code][m].is_null();
-      if (code != "EUR") complete = complete && !product["rates"][code][m].is_null();
+  for (const bool first : {true, false})
+    for (const auto& c : product["currencies"].as_array()) {
+      const std::string code = c["code"].as_string();
+      if ((code == base) != first) continue;
+      if (!wanted.empty() && code != base && std::find(wanted.begin(), wanted.end(), code) == wanted.end()) continue;
+      bool complete = true;
+      for (std::size_t m : span) {
+        complete = complete && !product["policy"][code][m].is_null();
+        if (code != base) complete = complete && !product["rates"][code][m].is_null();
+      }
+      if (code == base && !complete) throw std::invalid_argument("the base's policy rate (" + base + ") is missing in the span");
+      if (complete) {
+        codes.push_back(code);
+        names.push_back(c["name"].as_string());
+      }
     }
-    if (complete || code == "EUR") {
-      if (!complete) throw std::invalid_argument("the euro's policy rate is missing in the span");
-      codes.push_back(code);
-      names.push_back(c["name"].as_string());
-    }
-  }
+  if (codes.empty() || codes[0] != base) throw std::invalid_argument("the record has no currency " + base + ", its base");
   economics::Transactions T;
   T.agents = codes;
   std::vector<double> times;
@@ -197,7 +253,7 @@ Json spacetime(const Json& request) {
   std::vector<double> years(codes.size(), 0.0);
   for (std::size_t f = 0; f < S.lenses; f++) {
     const auto& L = S.worldlines.lenses[f];
-    const std::size_t x = S.encounters.pairs[L.pair].b;  // the euro is agent 0, every pair's a
+    const std::size_t x = S.encounters.pairs[L.pair].b;  // the base is agent 0, every pair's a
     const double k = S.curvature[f];
     lenses.push_back(Json(Arr{Json(x), Json(L.from), Json(L.to), Json(k)}));
     ks[x].push_back(k);
@@ -251,7 +307,7 @@ Json spacetime(const Json& request) {
     for (std::size_t m : span) r.push_back(a == 0 ? Json(1.0) : product["rates"][codes[a]][m]);
     rates.push_back(Json(std::move(r)));
   }
-  return Json(Obj{{"currencies", Json(codes)}, {"names", Json(names)}, {"months", Json(std::move(month_labels))}, {"times", Json(times)},
+  return Json(Obj{{"base", Json(base)}, {"currencies", Json(codes)}, {"names", Json(names)}, {"months", Json(std::move(month_labels))}, {"times", Json(times)},
                   {"lenses", Json(std::move(lenses))}, {"stats", Json(std::move(stats))}, {"presences", Json(std::move(presences))},
                   {"policy", Json(std::move(policy))}, {"rates", Json(std::move(rates))},
                   {"curvature", Json(Obj{{"rms", Json(std::sqrt(sum2 / n))}, {"rms_exchange", Json(std::sqrt(sum02 / n))},
@@ -372,6 +428,7 @@ int main() {
     const std::string op = text(request, "op");
     Json answer;
     if (op == "map") answer = map(request);
+    else if (op == "timeline") answer = timeline(request);
     else if (op == "spacetime") answer = spacetime(request);
     else if (op == "production") answer = production(request);
     else if (op == "circuits") answer = circuits(request);

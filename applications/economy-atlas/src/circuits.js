@@ -135,7 +135,14 @@ async function run() {
   results();
 }
 
-export async function showCircuits() {
+// The address may ask for an example network: #circuits&network=five.
+export async function showCircuits(data, params = {}) {
+  const wanted = NETWORKS.find((n) => n.id === params.network);
+  if (wanted && wanted.id !== state.preset) {
+    state.preset = wanted.id;
+    state.network = structuredClone(wanted.network);
+    render();
+  }
   if (!document.getElementById('ci-main').firstChild) render();
   await run();
 }

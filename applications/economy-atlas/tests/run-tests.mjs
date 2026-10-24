@@ -17,7 +17,7 @@ import { spawnSync } from 'node:child_process';
 
 import { suite, ROOT } from '../../../development/tools/checks.mjs';
 import { NETWORKS, TABLES } from '../src/presets.js';
-import { diverging, seriesColour } from '../src/palette.js';
+import { diverging, sequential, seriesColour } from '../src/palette.js';
 
 const { assert, check, skip, done } = suite();
 const APP = resolve(ROOT, 'applications/economy-atlas');
@@ -33,8 +33,9 @@ for (const t of TABLES) {
   assert(`table ${t.id}: square deliveries and a final demand for each sector`,
     t.table.z.length === n && t.table.z.every((r) => r.length === n) && t.table.final_demand.length === n);
 }
-assert('colours: the diverging ramp runs from slate through paper to terracotta',
-  diverging(-1) === 'rgb(63, 107, 124)' && diverging(1) === 'rgb(185, 97, 46)' && diverging(0) === 'rgb(243, 236, 223)', `${diverging(-1)} ${diverging(0)} ${diverging(1)}`);
+assert("colours: the diverging ramp runs from steel blue through the neutral to rose red (the day's, outside a page)",
+  diverging(-1) === 'rgb(58, 110, 165)' && diverging(1) === 'rgb(196, 80, 110)' && diverging(0) === 'rgb(239, 233, 221)', `${diverging(-1)} ${diverging(0)} ${diverging(1)}`);
+assert('colours: the sequential ramp runs from the neutral to deep gold', sequential(0) === 'rgb(239, 233, 221)' && sequential(1) === 'rgb(126, 98, 31)', `${sequential(0)} ${sequential(1)}`);
 assert('colours: the series cycles', seriesColour(0) === seriesColour(20) && seriesColour(-1) === seriesColour(19));
 
 // ---- the recipe -------------------------------------------------------------------------------------
@@ -102,6 +103,25 @@ assert('colours: the series cycles', seriesColour(0) === seriesColour(20) && ser
         K.rms > 0 && K.rms_exchange > 0 && K.removed < 1 && Math.abs(K.removed - (1 - (K.rms / K.rms_exchange) ** 2)) < 1e-9, JSON.stringify(K));
     } else skip('the currencies\' record is not built: the spacetime is not checked');
   }
+}
+
+// ---- one's own data, and the example plug-ins (ADR 0046): their own checks, one JSON object a line ----------
+const pythons = [resolve(ROOT, '.venv/Scripts/python.exe'), resolve(ROOT, '.venv/bin/python'), 'python3', 'python'];
+const python = pythons.find((p) => (p.includes('.venv') ? existsSync(p) : true) && spawnSync(p, ['-c', 'import numpy'], { stdio: 'ignore' }).status === 0);
+for (const script of ['check_datasets.py', 'check_plugins.py']) {
+  if (!python) { skip(`${script}: no Python with numpy`); continue; }
+  const r = spawnSync(python, [join(APP, 'tests', script)], { cwd: ROOT, encoding: 'utf8', timeout: 900000, maxBuffer: 1 << 24, env: { ...process.env, PYTHONIOENCODING: 'utf-8' } });
+  let seen = 0;
+  for (const line of (r.stdout || '').split(/\r?\n/)) {
+    if (!line.startsWith('{')) continue;
+    let rec;
+    try { rec = JSON.parse(line); } catch { continue; }
+    seen++;
+    if (rec.kind === 'check') check(rec.name, rec.value, rec.limit, rec.unit || '');
+    else if (rec.kind === 'assert') assert(rec.name, rec.ok, rec.detail || '');
+    else if (rec.kind === 'skip') skip(rec.name);
+  }
+  assert(`${script} ran to the end`, r.status === 0 && seen > 0, (r.stderr || '').trim().split(/\r?\n/).slice(-4).join(' | '));
 }
 
 done();

@@ -120,7 +120,15 @@ async function run() {
   results();
 }
 
-export async function showProduction() {
+// The address may ask for an example table: #production&table=three.
+export async function showProduction(data, params = {}) {
+  const wanted = TABLES.find((t) => t.id === params.table);
+  if (wanted && wanted.id !== state.preset) {
+    state.preset = wanted.id;
+    state.table = structuredClone(wanted.table);
+    state.shock = { sector: 0, dc: 0, dy: 0 };
+    render();
+  }
   if (!document.getElementById('pr-main').firstChild) render();
   await run();
 }

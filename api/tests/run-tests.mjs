@@ -7,7 +7,8 @@
 // errors, the plug-ins and their jobs, and the clients: the Python client's
 // checks (check_client.py, reporting JSON lines as data/tests/checks.py does), the
 // C and C++ clients' where a compiler is found (check_cpp.mjs, built by
-// api/Makefile), and the JavaScript client's, here.
+// api/Makefile), and the JavaScript client's, here; and the plug-ins over
+// networks of places (check_networks.py), in Python and C++.
 //
 // The services started here keep the sensors' readings and the plug-ins' products
 // in a directory of their own, deleted at the end, and build no products: the
@@ -469,6 +470,21 @@ if (!python) {
     assert('api policy: the services with a token and read-only ran', false, String(error.stack || error));
   }
   for (const s of services) stop(s);
+
+  // The plug-ins over networks of places (check_networks.py), which need no service.
+  const r = spawnSync(python, [resolve(HERE, 'check_networks.py')],
+    { cwd: ROOT, encoding: 'utf8', timeout: 600000, maxBuffer: 1 << 24, env: { ...process.env, PYTHONIOENCODING: 'utf-8' } });
+  let seen = 0;
+  for (const line of (r.stdout || '').split('\n')) {
+    if (!line.startsWith('{')) continue;
+    let rec;
+    try { rec = JSON.parse(line); } catch { continue; }
+    seen++;
+    if (rec.kind === 'check') check(rec.name, rec.value, rec.limit, rec.unit || '');
+    else if (rec.kind === 'assert') assert(rec.name, rec.ok, rec.detail || '');
+    else if (rec.kind === 'skip') skip(rec.name);
+  }
+  assert('api: check_networks.py ran to the end', r.status === 0 && seen > 0, (r.stderr || '').trim().split('\n').slice(-4).join(' | '));
 }
 rmSync(work, { recursive: true, force: true });
 done();

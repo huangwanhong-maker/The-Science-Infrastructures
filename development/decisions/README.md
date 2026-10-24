@@ -56,8 +56,9 @@ Decisions that concern only one library are recorded in that library's own `deve
 | [0041](0041-the-history-domain.md) | The history domain and the History Complex | Accepted; amended by 0042 |
 | [0042](0042-the-history-as-a-field-theory.md) | The history as a field theory, on the foundations | Accepted, provisionally; amends 0041 |
 | [0043](0043-the-genome-infrastructure.md) | The genome infrastructure: the genomics and evolution domains and the Genome Atlas | Accepted; amended by 0045 |
-| [0044](0044-value-in-space-and-time.md) | Value in space and time: the economics domain and the Economy Atlas | Accepted, provisionally |
+| [0044](0044-value-in-space-and-time.md) | Value in space and time: the economics domain and the Economy Atlas | Accepted, provisionally; amended by 0046 |
 | [0045](0045-the-genome-workbench.md) | The Genome Workbench: the Genome Atlas renamed, its Toolbox, the user's files and a shell built from registries | Accepted, provisionally; amends 0043 |
+| [0046](0046-the-economy-atlas-data-and-plugins.md) | The Economy Atlas: one's own data, plug-ins over networks of places, and a ledger in gold | Accepted, provisionally; amends 0044 |
 
 ## 2. Template
 

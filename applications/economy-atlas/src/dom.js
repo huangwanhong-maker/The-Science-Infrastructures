@@ -26,12 +26,26 @@ export function clear(node) {
   return node;
 }
 
+// Children appended as el() appends them: arrays flattened, null and false left out.
+export const put = (node, ...children) => build(node, {}, children);
+export const fill = (node, ...children) => put(clear(node), ...children);
+
 // Millions of US dollars, read as thousands of millions or millions of millions.
 export function money(millions) {
   const a = Math.abs(millions);
   if (a >= 1e6) return `${(millions / 1e6).toFixed(2)} tn $`;
   if (a >= 1e3) return `${(millions / 1e3).toFixed(a >= 1e5 ? 0 : 1)} bn $`;
   return `${millions.toFixed(0)} m $`;
+}
+
+// A quantity in the data's own unit: thousands, millions and thousands of millions shortened.
+export function quantity(x) {
+  if (!Number.isFinite(x)) return '—';
+  const a = Math.abs(x);
+  if (a >= 1e9) return `${(x / 1e9).toFixed(2)} bn`;
+  if (a >= 1e6) return `${(x / 1e6).toFixed(2)} m`;
+  if (a >= 1e4) return `${(x / 1e3).toFixed(1)} k`;
+  return x.toLocaleString('en-GB', { maximumFractionDigits: a >= 100 ? 0 : 2 });
 }
 
 export const percent = (x, digits = 1) => `${(100 * x).toFixed(digits)}%`;

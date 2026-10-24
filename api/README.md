@@ -82,6 +82,23 @@ here.field("gfs-forecast").sample("tmp2m", 139.69, 35.69, "now+1d")
 
 The two cannot drift apart, and the checks hold them to each other exactly.
 
+### 2.7 Plug-ins over Networks of Places
+
+Some applications draw flows between places rather than fields on a grid: the Economy Atlas draws the world's trade between economies ([ADR 0046](../development/decisions/0046-the-economy-atlas-data-and-plugins.md)). Their plug-ins are given a **network**, places (an id, a name, a latitude and longitude, a group) and flows between them (a value, optionally a kind), and answer **results** the application draws: `values` (a number for each place), `arcs` (flows between places), and the sketches, tables and notes of §2.3. The classes are [python/science/networks.py](python/science/networks.py) (`Network`, `NetworkAnalysis`, `values`, `arcs`, `param`) and [cpp/network_plugin.hpp](cpp/network_plugin.hpp) (`science::network::Analysis`, `SCIENCE_NETWORK_PLUGIN`); an application binds a `networks.Host` to its own `plugins/`, with the include directories its C++ plug-ins may use.
+
+Both languages run as processes behind one file contract: the host writes `input.json` (the network and the parameters, defaulted and typed) into a directory of the run's own, runs the plug-in with `--run <dir>`, follows its progress lines and reads `output.json`. A script runs as `python -m science.networks run <script> <dir>`; a C++ plug-in is compiled as hosting.py compiles its own (natively, or with g++ in WSL), again when it or a header it includes changes.
+
+```python
+def create(api):
+    class Balance(api.NetworkAnalysis):
+        id, title = "balance", "Net inflow"
+        def run(self, network, params, context):
+            return [api.values("Net inflow", network.balance(), scale="diverging")]
+    return Balance()
+```
+
+*Rationale.* A plug-in over a network is written by the person using the application, and runs whatever it contains; a process of its own bounds it in time (600 s by default, or as the host is told), lets it be cancelled, and keeps a failure from reaching the server. A network of a few hundred places and tens of thousands of flows passes as JSON in a fraction of a second, so the contract needs no binary files, unlike the fields of §2.3.
+
 ## 3. Quick Start
 
 ### 3.1 The Service
@@ -280,9 +297,10 @@ The version is in the path: `/api/v1`. Within v1, endpoints and fields are added
 | [`service/handler.py`](service/handler.py) | `Api`: the endpoints, the write policy, the stream; mountable by any standard-library server | draft |
 | [`service/server.py`](service/server.py) | The standalone service: `ThreadingHTTPServer`, port 8800, `--host`, `--port`, `--token`, `--read-only` | draft |
 | [`service/compute.mjs`](service/compute.mjs) | The Node worker of the compute bridge: JSON lines in and out | draft |
-| [`python/science/`](python/science/) | The package `science`: `Client` ([client.py](python/science/client.py)), `Local` ([local.py](python/science/local.py)), the bridge's pool ([bridge.py](python/science/bridge.py)), field products ([fields.py](python/science/fields.py)), plug-ins ([plugins.py](python/science/plugins.py)) and their hosting ([hosting.py](python/science/hosting.py)); [pyproject.toml](python/pyproject.toml) | draft |
+| [`python/science/`](python/science/) | The package `science`: `Client` ([client.py](python/science/client.py)), `Local` ([local.py](python/science/local.py)), the bridge's pool ([bridge.py](python/science/bridge.py)), field products ([fields.py](python/science/fields.py)), plug-ins ([plugins.py](python/science/plugins.py)) and their hosting ([hosting.py](python/science/hosting.py)), plug-ins over networks of places and their host ([networks.py](python/science/networks.py)); [pyproject.toml](python/pyproject.toml) | draft |
 | [`js/science.mjs`](js/science.mjs) | The JavaScript client, for Node and browsers | draft |
 | [`cpp/science.hpp`](cpp/science.hpp), [`cpp/science/`](cpp/science/) | The C++ client, header-only: `Client`, `Field`, the stream; its JSON ([json.hpp](cpp/science/json.hpp)) and its HTTP over the system's sockets ([http.hpp](cpp/science/http.hpp)) | draft |
+| [`cpp/plugin.hpp`](cpp/plugin.hpp), [`cpp/network_plugin.hpp`](cpp/network_plugin.hpp) | The classes of C++ plug-ins: over fields (§2.3), and over networks of places (§2.7) | draft |
 | [`c/`](c/) | The C client ([science.h](c/science.h)), implemented over the C++ ([science.cpp](c/science.cpp)) | draft |
 | [`Makefile`](Makefile) | Builds `libscience.a`, `libscience.so`, the C and C++ examples and the check programs into `build/` | draft |
 | [`openapi.json`](openapi.json) | The description of every endpoint (OpenAPI 3.1) | draft |
@@ -300,6 +318,7 @@ The version is in the path: `/api/v1`. Within v1, endpoints and fields are added
 - readings posted and received on a stream within a second, implausible readings refused with their reasons, a reconnecting stream receiving what it missed;
 - the write policy with and without a token, read-only, and from another origin; the errors (400, 404, 405, 409, 422);
 - the plug-ins: listed, described, run one at a time, their field served;
+- the plug-ins over networks of places (`check_networks.py`): a network's matrix, balances and distances against closed forms; parameters defaulted, typed and refused out of bounds; a plug-in described and run through a host in Python and, where a compiler is found, the same in C++ with the same results; a failure reported with its reason, a file outside `plugins/` refused, a run stopped at its time limit and when cancelled;
 - the Python client (`check_client.py`) against the service and against `Local`, and the interpolation of `fields.py` against cases known in closed form; the JavaScript client;
 - the C and C++ clients, where a compiler is found ([check_cpp.mjs](tests/check_cpp.mjs)): the Makefile builds everything without a warning, and the check programs ([check_cpp.cpp](tests/check_cpp.cpp), [check_c.c](tests/check_c.c)) hold their samples, series, grids and calls to the Python client's for the same requests ([check_cpp.py](tests/check_cpp.py)), exactly; receive a posted reading on the stream within a second, and after reconnecting what they missed; run a plug-in to its field (C++); and check, offline, their JSON (exponents, the limits of doubles, escapes, surrogate pairs, nesting, malformed texts) and their HTTP (chunked bodies, framing, the events of a stream, instants). On Windows the compiler is WSL's: the programs run in WSL, and reach the service in WSL's mirrored network, or else a service started inside WSL with WSL's Python (`SCIENCE_CHECK_CPP_SERVICE=wsl` takes that way always).
 

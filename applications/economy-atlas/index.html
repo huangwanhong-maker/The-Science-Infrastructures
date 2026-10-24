@@ -4,23 +4,28 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Economy Atlas</title>
-  <meta name="description" content="Value carried between places and through time: the world's trade split into exchange, drive and circulation on a map; currencies held and exchanged as a spacetime complex whose curvature is the departure from a price system; production as a circular flow; and the loop deficits of transfer networks.">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='11' fill='none' stroke='%23a8743a' stroke-width='1.6'/%3E%3Cpath d='M9 19C12 9 20 9 23 13' fill='none' stroke='%2333291f' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M23 13l.4-3.4M23 13l-3.3.6' stroke='%2333291f' stroke-width='1.5' stroke-linecap='round'/%3E%3Ccircle cx='9' cy='19' r='2.4' fill='%23c0703a'/%3E%3Ccircle cx='23' cy='13' r='2.4' fill='%234f7a8a'/%3E%3C/svg%3E">
+  <meta name="description" content="Value carried between places and through time: flows split into exchange, drive and circulation on a map of their places, from the world's trade or one's own data; currencies held and exchanged as a spacetime whose curvature is the departure from a price system; production as a circular flow; the loop deficits of transfer networks; and plug-ins in Python and C++.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12' fill='none' stroke='%23c9a85c' stroke-width='2'/%3E%3Cpath d='M8.5 19.5C11 10.5 20 9.5 23.5 14' fill='none' stroke='%23c4506e' stroke-width='1.8' stroke-linecap='round'/%3E%3Ccircle cx='8.5' cy='19.5' r='2.4' fill='%233a6ea5'/%3E%3Ccircle cx='23.5' cy='14' r='2.4' fill='%23c4506e'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" media="print" onload="this.media='all'"
         href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..600&display=swap">
+  <script>
+    // The theme chosen before, if any, before the page is drawn (the system's otherwise).
+    try { const t = localStorage.getItem('economy-atlas-theme'); if (t === 'day' || t === 'night') document.documentElement.dataset.theme = t; } catch {}
+  </script>
   <link rel="stylesheet" href="styles.css">
   <script type="module" src="src/app.js"></script>
 </head>
 <body>
   <header class="top">
     <div class="brand">
-      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
-        <circle cx="16" cy="16" r="11" fill="none" stroke="#a8743a" stroke-width="1.4"/>
-        <path d="M9 19C12 9 20 9 23 13" fill="none" stroke="#33291f" stroke-width="1.3" stroke-linecap="round"/>
-        <path d="M23 13l.4-3.4M23 13l-3.3.6" stroke="#33291f" stroke-width="1.3" stroke-linecap="round"/>
-        <circle cx="9" cy="19" r="2.3" fill="#c0703a"/><circle cx="23" cy="13" r="2.3" fill="#4f7a8a"/>
+      <svg class="mark" viewBox="0 0 34 34" aria-hidden="true">
+        <circle cx="17" cy="17" r="13.5" fill="none" stroke="var(--gold)" stroke-width="1.3"/>
+        <circle cx="17" cy="17" r="10.6" fill="none" stroke="var(--gold)" stroke-width="0.5" stroke-dasharray="1 2.2"/>
+        <path d="M9.4 20.8C12 11 21.6 10 25 15" fill="none" stroke="var(--rose)" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M25 15l-.2-3.4M25 15l-3.2-.9" stroke="var(--rose)" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="9.4" cy="20.8" r="2.3" fill="var(--sends)"/>
       </svg>
       <div class="brand-text">
         <span class="brand-name">Economy Atlas</span>
@@ -34,8 +39,11 @@
       <button data-view="circuits" role="tab">Circuits</button>
     </nav>
     <div class="top-right">
-      <span class="status" id="status"></span>
+      <span class="status" id="status" role="status"></span>
       <span class="engine" id="engine" title="The engine: the economics domain's C++">engine</span>
+      <button class="theme" id="theme" title="Day or night" aria-label="Day or night">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M11.8 10.4A5.2 5.2 0 0 1 5.6 4.2a5.4 5.4 0 1 0 6.2 6.2z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+      </button>
     </div>
   </header>
 
@@ -51,19 +59,16 @@
 
     <section class="view" data-view="map" hidden>
       <div class="map-layout">
+        <aside class="dock" id="map-dock" aria-label="Data, layers and plug-ins"></aside>
         <div class="map-stage">
-          <svg id="map" class="map" role="img" aria-label="The world's trade on an Equal Earth map"></svg>
-          <div class="map-controls">
-            <label>Year <input type="range" id="year" min="2010" max="2024" step="1" value="2024"><output id="year-out">2024</output></label>
-            <label><input type="checkbox" id="show-faces" checked> the map's triangles</label>
-            <label>Arcs <select id="arc-part">
-              <option value="all">all net flows</option>
-              <option value="driven">driven</option>
-              <option value="circulating">circulating</option>
-            </select></label>
-            <label>Shown <select id="arc-count"><option>60</option><option selected>150</option><option>400</option></select></label>
+          <svg id="map" class="map" role="img" aria-label="Flows between places on an Equal Earth map"></svg>
+          <div class="zoom">
+            <button id="zoom-in" title="Closer" aria-label="Closer">+</button>
+            <button id="zoom-out" title="Further" aria-label="Further">−</button>
+            <button id="zoom-reset" title="The whole world" aria-label="The whole world">○</button>
           </div>
           <div class="legend" id="map-legend"></div>
+          <div class="years" id="years"></div>
         </div>
         <aside class="panel" id="map-panel"></aside>
       </div>
@@ -73,12 +78,13 @@
       <div class="st-layout">
         <div class="st-main">
           <div class="st-controls">
+            <label>Record <select id="st-dataset"></select></label>
             <label>From <select id="st-first"></select></label>
             <label>to <select id="st-last"></select></label>
             <span class="note" id="st-note"></span>
           </div>
           <svg id="st-sheet" class="st-sheet" role="img" aria-label="The curvature of every lens, currency by month"></svg>
-          <svg id="st-lines" class="st-lines" role="img" aria-label="The cumulative excess return of the euro over each currency"></svg>
+          <svg id="st-lines" class="st-lines" role="img" aria-label="The cumulative excess return of the base over each currency"></svg>
         </div>
         <aside class="panel" id="st-panel"></aside>
       </div>
@@ -99,6 +105,9 @@
     </section>
   </main>
 
-  <footer class="credits" id="credits">Trade: OECD BIMTS (CC BY 4.0) · exchange rates: ECB · policy rates: BIS · countries: Natural Earth · computed by the economics domain of The Science Infrastructures</footer>
+  <div class="tip" id="tip" role="tooltip"></div>
+  <dialog class="data-dialog" id="data-dialog" aria-labelledby="data-title"></dialog>
+
+  <footer class="credits" id="credits">Trade: OECD BIMTS (CC BY 4.0) · exchange rates and the euro's deposit rate: ECB · policy rates: BIS · countries: Natural Earth · computed by the economics domain of The Science Infrastructures</footer>
 </body>
 </html>
