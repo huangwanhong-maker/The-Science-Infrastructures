@@ -1,0 +1,10 @@
+{
+  "name": "genomics",
+  "kind": "field",
+  "status": "draft",
+  "depends": [],
+  "foundations": [
+    "calx",
+    "morphe"
+  ]
+}

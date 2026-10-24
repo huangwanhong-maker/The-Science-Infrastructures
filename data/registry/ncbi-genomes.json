@@ -1,0 +1,115 @@
+{
+  "id": "ncbi-genomes",
+  "domain": "genomics",
+  "title": "Reference genomes from NCBI RefSeq, as GenBank flat files with their annotation: two bacteriophages, SARS-CoV-2, Escherichia coli K-12, and the mitochondrial genomes of humans, Neanderthals, the great apes, a gibbon and two Old World monkeys",
+  "provider": "National Center for Biotechnology Information (NCBI), RefSeq, through the E-utilities (efetch)",
+  "credit": "Genomes: NCBI RefSeq",
+  "files": [
+    {
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_001422.1&rettype=gbwithparts&retmode=text",
+      "file": "NC_001422.1.gb",
+      "title": "Escherichia phage phiX174, complete genome (5,386 bp, circular)",
+      "size": 26238,
+      "sha256": "0a8099e207633f8c3ba998bfe2a198518e1de356c7956691101b2512324b807c"
+    },
+    {
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_001416.1&rettype=gbwithparts&retmode=text",
+      "file": "NC_001416.1.gb",
+      "title": "Enterobacteria phage lambda, complete genome (48,502 bp)",
+      "size": 176721,
+      "sha256": "3c624302adeeb3c00649f549903ab781b9e75bab16069ae655833d536407367f"
+    },
+    {
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_012920.1&rettype=gbwithparts&retmode=text",
+      "file": "NC_012920.1.gb",
+      "title": "Homo sapiens mitochondrion, complete genome (the revised Cambridge Reference Sequence, 16,569 bp)",
+      "size": 64640,
+      "sha256": "7530d659e7174272372814edfecb2ece1f87a444395a861fcdf1b977c4aa5c1f"
+    },
+    {
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_045512.2&rettype=gbwithparts&retmode=text",
+      "file": "NC_045512.2.gb",
+      "title": "SARS-CoV-2 isolate Wuhan-Hu-1, complete genome (29,903 bp)",
+      "size": 78517,
+      "sha256": "87744b176aa9ce71350c8becf0d062950dbc485a59766fcfe723ec859f6b6d5c"
+    },
+    {
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_000913.3&rettype=gbwithparts&retmode=text",
+      "file": "NC_000913.3.gb",
+      "title": "Escherichia coli str. K-12 substr. MG1655, complete genome (4,641,652 bp, circular)",
+      "size": 11450917,
+      "sha256": "313752bfe10d4aaf04abdb541a1309bce9a6b66f059e75fe215898e736a5a8a5"
+    },
+    {
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_011137.1&rettype=gbwithparts&retmode=text",
+      "file": "NC_011137.1.gb",
+      "title": "Homo sapiens neanderthalensis mitochondrion, complete genome",
+      "size": 41979,
+      "sha256": "f2bc5340e058fd5231a005d5ce12b0375f412f045279526d99e25a7ce79fe411"
+    },
+    {
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_001643.1&rettype=gbwithparts&retmode=text",
+      "file": "NC_001643.1.gb",
+      "title": "Pan troglodytes mitochondrion, complete genome",
+      "size": 43750,
+      "sha256": "c4a607813cd6a2fc08726df6623504b420bae059458eb3c0e44e5fe08374e740"
+    },
+    {
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_001644.1&rettype=gbwithparts&retmode=text",
+      "file": "NC_001644.1.gb",
+      "title": "Pan paniscus mitochondrion, complete genome",
+      "size": 43665,
+      "sha256": "d780ac81f06f1f0699549ae87aa6df6da10adf1b537af05e7ed67ac8a4d2e4cb"
+    },
+    {
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_011120.1&rettype=gbwithparts&retmode=text",
+      "file": "NC_011120.1.gb",
+      "title": "Gorilla gorilla gorilla mitochondrion, complete genome",
+      "size": 43961,
+      "sha256": "a0078a4f2a22ba796773a724c3364fe32488c5994cbb13b87a16a6c58bb5d563"
+    },
+    {
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_002083.1&rettype=gbwithparts&retmode=text",
+      "file": "NC_002083.1.gb",
+      "title": "Pongo abelii mitochondrion, complete genome",
+      "size": 45204,
+      "sha256": "926a100cd699c5b0e9ac389f730eb660c2d0e29a151f10e79af0dfeec1cbb21b"
+    },
+    {
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_001646.1&rettype=gbwithparts&retmode=text",
+      "file": "NC_001646.1.gb",
+      "title": "Pongo pygmaeus mitochondrion, complete genome",
+      "size": 37159,
+      "sha256": "46d5390d5d61848af33f6b89dbd9adcc93075e5f19a83a91c5c4942c8cdea598"
+    },
+    {
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_002082.1&rettype=gbwithparts&retmode=text",
+      "file": "NC_002082.1.gb",
+      "title": "Hylobates lar mitochondrion, complete genome",
+      "size": 38105,
+      "sha256": "175ca410024562f3d26a7063effa0869fc6d4d7b3af17545a1aa47215dffee6e"
+    },
+    {
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_005943.1&rettype=gbwithparts&retmode=text",
+      "file": "NC_005943.1.gb",
+      "title": "Macaca mulatta mitochondrion, complete genome",
+      "size": 43530,
+      "sha256": "ecc7c36d955a3fb0b7173513e61886fd665e024708f781700e3f61a373d06c1c"
+    },
+    {
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_020006.2&rettype=gbwithparts&retmode=text",
+      "file": "NC_020006.2.gb",
+      "title": "Papio anubis mitochondrion, complete genome",
+      "size": 37125,
+      "sha256": "6e96daf64c6530c58521b97050ffaa3eb14107c5c47e9f3564aaa4f79f8e2e71"
+    }
+  ],
+  "format": "GenBank flat files (NCBI, GenBank Release Notes §3.4), one record each, with the full sequence (rettype=gbwithparts) and the features of RefSeq's annotation. Versioned accessions, so that a file's checksum holds until NCBI changes how efetch formats records.",
+  "coverage": "Complete genomes; the mitochondrial set spans the hominoids and two cercopithecids for phylogenies (Homo, Pan, Gorilla, Pongo, Hylobates, Macaca, Papio)",
+  "licence": "NCBI places no restrictions on the use or distribution of the GenBank and RefSeq data (https://www.ncbi.nlm.nih.gov/home/about/policies/); submitters may hold rights in some records, so the files are fetched into the cache and not redistributed.",
+  "citation": "O'Leary, N. A. et al. (2016), Reference sequence (RefSeq) database at NCBI: current status, taxonomic expansion, and functional annotation, Nucleic Acids Research 44, D733-D745; Sayers, E. W. et al. (2022), Database resources of the National Center for Biotechnology Information, Nucleic Acids Research 50, D20-D26.",
+  "used_by": [
+    "domains/genomics (checks of the GenBank reader against NCBI's translations)",
+    "applications/genome-atlas"
+  ]
+}

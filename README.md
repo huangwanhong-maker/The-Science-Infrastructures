@@ -54,7 +54,7 @@ An integrative infrastructure for learning, using and researching all domains of
 
 ## Quick Start
 
-**Online, with nothing to install.** The three atlases run on our online server; the Spiking Simulator, the Complex Atlas and the History Complex do not:
+**Online, with nothing to install.** The three atlases run on our online server; the Spiking Simulator, the Complex Atlas, the History Complex and the Genome Atlas do not:
 
 - **Earth Atlas:** http://173.212.213.207:9201/ — the atmosphere, the ocean, the land, the people and the solid Earth on one globe.
 - **Brain Atlas:** http://173.212.213.207:9202/ — the human brain in the round, every part with its anatomy; sections, atlases, data, the head and its electrodes, the mouse brain, and EEG, MEG and fMRI mapped onto the brain.
@@ -64,6 +64,8 @@ An integrative infrastructure for learning, using and researching all domains of
 - **Complex Atlas:** not run on our online server, whose resources the other applications already take much of — cell complexes, their invariants and the fields on them, computed by a C++ engine on the foundations morphe and physis; so for now it runs on your own computer: see [the Complex Atlas on your computer](#the-complex-atlas-on-your-computer).
 
 - **History Complex:** not run on our online server either — histories recorded as occasions, beings and ties, built into a 2-complex whose topology and signed ties a C++ engine on the history domain reads; it runs on your own computer: see [the History Complex on your computer](#the-history-complex-on-your-computer).
+
+- **Genome Atlas:** not run on our online server either — genomes mapped, aligned, indexed, read, assembled, quantified and placed on their trees by a C++ engine on the genomics and evolution domains, kept alive as workers that share out large jobs; it runs on your own computer, and can enlist others: see [the Genome Atlas on your computer](#the-genome-atlas-on-your-computer).
 
 The Earth and Celestial Atlases link to each other: a place on the Earth leads to its sky, and a sky to its weather.
 
@@ -136,6 +138,15 @@ python applications/history-complex/serve.py --open
 ```
 
 The first line builds its engine, the second opens it at http://127.0.0.1:8870/ on the canon of Europe, 1785–1828: the foam of its lives and ties rising through time in three dimensions, its loom, the network of any moment, the loops, shells and spin foams of its complex, and every assertion beside its sources; guided tours walk each canon. Its [README](applications/history-complex/README.md) tells the rest.
+
+<a id="the-genome-atlas-on-your-computer"></a>**The Genome Atlas on your computer.** It needs the same (Git, Python, g++), and fourteen genomes from NCBI (a few megabytes):
+
+```
+python data/acquisition/recipe.py applications/genome-atlas/recipe.json
+python applications/genome-atlas/serve.py --open
+```
+
+The first line builds its engine for your processor (a few minutes, once) and fetches the genomes; the second opens it at http://127.0.0.1:8890/ on *Escherichia coli*: its circular map, its origin of replication found from the skew, its genes found from the sequence alone. Then align two sequences and watch each algorithm's footprint on the edit graph, read and call a diploid, assemble a genome from its reads, place primate mitochondria on their tree, and in **Run** watch a job spread over the workers. Its [README](applications/genome-atlas/README.md) tells the rest, including how to add workers on other machines.
 
 *If something goes wrong.*
 
@@ -450,6 +461,8 @@ height 0   metrology · neuroscience · history · linguistics¹ · genomics¹ �
 
 - The [History Complex](applications/history-complex/README.md) builds histories into 2-complexes, from the history domain's records ([ADR 0041](development/decisions/0041-the-history-domain.md)). Occasions are its vertices, the lives of beings between them its edges, and each tie between two beings, between two of their meetings, a 2-cell, so that a 2-cell's cyclic order is time. It draws a history in three dimensions as a foam of lives and ties rising through time, cut at any date into the network of that moment, and as a loom. It reads the loops where the record is silent, the shells where triangles of ties persist, the history's other complexes (with its shells filled, Dowker's complex of who met whom, its persistent homology in time), and the signed ties as the spin foam of a ℤ₂ gauge theory: spins, amplitudes and the Gauss law derived by the character expansion, Wilson loops, the reconstruction of the signs the sources do not give, and the power of each being over it, all computed exactly by physis, with the couplings fitted to the record by their exact likelihood ([ADR 0042](development/decisions/0042-the-history-as-a-field-theory.md)). It also reads a history as one Feynman graph of a group field theory, its occasions the interaction vertices and its amplitude exact, and in time as one sample path, whose rates it estimates and tests. Its canons are classical facts of several ages and disciplines, which it can also join into one record.
 
+- The [Genome Atlas](applications/genome-atlas/README.md) draws genomes and computes with them, on the genomics and evolution domains ([ADR 0043](development/decisions/0043-the-genome-infrastructure.md)). It maps a genome in the round, finds its origin of replication from the skew and its genes, CpG islands and repeats from the sequence alone. It aligns two sequences as what an alignment is, a path through an edit graph whose score is a sum over paths in a semiring, and draws the footprint of each algorithm that computes it (the full matrix, a band, the wavefronts of equal penalty, bit vectors, vector lanes), every one held to the generic sum; in other semirings the same graph counts the alignments, gives each pair its probability, or yields every optimal alignment of every scoring at once as a polygon and its normal fan. It indexes genomes by suffix arrays and the Burrows–Wheeler transform; reads a diploid, maps the reads, calls the variants and scores the calls against the truth; assembles a genome from its reads on a de Bruijn graph cleaned step by step; quantifies an RNA-seq sample and tests what changed between conditions; places genes and genomes on their trees by distances, likelihood and sketches, and measures the selection on a gene; and simulates populations. Its engine is kept alive as workers, here and on other machines, among which large jobs are cut into shards whose answer does not depend on how they were cut; the browser's GPU scores alignments beside them.
+
 The three atlases run online on the project's server, the [Celestial Atlas](http://173.212.213.207:9200/), the [Earth Atlas](http://173.212.213.207:9201/) and the [Brain Atlas](http://173.212.213.207:9202/), and on your own computer in a few lines (Quick Start, above). The [index of applications](applications/README.md) lists those planned.
 
 ## 6. Organisation of the Repository
@@ -459,13 +472,13 @@ The three atlases run online on the project's server, the [Celestial Atlas](http
 ├── foundations/     calx · morphe · physis (git submodules); inference planned
 ├── domains/         metrology · geodesy · astronomy · geophysics · geography · oceanography ·
 │                    meteorology · tides · navigation · air-sea · climate · neuroscience (submodule) ·
-│                    history
+│                    history · genomics · evolution
 ├── data/            registry · acquisition · formats · products · requests on demand
 ├── visualization/   scene model · renderers · styles; provisional drawing helpers
 ├── observation/     instruments · field work · sensors
 ├── api/             the service and its clients in Python, C and C++, JavaScript
 ├── applications/    celestial-atlas · earth-atlas · brain-atlas · spiking-simulator · complex-atlas ·
-│                    history-complex
+│                    history-complex · genome-atlas
 ├── research/        questions · experiments · papers
 ├── notebooks/       exploration and teaching
 ├── docs/            architecture · gallery
