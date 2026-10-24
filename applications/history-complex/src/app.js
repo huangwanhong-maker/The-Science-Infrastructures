@@ -11,9 +11,10 @@ import { MomentView } from './moment.js';
 import { renderComplex } from './complexview.js';
 import { renderRecord } from './record.js';
 import { renderReadings } from './readings.js';
+import { renderField } from './field.js';
 import { occasionCard, tieCard, beingCard, canonCard } from './card.js';
-import { COLOURS } from './palette.js';
-import { yearOfJdn, dateText, signText, shortNames, yearText, number, isoOfYear } from './format.js';
+import { COLOURS, colourOf } from './palette.js';
+import { yearOfJdn, dateText, signText, shortNames, yearText, number, isoOfYear, listText } from './format.js';
 
 const state = { ...readHash(), engine: null, canons: [], data: null, check: null, checkTimer: null };
 let loom = null, moment = null, foam = null, player = null;
@@ -110,7 +111,7 @@ function enrich(d) {
 // ---- the views --------------------------------------------------------------------------------------
 function render() {
   for (const b of document.querySelectorAll('.views button')) b.setAttribute('aria-selected', String(b.dataset.view === state.view));
-  for (const v of ['foam', 'loom', 'moment', 'complex', 'record', 'readings']) $(`view-${v}`).hidden = v !== state.view;
+  for (const v of ['foam', 'loom', 'moment', 'complex', 'record', 'readings', 'field']) $(`view-${v}`).hidden = v !== state.view;
   const d = state.data;
   if (!d) return;
   d.view = state;
@@ -118,11 +119,12 @@ function render() {
   if (state.view === 'foam') renderFoam(d);
   else if (state.view === 'loom') renderLoom(d);
   else if (state.view === 'moment') {
-    moment ??= new MomentView($('view-moment'), { load: (date) => api.moment(state.canon, date), pick: act.pick, setDate: (date) => { state.date = date; save(); render(); } });
+    moment ??= new MomentView($('view-moment'), { load: (date) => api.moment(state.canon, date, api.couplingsOf(state.data)), pick: act.pick, setDate: (date) => { state.date = date; save(); render(); } });
     moment.render(d, state);
   } else if (state.view === 'complex') renderComplex($('view-complex'), d, act);
   else if (state.view === 'record') renderRecord($('view-record'), d, state, act, state.check);
   else if (state.view === 'readings') renderReadings($('view-readings'), d, act, state);
+  else if (state.view === 'field') renderField($('view-field'), d, act, state);
 }
 
 function renderLoom(d) {
@@ -305,11 +307,11 @@ function tourCard(d) {
 function foamCard(d) {
   const f = d.foam;
   const coupling = (of) => f?.couplings.find((c) => c.of === of);
-  const bal = coupling('balance'), all = coupling('all');
+  const bal = coupling('balance');
   return el('div', { class: 'card date' },
     el('p', { class: 'eyebrow', text: 'Reading the foam' }),
     el('p', { class: 'note', text: 'Time rises. Each being is a thread, each occasion a knot where the threads of those present meet, and each tie between two of their meetings a ribbon: a lens, a 2-cell of the complex. Opened, an occasion shows its presences, the rungs of its ties (gold positive, violet negative, dashed where inferred) and their triangles, vermilion where frustrated. A cut at a date is the network of that moment.' }),
-    f ? el('p', { class: 'note', text: `The theory fitted to this record: persistence tanh β = ${number(all?.t, 2)} over all ties, balance tanh β_Δ = ${number(bal?.t, 2)}; ${f.foams} independent foams.` }) : null,
+    f ? el('p', { class: 'note', text: `The theory fitted to this record${f.exact ? ', exactly' : ''}: persistence tanh β ${listText(f.couplings.filter((c) => c.of !== 'balance' && c.of !== 'all').map((c) => `${number(c.t, 2)} in ${colourOf(c.of).name.toLowerCase()}`))}; balance tanh β_Δ = ${number(bal?.t, 2)}; ${f.foams} independent foams.` }) : null,
     el('p', { class: 'note' }, 'How a record becomes a complex, and its signs a spin foam: ',
       el('a', { href: '/domains/history/theory/the-history-complex.md', target: '_blank', rel: 'noopener' }, 'the theory note'), '; how a history is recorded: ',
       el('a', { href: '/domains/history/codebook.md', target: '_blank', rel: 'noopener' }, 'the codebook'), '.'),

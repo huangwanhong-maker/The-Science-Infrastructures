@@ -1,1 +1,1 @@
-{"jdn": 2381692, "nodes": [], "links": [], "triangles": [], "frustrated": 0, "expected": 0, "date": "1808-10-01", "posterior": {"links": [], "triangles": [], "frustrated": {"mean": 0, "lo": 0, "hi": 0}}}
+{"jdn": 2381692, "nodes": [], "links": [], "triangles": [], "frustrated": 0, "expected": 0, "date": "1808-10-01", "posterior": {"links": [], "triangles": [], "frustrated": {"mean": 0, "lo": 0, "hi": 0}, "exact": true}, "networks": [{"ties": [], "weight": 1}]}

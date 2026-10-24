@@ -47,12 +47,17 @@ export function renderFoamReadings(data, act, state) {
       el('div', {},
         el('h4', { text: 'The couplings fitted to the record' }),
         el('div', { class: 'table-wrap' }, el('table', { class: 'record' },
-          el('thead', {}, el('tr', {}, el('th', { text: 'Of' }), el('th', { class: 'num', text: 'Cells' }), el('th', { class: 'num', text: 'Flipped or frustrated' }), el('th', { class: 'num', text: 'tanh β' }), el('th', { class: 'num', text: 'β' }))),
+          el('thead', {}, el('tr', {}, el('th', { text: 'Of' }), el('th', { class: 'num', text: 'Attested, changed' }),
+            el('th', { class: 'num', text: f.exact ? 'tanh β, MAP' : 'tanh β' }), f.exact ? el('th', { class: 'num', text: '95%' }) : null, el('th', { class: 'num', text: 'KT' }))),
           el('tbody', {}, ...f.couplings.map((c) => el('tr', { class: c.of === 'all' || c.of === 'balance' ? 'total' : '' },
             el('td', {}, c.of === 'balance' ? 'Balance, triangles at occasions' : c.of === 'all' ? 'All ties' : el('span', {}, swatch(c.of), ` ${colourOf(c.of).name}`)),
-            el('td', { class: 'num', text: String(c.n) }), el('td', { class: 'num', text: String(c.k) }),
-            el('td', { class: 'num', text: number(c.t, 3) }), el('td', { class: 'num', text: number(c.beta, 3) })))))),
-        el('p', { class: 'note', text: 'Each from the cells whose signs are all attested, the share flipped or frustrated taken as (k + ½)/(n + 1), so that a coupling stays finite where nothing has yet changed; tanh β = 1 − 2p.' })),
+            el('td', { class: 'num', text: `${c.k} of ${c.n}` }),
+            el('td', { class: 'num', text: number(c.t, 3) }),
+            f.exact ? el('td', { class: 'num faint', text: c.low === null || c.low === undefined ? '' : `${number(c.low, 2)} to ${number(c.high, 2)}` }) : null,
+            el('td', { class: 'num faint', text: number(c.kt_t, 3) })))))),
+        el('p', { class: 'note', text: f.exact
+          ? `The maximum a posteriori of the exact likelihood of the attested signs, log P = ${number(f.log_likelihood, 2)}, with the Jeffreys prior on each coupling's rate of change, and its 95% interval (Laplace). KT counts only the cells whose signs are all attested, each as if alone, (k + ½)/(n + 1); the fit uses every cell at once, the carried signs included (the theory note, §6.1).`
+          : `Each from the cells whose signs are all attested, the share changed taken as (k + ½)/(n + 1), the Krichevsky–Trofimov estimate: the exact likelihood is beyond reach here (${f.inexact}).` })),
       el('div', {},
         el('h4', { text: 'The labels, and what they mean here' }),
         el('dl', { class: 'meanings' },
@@ -105,7 +110,7 @@ function livesChart(data, lives) {
 async function loadPower(data, act, state, host) {
   host.replaceChildren(el('p', { class: 'note', text: 'Reconstructing the history without each being in turn…' }));
   try {
-    const answer = await api.power(data.canon.id);
+    const answer = await api.power(data.canon.id, api.couplingsOf(data));
     state.power = { canon: data.canon.id, answer };
     drawPower(data, act, answer, host);
   } catch (error) {
@@ -125,5 +130,5 @@ function drawPower(data, act, answer, host) {
         el('span', { class: 'bar-name' }, el('button', { class: 'link', onclick: () => act.pick({ kind: 'being', id: data.beings[r.being].id }) }, data.beings[r.being].name)),
         el('span', { class: 'bar-track' }, el('span', { class: 'bar', style: `width:${(100 * r.divergence) / max}%;background:${colourOf(data.beings[r.being].colour).hex}` })),
         el('span', { class: 'bar-value', text: number(r.divergence, 3) })))),
-    el('p', { class: 'faint small', text: `Nats over ${plural(answer.balance.rungs, 'unattested sign')}; ${answer.sweeps} sweeps of the heat bath for each reconstruction${answer.computed < answer.considered ? `; for the ${answer.computed} beings with the most ties, of ${answer.considered}` : ''}.` }));
+    el('p', { class: 'faint small', text: `Nats over ${plural(answer.balance.rungs, 'unattested sign')}; ${answer.exact ? 'each reconstruction computed exactly' : `${answer.sweeps} sweeps of the heat bath for each reconstruction`}${answer.computed < answer.considered ? `; for the ${answer.computed} beings with the most ties, of ${answer.considered}` : ''}.` }));
 }

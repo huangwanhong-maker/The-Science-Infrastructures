@@ -1,14 +1,17 @@
 // The engine of the History Complex: one request in JSON on standard input, one answer in JSON
 // on standard output (the application's README, §3). It composes the history domain (the
 // record, the construction, the readings, the spin foam and the other complexes) with morphe's
-// invariants (homology with generators, the fundamental group, persistence). The canons are read
+// invariants (homology with generators, the fundamental group, persistence) and physis's (the ℤ₂
+// gauge theory of the foam, exact and sampled; the recoupling of SU(2)). The canons are read
 // from the paths the request names, and nothing else is read. Errors are answered as
 // {"error": "..."} with exit status 1.
 //
 //   {"op": "build", "canon": path}                  the record, the complexes, their invariants, the readings, the foam
 //   {"op": "build", "canons": [paths]}              the same for the canons joined into one record
 //   {"op": "moment", "canon": path, "date": edtf}   the network of the moment at the date's last day, with its posterior
+//   moment, power and field take "couplings": {name: β}, those a build fitted, and do not fit again
 //   {"op": "power", "canon": path}                  the power of each being over the reconstruction
+//   {"op": "field", "canon": path}                  the history as a Feynman graph and as a sample path
 
 #include <history/construction/complex.hpp>
 #include <history/construction/loops.hpp>
@@ -17,8 +20,12 @@
 #include <history/foam/model.hpp>
 #include <history/foam/models.hpp>
 #include <history/foam/refined.hpp>
+#include <history/foam/transfer.hpp>
+#include <history/field/process.hpp>
+#include <history/field/stranded.hpp>
 #include <morphe/topology/invariants.hpp>
 #include <morphe/topology/persistence.hpp>
+#include <physis/symmetry/recoupling.hpp>
 
 #include <cmath>
 #include <exception>
@@ -26,6 +33,7 @@
 #include <iterator>
 #include <map>
 #include <numbers>
+#include <tuple>
 #include <utility>
 #include <optional>
 #include <string>
@@ -111,20 +119,91 @@ Json moment_json(const history::Moment& M) {
 
 // ---- the spin foam at G = ℤ₂ (theory note §6) ----------------------------------------------------
 
+// The couplings in use are the maximum a posteriori of the exact likelihood (transfer.hpp) where
+// the contraction reaches, else the KT estimates; and the ensembles are exact where it reaches,
+// else sampled. The answer says which.
 struct Foam {
   history::RefinedComplex R;
-  history::Couplings C;
+  history::Couplings C;          // the KT estimates, cell by cell independent
+  history::Couplings used;       // the couplings of M
   history::HistoryModel M;
   history::FoamSpace space;
+  std::optional<history::Fit> fit;
+  std::string inexact;           // why the contraction is not exact, or empty
 };
 
-Foam foam_of(const history::HistoryComplex& K) {
+using Given = std::optional<std::map<std::string, double>>;
+
+// The couplings a request carries (those a build fitted), if any.
+Given couplings_in(const Json& request) {
+  const Json* c = request.find("couplings");
+  if (!c || !c->is_object()) return std::nullopt;
+  std::map<std::string, double> out;
+  for (const auto& [k, v] : c->as_object())
+    if (v.is_number()) out[k] = v.as_number();
+  return out;
+}
+
+// The foam with the couplings given, or fitted here: exactly where the contraction reaches (a
+// first pass for log Z alone says whether it does), else the KT estimates.
+Foam foam_of(const history::HistoryComplex& K, const Given& given = std::nullopt) {
   Foam F;
   F.R = history::refine(K);
   F.C = history::estimate_couplings(K, F.R);
+  F.used = F.C;
   F.M = history::history_model(K, F.R, F.C);
   F.space = history::foam_space(F.R);
+  const auto P = history::parameters_of(K, F.M);
+  try {
+    std::size_t largest = 0;
+    (void)history::log_z(K, F.M, false, largest);
+    (void)history::log_z(K, F.M, true, largest);
+  } catch (const history::Intractable& e) {
+    F.inexact = e.what();
+  }
+  if (given) {
+    for (std::size_t c = 0; c < F.M.cells.size(); c++) {
+      const auto it = given->find(P.names[P.of_cell[c]]);
+      if (it != given->end()) F.M.cells[c].beta = it->second;
+    }
+    for (const auto& [name, b] : *given) {
+      if (name == "balance") F.used.balance = b;
+      else F.used.lens[name] = b;
+    }
+    return F;
+  }
+  if (!F.inexact.empty()) return F;
+  try {
+    F.fit = history::fit_couplings(K, F.M, F.C);
+    for (std::size_t c = 0; c < F.M.cells.size(); c++) F.M.cells[c].beta = F.fit->beta[P.of_cell[c]];
+    for (std::size_t p = 0; p < F.fit->names.size(); p++) {
+      if (F.fit->names[p] == "balance") F.used.balance = F.fit->beta[p];
+      else F.used.lens[F.fit->names[p]] = F.fit->beta[p];
+    }
+  } catch (const history::Intractable& e) {
+    F.inexact = e.what();
+  }
   return F;
+}
+
+// The cut at the end of a day: after the last occasion that begins on or before it.
+std::size_t cut_at(const history::HistoryComplex& K, long jdn) {
+  std::size_t v = 0;
+  for (std::size_t k = 0; k < K.order.size(); k++)
+    if (K.record.occasions[K.order[k]].date.first <= jdn) v = k;
+  return v;
+}
+
+// The mean and the 5% and 95% points of a law of counts (the mean alone when there is no law).
+std::array<double, 3> law_summary(const std::vector<double>& law, double mean) {
+  if (law.empty()) return {mean, mean, mean};
+  double acc = 0, lo = -1, hi = -1;
+  for (std::size_t k = 0; k < law.size(); k++) {
+    acc += law[k];
+    if (lo < 0 && acc >= 0.05 - 1e-12) lo = static_cast<double>(k);
+    if (hi < 0 && acc >= 0.95 - 1e-12) hi = static_cast<double>(k);
+  }
+  return {mean, lo, hi};
 }
 
 // The triangles of the network of the moment at a day, as triples of rungs (the last rung of each
@@ -160,33 +239,98 @@ std::array<double, 3> summary(const std::vector<std::size_t>& hist) {
 Json foam_json(const history::HistoryComplex& K, const Foam& F) {
   const auto& M = F.M;
   const history::Memory m = history::memory(history::persistence(K));
-  // The posterior, with the frustration of the moment at the end of every year.
+  // The posterior, with the frustration of the moment at the end of every year; the prior, its
+  // spins and the Wilson loops of the ties' lives.
   const auto years = history::moments_by_year(K, m);
   std::vector<history::Counter> counters;
   for (const auto& y : years) counters.push_back(moment_counter(K, M, history::moment(K, y.jdn, m)));
-  history::Sampling S;
-  S.burn = 1000;
-  S.sweeps = 20000;
-  const history::Ensemble post = history::sample(M, true, S, {}, counters);
-  // The prior: the theory's own ensemble, its spins and the Wilson loops of the ties' lives.
   std::vector<std::vector<std::size_t>> lives;
   std::vector<std::size_t> lived;
   for (std::size_t t = 0; t < K.rungs.size(); t++)
     if (K.rungs[t].size() >= 2) { lives.push_back({M.index[t].front(), M.index[t].back()}); lived.push_back(t); }
-  S.seed += 1;
-  const history::Ensemble prior = history::sample(M, false, S, lives);
-  const auto j = history::spins(M, prior, &F.space);
+  // Exactly where the contraction reaches; else by the heat bath.
+  std::vector<double> post_rung, post_cell, prior_cell, loop, loop_error;
+  std::vector<std::array<double, 3>> year_law;
+  std::size_t width = 0, largest = 0;
+  double log_z = 0;
+  bool exact = F.inexact.empty();
+  if (exact) {
+    try {
+      std::vector<history::Cut> cuts;
+      for (std::size_t y = 0; y < years.size(); y++) {
+        history::Cut c;
+        c.after = cut_at(K, years[y].jdn);
+        for (const auto& t : counters[y].triangles) c.keep.insert(c.keep.end(), t.begin(), t.end());
+        cuts.push_back(std::move(c));
+      }
+      std::vector<std::array<std::size_t, 2>> pairs;
+      for (const auto& l : lives) pairs.push_back({l[0], l[1]});
+      const auto post = history::contract(K, M, true, {}, cuts, counters);
+      const auto prior = history::contract(K, M, false, pairs);
+      post_rung = post.link;
+      post_cell = post.plaquette;
+      prior_cell = prior.plaquette;
+      loop = prior.two_point;
+      loop_error.assign(loop.size(), 0);
+      for (std::size_t y = 0; y < years.size(); y++) year_law.push_back(law_summary(post.cuts[y].negative, post.cuts[y].mean_negative));
+      width = std::max(post.width, prior.width);
+      largest = std::max(post.largest, prior.largest);
+      log_z = prior.log_z;
+    } catch (const history::Intractable&) {
+      exact = false;
+    }
+  }
+  history::Sampling S;
+  if (!exact) {
+    S.burn = 1000;
+    S.sweeps = 20000;
+    history::Observables at_years, around_lives;
+    at_years.counters = counters;
+    for (const std::size_t t : lived) around_lives.loops.push_back(history::tie_loop(K, F.R, t, 0, K.rungs[t].size() - 1));
+    const history::Ensemble post = history::sample(F.R, M, true, S, at_years);
+    S.seed += 1;
+    const history::Ensemble prior = history::sample(F.R, M, false, S, around_lives);
+    post_rung = post.rung;
+    post_cell = post.cell;
+    prior_cell = prior.cell;
+    loop = prior.loop;
+    loop_error = prior.loop_error;
+    for (std::size_t y = 0; y < years.size(); y++) year_law.push_back(summary(post.count_hist[y]));
+  }
+  const auto j = history::spins(M, prior_cell, &F.space);
 
+  // The couplings: the MAP of each parameter beside its KT estimate, or the KT estimates alone.
   Arr couplings;
-  for (const auto& e : F.C.estimates)
-    couplings.push_back(Json(Obj{{"of", Json(e.of)}, {"n", index(e.n)}, {"k", index(e.k)}, {"p", Json(e.p)}, {"t", Json(e.t)}, {"beta", Json(e.beta)}}));
+  auto kt_of = [&](const std::string& of) -> const history::CouplingEstimate* {
+    for (const auto& e : F.C.estimates)
+      if (e.of == of) return &e;
+    return nullptr;
+  };
+  if (F.fit) {
+    const auto& fit = *F.fit;
+    for (std::size_t p = 0; p < fit.names.size(); p++) {
+      const auto* e = kt_of(fit.names[p]);
+      const double b = fit.beta[p], se = fit.error[p];
+      const bool known = std::isfinite(se);
+      couplings.push_back(Json(Obj{{"of", Json(fit.names[p])}, {"cells", index(fit.cells[p])},
+                                   {"n", e ? index(e->n) : index(0)}, {"k", e ? index(e->k) : index(0)},
+                                   {"t", Json(std::tanh(b))}, {"beta", Json(b)}, {"error", known ? Json(se) : Json(nullptr)},
+                                   {"low", known ? Json(std::tanh(b - 1.96 * se)) : Json(nullptr)},
+                                   {"high", known ? Json(std::tanh(b + 1.96 * se)) : Json(nullptr)},
+                                   {"kt_t", Json(std::tanh(fit.start[p]))}, {"kt_beta", Json(fit.start[p])}}));
+    }
+  } else {
+    for (const auto& e : F.C.estimates)
+      couplings.push_back(Json(Obj{{"of", Json(e.of)}, {"n", index(e.n)}, {"k", index(e.k)}, {"p", Json(e.p)}, {"t", Json(e.t)}, {"beta", Json(e.beta)},
+                                   {"kt_t", Json(e.t)}, {"kt_beta", Json(e.beta)}}));
+  }
   Arr cells;
   const std::size_t lenses = K.lenses.size();
   for (std::size_t c = 0; c < M.cells.size(); c++) {
     const double t = std::tanh(M.cells[c].beta);
     cells.push_back(Json(Obj{{"kind", Json(M.cells[c].triangle ? "triangle" : "lens")}, {"index", index(M.cells[c].triangle ? c - lenses : c)},
-                             {"beta", Json(M.cells[c].beta)}, {"t", Json(t)}, {"prior", Json(prior.cell[c])}, {"spin", Json(j[c])},
-                             {"support", Json(static_cast<bool>(F.space.support[c]))}, {"posterior", Json(post.cell[c])}}));
+                             {"beta", Json(M.cells[c].beta)}, {"t", Json(t)}, {"prior", Json(prior_cell[c])}, {"spin", Json(j[c])},
+                             {"support", Json(static_cast<bool>(F.space.support[c]))}, {"posterior", Json(post_cell[c])}}));
   }
   Arr triangles;
   for (const auto& T : F.R.triangles)
@@ -195,19 +339,19 @@ Json foam_json(const history::HistoryComplex& K, const Foam& F) {
   Arr ties;
   for (std::size_t t = 0; t < K.rungs.size(); t++) {
     Arr rungs;
-    for (std::size_t k = 0; k < K.rungs[t].size(); k++) rungs.push_back(Json(post.rung[M.index[t][k]]));
+    for (std::size_t k = 0; k < K.rungs[t].size(); k++) rungs.push_back(Json(post_rung[M.index[t][k]]));
     ties.push_back(Json(Obj{{"tie", index(t)}, {"posterior", Json(std::move(rungs))}}));
   }
   Arr loops;
   for (std::size_t l = 0; l < lived.size(); l++) {
     const std::size_t t = lived[l];
-    const double tc = std::tanh(F.C.of(K.record.ties[t].colour));
-    loops.push_back(Json(Obj{{"tie", index(t)}, {"lenses", index(K.rungs[t].size() - 1)}, {"wilson", Json(prior.loop[l])}, {"error", Json(prior.loop_error[l])},
+    const double tc = std::tanh(F.used.of(K.record.ties[t].colour));
+    loops.push_back(Json(Obj{{"tie", index(t)}, {"lenses", index(K.rungs[t].size() - 1)}, {"wilson", Json(loop[l])}, {"error", Json(loop_error[l])},
                              {"chain", Json(std::pow(tc, static_cast<double>(K.rungs[t].size() - 1)))}}));
   }
   Arr moments;
   for (std::size_t y = 0; y < years.size(); y++) {
-    const auto [mean, lo, hi] = summary(post.count_hist[y]);
+    const auto [mean, lo, hi] = year_law[y];
     moments.push_back(Json(Obj{{"year", Json(static_cast<double>(years[y].year))}, {"triangles", index(counters[y].triangles.size())},
                                {"mean", Json(mean)}, {"lo", Json(lo)}, {"hi", Json(hi)}}));
   }
@@ -218,8 +362,8 @@ Json foam_json(const history::HistoryComplex& K, const Foam& F) {
   Arr channels;
   std::size_t admissible = 0, carrying = 0;
   for (std::size_t e = 0; e < live.size(); e++) {
-    const auto d = history::invariant_dimension(std::vector<int>(live[e], 1));
-    channels.push_back(Json(Obj{{"live", index(live[e])}, {"channels", Json(static_cast<double>(d))}}));
+    const double d = physis::symmetry::invariant_dimension(std::vector<int>(live[e], 1)).to_double();
+    channels.push_back(Json(Obj{{"live", index(live[e])}, {"channels", Json(d)}}));
     if (live[e]) { carrying++; admissible += d > 0; }
   }
   return Json(Obj{{"couplings", Json(std::move(couplings))},
@@ -229,7 +373,12 @@ Json foam_json(const history::HistoryComplex& K, const Foam& F) {
                   {"ties", Json(std::move(ties))},
                   {"lives", Json(std::move(loops))},
                   {"moments", Json(std::move(moments))},
-                  {"sweeps", index(S.sweeps)},
+                  {"sweeps", exact ? Json(nullptr) : index(S.sweeps)},
+                  {"exact", Json(exact)},
+                  {"inexact", exact ? Json(nullptr) : Json(F.inexact.empty() ? std::string("the contraction is beyond reach") : F.inexact)},
+                  {"width", index(width)}, {"largest", index(largest)},
+                  {"log_z", exact ? Json(log_z) : Json(nullptr)},
+                  {"log_likelihood", F.fit ? Json(F.fit->log_likelihood) : Json(nullptr)},
                   {"su2", Json(Obj{{"segments", Json(std::move(channels))}, {"carrying", index(carrying)}, {"admissible", index(admissible)}})}});
 }
 
@@ -439,7 +588,7 @@ Json build(const history::Record& record) {
   return answer;
 }
 
-Json moment(const history::Record& record, const std::string& date) {
+Json moment(const history::Record& record, const std::string& date, const Given& given) {
   const history::HistoryComplex K = history::construct(record);
   const history::Memory m = history::memory(history::persistence(K));
   const history::Date d = history::parse_historical(date);
@@ -447,27 +596,61 @@ Json moment(const history::Record& record, const std::string& date) {
   Json answer = moment_json(M);
   answer.set("date", Json(date));
   // The posterior of the reconstruction at this moment: each link's inferred sign at its last
-  // meeting, each triangle's mean product, and the number frustrated.
-  const Foam F = foam_of(K);
+  // meeting, each triangle's mean product, and the law of the number frustrated; and, from the
+  // prior, the spin networks along which the foam crosses this cut, with their weights.
+  const Foam F = foam_of(K, given);
   const history::Counter counter = moment_counter(K, F.M, M);
-  history::Sampling S;
-  S.burn = 1000;
-  S.sweeps = 20000;
-  std::vector<std::vector<std::size_t>> loops;
-  for (const auto& t : counter.triangles) loops.push_back({t[0], t[1], t[2]});
-  const history::Ensemble post = history::sample(F.M, true, S, loops, {counter});
-  Arr links;
+  std::vector<std::size_t> link_rung;
   for (const auto& l : M.links) {
     std::size_t r = F.M.index[l.tie].front();
     for (std::size_t k = 0; k < K.rungs[l.tie].size(); k++)
       if (K.record.occasions[K.rungs[l.tie][k].occasion].date.first <= M.jdn) r = F.M.index[l.tie][k];
-    links.push_back(Json(post.rung[r]));
+    link_rung.push_back(r);
   }
-  Arr triangles;
-  for (std::size_t i = 0; i < loops.size(); i++) triangles.push_back(Json(post.loop[i]));
-  const auto [mean, lo, hi] = summary(post.count_hist[0]);
+  Arr links, triangles, networks;
+  double mean = 0, lo = 0, hi = 0;
+  bool exact = F.inexact.empty();
+  if (exact) {
+    try {
+      history::Cut cut;
+      cut.after = cut_at(K, M.jdn);
+      cut.keep = link_rung;
+      for (const auto& t : counter.triangles) cut.keep.insert(cut.keep.end(), t.begin(), t.end());
+      const auto post = history::contract(K, F.M, true, {}, {cut}, {counter});
+      for (std::size_t r : link_rung) links.push_back(Json(post.link[r]));
+      for (double x : post.cuts[0].products) triangles.push_back(Json(x));
+      std::tie(mean, lo, hi) = std::tuple_cat(law_summary(post.cuts[0].negative, post.cuts[0].mean_negative));
+      history::Cut open;
+      open.after = cut.after;
+      const auto prior = history::contract(K, F.M, false, {}, {open}, {}, 12);
+      for (const auto& [set, weight] : prior.cuts[0].networks) {
+        Arr ties;
+        for (std::size_t r : set) ties.push_back(index(F.M.rung[r][0]));
+        networks.push_back(Json(Obj{{"ties", Json(std::move(ties))}, {"weight", Json(weight)}}));
+      }
+    } catch (const history::Intractable&) {
+      exact = false;
+      links = Arr();
+      triangles = Arr();
+      networks = Arr();
+    }
+  }
+  if (!exact) {
+    history::Sampling S;
+    S.burn = 1000;
+    S.sweeps = 20000;
+    history::Observables O;
+    for (const auto& t : counter.triangles) O.rungs.push_back({t[0], t[1], t[2]});
+    O.counters = {counter};
+    const history::Ensemble post = history::sample(F.R, F.M, true, S, O);
+    for (std::size_t r : link_rung) links.push_back(Json(post.rung[r]));
+    for (double x : post.rung_product) triangles.push_back(Json(x));
+    std::tie(mean, lo, hi) = std::tuple_cat(summary(post.count_hist[0]));
+  }
   answer.set("posterior", Json(Obj{{"links", Json(std::move(links))}, {"triangles", Json(std::move(triangles))},
-                                   {"frustrated", Json(Obj{{"mean", Json(mean)}, {"lo", Json(lo)}, {"hi", Json(hi)}})}}));
+                                   {"frustrated", Json(Obj{{"mean", Json(mean)}, {"lo", Json(lo)}, {"hi", Json(hi)}})},
+                                   {"exact", Json(exact)}}));
+  answer.set("networks", Json(std::move(networks)));
   return answer;
 }
 
@@ -475,13 +658,27 @@ Json moment(const history::Record& record, const std::string& date) {
 // the record without the being's ties, the couplings kept; its power is the divergence of the
 // posterior marginals of every other unattested sign. And the power of balance itself: the act
 // is β_Δ = 0.
-Json power(const history::Record& record) {
+Json power(const history::Record& record, const Given& given) {
   const history::HistoryComplex K = history::construct(record);
-  const Foam F = foam_of(K);
+  const Foam F = foam_of(K, given);
   history::Sampling S;
   S.burn = 500;
   S.sweeps = 6000;
-  const history::Ensemble base = history::sample(F.M, true, S);
+  // The posterior's marginals, exactly where the contraction reaches.
+  bool exact = F.inexact.empty();
+  auto marginals = [&](const history::HistoryComplex& KK, const history::HistoryModel& MM) {
+    if (exact) {
+      try {
+        history::Ensemble E;
+        E.rung = history::contract(KK, MM, true).link;
+        return E;
+      } catch (const history::Intractable&) {
+        exact = false;
+      }
+    }
+    return history::sample(history::refine(KK), MM, true, S);
+  };
+  const history::Ensemble base = marginals(K, F.M);
   // The unattested rungs, by (tie id, occasion id).
   std::map<std::pair<std::string, std::string>, double> mean;
   for (std::size_t r = 0; r < F.M.rung.size(); r++)
@@ -524,16 +721,119 @@ Json power(const history::Record& record) {
     without.ties = kept;
     const history::HistoryComplex K2 = history::construct(without);
     const history::RefinedComplex R2 = history::refine(K2);
-    const history::HistoryModel M2 = history::history_model(K2, R2, F.C);
-    const auto [d, n] = divergence(K2, M2, history::sample(M2, true, S));
+    const history::HistoryModel M2 = history::history_model(K2, R2, F.used);
+    const auto [d, n] = divergence(K2, M2, marginals(K2, M2));
     beings.push_back(Json(Obj{{"being", index(b)}, {"ties", index(removed)}, {"divergence", Json(d)}, {"rungs", index(n)}}));
   }
-  history::Couplings flat = F.C;
+  history::Couplings flat = F.used;
   flat.balance = 0;
   const history::HistoryModel M0 = history::history_model(K, F.R, flat);
-  const auto [d0, n0] = divergence(K, M0, history::sample(M0, true, S));
-  return Json(Obj{{"beings", Json(std::move(beings))}, {"balance", Json(Obj{{"divergence", Json(d0)}, {"rungs", index(n0)}})}, {"sweeps", index(S.sweeps)},
+  const auto [d0, n0] = divergence(K, M0, marginals(K, M0));
+  return Json(Obj{{"beings", Json(std::move(beings))}, {"balance", Json(Obj{{"divergence", Json(d0)}, {"rungs", index(n0)}})},
+                  {"sweeps", exact ? Json(nullptr) : index(S.sweeps)}, {"exact", Json(exact)},
                   {"considered", index(considered)}, {"computed", index(chosen.size())}});
+}
+
+// The history as a Feynman graph of a group field theory, and in time as a sample path (theory
+// note §8): the stranded graph, its bubbles and their types, the check of Proposition 8.1, the
+// amplitude, and the rates of the time-ordered process with its martingale checks.
+Json field(const history::Record& record, const Given& given) {
+  const history::HistoryComplex K = history::construct(record);
+  const history::RefinedComplex R = history::refine(K);
+  const history::StrandedGraph G = history::stranded(K);
+  const auto forms = history::feynman_forms(K, R, G);
+  const auto boundary = history::lens_boundaries(R, K.lenses.size());
+  bool identity = forms.consistent && forms.free_strands == K.lenses.size() && history::pairing_complete(K, G);
+  for (std::size_t f = 0; f < K.lenses.size(); f++) identity = identity && forms.argument[f] == boundary[f];
+  // The field's ranks.
+  std::map<std::size_t, std::size_t> ranks;
+  std::size_t strands = 0;
+  for (std::size_t e = 0; e < K.segments.size(); e++) { ranks[G.rank(e)]++; strands += G.rank(e); }
+  Arr rank_list;
+  for (const auto& [n, count] : ranks) rank_list.push_back(Json(Obj{{"rank", index(n)}, {"segments", index(count)}}));
+  // The bubbles, and their types by frequency.
+  std::vector<std::pair<std::string, const std::vector<std::size_t>*>> types;
+  for (const auto& [t, vs] : G.types) types.push_back({t, &vs});
+  std::stable_sort(types.begin(), types.end(), [](const auto& a, const auto& b) { return a.second->size() > b.second->size(); });
+  std::map<std::string, std::size_t> type_index;
+  for (std::size_t i = 0; i < types.size(); i++) type_index[types[i].first] = i;
+  Arr bubbles;
+  for (std::size_t v = 0; v < G.bubbles.size(); v++) {
+    const auto& B = G.bubbles[v];
+    Arr halves, corners;
+    for (std::size_t h = 0; h < B.half_edges.size(); h++)
+      halves.push_back(Json(Obj{{"being", index(B.owner[h])}, {"out", Json(B.half_edges[h].out)}, {"rank", index(G.rank(B.half_edges[h].segment))}}));
+    for (const auto& c : B.corners)
+      corners.push_back(Json(Obj{{"lens", index(c.lens)}, {"tie", index(K.lenses[c.lens].tie)},
+                                 {"kind", Json(c.kind == history::Corner::passing ? "passing" : c.kind == history::Corner::closing ? "closing" : "opening")},
+                                 {"ends", Json(Arr{index(c.ends[0]), index(c.ends[1])})}}));
+    bubbles.push_back(Json(Obj{{"occasion", index(B.occasion)}, {"type", index(type_index.at(B.type))}, {"k_in", index(B.k_in)}, {"k_new", index(B.k_new)},
+                               {"k_last", index(B.k_last)}, {"meetings", index(B.meetings)}, {"begun", index(B.begun)}, {"ended", index(B.ended)},
+                               {"automorphisms", index(B.automorphisms)}, {"canonical", Json(B.canonical)},
+                               {"half_edges", Json(std::move(halves))}, {"corners", Json(std::move(corners))}}));
+  }
+  Arr type_list;
+  for (const auto& [t, vs] : types) {
+    const auto& B = G.bubbles[vs->front()];
+    type_list.push_back(Json(Obj{{"count", index(vs->size())}, {"example", index(vs->front())}, {"beings", index(B.beings.size())},
+                                 {"automorphisms", index(B.automorphisms)}, {"canonical", Json(B.canonical)}}));
+  }
+  // The amplitude: Z of the spin foam, and the history's Feynman amplitude 2^{F + E} Z.
+  const Foam F = foam_of(K, given);
+  Json amplitude = Json(nullptr);
+  if (F.inexact.empty()) {
+    try {
+      std::size_t largest = 0;
+      const double prior = history::log_z(K, F.M, false, largest), post = history::log_z(K, F.M, true, largest);
+      const double ln2 = std::log(2.0);
+      amplitude = Json(Obj{{"log_z", Json(prior)},
+                           {"log_amplitude", Json(prior + ln2 * static_cast<double>(K.lenses.size() + K.segments.size()))},
+                           {"log_likelihood", Json(post - prior)},
+                           {"largest", index(largest)}});
+    } catch (const history::Intractable&) {
+    }
+  }
+  Arr couplings;
+  {
+    const auto P = history::parameters_of(K, F.M);
+    std::vector<bool> seen(P.names.size(), false);
+    std::vector<std::size_t> cells(P.names.size(), 0);
+    for (std::size_t p : P.of_cell) cells[p]++;
+    for (std::size_t c = 0; c < F.M.cells.size(); c++) {
+      const std::size_t p = P.of_cell[c];
+      if (seen[p]) continue;
+      seen[p] = true;
+      const double b = F.M.cells[c].beta;
+      couplings.push_back(Json(Obj{{"of", Json(P.names[p])}, {"cells", index(cells[p])}, {"beta", Json(b)}, {"t", Json(std::tanh(b))}}));
+    }
+  }
+  // The process.
+  const history::Process P = history::process_of(K);
+  auto prop = [](const history::Proportion& q) {
+    return Json(Obj{{"trials", index(q.trials)}, {"successes", index(q.successes)}, {"p", Json(q.p)}, {"error", Json(q.error)}});
+  };
+  Json process = Json(Obj{
+      {"from", Json(P.from)}, {"to", Json(P.to)},
+      {"rates", array_of(P.rates, [](const history::Rate& r) {
+         return Json(Obj{{"k", index(r.k)}, {"count", index(r.count)}, {"exposure", Json(r.exposure)}, {"rate", Json(r.rate)},
+                         {"error", Json(r.error)}, {"upper", Json(r.upper)}, {"mean_new", Json(r.mean_new)}});
+       })},
+      {"open", prop(P.open)}, {"close", prop(P.close)},
+      {"binding", Json(Obj{{"tied", Json(P.mu_tied)}, {"untied", Json(P.mu_untied)}, {"ratio", Json(P.binding)}, {"low", Json(P.binding_low)},
+                            {"high", Json(P.binding_high)}, {"tied_meetings", index(P.tied_meetings)}, {"untied_meetings", index(P.untied_meetings)},
+                            {"tied_exposure", Json(P.tied_exposure)}, {"untied_exposure", Json(P.untied_exposure)}})},
+      {"eras", array_of(P.eras, [](const history::EraCheck& c) {
+         return Json(Obj{{"from", Json(c.from)}, {"to", Json(c.to)}, {"occasions", index(c.occasions)}, {"expected", Json(c.expected)}, {"z", Json(c.z)},
+                         {"opened", index(c.opened)}, {"opened_expected", Json(c.opened_expected)}, {"opened_z", Json(c.opened_z)}});
+       })},
+      {"chi2", Json(P.chi2)}, {"dof", index(P.dof)},
+      {"log_likelihood", Json(Obj{{"occasions", Json(P.log_likelihood_occasions)}, {"strands", Json(P.log_likelihood_strands)}})}});
+  return Json(Obj{{"segments", index(K.segments.size())}, {"lenses", index(K.lenses.size())}, {"occasions", index(K.order.size())},
+                  {"strands", index(strands)}, {"ranks", Json(std::move(rank_list))},
+                  {"identity", Json(Obj{{"holds", Json(identity)}, {"free_strands", index(forms.free_strands)}})},
+                  {"bubbles", Json(std::move(bubbles))}, {"types", Json(std::move(type_list))},
+                  {"amplitude", amplitude}, {"couplings", Json(std::move(couplings))},
+                  {"exact", Json(F.inexact.empty())}, {"process", process}});
 }
 
 // The record a request names: one canon, or several joined.
@@ -566,8 +866,9 @@ int main() {
     const std::string op = text(request, "op");
     Json answer;
     if (op == "build") answer = build(load(request));
-    else if (op == "moment") answer = moment(load(request), text(request, "date"));
-    else if (op == "power") answer = power(load(request));
+    else if (op == "moment") answer = moment(load(request), text(request, "date"), couplings_in(request));
+    else if (op == "power") answer = power(load(request), couplings_in(request));
+    else if (op == "field") answer = field(load(request), couplings_in(request));
     else throw std::invalid_argument("no operation \"" + op + "\"");
     std::cout << answer.dump() << "\n";
     return 0;

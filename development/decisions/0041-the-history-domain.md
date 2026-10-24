@@ -1,6 +1,6 @@
 # 0041. The History Domain and the History Complex
 
-- **Status:** Accepted
+- **Status:** Accepted; amended by [0042](0042-the-history-as-a-field-theory.md)
 - **Date:** 2026-10-24
 - **Decided by:** the user asked for a History Complex: histories of science, art, music, international relations and philosophy, and their integration, each represented as a 2-complex, to bridge social spacetime with theoretical physics and field models. They asked for the semantics to be designed first, and for Claude to form its own view rather than follow their discussion papers. They judged full historical data out of reach and proposed building from classical facts. Then they agreed: to build it properly, to make history a new domain, and to code the canon's signs by a codebook that Claude writes and the user reviews. While the work went on they asked for several things:
 

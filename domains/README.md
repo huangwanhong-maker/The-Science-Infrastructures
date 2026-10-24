@@ -33,7 +33,7 @@ height 4   climate                                                       (bridge
 |---|---|---|---|---|
 | [metrology](metrology/) | field | Time scales, reference frames, Earth orientation | — | draft |
 | [neuroscience](neuroscience/) | field | The brain: reference spaces, parcellations and maps, the head and its electrodes; later surfaces, connectivity, neurons, signals (a submodule) | — | draft |
-| [history](history/) | field | Records of histories by a codebook; chronology and calendars; the history complex, its topology and its signed ties as a ℤ₂ field (ADR 0041) | — | draft |
+| [history](history/) | field | Records of histories by a codebook; chronology and calendars; the history complex, its topology and its signed ties as a ℤ₂ field, their spin foam computed exactly on physis; the history as a field theory (ADR 0041, 0042) | — | draft |
 | [geodesy](geodesy/) | field | The figure of the Earth, its gravity field and rotation, reference systems; places, distances, directions | metrology | draft |
 | [astronomy](astronomy/) | field | Positional astronomy, ephemerides, the rotation of the bodies, galaxies; later astrophysics and cosmology | metrology, geodesy | draft |
 | [geophysics](geophysics/) | field | The solid Earth: plate motion, earthquake mechanisms, the crust, sections; later seismology, gravity and magnetism | geodesy | draft |

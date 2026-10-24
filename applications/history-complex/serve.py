@@ -11,6 +11,7 @@ at ``/data/``. The histories it shows are the canons of the history domain
     POST /api/build                      {"canon"}: the record, the complex, its invariants and readings
     POST /api/moment                     {"canon", "date"}: the network of the moment at a date
     POST /api/power                      {"canon"}: the power of each being over the reconstruction
+    POST /api/field                      {"canon"}: the history as a Feynman graph and as a sample path
     GET  /api/check?canon=<id>           the last check of the canon's beings against Wikidata
     POST /api/check/run                  {"canon"}: check it again (data/products/history_check.py)
     POST /api/cancel                     stop the computations in progress
@@ -33,6 +34,7 @@ then open http://127.0.0.1:8870/ in a browser.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import http.server
 import json
 import subprocess
@@ -72,10 +74,21 @@ import engine  # noqa: E402
 RECIPE = None
 WRITES = {"allowed": True, "token": None}
 # The limits of a request: the lines of a canon and the wall time of each kind of request.
-LIMITS = {"lines": 200_000, "seconds": {"build": 120.0, "moment": 30.0, "power": 180.0}}
+LIMITS = {"lines": 200_000, "seconds": {"build": 120.0, "moment": 30.0, "power": 180.0, "field": 120.0}}
 RUNNING: set = set()
 SLOTS = threading.BoundedSemaphore(3)
-OPS = {"/api/build": "build", "/api/moment": "moment", "/api/power": "power"}
+OPS = {"/api/build": "build", "/api/moment": "moment", "/api/power": "power", "/api/field": "field"}
+# Builds are kept, keyed by the engine's build and the canons' text: fitting the couplings exactly
+# takes up to half a minute on the largest canons, and a canon's build never changes otherwise.
+BUILDS = ROOT / "data" / "cache" / "history-complex" / "builds"
+
+
+def build_key(paths: list) -> str:
+    h = hashlib.sha256(json.dumps(engine.read_build() or {}, sort_keys=True).encode("utf-8"))
+    for path in paths:
+        h.update(path.name.encode("utf-8"))
+        h.update(path.read_bytes())
+    return h.hexdigest()[:32]
 # The canons joined into one record (the engine's join_records): a canon of its own in the list.
 INTEGRATED = "integrated"
 # The checks against Wikidata in progress or ended, by canon: {"status", "started", "message"}.
@@ -279,6 +292,11 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         # A page may ask for a build and several moments at once: each waits for one of the engine's slots.
         if not SLOTS.acquire(timeout=120):
             return self.reply_json({"message": "the engine is busy with other requests; try again in a moment"}, 409)
+        key = build_key(paths) if op == "build" else None
+        kept = BUILDS / f"{key}.json" if key else None
+        if kept is not None and kept.exists():
+            SLOTS.release()
+            return self.reply_text(kept.read_text(encoding="utf-8"), 200)
         toolchain = (engine.read_build() or {}).get("toolchain") or "native"
         request = {"op": op}
         if len(paths) > 1 or body.get("canon") == INTEGRATED:
@@ -287,6 +305,10 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             request["canon"] = engine.path_for(toolchain, paths[0])
         if op == "moment":
             request["date"] = body["date"]
+        # The couplings a build fitted, so that a moment, the power or the field need not fit again.
+        couplings = body.get("couplings")
+        if isinstance(couplings, dict) and all(isinstance(k, str) and isinstance(v, (int, float)) for k, v in couplings.items()):
+            request["couplings"] = couplings
         run = None
         try:
             run = engine.Run(json.dumps(request))
@@ -304,6 +326,12 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         if code != 0 or answer is None:
             message = err.strip().splitlines()[-1] if err.strip() else "the engine failed"
             return self.reply_json({"message": message}, 499 if code < 0 else 500)
+        if kept is not None:
+            try:
+                BUILDS.mkdir(parents=True, exist_ok=True)
+                kept.write_text(out, encoding="utf-8")
+            except OSError:
+                pass
         # The answer is passed through as the engine wrote it.
         self.reply_text(out, 200)
 
@@ -355,7 +383,7 @@ def main(argv: list[str]) -> int:
     public = args.host not in ("127.0.0.1", "localhost", "::1")
     if public:
         WRITES.update(allowed=bool(args.token), token=args.token)
-        LIMITS.update(lines=20_000, seconds={"build": 30.0, "moment": 10.0})
+        LIMITS.update(lines=20_000, seconds={"build": 30.0, "moment": 10.0, "power": 60.0, "field": 30.0})
     if not engine.status()["current"]:
         print("The engine is not built from the present sources. Build it from the page, or run:\n"
               "  python data/acquisition/recipe.py applications/history-complex/recipe.json", file=sys.stderr)

@@ -1,5 +1,6 @@
 // The spin foam of a history at G = ℤ₂ (theory note §6; the idea note §3): the unified model of
-// the social and street spin foams, with the frame group the record measures.
+// the social and street spin foams, with the frame group the record measures, as a lattice gauge
+// theory of physis on the history's refined complex.
 //
 // The variables are the rungs of the refined complex K̂ in temporal gauge, u_r = ±1: a tie's sign
 // at a meeting. The weight of a configuration is a Gibbs weight, a product over the 2-cells:
@@ -38,14 +39,10 @@
 // (the social spin foam's Def. 8.5), in which each unattested sign is inferred from all the
 // others, through persistence and balance at once, rather than carried forward.
 //
-// Sampling is by single-site heat bath (Glauber dynamics), which leaves W invariant, and after each
-// sweep a cluster move at every presence (b, o): all the rungs of b's ties at o flipped at once,
-// accepted by Metropolis. Every triangle through the presence holds two of those rungs, so the
-// move changes no triangle and only the lenses that begin or end there; where balance is strong
-// and the triangles freeze, it carries the chain between configurations the single-site moves
-// cannot reach in reasonable time. Its draws are reproducible, a calx Philox stream under a seed. Means of rungs and cells are measured by
-// their conditional expectations at a free rung (Rao-Blackwell), unbiased and of far smaller
-// variance than the raw values.
+// The theory is physis's ℤ₂ lattice gauge theory on the 2-complex K̂ (physis gauge), with a
+// coupling for each 2-cell: computed exactly by physis's contraction (transfer.hpp), and sampled,
+// where the contraction is out of reach, by physis's heat bath (sample(), below). The domain adds
+// only what is the record's: which cells, which couplings, which links are fixed by the record.
 //
 // The configuration side is a probability measure for every real β. The foam side is signed
 // where some β < 0 (a colour whose ties flip more often than not, or triangles frustrated more
@@ -57,6 +54,10 @@
 #include <history/construction/complex.hpp>
 #include <history/foam/refined.hpp>
 #include <calx/random/stream.hpp>
+#include <morphe/topology/cycles.hpp>
+#include <physis/field_theory/statistics.hpp>
+#include <physis/gauge/field.hpp>
+#include <physis/gauge/updates.hpp>
 
 #include <algorithm>
 #include <array>
@@ -195,231 +196,123 @@ struct Sampling {
   std::uint64_t seed = 20261024;
 };
 
-// What an ensemble yields: the mean of each rung, of each cell's holonomy, and of any products
-// of rungs asked for (Wilson loops in temporal gauge), with their standard errors from batches.
-struct Ensemble {
-  bool conditioned = false;
-  std::vector<double> rung;    // ⟨u_r⟩
-  std::vector<double> cell;    // ⟨h_f⟩
-  std::vector<double> loop;    // ⟨Π_{r ∈ loop} u_r⟩
-  std::vector<double> loop_error;
-  std::vector<std::vector<std::size_t>> count_hist;  // for each counter, a histogram of its values
-  std::size_t samples = 0;
-};
-
 // A count of frustrated triangles, evaluated on each draw (the network of the moment at a date).
 struct Counter {
   std::vector<std::array<std::size_t, 3>> triangles;  // three rungs each
 };
 
-// Samples the prior (conditioned = false) or the posterior (the attested rungs fixed).
-inline Ensemble sample(const HistoryModel& M, bool conditioned, const Sampling& S,
-                       const std::vector<std::vector<std::size_t>>& loops = {}, const std::vector<Counter>& counters = {}) {
+// What a sample is asked to measure besides the means of rungs and cells: products of 2-cells'
+// holonomies and Wilson loops along closed paths of K̂, which are gauge invariant and so read in
+// either ensemble; products of rungs and counts of frustrated triangles, read in the posterior,
+// whose temporal gauge gives a rung its sign.
+struct Observables {
+  std::vector<std::vector<std::size_t>> cells;
+  std::vector<morphe::topology::Path> loops;
+  std::vector<std::vector<std::size_t>> rungs;
+  std::vector<Counter> counters;
+};
+
+// What an ensemble yields: the mean of each rung and of each cell's holonomy, the observables asked
+// for with their standard errors (binned, physis field_theory), and a histogram of each counter.
+struct Ensemble {
+  bool conditioned = false;
+  std::vector<double> rung;    // ⟨u_r⟩, in temporal gauge (posterior); 0 by symmetry in the prior
+  std::vector<double> cell;    // ⟨h_f⟩
+  std::vector<double> product, product_error;  // the cells' products asked
+  std::vector<double> loop, loop_error;        // the Wilson loops asked
+  std::vector<double> rung_product;            // the rungs' products asked
+  std::vector<std::vector<std::size_t>> count_hist;
+  std::size_t samples = 0;
+};
+
+// Samples the prior (conditioned = false) or the posterior by physis's ℤ₂ lattice gauge theory on
+// K̂ (physis gauge, field.hpp and updates.hpp): a coupling for each 2-cell, β_f = the cell's, and
+// the heat bath of a finite group link by link. The prior leaves every link free, so that the updates of the temporal
+// edges move the field along its gauge orbits: flipping a being's edge between two occasions
+// changes exactly the lenses along it, the move that keeps a strongly balanced field from freezing,
+// and every observable read in it is gauge invariant. The posterior freezes the temporal edges at
+// the identity (the temporal gauge, in which a rung is a tie's sign) and every attested rung at its
+// sign. Draws are reproducible: a calx Philox stream under a seed.
+inline Ensemble sample(const RefinedComplex& R, const HistoryModel& M, bool conditioned, const Sampling& S, const Observables& O = {}) {
+  namespace pg = physis::gauge;
   calx::random::Stream z(S.seed, conditioned ? 1u : 0u, 0x4f4d4146u, 0u);
+  pg::GaugeField<pg::ZN> U(pg::ZN{2}, R.cw);
+  std::vector<double> w(M.cells.size());
+  for (std::size_t c = 0; c < M.cells.size(); c++) w[c] = M.cells[c].beta;
+  U.set_couplings(std::move(w));
   const std::size_t n = M.rung.size();
-  std::vector<int> u(n, 1);
-  std::vector<bool> free(n, true);
-  for (std::size_t r = 0; r < n; r++) {
-    if (conditioned && M.attested[r]) { u[r] = M.attested[r]; free[r] = false; }
-    else u[r] = z.uniform() < 0.5 ? 1 : -1;
-  }
-  // The local field at a rung: the weight is e^{field · u_r}.
-  auto field_at = [&](std::size_t r) {
-    double field = 0;
-    for (std::size_t c : M.cells_of[r]) {
-      const auto& cell = M.cells[c];
-      int rest = 1;
-      for (std::size_t q : cell.rungs)
-        if (q != r) rest *= u[q];
-      field += cell.beta * rest;
-    }
-    return field;
-  };
-  std::vector<int> flipped(M.cells.size(), 0);
-  auto cluster = [&]() {
-    for (const auto& g : M.presences) {
-      if (std::any_of(g.begin(), g.end(), [&](std::size_t r) { return !free[r]; })) continue;
-      std::vector<std::size_t> touched;
-      for (std::size_t r : g)
-        for (std::size_t c : M.cells_of[r]) {
-          if (!flipped[c]) touched.push_back(c);
-          flipped[c] ^= 1;
-        }
-      double delta = 0;  // the change of log W
-      for (std::size_t c : touched)
-        if (flipped[c]) delta -= 2 * M.cells[c].beta * holonomy(M.cells[c], u);
-      for (std::size_t c : touched) flipped[c] = 0;
-      if (delta >= 0 || z.uniform() < std::exp(delta))
-        for (std::size_t r : g) u[r] = -u[r];
-    }
-  };
-  auto sweep = [&]() {
+  std::vector<std::size_t> edge(n);
+  for (std::size_t r = 0; r < n; r++) edge[r] = R.rung_edge[M.rung[r][0]][M.rung[r][1]];
+  for (std::size_t e = 0; e < R.cw.edges.size(); e++) U.set(e, z.uniform() < 0.5 ? 0u : 1u);
+  if (conditioned) {
+    for (std::size_t e = 0; e < R.temporal; e++) U.freeze(e, 0u);
     for (std::size_t r = 0; r < n; r++)
-      if (free[r]) u[r] = z.uniform() < 1 / (1 + std::exp(-2 * field_at(r))) ? 1 : -1;
-    cluster();
-  };
-  // Each cell is measured by its conditional mean at one free rung (Rao-Blackwell):
-  // E[h_f | the rest] = (product of its other rungs) · tanh(field at that rung).
-  std::vector<std::size_t> pivot(M.cells.size(), n);
-  for (std::size_t c = 0; c < M.cells.size(); c++)
-    for (std::size_t r : M.cells[c].rungs)
-      if (free[r]) { pivot[c] = r; break; }
-  for (std::size_t k = 0; k < S.burn; k++) sweep();
+      if (M.attested[r]) U.freeze(edge[r], M.attested[r] > 0 ? 0u : 1u);
+  }
+  auto sign = [&](std::size_t r) { return U.link(edge[r]) == 0u ? 1 : -1; };
+  for (std::size_t k = 0; k < S.burn; k++) pg::heat_bath_sweep(U, 1.0, z);
   Ensemble E;
   E.conditioned = conditioned;
   E.rung.assign(n, 0);
   E.cell.assign(M.cells.size(), 0);
-  E.loop.assign(loops.size(), 0);
-  E.loop_error.assign(loops.size(), 0);
-  E.count_hist.assign(counters.size(), {});
-  for (std::size_t c = 0; c < counters.size(); c++) E.count_hist[c].assign(counters[c].triangles.size() + 1, 0);
-  const std::size_t batches = 20, per = std::max<std::size_t>(1, S.sweeps / batches);
-  std::vector<std::vector<double>> batch(loops.size(), std::vector<double>(batches, 0));
-  for (std::size_t k = 0; k < per * batches; k++) {
-    sweep();
-    for (std::size_t r = 0; r < n; r++) E.rung[r] += free[r] ? std::tanh(field_at(r)) : u[r];
-    for (std::size_t c = 0; c < M.cells.size(); c++) {
-      if (pivot[c] == n) { E.cell[c] += holonomy(M.cells[c], u); continue; }
-      int rest = 1;
-      for (std::size_t q : M.cells[c].rungs)
-        if (q != pivot[c]) rest *= u[q];
-      E.cell[c] += rest * std::tanh(field_at(pivot[c]));
+  E.rung_product.assign(O.rungs.size(), 0);
+  E.count_hist.assign(O.counters.size(), {});
+  for (std::size_t c = 0; c < O.counters.size(); c++) E.count_hist[c].assign(O.counters[c].triangles.size() + 1, 0);
+  std::vector<std::vector<double>> products(O.cells.size()), loops(O.loops.size());
+  for (std::size_t k = 0; k < S.sweeps; k++) {
+    pg::heat_bath_sweep(U, 1.0, z);
+    for (std::size_t r = 0; r < n; r++) E.rung[r] += sign(r);
+    for (std::size_t c = 0; c < M.cells.size(); c++) E.cell[c] += U.plaquette(c);
+    for (std::size_t i = 0; i < O.cells.size(); i++) {
+      double h = 1;
+      for (std::size_t c : O.cells[i]) h *= U.plaquette(c);
+      products[i].push_back(h);
     }
-    for (std::size_t l = 0; l < loops.size(); l++) {
-      int w = 1;
-      for (std::size_t r : loops[l]) w *= u[r];
-      E.loop[l] += w;
-      batch[l][k / per] += w;
+    for (std::size_t i = 0; i < O.loops.size(); i++) loops[i].push_back(U.wilson_loop(O.loops[i]));
+    for (std::size_t i = 0; i < O.rungs.size(); i++) {
+      int h = 1;
+      for (std::size_t r : O.rungs[i]) h *= sign(r);
+      E.rung_product[i] += h;
     }
-    for (std::size_t c = 0; c < counters.size(); c++) {
+    for (std::size_t c = 0; c < O.counters.size(); c++) {
       std::size_t f = 0;
-      for (const auto& t : counters[c].triangles) f += u[t[0]] * u[t[1]] * u[t[2]] < 0;
+      for (const auto& t : O.counters[c].triangles) f += sign(t[0]) * sign(t[1]) * sign(t[2]) < 0;
       E.count_hist[c][f]++;
     }
   }
-  E.samples = per * batches;
-  const double N = static_cast<double>(E.samples);
+  E.samples = S.sweeps;
+  const double N = static_cast<double>(std::max<std::size_t>(1, S.sweeps));
   for (auto& x : E.rung) x /= N;
   for (auto& x : E.cell) x /= N;
-  for (std::size_t l = 0; l < loops.size(); l++) {
-    E.loop[l] /= N;
-    double v = 0;
-    for (double b : batch[l]) v += (b / static_cast<double>(per) - E.loop[l]) * (b / static_cast<double>(per) - E.loop[l]);
-    E.loop_error[l] = std::sqrt(v / static_cast<double>(batches * (batches - 1)));
+  for (auto& x : E.rung_product) x /= N;
+  for (const auto& series : products) {
+    const auto e = physis::field_theory::binned(series);
+    E.product.push_back(e.mean);
+    E.product_error.push_back(e.error);
+  }
+  for (const auto& series : loops) {
+    const auto e = physis::field_theory::binned(series);
+    E.loop.push_back(e.mean);
+    E.loop_error.push_back(e.error);
   }
   return E;
 }
 
-// The space of foams: the 2-cycles of K̂ over ℤ/2, as a basis found by Gaussian elimination of
-// the boundary matrix over GF(2), column by column with the combinations tracked (the kernel of
-// ∂₂: a column that reduces to zero gives a cycle). Its dimension is the number of independent
-// foams, b₂(K̂; ℤ/2); a cell outside the support of every 2-cycle is in no foam.
-struct FoamSpace {
-  std::size_t dimension = 0;
-  std::vector<std::vector<std::size_t>> basis;  // each a set of cells
-  std::vector<bool> support;                    // cell -> in some foam
-};
-
-inline FoamSpace foam_space(const RefinedComplex& R) {
-  const std::size_t E = R.cw.edges.size(), F = R.cw.faces.size();
-  using Bits = std::vector<std::uint64_t>;
-  auto set = [](Bits& b, std::size_t i) { b[i / 64] ^= std::uint64_t{1} << (i % 64); };
-  auto low = [](const Bits& b) -> long long {
-    for (std::size_t w = b.size(); w-- > 0;)
-      if (b[w]) return static_cast<long long>(64 * w + 63 - static_cast<std::size_t>(__builtin_clzll(b[w])));
-    return -1;
-  };
-  std::vector<Bits> column(F, Bits((E + 63) / 64, 0)), combination(F, Bits((F + 63) / 64, 0));
-  std::vector<long long> owner(E, -1);
-  FoamSpace S;
-  S.support.assign(F, false);
-  for (std::size_t f = 0; f < F; f++) {
-    for (const auto& step : R.cw.faces[f].boundary) set(column[f], step.edge);
-    set(combination[f], f);
-    for (long long l = low(column[f]); l >= 0 && owner[l] >= 0; l = low(column[f])) {
-      const auto& o = static_cast<std::size_t>(owner[l]);
-      for (std::size_t w = 0; w < column[f].size(); w++) column[f][w] ^= column[o][w];
-      for (std::size_t w = 0; w < combination[f].size(); w++) combination[f][w] ^= combination[o][w];
-    }
-    const long long l = low(column[f]);
-    if (l >= 0) { owner[l] = static_cast<long long>(f); continue; }
-    std::vector<std::size_t> cycle;
-    for (std::size_t g = 0; g < F; g++)
-      if ((combination[f][g / 64] >> (g % 64)) & 1) { cycle.push_back(g); S.support[g] = true; }
-    S.basis.push_back(std::move(cycle));
-  }
-  S.dimension = S.basis.size();
-  return S;
-}
+// The space of foams: the 2-cycles of K̂ over ℤ/2 (morphe's cycles_mod2), its dimension the number
+// of independent foams, b₂(K̂; ℤ/2); a cell outside the support of every 2-cycle is in no foam.
+using FoamSpace = morphe::topology::Cycles;
+inline FoamSpace foam_space(const RefinedComplex& R) { return morphe::topology::cycles_mod2(R.cw, 2); }
 
 // The spin of each cell in the foam ensemble of the prior: P(f ∈ S) from ⟨h_f⟩ (the exact
 // identity), and exactly 0 for a cell outside the support of the foams.
-inline std::vector<double> spins(const HistoryModel& M, const Ensemble& prior, const FoamSpace* space = nullptr) {
+inline std::vector<double> spins(const HistoryModel& M, const std::vector<double>& prior_cell, const FoamSpace* space = nullptr) {
   std::vector<double> j(M.cells.size(), 0);
   for (std::size_t c = 0; c < M.cells.size(); c++) {
     if (space && !space->support[c]) continue;
     const double t = std::tanh(M.cells[c].beta);
-    j[c] = std::fabs(t) < 1e-12 ? 0 : t * (prior.cell[c] - t) / (1 - t * t);
+    j[c] = std::fabs(t) < 1e-12 ? 0 : t * (prior_cell[c] - t) / (1 - t * t);
   }
   return j;
-}
-
-// Exactly, by enumeration, for small models: ⟨u_r⟩ and ⟨h_f⟩ under the prior or the posterior.
-// Refuses more than 24 free rungs.
-inline Ensemble exact(const HistoryModel& M, bool conditioned) {
-  const std::size_t n = M.rung.size();
-  std::vector<std::size_t> vars;
-  for (std::size_t r = 0; r < n; r++)
-    if (!conditioned || !M.attested[r]) vars.push_back(r);
-  if (vars.size() > 24) throw std::invalid_argument("too many free rungs to enumerate");
-  std::vector<int> u(n, 1);
-  for (std::size_t r = 0; r < n; r++)
-    if (conditioned && M.attested[r]) u[r] = M.attested[r];
-  Ensemble E;
-  E.conditioned = conditioned;
-  E.rung.assign(n, 0);
-  E.cell.assign(M.cells.size(), 0);
-  double Z = 0;
-  for (std::uint64_t mask = 0; mask < (std::uint64_t{1} << vars.size()); mask++) {
-    for (std::size_t i = 0; i < vars.size(); i++) u[vars[i]] = (mask >> i) & 1 ? -1 : 1;
-    double logw = 0;
-    for (const auto& c : M.cells) logw += c.beta * holonomy(c, u);
-    const double w = std::exp(logw);
-    Z += w;
-    for (std::size_t r = 0; r < n; r++) E.rung[r] += w * u[r];
-    for (std::size_t c = 0; c < M.cells.size(); c++) E.cell[c] += w * holonomy(M.cells[c], u);
-  }
-  for (auto& x : E.rung) x /= Z;
-  for (auto& x : E.cell) x /= Z;
-  return E;
-}
-
-// The spin foams themselves, enumerated for small models: every set of cells containing every
-// rung an even number of times, with its amplitude Π tanh β_f; and from them P(f ∈ S).
-// Refuses more than 24 cells.
-inline std::vector<double> foam_spins_by_enumeration(const HistoryModel& M, std::size_t* foams = nullptr) {
-  if (M.cells.size() > 24) throw std::invalid_argument("too many cells to enumerate foams");
-  std::vector<double> in(M.cells.size(), 0);
-  double total = 0;
-  std::size_t count = 0;
-  std::vector<int> parity(M.rung.size());
-  for (std::uint64_t mask = 0; mask < (std::uint64_t{1} << M.cells.size()); mask++) {
-    std::fill(parity.begin(), parity.end(), 0);
-    double a = 1;
-    for (std::size_t c = 0; c < M.cells.size(); c++)
-      if ((mask >> c) & 1) {
-        a *= std::tanh(M.cells[c].beta);
-        for (std::size_t r : M.cells[c].rungs) parity[r] ^= 1;
-      }
-    if (std::any_of(parity.begin(), parity.end(), [](int p) { return p != 0; })) continue;
-    count++;
-    total += a;
-    for (std::size_t c = 0; c < M.cells.size(); c++)
-      if ((mask >> c) & 1) in[c] += a;
-  }
-  for (auto& x : in) x /= total;
-  if (foams) *foams = count;
-  return in;
 }
 
 // The divergence of two ensembles' marginals on the given rungs: Σ_r D(Bern(p_r) ‖ Bern(q_r)),
@@ -432,20 +325,6 @@ inline double marginal_divergence(const std::vector<double>& p_mean, const std::
     d += p * std::log(p / q) + (1 - p) * std::log((1 - p) / (1 - q));
   }
   return d;
-}
-
-// SU(2) kinematics: the dimension of the space of invariants of V_{j₁} ⊗ … ⊗ V_{jₙ}, the spins
-// given as 2j; by Clebsch–Gordan, multiplicity by multiplicity (exact, in unsigned integers).
-inline std::uint64_t invariant_dimension(const std::vector<int>& twice_j) {
-  std::map<int, std::uint64_t> m{{0, 1}};  // 2J -> multiplicity
-  for (int a : twice_j) {
-    std::map<int, std::uint64_t> next;
-    for (const auto& [b, k] : m)
-      for (int c = std::abs(a - b); c <= a + b; c += 2) next[c] += k;
-    m.swap(next);
-  }
-  const auto it = m.find(0);
-  return it == m.end() ? 0 : it->second;
 }
 
 }  // namespace history

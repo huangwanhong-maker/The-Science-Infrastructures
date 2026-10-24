@@ -2,8 +2,9 @@
 
 The engine is ``engine/history.cpp``, header-only C++20 on the history domain
 (``domains/history/``: the record and its chronology, the construction of the complex, the
-readings of its signed ties), morphe (homology and the fundamental group) and calx, with the
-API's JSON (``api/cpp/science/json.hpp``). It is compiled here by g++ 11 or later: natively where
+readings of its signed ties, its spin foam and field theory), morphe (homology, the fundamental
+group, cycles, canonical forms), physis (the ℤ₂ gauge theory of the foam, exact and sampled;
+recoupling) and calx, with the API's JSON (``api/cpp/science/json.hpp``). It is compiled here by g++ 11 or later: natively where
 there is one, and otherwise in WSL (Windows without a compiler), into
 ``data/cache/engines/history/``. Beside the program it keeps ``build.json``, with the hash of
 every source it was built from (a change to any header makes it stale).
@@ -42,10 +43,11 @@ CANONS = ROOT / "domains" / "history" / "canons"
 
 
 def include_dirs() -> list[Path]:
-    """The include directories of the engine: the history domain, morphe, calx, the API's C++ and the engine's own."""
+    """The include directories of the engine: the history domain, morphe, calx, physis, the API's C++ and the engine's own."""
     dirs = sorted(p for p in ROOT.glob("domains/history/*/include") if p.is_dir())
     dirs += [ROOT / "foundations" / "morphe" / "include"]
-    for pattern in ("foundations/morphe/*/include", "foundations/calx/numerics/*/include", "foundations/calx/compute/*/include"):
+    for pattern in ("foundations/morphe/*/include", "foundations/calx/numerics/*/include", "foundations/calx/compute/*/include",
+                    "foundations/physis/*/include"):
         dirs += sorted(p for p in ROOT.glob(pattern) if p.is_dir())
     dirs += [ROOT / "api" / "cpp", APP / "engine"]
     return [d for d in dirs if d.is_dir()]

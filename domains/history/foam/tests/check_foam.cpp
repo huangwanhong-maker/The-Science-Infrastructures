@@ -1,22 +1,27 @@
 // Checks of the spin foam of a history at G = ℤ₂ and of the other complexes (theory note §6–7).
 //
 // On records small enough to know: the refined complex of three ties between two meetings is a
-// prism, a sphere; the heat bath agrees with exact enumeration, prior and posterior; the spins
-// from the character expansion, P(f ∈ S) = t(⟨h⟩ − t)/(1 − t²), equal those of the foams
-// enumerated one by one, and every foam is a ℤ/2 2-cycle of K̂ (the Gauss law); a Wilson loop
-// around a circle no cell fills vanishes; the posterior of a sign between two attested ones is
-// tanh 2β, and of a sign closing a triangle tanh β_Δ; switching a being changes no cell's mean.
-// SU(2) kinematics: dimensions of invariants against Clebsch–Gordan and the Catalan numbers.
-// The other complexes: the shells filled kill H₂; Dowker's two complexes have the same
+// prism, a sphere; physis's heat bath on K̂ agrees with the exact contraction, prior and
+// posterior; the model in temporal gauge is physis's theory on the whole of K̂ (log Z less
+// #temporal · log 2, and at strong coupling the flat connections physis counts); the spins from
+// the character expansion, P(f ∈ S) = t(⟨h⟩ − t)/(1 − t²), equal those of the foams enumerated one
+// by one, and every foam is a ℤ/2 2-cycle of K̂ (the Gauss law); a Wilson loop around a circle no
+// cell fills vanishes; the posterior of a sign between two attested ones is tanh 2β, and of a sign
+// closing a triangle tanh β_Δ; switching a being changes no cell's mean. The other complexes: the shells filled kill H₂; Dowker's two complexes have the same
 // homology; Atkin's Q-vector of a small relation; persistence in time ends at the Betti numbers
 // over ℤ/2. And on every canon: the attested signs never move, and the spins lie in [0, 1].
 
 #include <history/foam/model.hpp>
 #include <history/foam/models.hpp>
 #include <history/foam/refined.hpp>
+#include <history/foam/transfer.hpp>
 #include <calx/verification/check.hpp>
+#include <morphe/algebra/finite_group.hpp>
+#include <physis/gauge/exact.hpp>
 
+#include <algorithm>
 #include <cmath>
+#include <cstdint>
 #include <filesystem>
 #include <string>
 #include <vector>
@@ -58,6 +63,42 @@ bool signed_foam_of(const HistoryModel& M) {
   return std::any_of(M.cells.begin(), M.cells.end(), [](const HistoryModel::Cell& c) { return c.beta < 0; });
 }
 
+// The spins by brute force: every set of cells holding each rung an even number of times (a foam),
+// weighed by Π tanh β_f; P(f ∈ S) over them. The oracle of the character expansion's identity.
+std::vector<double> spins_by_enumeration(const HistoryModel& M, std::size_t* foams) {
+  const std::size_t F = M.cells.size();
+  std::vector<double> in(F, 0);
+  double total = 0;
+  *foams = 0;
+  for (std::uint64_t S = 0; S < (std::uint64_t{1} << F); S++) {
+    std::vector<int> parity(M.rung.size(), 0);
+    double w = 1;
+    for (std::size_t f = 0; f < F; f++)
+      if ((S >> f) & 1) {
+        for (std::size_t r : M.cells[f].rungs) parity[r] ^= 1;
+        w *= std::tanh(M.cells[f].beta);
+      }
+    if (std::any_of(parity.begin(), parity.end(), [](int x) { return x != 0; })) continue;
+    ++*foams;
+    total += w;
+    for (std::size_t f = 0; f < F; f++)
+      if ((S >> f) & 1) in[f] += w;
+  }
+  for (auto& x : in) x /= total;
+  return in;
+}
+
+// A closed path of K̂ through the given presences, each step along an edge joining consecutive ones.
+mt::Path path_through(const mt::CWComplex& X, const std::vector<std::size_t>& v) {
+  mt::Path p;
+  for (std::size_t i = 0; i + 1 < v.size(); i++)
+    for (std::size_t e = 0; e < X.edges.size(); e++) {
+      if (X.edges[e][0] == v[i] && X.edges[e][1] == v[i + 1]) { p.push_back({e, 1}); break; }
+      if (X.edges[e][1] == v[i] && X.edges[e][0] == v[i + 1]) { p.push_back({e, -1}); break; }
+    }
+  return p;
+}
+
 // A model with every coupling set by hand.
 HistoryModel with_couplings(const HistoryComplex& K, const RefinedComplex& R, double lens, double balance) {
   Couplings C;
@@ -84,22 +125,38 @@ int main() {
     s.require("couplings: letters from 3 lenses attested at both ends, 2 flips; balance from 2 triangles, both frustrated", C.estimates[0].of == "letters" && C.estimates[0].n == 3 && C.estimates[0].k == 2 && C.estimates.back().of == "balance" && C.estimates.back().n == 2 && C.estimates.back().k == 2);
 
     const HistoryModel M = with_couplings(K, R, 0.7, 0.4);
-    const Ensemble prior = exact(M, false), post = exact(M, true);
+    const Contraction prior = contract(K, M, false), post = contract(K, M, true);
     Sampling S;
     S.sweeps = 60000;
-    const Ensemble mc_prior = sample(M, false, S), mc_post = sample(M, true, S);
-    s.check("heat bath against enumeration, prior: ⟨h_f⟩", max_difference(mc_prior.cell, prior.cell), 0.02);
-    s.check("heat bath against enumeration, posterior: ⟨u_r⟩", max_difference(mc_post.rung, post.rung), 0.02);
+    const Ensemble mc_prior = sample(R, M, false, S), mc_post = sample(R, M, true, S);
+    s.check("physis's heat bath on K̂ against the exact contraction, prior: ⟨h_f⟩", max_difference(mc_prior.cell, prior.plaquette), 0.02);
+    s.check("physis's heat bath on K̂ against the exact contraction, posterior: ⟨u_r⟩", max_difference(mc_post.rung, post.link), 0.02);
     bool fixed = true;
     for (std::size_t r = 0; r < M.rung.size(); r++)
       if (M.attested[r]) fixed = fixed && mc_post.rung[r] == M.attested[r];
     s.require("the posterior never moves an attested sign", fixed);
 
+    // The model in temporal gauge is physis's ℤ₂ theory on the whole of K̂: the temporal edges are a
+    // forest, so fixing them divides Z by 2^{#temporal} exactly; and as every β grows, Z/e^{Σβ}
+    // counts the flat connections of K̂, which physis counts by a spanning forest.
+    std::vector<double> beta;
+    for (const auto& c : M.cells) beta.push_back(c.beta);
+    std::vector<std::size_t> natural(M.cells.size());
+    for (std::size_t f = 0; f < natural.size(); f++) natural[f] = f;
+    const double whole = physis::gauge::log_z(physis::gauge::Z2Theory::of(R.cw, beta), natural);
+    s.check("the model in temporal gauge is physis's theory on K̂: log Z + #temporal · log 2", prior.log_z + static_cast<double>(R.temporal) * std::log(2.0) - whole, 1e-12);
+    HistoryModel strong = M;
+    double sum = 0;
+    for (auto& c : strong.cells) sum += c.beta = 40;
+    const double flat = std::stod(physis::gauge::count_flat_connections(R.cw, morphe::algebra::cyclic(2)).str());
+    s.check("at strong coupling, Z e^{−Σβ} 2^{#temporal} is the number of flat connections of K̂ (physis)",
+            contract(K, strong, false).log_z - sum + static_cast<double>(R.temporal) * std::log(2.0) - std::log(flat), 1e-9);
+
     std::size_t foams = 0;
-    const auto by_foams = foam_spins_by_enumeration(M, &foams);
+    const auto by_foams = spins_by_enumeration(M, &foams);
     const FoamSpace space = foam_space(R);
     s.require("the space of foams of the prism: dimension 1, every cell in its support", space.dimension == 1 && std::all_of(space.support.begin(), space.support.end(), [](bool b) { return b; }));
-    s.check("spins: the character expansion's identity against the foams enumerated", max_difference(spins(M, prior), by_foams), 1e-12);
+    s.check("spins: the character expansion's identity against the foams enumerated", max_difference(spins(M, prior.plaquette), by_foams), 1e-12);
     s.require("the foams of the prism: the empty one and the whole sphere (2 = 2^b₂ over ℤ/2)", foams == 2);
     // Every foam is a ℤ/2 2-cycle of K̂: the sum of all five cells has every edge twice.
     std::vector<int> parity(R.cw.edges.size(), 0);
@@ -117,7 +174,12 @@ int main() {
     const HistoryModel M = with_couplings(K, R, 0.9, 0.9);
     Sampling S;
     S.sweeps = 20000;
-    const Ensemble E = sample(M, false, S, {{0, 1, 2}});
+    // a at o1 → b at o1 → b at o2 → c at o2 → c at o3 → a at o3 → a at o1.
+    auto at = [&](const std::string& being, const std::string& occasion) { return R.vertex_of.at({*K.record.being(being), *K.record.occasion(occasion)}); };
+    Observables O;
+    O.loops.push_back(path_through(R.cw, {at("a", "o1"), at("b", "o1"), at("b", "o2"), at("c", "o2"), at("c", "o3"), at("a", "o3"), at("a", "o1")}));
+    s.require("the circle is a closed path of six edges in K̂", O.loops[0].size() == 6);
+    const Ensemble E = sample(R, M, false, S, O);
     s.require("a circle no cell fills: H₁ of K̂ is ℤ", ranks(R.cw) == std::vector<std::size_t>{1, 1}, text(ranks(R.cw)));
     s.check("its Wilson loop vanishes", E.loop[0], 4 * E.loop_error[0] + 0.02);
   }
@@ -129,15 +191,15 @@ int main() {
                                                         tie("a", "b", R"([["p", 1], ["r", 1]])")));
     const RefinedComplex R = refine(K);
     const double beta = 0.6;
-    const Ensemble E = exact(with_couplings(K, R, beta, 0), true);
-    s.check("a sign between two attested +1, coupled by β to each: ⟨u⟩ = tanh 2β", E.rung[1] - std::tanh(2 * beta), 1e-12);
+    const Contraction E = contract(K, with_couplings(K, R, beta, 0), true);
+    s.check("a sign between two attested +1, coupled by β to each: ⟨u⟩ = tanh 2β", E.link[1] - std::tanh(2 * beta), 1e-12);
     const HistoryComplex T = construct(read_record_text(HEAD + being("a") + being("b") + being("c") + occasion("p", "1800", all) +
                                                         tie("a", "b", R"([["p", 1]])") + tie("b", "c", R"([["p", 1]])") + tie("a", "c", R"([["p", 1]])")));
     RefinedComplex RT = refine(T);
     HistoryModel MT = with_couplings(T, RT, 0, 0.8);
     MT.attested[2] = 0;  // the third sign unattested
-    const Ensemble ET = exact(MT, true);
-    s.check("a sign closing a triangle of two attested +1 under balance β_Δ: ⟨u⟩ = tanh β_Δ", ET.rung[2] - std::tanh(0.8), 1e-12);
+    const Contraction ET = contract(T, MT, true);
+    s.check("a sign closing a triangle of two attested +1 under balance β_Δ: ⟨u⟩ = tanh β_Δ", ET.link[2] - std::tanh(0.8), 1e-12);
   }
 
   // Switching a being changes no cell's mean, prior or posterior (exactly).
@@ -152,18 +214,8 @@ int main() {
     const RefinedComplex R = refine(K), RF = refine(KF);
     const Couplings C = estimate_couplings(K, R), CF = estimate_couplings(KF, RF);
     s.require("switching: the couplings estimated are the same", std::fabs(C.balance - CF.balance) < 1e-15 && std::fabs(C.of("letters") - CF.of("letters")) < 1e-15);
-    const Ensemble E = exact(history_model(K, R, C), true), EF = exact(history_model(KF, RF, CF), true);
-    s.check("switching b: every cell's posterior mean unchanged", max_difference(E.cell, EF.cell), 1e-12);
-  }
-
-  // SU(2) kinematics: dim Inv(V_{j₁} ⊗ … ⊗ V_{jₙ}).
-  {
-    auto half = [](std::size_t n) { return std::vector<int>(n, 1); };
-    s.require("dim Inv: (½)⊗2 = 1, (½)⊗4 = 2, (½)⊗6 = 5, (½)⊗8 = 14, the Catalan numbers",
-              invariant_dimension(half(2)) == 1 && invariant_dimension(half(4)) == 2 && invariant_dimension(half(6)) == 5 && invariant_dimension(half(8)) == 14);
-    s.require("dim Inv: an odd number of spins ½ has none", invariant_dimension(half(3)) == 0 && invariant_dimension(half(5)) == 0);
-    s.require("dim Inv: (½, ½, 1) = 1, (1, 1, 1) = 1, (½, 1) = 0, (½, 1, 2) = 0 (the triangle fails)",
-              invariant_dimension({1, 1, 2}) == 1 && invariant_dimension({2, 2, 2}) == 1 && invariant_dimension({1, 2}) == 0 && invariant_dimension({1, 2, 4}) == 0);
+    const Contraction E = contract(K, history_model(K, R, C), true), EF = contract(KF, history_model(KF, RF, CF), true);
+    s.check("switching b: every cell's posterior mean unchanged", max_difference(E.plaquette, EF.plaquette), 1e-12);
   }
 
   // The other complexes, on small records.
@@ -200,7 +252,7 @@ int main() {
     Sampling S;
     S.burn = 200;
     S.sweeps = 20000;
-    const Ensemble post = sample(M, true, S), prior = sample(M, false, S);
+    const Ensemble post = sample(R, M, true, S), prior = sample(R, M, false, S);
     const FoamSpace space = foam_space(R);
     const auto b2 = morphe::algebra::betti(R.cw.chain_complex(), 2);
     s.require("canon " + name + ": the foams are the 2-cycles of K̂ over ℤ/2 (their dimension is b₂)", b2.size() > 2 && space.dimension == b2[2], std::to_string(space.dimension) + " foams");
@@ -215,7 +267,7 @@ int main() {
       for (std::size_t c = 0; c < M.cells.size(); c++) worst = std::min(worst, prior.cell[c] - std::tanh(M.cells[c].beta));
       s.check("canon " + name + ": the GKS inequality ⟨h_f⟩ ≥ tanh β_f on every cell, within the sampling error", std::min(0.0, worst + 0.03), 0.0);
     }
-    const auto j = spins(M, prior, &space);
+    const auto j = spins(M, prior.cell, &space);
     const double lo = *std::min_element(j.begin(), j.end()), hi = *std::max_element(j.begin(), j.end());
     const bool signed_foam = std::any_of(M.cells.begin(), M.cells.end(), [](const HistoryModel::Cell& c) { return c.beta < 0; });
     s.require("canon " + name + ": the spins of the prior lie in [0, 1] within the sampling error (or the foam is signed)", signed_foam || (lo > -0.05 && hi < 1.05), std::to_string(lo) + " .. " + std::to_string(hi));

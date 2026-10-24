@@ -4,7 +4,7 @@
 //   #view=loom&canon=europe-1785-1828&date=1814-11-15&focus=being:beethoven&hide=art,science&loop=2
 //   #canon=europe-1785-1828&mode=spin&open=1&time=events     (the foam, the default view)
 
-export const VIEWS = ['foam', 'loom', 'moment', 'complex', 'record', 'readings'];
+export const VIEWS = ['foam', 'loom', 'moment', 'complex', 'record', 'readings', 'field'];
 export const FOAM_MODES = ['discipline', 'spin', 'flips', 'inference'];
 
 export function readHash(hash = typeof location !== 'undefined' ? location.hash : '') {

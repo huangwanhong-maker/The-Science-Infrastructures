@@ -37,13 +37,20 @@ export const buildEngine = () => fetch('/setup/run?again=1', { method: 'POST' })
 // A canon built: its record, complex, invariants and readings.
 export const build = (canon) => (FIXTURES ? fixture(`build-${canon}`) : post('/api/build', { canon }));
 
+// The couplings a build fitted, by name, sent with the requests that follow so that the engine
+// does not fit them again.
+export const couplingsOf = (data) => Object.fromEntries((data?.foam?.couplings || []).map((c) => [c.of, c.beta]));
+
 // The power of each being over the reconstruction (the engine's power request).
-export const power = (canon) => (FIXTURES ? fixture(`power-${canon}`) : post('/api/power', { canon }));
+export const power = (canon, couplings) => (FIXTURES ? fixture(`power-${canon}`) : post('/api/power', { canon, couplings }));
+
+// The history as a Feynman graph and as a sample path (the engine's field request).
+export const field = (canon, couplings) => (FIXTURES ? fixture(`field-${canon}`) : post('/api/field', { canon, couplings }));
 
 // The network of the moment at a date. The fixtures hold two dates; any other is answered with the
 // nearer of them, and says so.
-export async function moment(canon, date) {
-  if (!FIXTURES) return post('/api/moment', { canon, date });
+export async function moment(canon, date, couplings) {
+  if (!FIXTURES) return post('/api/moment', { canon, date, couplings });
   const t = Date.parse(date.length === 4 ? `${date}-12-31` : date.length === 7 ? `${date}-28` : date);
   const near = FIXTURE_DATES.reduce((a, b) => (Math.abs(Date.parse(a) - t) <= Math.abs(Date.parse(b) - t) ? a : b));
   const m = await fixture(`moment-${canon}-${near}`);

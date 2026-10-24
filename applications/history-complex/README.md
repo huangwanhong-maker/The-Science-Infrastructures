@@ -1,10 +1,10 @@
 # The History Complex
 
-*Status: draft.* An application of the history domain ([ADR 0041](../../development/decisions/0041-the-history-domain.md)). Histories are recorded as occasions, beings and ties, and built into a 2-complex whose topology is computed exactly. Its signed ties become the spin foam of a ℤ₂ gauge theory fitted to the record, from which the unattested signs are reconstructed. Serves research and learning.
+*Status: draft.* An application of the history domain ([ADR 0041](../../development/decisions/0041-the-history-domain.md), [ADR 0042](../../development/decisions/0042-the-history-as-a-field-theory.md)). Histories are recorded as occasions, beings and ties, and built into a 2-complex whose topology is computed exactly. Its signed ties become the spin foam of a ℤ₂ gauge theory, whose couplings are fitted to the record by its exact likelihood and from which the unattested signs are reconstructed, exactly. The history is also read as one Feynman graph of a group field theory, and in time as a sample path. Serves research and learning.
 
 ## 1. What It Shows
 
-A **canon** of classical facts, recorded by the domain's [codebook](../../domains/history/codebook.md), becomes a complex by the domain's construction ([theory](../../domains/history/theory/the-history-complex.md)): occasions are its vertices, the lives of the beings between occasions its edges, and each tie between two beings a chain of lenses, one 2-cell between each two of their meetings. The application shows it six ways:
+A **canon** of classical facts, recorded by the domain's [codebook](../../domains/history/codebook.md), becomes a complex by the domain's construction ([theory](../../domains/history/theory/the-history-complex.md)): occasions are its vertices, the lives of the beings between occasions its edges, and each tie between two beings a chain of lenses, one 2-cell between each two of their meetings. The application shows it seven ways:
 
 - **The foam.** The history in spacetime, in three dimensions:
   - time rises, and each being is a thread through the occasions it attends, drifting back toward its own place between them;
@@ -13,7 +13,7 @@ A **canon** of classical facts, recorded by the domain's [codebook](../../domain
   - opened, each occasion shows its presences, the rungs of its ties and their triangles, frustrated ones in vermilion: the refined complex;
   - a cut at any date is the network of that moment, and the cut can be played upward through the history.
 - **The loom.** Time runs across; each being is a thread; an occasion is a knot binding the threads of those present; a tie is a ribbon of lenses between two threads, coloured by its discipline, hatched where it is negative, marked where it flips. A being, a tie or an occasion is chosen to follow it; the disciplines are shown or hidden.
-- **The moment.** The network of beings and live ties at a chosen date, the spin network of the moment: links signed, their certainty fading with the meetings since they were last attested, frustrated triangles shaded; beneath it, the frustration of the network year by year.
+- **The moment.** The network of beings and live ties at a chosen date, the spin network of the moment: links signed, their certainty fading with the meetings since they were last attested, frustrated triangles shaded; beneath it, the frustration of the network year by year; and the ℤ₂ spin networks along which the theory's foams cross this date, each with its exact weight.
 - **The complex.** It shows:
   - its counts and Euler characteristic, its homology and fundamental group;
   - the loops of H₁, told as the beings and occasions they pass: circles of encounters no recorded tie fills, where the canon is silent;
@@ -22,8 +22,13 @@ A **canon** of classical facts, recorded by the domain's [codebook](../../domain
 
   The complex can be saved as JSON for the [Complex Atlas](../complex-atlas/).
 - **The record.** Every assertion beside its sources, confidence and provenance, the problems the construction found, and the check of the beings against Wikidata.
+- **The field.** The history as a Feynman graph (the theory note, §8):
+  - the field's quanta by rank, and every occasion drawn as its interaction vertex, its strands paired at closing, opening and passing corners;
+  - the bubble types with their symmetry factors, and the action term by term;
+  - the check of Proposition 8.1, the amplitude 2^(F + E) Z and the exact log-likelihood of the attested signs;
+  - in time, the rates of occasions by the number of continuing beings, the strands' opening and closing, the binding of ties, and the martingale check of each era with its χ².
 - **The readings.** They show:
-  - the spin foam: the couplings fitted to the record, what each label means, the cells most often in the foam, each tie's memory across its life against an isolated tie's, the power of each being over the reconstruction, and SU(2) kinematics;
+  - the spin foam: the couplings fitted to the record (the maximum a posteriori of the exact likelihood, with its interval, beside the moment estimate), what each label means, the cells most often in the foam, each tie's memory across its life against an isolated tie's, the power of each being over the reconstruction, and SU(2) kinematics;
   - the persistence of ties by discipline;
   - the frustrated triangles at occasions;
   - the disciplines' lenses, and the beings and occasions where they meet.
@@ -43,7 +48,9 @@ The page is at http://127.0.0.1:8870/. With `?fixtures` in the address the page 
 
 ## 3. The Protocol
 
-The engine is `engine/history.cpp`, header-only C++20 on the history domain (`domains/history/`), morphe (homology, π₁) and the API's JSON. The server runs it once per request: one JSON request on its standard input, one JSON answer on its standard output, an error as `{"error": "..."}`. The canon is passed by its path; the engine reads nothing else.
+The engine is `engine/history.cpp`, header-only C++20 on the history domain (`domains/history/`), morphe (homology, π₁, cycles, canonical forms), physis (the ℤ₂ gauge theory of the foam, exact and sampled; recoupling) and calx. The server runs it once per request: one JSON request on its standard input, one JSON answer on its standard output, an error as `{"error": "..."}`. The canon is passed by its path; the engine reads nothing else.
+
+The spin foam is computed exactly wherever physis's contraction reaches, which is every single canon; the canons joined are sampled by physis's heat bath, and every answer says which (`exact`).
 
 ### 3.1 Requests
 
@@ -53,6 +60,9 @@ The engine is `engine/history.cpp`, header-only C++20 on the history domain (`do
 | `{"op": "build", "canons": ["<path>.jsonl", …]}` | the same, for the canons joined into one record |
 | `{"op": "moment", "canon": "<path>.jsonl", "date": "<EDTF>"}` | the network of the moment at the last day of the date, with its reconstruction (§3.3) |
 | `{"op": "power", "canon": "<path>.jsonl"}` | the power of each being, and of balance, over the reconstruction (§3.4) |
+| `{"op": "field", "canon": "<path>.jsonl"}` | the history as a Feynman graph and as a sample path (§3.5) |
+
+`moment`, `power` and `field` take `"couplings": {name: β}`, the couplings a build fitted, and then do not fit them again.
 
 ### 3.2 The Answer to `build`
 
@@ -111,14 +121,19 @@ The answer also carries the spin foam and the other complexes (the domain's theo
 
 ```
   "foam": {
-    "couplings": [{"of", "n", "k", "p", "t", "beta"}],          // by colour, "all", and "balance"
+    "couplings": [{"of", "cells", "n", "k", "t", "beta", "error", "low", "high", "kt_t", "kt_beta"}],
+                                                                // by colour with lenses, and "balance": the MAP
+                                                                // with its standard error and 95% interval of t,
+                                                                // beside the KT estimate (only the KT where inexact)
     "foams",                                                    // b₂ of K̂ over ℤ/2
     "cells": [{"kind": "lens" | "triangle", "index", "beta", "t", "prior", "spin", "support", "posterior"}],
     "triangles": [{"occasion": o, "beings": [b, b, b], "ties": [t, t, t]}],
     "ties": [{"tie": t, "posterior": [⟨u⟩ at each rung]}],
     "lives": [{"tie": t, "lenses", "wilson", "error", "chain"}],
     "moments": [{"year", "triangles", "mean", "lo", "hi"}],      // the reconstruction's frustration
-    "sweeps",
+    "exact", "inexact",                                         // whether contracted exactly; if not, why
+    "sweeps",                                                   // when sampled
+    "width", "largest", "log_z", "log_likelihood",              // the contraction's most live rungs and largest state
     "su2": {"segments": [{"live", "channels"}], "carrying", "admissible"}
   },
   "models": {
@@ -137,16 +152,33 @@ The answer also carries the spin foam and the other complexes (the domain's theo
  "links": [{"tie": t, "a": b, "b": b, "sign": ±1, "expected", "since": o, "lenses_since"}],
  "triangles": [{"beings": [b, b, b], "ties": [t, t, t], "product": ±1, "expected"}],
  "frustrated", "expected",
- "posterior": {"links": [⟨u⟩], "triangles": [⟨product⟩], "frustrated": {"mean", "lo", "hi"}}}
+ "posterior": {"links": [⟨u⟩], "triangles": [⟨product⟩], "frustrated": {"mean", "lo", "hi"}, "exact"},
+ "networks": [{"ties": [t, ...], "weight"}]}                    // the prior's spin networks at the cut, heaviest first
 ```
 
 ### 3.4 The Answer to `power`
 
 ```
-{"beings": [{"being": b, "ties", "divergence", "rungs"}], "balance": {"divergence", "rungs"}, "sweeps"}
+{"beings": [{"being": b, "ties", "divergence", "rungs"}], "balance": {"divergence", "rungs"}, "sweeps", "exact", "considered", "computed"}
 ```
 
-### 3.5 The Server
+### 3.5 The Answer to `field`
+
+```
+{"segments", "lenses", "occasions", "strands", "ranks": [{"rank", "segments"}],
+ "identity": {"holds", "free_strands"},                          // Proposition 8.1
+ "bubbles": [{"occasion": o, "type", "k_in", "k_new", "k_last", "meetings", "begun", "ended", "automorphisms", "canonical",
+              "half_edges": [{"being": b, "out", "rank"}], "corners": [{"lens", "tie", "kind", "ends": [h, h]}]}],
+ "types": [{"count", "example", "beings", "automorphisms", "canonical"}],
+ "amplitude": {"log_z", "log_amplitude", "log_likelihood", "largest"} | null,
+ "couplings": [{"of", "cells", "beta", "t"}], "exact",
+ "process": {"from", "to", "rates": [{"k", "count", "exposure", "rate", "error", "upper", "mean_new"}],
+             "open", "close", "binding": {"tied", "untied", "ratio", "low", "high", …},
+             "eras": [{"from", "to", "occasions", "expected", "z", "opened", "opened_expected", "opened_z"}],
+             "chi2", "dof", "log_likelihood": {"occasions", "strands"}}}
+```
+
+### 3.6 The Server
 
 | Path | |
 |---|---|
@@ -155,6 +187,10 @@ The answer also carries the spin foam and the other complexes (the domain's theo
 | `POST /api/build` `{"canon": id}` | the engine's `build` |
 | `POST /api/moment` `{"canon": id, "date"}` | the engine's `moment` |
 | `POST /api/power` `{"canon": id}` | the engine's `power` |
+| `POST /api/field` `{"canon": id}` | the engine's `field` |
+| `POST /api/cancel` | stops the computations in progress |
+
+A request may carry `"couplings"`, passed to the engine. Builds are kept in `data/cache/history-complex/builds/`, keyed by the engine's build and the canons' text, so that a canon is fitted once.
 | `GET /api/check?canon=id` | the last check of the canon's beings against Wikidata, or `{"status": "none"}` |
 | `POST /api/check/run` `{"canon": id}` | runs the check (`data/products/history_check.py`) in the background |
 | `GET /setup`, `POST /setup/run` | the recipe: building the engine |
@@ -168,4 +204,5 @@ The answer also carries the spin foam and the other complexes (the domain's theo
 | `engine/history.cpp` | The engine |
 | `src/foam3d.js`, `src/foamlayout.js` | The foam in three dimensions (three.js 0.170.0), and its layout |
 | `src/models.js`, `src/foamreadings.js` | The other complexes and persistence; the spin foam's readings |
+| `src/field.js` | The field: the history as a Feynman graph and as a sample path |
 | `tests/` | The application's checks, and the engine's answers as fixtures |

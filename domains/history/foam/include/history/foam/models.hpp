@@ -18,14 +18,13 @@
 #include <history/readings/signed.hpp>
 #include <morphe/topology/invariants.hpp>
 #include <morphe/topology/persistence.hpp>
+#include <morphe/topology/q_analysis.hpp>
 #include <morphe/topology/simplicial.hpp>
 
 #include <algorithm>
 #include <array>
 #include <cstddef>
 #include <map>
-#include <numeric>
-#include <set>
 #include <vector>
 
 namespace history {
@@ -88,39 +87,18 @@ inline morphe::topology::SimplicialComplex dowker_occasions(const HistoryComplex
   return morphe::topology::SimplicialComplex::from_facets(facets, K.record.occasions.size(), K.cw.name + " (Dowker, occasions)");
 }
 
-// Atkin's Q-analysis of the occasions as simplices on the beings: for each q, the number of
-// q-connected components among the simplices of dimension ≥ q, two being q-near when they share
-// q + 1 beings (Atkin 1974, ch. 3). Q[q] for q = 0 .. the largest dimension.
+// Atkin's Q-analysis of the occasions as simplices on the beings present (the derived bereaved
+// left out): morphe's q_analysis of that family (Atkin 1974, ch. 3). Q[q] for q = 0 .. the
+// largest dimension.
 inline std::vector<std::size_t> q_analysis(const HistoryComplex& K) {
-  std::vector<std::vector<std::size_t>> simplices;
+  std::vector<morphe::topology::Simplex> family;
   for (const auto& o : K.record.occasions) {
-    std::vector<std::size_t> s;
+    morphe::topology::Simplex s;
     for (const auto& p : o.present)
       if (!p.derived) s.push_back(p.being);
-    std::sort(s.begin(), s.end());
-    if (!s.empty()) simplices.push_back(s);
+    if (!s.empty()) family.push_back(std::move(s));
   }
-  std::size_t top = 0;
-  for (const auto& s : simplices) top = std::max(top, s.size() - 1);
-  std::vector<std::size_t> Q(top + 1, 0);
-  for (std::size_t q = 0; q <= top; q++) {
-    std::vector<std::size_t> live;
-    for (std::size_t i = 0; i < simplices.size(); i++)
-      if (simplices[i].size() >= q + 1) live.push_back(i);
-    std::vector<std::size_t> parent(live.size());
-    std::iota(parent.begin(), parent.end(), 0);
-    auto find = [&](std::size_t x) { while (parent[x] != x) x = parent[x] = parent[parent[x]]; return x; };
-    for (std::size_t a = 0; a < live.size(); a++)
-      for (std::size_t b = a + 1; b < live.size(); b++) {
-        std::vector<std::size_t> shared;
-        std::set_intersection(simplices[live[a]].begin(), simplices[live[a]].end(), simplices[live[b]].begin(), simplices[live[b]].end(), std::back_inserter(shared));
-        if (shared.size() >= q + 1) parent[find(a)] = find(b);
-      }
-    std::set<std::size_t> roots;
-    for (std::size_t a = 0; a < live.size(); a++) roots.insert(find(a));
-    Q[q] = roots.size();
-  }
-  return Q;
+  return morphe::topology::q_analysis(std::move(family));
 }
 
 // The history in time: each cell of K enters at the rank of its last occasion (a vertex at its

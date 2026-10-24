@@ -1,9 +1,11 @@
 # The history domain's C++: the record and its chronology, the construction of the history
-# complex, and its readings (ADR 0041). Header-only; each module a target history::<module>.
+# complex, its readings and spin foam (ADR 0041), and its field theory (ADR 0042). Header-only;
+# each module a target history::<module>.
 #
-# The domain uses morphe (complexes, homology, π₁) and calx (the report of its checks). Inside
-# The Science Infrastructures they are the sibling foundations, added here when no larger
-# project has added them.
+# The domain uses morphe (complexes, homology, π₁, cycles, canonical forms), physis (the ℤ₂
+# lattice gauge theory of its spin foam, exact and sampled; recoupling) and calx (random streams,
+# jets, linear algebra, the report of its checks). Inside The Science Infrastructures they are the
+# sibling foundations, added here when no larger project has added them.
 
 cmake_minimum_required(VERSION 3.20)
 project(history LANGUAGES CXX)
@@ -29,11 +31,14 @@ if(NOT TARGET calx::verification)
   if(EXISTS ${SCIENCE_FOUNDATIONS}/calx/CMakeLists.txt)
     add_subdirectory(${SCIENCE_FOUNDATIONS}/calx ${CMAKE_CURRENT_BINARY_DIR}/calx)
   else()
-    message(FATAL_ERROR "the history domain needs calx and morphe: build it inside The Science Infrastructures")
+    message(FATAL_ERROR "the history domain needs calx, morphe and physis: build it inside The Science Infrastructures")
   endif()
 endif()
 if(NOT TARGET morphe::topology)
   add_subdirectory(${SCIENCE_FOUNDATIONS}/morphe ${CMAKE_CURRENT_BINARY_DIR}/morphe)
+endif()
+if(NOT TARGET physis::gauge)
+  add_subdirectory(${SCIENCE_FOUNDATIONS}/physis ${CMAKE_CURRENT_BINARY_DIR}/physis)
 endif()
 if(HISTORY_CHECKS)
   enable_testing()
@@ -57,11 +62,19 @@ add_library(history::readings ALIAS history_readings)
 target_include_directories(history_readings INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/readings/include)
 target_link_libraries(history_readings INTERFACE history::construction)
 
-# foam: the refined complex, the spin foam of a history at G = ℤ₂, and the other complexes.
+# foam: the refined complex, the spin foam of a history at G = ℤ₂ (physis's gauge theory on it),
+# and the other complexes.
 add_library(history_foam INTERFACE)
 add_library(history::foam ALIAS history_foam)
 target_include_directories(history_foam INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/foam/include)
-target_link_libraries(history_foam INTERFACE history::readings calx::random)
+target_link_libraries(history_foam INTERFACE history::readings physis::gauge calx::random calx::linalg)
+
+# field: the history as a Feynman graph of a group field theory (its stranded graph, bubbles and
+# Feynman rules), and in time as a sample path (rates of occasions and strands, martingale checks).
+add_library(history_field INTERFACE)
+add_library(history::field ALIAS history_field)
+target_include_directories(history_field INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/field/include)
+target_link_libraries(history_field INTERFACE history::foam morphe::combinatorics physis::symmetry)
 
 if(HISTORY_CHECKS)
   # The canons are the domain's records; the checks read them by the path given here.
@@ -71,7 +84,9 @@ if(HISTORY_CHECKS)
   calx_add_check(check_history_construction SOURCES construction/tests/check_construction.cpp LIBRARIES history::construction)
   calx_add_check(check_history_readings SOURCES readings/tests/check_readings.cpp LIBRARIES history::readings)
   calx_add_check(check_history_foam SOURCES foam/tests/check_foam.cpp LIBRARIES history::foam)
-  foreach(check check_history_record check_history_construction check_history_readings check_history_foam)
+  calx_add_check(check_history_transfer SOURCES foam/tests/check_transfer.cpp LIBRARIES history::foam)
+  calx_add_check(check_history_field SOURCES field/tests/check_field.cpp LIBRARIES history::field)
+  foreach(check check_history_record check_history_construction check_history_readings check_history_foam check_history_transfer check_history_field)
     target_compile_definitions(${check} PRIVATE HISTORY_CANONS="${HISTORY_CANONS_DIR}")
   endforeach()
 endif()

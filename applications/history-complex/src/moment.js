@@ -114,7 +114,7 @@ export class MomentView {
         el('dt', { text: 'Frustrated, expected' }), el('dd', { text: number(m.expected, 2) }),
         m.posterior ? el('dt', { text: 'Frustrated, reconstructed' }) : null,
         m.posterior ? el('dd', { text: `${number(m.posterior.frustrated.mean, 2)} (${m.posterior.frustrated.lo}–${m.posterior.frustrated.hi})` }) : null),
-      m.posterior ? el('p', { class: 'note', text: 'Reconstructed: the signs the record does not attest at their last meeting are inferred from all the others at once, by the persistence of their ties and the balance of the triangles they close (the theory note, §6.4); the range holds nine draws in ten.' }) : null,
+      m.posterior ? el('p', { class: 'note', text: `Reconstructed: the signs the record does not attest at their last meeting are inferred from all the others at once, by the persistence of their ties and the balance of the triangles they close (the theory note, §6.4); ${m.posterior.exact ? 'computed exactly, the range holding the middle nine tenths of the law' : 'sampled by the heat bath, the range holding nine draws in ten'}.` }) : null,
       frustrated.length ? el('h4', { text: 'Frustrated triangles' })
         : m.triangles.length ? el('p', { class: 'note', text: `None of the ${plural(m.triangles.length, 'triangle')} is frustrated: here the network is balanced, its signs a flat ℤ₂ connection.` })
           : el('p', { class: 'note', text: 'There is no triangle of live ties at this date, so nothing can be frustrated: the record is silent, not balanced. (A tie lives only from its first attestation to its last.)' }),
@@ -122,6 +122,11 @@ export class MomentView {
         el('span', { class: 'tri frustrated', text: '▲' }),
         el('span', { text: listText(t.beings.map((b) => data.beings[b].short)) }),
         el('span', { class: 'role', text: m.posterior ? `reconstructed ${number(m.posterior.triangles[m.triangles.indexOf(t)], 2)}` : `expected ${number(t.expected, 2)}` })))) : null,
+      m.networks?.length ? el('h4', { text: 'The spin networks of this cut' }) : null,
+      m.networks?.length ? el('p', { class: 'note', text: 'In the theory\'s own ensemble, the foam crosses this cut along an even subgraph of the open ties: a ℤ₂ spin network. Each is shown with the weight of the foams that cross along it, computed exactly. The empty network is the weight of no foam crossing here (the theory note, Proposition 6.3).' }) : null,
+      m.networks?.length ? el('ol', { class: 'networks' }, ...m.networks.map((nw) => el('li', {},
+        el('span', { class: 'num', text: number(nw.weight, 3) }), ' ',
+        nw.ties.length ? listText(nw.ties.map((t) => `${data.beings[data.ties[t].a].short}–${data.beings[data.ties[t].b].short}`)) : el('span', { class: 'faint', text: 'none: no foam crosses' })))) : null,
       el('div', { class: 'legend-block' },
         el('div', {}, svg('svg', { width: 34, height: 10 }, svg('line', { x1: 2, x2: 32, y1: 5, y2: 5, stroke: INK, 'stroke-width': 1.6 })), ' positive, last attested'),
         el('div', {}, svg('svg', { width: 34, height: 10 }, svg('line', { x1: 2, x2: 32, y1: 5, y2: 5, stroke: INK, 'stroke-width': 1.6, 'stroke-dasharray': '5 3' })), ' negative'),

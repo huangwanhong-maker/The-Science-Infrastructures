@@ -128,4 +128,19 @@ inline RefinedComplex refine(const HistoryComplex& K) {
   return R;
 }
 
+// The closed path of K̂ around a tie's meetings k < l: a's worldline from the one to the other, the
+// rung at l, b's worldline back, the rung at k reversed. It bounds the tie's lenses from k to l, and
+// its holonomy is u_k u_l in temporal gauge: the Wilson loop of that stretch of the tie's life.
+inline morphe::topology::Path tie_loop(const HistoryComplex& K, const RefinedComplex& R, std::size_t t, std::size_t k, std::size_t l) {
+  const Tie& tie = K.record.ties[t];
+  const std::size_t p = K.rungs[t][k].occasion, q = K.rungs[t][l].occasion;
+  morphe::topology::Path w;
+  for (std::size_t e : detail::path(K, tie.a, p, q)) w.push_back({e, 1});
+  w.push_back({R.rung_edge[t][l], 1});
+  const auto back = detail::path(K, tie.b, p, q);
+  for (auto it = back.rbegin(); it != back.rend(); ++it) w.push_back({*it, -1});
+  w.push_back({R.rung_edge[t][k], -1});
+  return w;
+}
+
 }  // namespace history
