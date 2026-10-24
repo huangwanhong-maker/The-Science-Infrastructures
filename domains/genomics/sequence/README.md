@@ -16,7 +16,7 @@
 | [`alphabet.hpp`](include/genomics/sequence/alphabet.hpp) | DNA, IUPAC and protein codes; complements and reverse complements of codes and of letters |
 | [`packed.hpp`](include/genomics/sequence/packed.hpp) | `PackedDna`: two bits a base, runs of N beside the words; the reverse complement, k-mers and counts a word at a time |
 | [`genetic_code.hpp`](include/genomics/sequence/genetic_code.hpp) | The 27 NCBI translation tables (gc.prt 4.6); codons, ambiguity resolved when every reading agrees; translation; ORFs on both strands |
-| [`fasta.hpp`](include/genomics/sequence/fasta.hpp) | FASTA and FASTQ read and written; the Phred scale; `Problem` |
+| [`fasta.hpp`](include/genomics/sequence/fasta.hpp) | FASTA and FASTQ read and written; `FastaReader` and `FastqReader`, the same grammars a line at a time for files too large to hold; the Phred scale; `Problem` |
 | [`genbank.hpp`](include/genomics/sequence/genbank.hpp) | GenBank records: LOCUS, DEFINITION, lineage, features with their qualifiers, ORIGIN; locations by recursive descent (join, order, complement, partial ends, sites between bases, remote parts); extraction and `translate_cds` |
 | [`kmer.hpp`](include/genomics/sequence/kmer.hpp) | k-mers ≤ 32, their reverse complements and canonical forms; minimap2's hash64; ntHash for any k; (w, k)-minimizers; closed and open syncmers |
 | [`composition.hpp`](include/genomics/sequence/composition.hpp) | Base counts, GC in windows, GC skew and its cumulative sum (origin and terminus), CpG observed/expected, k-mer entropy, codon counts, RSCU, Wright's effective number of codons |
@@ -36,7 +36,7 @@ None in the infrastructure; the checks use calx (`verification`, `random`).
 | genetic codes | The 27 tables well formed; the standard code's stops and starts; the vertebrate mitochondrial AGA, AGG, TGA and ATA; the bacterial starts; ambiguous codons; a peptide back-translated and translated again; frames |
 | ORFs | On random sequence, on both strands: each starts at ATG, ends at its first stop in frame, and begins at the first start after the previous stop |
 | composition | GC; CpG o/e near 1 in i.i.d. sequence and 0 without CpG; k-mer entropy; the cumulative skew's extremes at a planted origin and terminus; RSCU 1 and N_c = 61 for even usage; N_c = 20 for one codon per amino acid |
-| FASTA, FASTQ | Comments, wrapping, descriptions, CRLF; four-line and multi-line records; the faults found on their lines; round trips; Phred |
+| FASTA, FASTQ | Comments, wrapping, descriptions, CRLF; four-line and multi-line records; the faults found on their lines; round trips; Phred; the readers a line at a time give the records and problems of the whole-text readers |
 | locations | Spans, partial ends, sites between bases, complement of a join, mixed strands, order, remote parts, and the errors of each |
 | GenBank | A circular genome written by the check, with genes across the origin, on the complement strand and from GTG, read whole and translated as its `/translation`; and, with the data cache, **every CDS of the fourteen RefSeq genomes of `ncbi-genomes` (4,522 proteins, the three selenoproteins of *E. coli* among them) translated exactly as RefSeq's own `/translation`** |
 | k-mers | Encoding, reverse complements and canonical forms for k = 1 to 32; every k-mer free of N visited once; hash64 a bijection for k ≤ 8; ntHash rolled against ntHash computed, k = 1 to 100, and its canonical value strand-symmetric |

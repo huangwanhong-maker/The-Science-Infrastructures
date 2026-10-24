@@ -110,6 +110,6 @@
   "citation": "O'Leary, N. A. et al. (2016), Reference sequence (RefSeq) database at NCBI: current status, taxonomic expansion, and functional annotation, Nucleic Acids Research 44, D733-D745; Sayers, E. W. et al. (2022), Database resources of the National Center for Biotechnology Information, Nucleic Acids Research 50, D20-D26.",
   "used_by": [
     "domains/genomics (checks of the GenBank reader against NCBI's translations)",
-    "applications/genome-atlas"
+    "applications/genome-workbench"
   ]
 }

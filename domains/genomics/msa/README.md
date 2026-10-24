@@ -10,7 +10,7 @@ A multiple alignment says which residues of many sequences descend from one resi
 - **The centre star** (Gusfield 1993) aligns every sequence to the one closest to all the others and merges the pairwise alignments; under a metric cost it is within a factor 2 − 2/k of the optimum.
 - **Partial orders** (Lee, Grasso and Sharlow 2002) align each sequence to a graph of all the previous ones rather than to a profile, so that shared indels are branches.
 
-The theory, with the proofs of the bounds, is [theory/msa-and-expression.md](../theory/msa-and-expression.md) §1–3. The Genome Atlas draws the alignments in its Trees view; the evolution domain's phylogeny reads them.
+The theory, with the proofs of the bounds, is [theory/msa-and-expression.md](../theory/msa-and-expression.md) §1–3. The Genome Workbench draws the alignments in its Trees view; the evolution domain's phylogeny reads them.
 
 ## 2. Content
 

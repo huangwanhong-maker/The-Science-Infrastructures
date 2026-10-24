@@ -98,6 +98,62 @@ int main() {
     s.require("Phred: Q 30 is an error of 0.001, written '?'", std::fabs(error_probability(30) - 0.001) < 1e-15 && phred_char(30) == '?' && phred_of('?') == 30 && phred_from_probability(0.001) == 30);
   }
 
+  // ---- a line at a time ------------------------------------------------------------------------
+  {
+    // Each text fed to the readers line by line as std::getline gives them (a \r\n line keeps its
+    // '\r'), against the whole-text readers: the same records and the same problems on the same lines.
+    const auto same = [](const std::vector<Record>& a, const std::vector<Record>& b) {
+      if (a.size() != b.size()) return false;
+      for (std::size_t i = 0; i < a.size(); i++)
+        if (a[i].id != b[i].id || a[i].description != b[i].description || a[i].sequence != b[i].sequence || a[i].quality != b[i].quality) return false;
+      return true;
+    };
+    const auto same_problems = [](const std::vector<Problem>& a, const std::vector<Problem>& b) {
+      if (a.size() != b.size()) return false;
+      for (std::size_t i = 0; i < a.size(); i++)
+        if (a[i].line != b[i].line || a[i].message != b[i].message) return false;
+      return true;
+    };
+    const auto by_lines = [](const std::string& text, bool fastq, std::vector<Problem>& problems) {
+      std::vector<Record> out;
+      std::istringstream in(text);
+      std::string line;
+      Record r;
+      FastaReader fa(&problems);
+      FastqReader fq(&problems);
+      while (std::getline(in, line))
+        if (fastq ? fq.line(line, r) : fa.line(line, r)) out.push_back(std::move(r));
+      if (fastq) fq.finish();
+      else if (fa.finish(r)) out.push_back(std::move(r));
+      return out;
+    };
+    // Random records, wrapped, with comments, CRLF endings, empty records and faults.
+    std::string fasta = "ACGT\n", fastq;
+    for (int k = 0; k < 200; k++) {
+      std::string seq;
+      const std::size_t n = r.below(300);
+      for (std::size_t i = 0; i < n; i++) seq += "ACGTN"[r.below(5)];
+      const std::string end = r.below(4) == 0 ? "\r\n" : "\n";
+      fasta += (r.below(10) == 0 ? ";comment" + end : "") + ">r" + std::to_string(k) + (r.below(2) ? " a description" : "") + end;
+      for (std::size_t i = 0; i < seq.size(); i += 60) fasta += seq.substr(i, 60) + end;
+      std::string q;
+      for (std::size_t i = 0; i < seq.size(); i++) q += phred_char(static_cast<int>(r.below(41)));
+      const bool many = r.below(3) == 0;
+      fastq += "@r" + std::to_string(k) + end + (many ? seq.substr(0, seq.size() / 2) + end + seq.substr(seq.size() / 2) : seq) + end + (r.below(5) == 0 ? "+r" + std::to_string(k) : "+") + end;
+      fastq += (many ? q.substr(0, q.size() / 3) + end + q.substr(q.size() / 3) : q) + end;
+      if (k == 70) fastq += "not a header" + end;
+      if (k == 120) fastq += "@x\nACGT\n+y\nIIIIII" + end;
+    }
+    fastq += "@cut\nACGT\n+\nII";
+    std::vector<Problem> p1, p2, q1, q2;
+    const auto whole_a = read_fasta(fasta, &p1), lines_a = by_lines(fasta, false, p2);
+    const auto whole_q = read_fastq(fastq, &q1), lines_q = by_lines(fastq, true, q2);
+    s.require("FASTA a line at a time: the same 200 records as the whole text, and the same problem on the same line", whole_a.size() == 200 && same(whole_a, lines_a) && same_problems(p1, p2) && p1.size() == 1,
+              std::to_string(lines_a.size()));
+    s.require("FASTQ a line at a time: the same records as the whole text, in four lines and in many, and the same problems on the same lines", whole_q.size() == 201 && same(whole_q, lines_q) && same_problems(q1, q2) && q1.size() == 4,
+              std::to_string(lines_q.size()) + " records, " + std::to_string(q1.size()) + " problems");
+  }
+
   // ---- locations ----------------------------------------------------------------------------------
   {
     Location L;

@@ -1,6 +1,6 @@
 # index: The Indexes of a Genome
 
-*Status: draft (2026-10-24).* The FMD-index of a genome and its reverse complement, with bidirectional extension and super-maximal exact matches; the minimizer index of a genome. k-mer counting, Bloom filters and count-min sketches are planned (the design note's §4.2).
+*Status: draft (2026-10-24).* The FMD-index of a genome and its reverse complement, with bidirectional extension and super-maximal exact matches; the minimizer index of a genome; patterns of IUPAC letters found on both strands by one Aho–Corasick automaton. k-mer counting, Bloom filters and count-min sketches are planned (the design note's §4.2).
 
 ## 1. Purpose
 
@@ -17,6 +17,7 @@ The combinatorics of words they rest on is morphe's: SA-IS, the Burrows–Wheele
 |---|---|
 | `fmd.hpp` | `FmdIndex(contigs, FmdOptions{sample, seed})`. The text c₀ $₀ c̄₀ $₁ … is suffix-sorted by morphe's SA-IS, and each N is replaced by a base drawn from `Stream(seed, FMD_N, contig, 0)` and recorded (`ambiguous()`, `overlaps_ambiguous`). The BWT over {$, A, C, G, T} is kept in BWA's interleaved blocks of 128 symbols (counts and 2-bit symbols in one cache line): `occ(c, i)`, `occ4(i)`, `C(c)`, `bwt(i)`, `lf(i)`. `BiInterval{k, l, s}` with `init`, `backward`, `forward` (Li 2012, Algorithms 2–3); `search`, `count`, `locate` → `Hit{contig, position, reverse}`, `suffix(row)` by the suffix array sampled at text positions and sequence starts; `smems(query, min_length, min_occ)` → `Smem{begin, end, interval}` (Algorithm 5, BWA-MEM's `bwt_smem1` without re-seeding), `smems_at`, and `smems(pool, queries, …)` |
 | `minimizer_index.hpp` | `MinimizerIndex(pool, contigs, MinimizerOptions{k, w, ignore, chunk})`. It is built from fixed chunks with margins of w − 1 and w + k − 2 bases, which give exactly the minimizers of the whole contigs, then bucketed by hash and sorted on the pool, deterministically. It holds a flat array sorted by (hash, contig, position, strand) and an open-addressing table of hash ranges: `lookup(hash)`, `decode` → `Occurrence{contig, position, reverse}`, `max_occurrences()` (minimap2's `-f` cut-off), `anchors(query)` → `Anchor{contig, target, query, reverse}`, sorted for chaining |
+| `patterns.hpp` | `iupac_words(pattern, max_words)`: the words a pattern of IUPAC letters stands for, the product of its letters' sets, in order. `PatternSet(patterns, both_strands, max_words)`: every pattern's words, and the reverse complements of them that are not its own words, in one `morphe::formal::AhoCorasick` automaton; `find(text)` → `PatternHit{begin, end, pattern, reverse}` in one pass over the forward strand, a palindromic site once, forward; a window with N matches nothing |
 
 ## 3. Dependencies
 
@@ -28,6 +29,7 @@ The combinatorics of words they rest on is morphe's: SA-IS, the Burrows–Wheele
 |---|---|
 | `fmd` | The BWT and Occ, at every row, against a BWT from an independent suffix array (prefix doubling). The text closed under reverse complement, and the runs of N recorded. Counts and positions of 3000 patterns on both strands against brute force across five contigs. Bidirectional extension (forwards, backwards, and mixed from any base) against backward search of P and P̄. SMEMs against their definition by brute force on mutated reads with N, for min_occ 1 and 2, with the length filter. SMEMs the same on one and four threads. Escherichia coli K-12 (NC_000913.3): build time and memory, 1000 sampled 32-mers located at their true places, and the longest SMEM of 4000 simulated 150-base reads on its true diagonal |
 | `minimizer_index` | Chunks of 997 bases with margins give exactly the minimizers of each whole contig, for four (k, w), across runs of N and contigs shorter than a window. The index is the same on one and eight threads and for any chunk length. Lookups of absent hashes find nothing. The cut-off is minimap2's quantile plus one. Anchors equal their brute-force definition. Exact reads of either strand anchor on their true diagonal. Escherichia coli: size, time on one and eight threads, density against 2/(w + 1) |
+| `patterns` | The words of GAATTC, GGWCC, CCNGG and RYBN, in order, each reading its pattern; empty patterns, letters outside IUPAC's and too many words refused. Nine patterns on both strands of 300 kb of random sequence with runs of N against their definition by brute force (forward where the window reads the pattern, reverse where its reverse complement does and it does not); palindromic sites once; one strand alone |
 
 Measured on the development machine (i7-11370H, WSL, other builds running, so the ranges are of several runs), 2026-10-24:
 
@@ -38,6 +40,8 @@ Measured on the development machine (i7-11370H, WSL, other builds running, so th
 
 ## 5. References
 
+- Aho, A. V. and Corasick, M. J. (1975), Efficient string matching: an aid to bibliographic search, *Communications of the ACM* 18, 333–340.
+- Cornish-Bowden, A. (1985), Nomenclature for incompletely specified bases in nucleic acid sequences, *Nucleic Acids Research* 13, 3021–3030.
 - Li, H. (2012), Exploring single-sample SNP and INDEL calling with whole-genome de novo assembly, *Bioinformatics* 28, 1838–1844.
 - Li, H. (2013), Aligning sequence reads, clone sequences and assembly contigs with BWA-MEM, arXiv:1303.3997.
 - Li, H. and Durbin, R. (2009), Fast and accurate short read alignment with Burrows–Wheeler transform, *Bioinformatics* 25, 1754–1760.

@@ -10,7 +10,7 @@ A genome of millions of k-mers is compared with thousands of others through a sk
 - **FracMinHash** keeps every hash below a threshold, so it preserves both unions and intersections. It estimates containment, and from containment the ANI, for sets of very different sizes (Irber et al. 2022; Hera, Pierce-Ward and Koslicki 2023).
 - **HyperLogLog** preserves unions as the register-wise maximum, in 2^p bytes, and estimates cardinalities with a relative error of 1.04/√m (Flajolet et al. 2007; Ertl 2017). It estimates Jaccard by inclusion and exclusion (Baker and Langmead 2019, Dashing).
 
-The trees of genomes in the Genome Atlas are drawn from these distances. The theory, with the variances, is [theory/indexes.md §7](../theory/indexes.md).
+The trees of genomes in the Genome Workbench are drawn from these distances. The theory, with the variances, is [theory/indexes.md §7](../theory/indexes.md).
 
 ## 2. Content
 
