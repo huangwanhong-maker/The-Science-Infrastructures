@@ -58,7 +58,8 @@ The theory, with statements and proofs, is in `theory/`: [alignment](theory/alig
 1. **Where general sketches belong.** MinHash and HyperLogLog sketch any set; Bloom filters filter any keys. They are here because genomes need them first; when a second domain does, they move to a foundation.
 2. **HMMs and the negative binomial model** are statistics, and move to the inference foundation when it exists (CLAUDE.md §8, open decision 3).
 3. **Trees, and the methods that build them from distances.** `msa` keeps a guide tree (UPGMA, distances) of its own because genomics cannot depend on evolution, whose `phylogeny` holds the full ones; both belong in a foundation (ADR 0043, open).
-4. **Large genomes.** Everything is in memory: a bacterial genome is instant, a human chromosome comfortable, a whole human genome heavy. Memory-mapped indexes would carry it further.
+4. **Calling from long reads.** The mapper places long reads well, but the caller's genotype likelihoods (Li 2011) treat each base's error as a substitution of known probability; long reads' errors, mostly insertions and deletions at several percent, break that model, and most calls from them are false. A model of their errors (a pair HMM over the read against each haplotype, or a consensus of the reads first, as the partial order already gives) is needed.
+5. **Large genomes.** Everything is in memory: a bacterial genome is instant, a human chromosome comfortable, a whole human genome heavy. Memory-mapped indexes would carry it further.
 
 ## 7. References
 
