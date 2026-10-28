@@ -5,8 +5,11 @@
 // against a count by brute force, a feature's protein as RefSeq translates it, the gene finder
 // against RefSeq's annotation, every schedule of an alignment held to Gotoh's optimum, the batch
 // kernels to one another, the consensus of a partial order to its truth, and a job whose answer
-// is the same however it is cut into shards and spread over workers. The science is checked
-// with the genomics and evolution domains.
+// is the same however it is cut into shards and spread over workers; and the group grammars: the
+// draft's orbit-only scan accepting a word outside the language, Burnside's count of rule orbits,
+// the canonical search of a monotone grammar, the codes' stabilisers, Σ χ(1)² = |G|, hairpins
+// against their definition, and Chargaff's second rule on Escherichia coli. The science is
+// checked with the genomics and evolution domains.
 // Run from the repository root:  node applications/genome-workbench/tests/run-tests.mjs
 
 import { spawnSync } from 'node:child_process';
@@ -114,6 +117,23 @@ try:
     out["poa"] = c.request({"op": "align.poa", "length": 150, "reads": 10, "error": 0.08, "seed": 2})
     out["job5"] = c.job("reads.sample", {"genome": sim, "reads": 6000, "shards": 5, "seed": 9})
     out["job13"] = c.job("reads.sample", {"genome": sim, "reads": 6000, "shards": 13, "seed": 9})
+    # Group grammars: the draft's scan, Burnside's count, a monotone search, the codes, characters.
+    gr = {}
+    hp = [["S", "A P T | T P A | C P G | G P C"], ["P", "A Q T | T Q A | C Q G | G Q C"], ["Q", "A Q T | T Q A | C Q G | G Q C | A L T | T L A | C L G | G L C"], ["L", "N N N | N N N N | N N N N N"], ["N", "A | C | G | T"]]
+    split = lambda rules: [[l, alt.strip()] for l, r in rules for alt in r.split("|")]
+    gr["scan"] = c.request({"op": "grammar.parse", "alphabet": "ab", "rules": [["S", "a a"], ["S", "b b"]], "group": [["ba", False]], "word": "ab"})
+    gr["brackets"] = c.request({"op": "grammar.parse", "alphabet": "()", "rules": split([["S", "( ) | ( S ) | S S"]]), "group": [[")(", True]], "word": "(()())()"})
+    gr["hairpin"] = c.request({"op": "grammar.parse", "alphabet": "ACGT", "rules": split(hp), "group": [["TGCA", False], ["ACGT", True]], "word": "GCATTCGTGC"})
+    gr["monotone"] = c.request({"op": "grammar.parse", "alphabet": "abcd", "rules": split([["S", "a S C D | b S C D | a C D | b C D"], ["D C", "C D"], ["a C", "a c"], ["b C", "b c"], ["c C", "c c"], ["c D", "c d"], ["d D", "d d"]]), "group": [["bacd", False]], "word": "abccdd"})
+    gr["code1"] = c.request({"op": "grammar.code", "table": 1})
+    gr["code2"] = c.request({"op": "grammar.code", "table": 2})
+    gr["chars"] = {name: c.request({"op": "grammar.characters", "group": name}) for name in ["cyclic 4", "klein", "dihedral 4", "quaternion", "symmetric 4", "alternating 5"]}
+    gr["nucleotides"] = c.request({"op": "grammar.nucleotides", "base_point": "T"})
+    if (engine.Path(${JSON.stringify(genomes)}) / "NC_001422.1.gb").exists():
+        gr["hairpins"] = c.request({"op": "grammar.hairpins", "fasta_file": g("NC_001422.1")["file"], "begin": 0, "end": 300, "min_stem": 4, "min_loop": 3, "max_loop": 8, "max_span": 80})
+    if (engine.Path(${JSON.stringify(genomes)}) / "NC_000913.3.gb").exists():
+        gr["symmetry"] = c.request({"op": "grammar.symmetry", "genome": g("NC_000913.3"), "k": 4})
+    out["grammar"] = gr
 finally:
     c.stop()
 print(json.dumps(out))
@@ -179,6 +199,60 @@ print(json.dumps(out))
       assert('a job: the same answer in 5 shards and in 13, whichever worker computed which', a.errors === b.errors && JSON.stringify(a.quality) === JSON.stringify(b.quality) && a.minimizers === b.minimizers && a.reads === 6000, `${a.errors} ${b.errors}`);
       assert('a job: its trace has every shard, each on a worker, within the job\'s time', a._job.trace.length === 5 && a._job.trace.every((t) => t.end >= t.start && t.end <= a._job.seconds + 1e-6));
       check('a job: the simulated error rate rises along the read (last tenth over first tenth, 6.7 for 0.001 → 0.01 over 150 bases)', b.error_rate.slice(-15).reduce((s, v) => s + v, 0) / b.error_rate.slice(0, 15).reduce((s, v) => s + v, 0) / 6.7 - 1, 0.4);
+
+      // Group grammars (domains/genomics/theory/group-grammars.md), through the engine's grammar.* operations.
+      const gr = out.grammar;
+      const sc = gr.scan;
+      assert('grammar.parse: S → aa | bb under a ↔ b is invariant with one rule orbit; the orbit-only scan accepts ab, which Earley\'s parser and the equivariant parser reject (the draft\'s scan, Proposition 2.1)',
+        sc.invariant && sc.orbits.count === 1 && sc.equivariant.scan.accepts && !sc.earley.accepts && !sc.equivariant.consistent.accepts && sc.equivariant.survey.outside > 0,
+        `scan ${sc.equivariant.scan.accepts}, Earley ${sc.earley.accepts}, equivariant ${sc.equivariant.consistent.accepts}; ${sc.equivariant.survey.outside} short words outside the language accepted by the scan`);
+      const orbitCounts = ['scan', 'brackets', 'hairpin'].map((k) => [gr[k].orbits.count, gr[k].orbits.burnside]);
+      assert('grammar.parse: Burnside\'s count equals the rule orbits: 1 for S → aa | bb, 3 for brackets under the mirror (above |R|/|G| = 1.5), 13 for the hairpin under the strand group',
+        orbitCounts.every(([o, b]) => o === b) && orbitCounts.map(([o]) => o).join() === '1,3,13' && gr.brackets.orbits.ratio === 1.5, JSON.stringify(orbitCounts));
+      const hpq = gr.hairpin.equivariant;
+      assert('grammar.parse: on the hairpin, the equivariant parser under {1, κ} accepts the folded word, its chart standing for Earley\'s exactly (Proposition 2.3); they agree on every short word',
+        gr.hairpin.earley.accepts && hpq.consistent.accepts && hpq.order === 2 && hpq.chart_agrees && hpq.survey.equivariant_agrees && sc.equivariant.chart_agrees && sc.equivariant.survey.equivariant_agrees,
+        `${hpq.consistent.plain_equivalent} and ${gr.hairpin.earley.items} items`);
+      const ms = gr.monotone.monotone_search;
+      assert('grammar.parse: the monotone w cⁿ dⁿ under a ↔ b derives abccdd; its canonical search visits fewer classes than forms, and at least half as many (Proposition 2.4)',
+        !gr.monotone.context_free && gr.monotone.monotone && ms.classes.derives && ms.forms.derives && ms.classes.visited < ms.forms.visited && 2 * ms.classes.visited >= ms.forms.visited, `${ms.classes.visited} classes, ${ms.forms.visited} forms`);
+      const c1 = gr.code1, c2 = gr.code2;
+      assert('grammar.code: the vertebrate mitochondrial code\'s stabiliser is {1, τ₃}; the standard code\'s is {1}, and τ₃ fails there at ATA/ATG and TGA/TGG alone (Proposition 6.1)',
+        c2.stabiliser.map((s) => s.bits).join() === `0,${c2.tau3}` && c2.stabiliser[1].name === 'τ₃' && c1.stabiliser.map((s) => s.bits).join() === '0' && c1.element.keeps === 60 && c1.element.failures.join() === 'ATA/ATG,TGA/TGG',
+        `${c2.stabiliser.map((s) => s.name).join(', ')}; ${c1.element.failures.join(' ')}`);
+      assert('grammar.code: the power spectrum is the Walsh–Hadamard transform of the profile, and invariance is vanishing on the odd characters, in both codes (Proposition 6.2)', c1.wiener_khinchin && c2.wiener_khinchin && c1.duality && c2.duality);
+      const ch = gr.chars;
+      const degrees = (x) => x.characters.map((c) => c.degree).sort((p, q) => p - q).join();
+      assert('grammar.characters: Σ χ(1)² = |G| and the rows orthonormal for C₄, V₄, D₄, Q₈, S₄ and A₅; each Wedderburn block of dimension χ(1)², measured',
+        Object.values(ch).every((x) => x.sum_of_squares === x.order && x.orthonormal && x.wedderburn.measured && x.wedderburn.blocks.every((bl) => bl.dimension === bl.degree ** 2)),
+        Object.values(ch).map((x) => `${x.name} ${x.sum_of_squares}/${x.order}`).join(', '));
+      assert('grammar.characters: C₄ and C₂ × C₂, D₄ and Q₈ have the same degrees (the algebra does not determine the group); the indicators of D₄\'s and Q₈\'s two-dimensional characters are +1 and −1; S₄\'s degrees are the hook lengths\'',
+        degrees(ch['cyclic 4']) === degrees(ch.klein) && degrees(ch['dihedral 4']) === degrees(ch.quaternion) && degrees(ch.quaternion) === '1,1,1,1,2'
+          && ch['dihedral 4'].characters.find((c) => c.degree === 2).indicator === 1 && ch.quaternion.characters.find((c) => c.degree === 2).indicator === -1 && ch['symmetric 4'].symmetric.degrees_agree && degrees(ch['alternating 5']) === '1,3,3,4,5',
+        `${degrees(ch['dihedral 4'])} and ${degrees(ch.quaternion)}; A5 ${degrees(ch['alternating 5'])}`);
+      const nu = gr.nucleotides;
+      const byName = Object.fromEntries(nu.classifications.map((c) => [c.name, c]));
+      assert('grammar.nucleotides: the cosets of V₄\'s subgroups are the bases, the six two-letter codes and N, and B, D, H, V none; at the base point T the purine character changes sign, the weak–strong one does not',
+        nu.coset_count === 11 && !nu.three_letter_codes_are_cosets && nu.product_rule && byName['purine–pyrimidine'].on_bases.join() === '-1,1,-1,1' && byName['weak–strong'].on_bases.join() === '1,-1,-1,1' && byName['purine–pyrimidine'].letters.join('/') === 'Y/R',
+        nu.classifications.map((c) => `${c.letters.join('/')} ${c.on_bases.join(' ')}`).join('; '));
+      if (gr.hairpins && out.phix_letters) {
+        // The definition, again, here: every span of at most 80 of phiX174's first 300 bases that is a
+        // stem of four Watson–Crick pairs or more closing a loop of 3 to 8.
+        const wc = new Set(['AT', 'TA', 'CG', 'GC']);
+        const hairpin = (w) => { for (let st = 4; 2 * st + 3 <= w.length; st++) { const loop = w.length - 2 * st; if (loop > 8) continue; let ok = true; for (let i = 0; i < st && ok; i++) ok = wc.has(w[i] + w[w.length - 1 - i]); if (ok) return true; } return false; };
+        const text = out.phix_letters.slice(0, 300);
+        let count = 0;
+        for (let len = 1; len <= 80; len++) for (let i = 0; i + len <= 300; i++) count += hairpin(text.slice(i, i + len));
+        const h = gr.hairpins;
+        assert('grammar.hairpins: on phiX174\'s first 300 bases the inside pass finds every hairpin span, as many as counted here by the definition; graduated breaking over R/Y, W/S and M/K keeps them all',
+          h.agrees_with_definition && h.spans === count && h.by_definition === count && h.coarse.exact && h.coarse.by.length === 3, `${h.spans} spans, ${count} by the definition, ${h.maximal_count} maximal`);
+      } else skip('phiX174 is not in the data cache: its hairpins are not checked');
+      if (gr.symmetry) {
+        const sy = gr.symmetry;
+        const rcTV = sy.elements.find((e) => e.short === 'κρ').total_variation, rest = Math.min(...sy.elements.filter((e) => !['1', 'κρ'].includes(e.short)).map((e) => e.total_variation));
+        assert('grammar.symmetry: Escherichia coli\'s 4-mer statistics keep the reverse complement alone among the eight symmetries (Chargaff\'s second rule); the eight channels sum to ‖f‖²',
+          rcTV < 0.05 && rest > 4 * rcTV && Math.abs(sy.channel_sum - sy.norm) / sy.norm < 1e-12 && sy.channels.length === 8 && sy.odd_rc < 1e-3, `κρ ${rcTV.toFixed(4)}, others from ${rest.toFixed(3)}`);
+      } else skip('Escherichia coli is not in the data cache: the symmetry of its k-mers is not checked');
     }
   }
 }

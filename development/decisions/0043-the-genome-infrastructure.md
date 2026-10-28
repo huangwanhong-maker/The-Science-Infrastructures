@@ -1,6 +1,6 @@
 # 0043. The Genome Infrastructure: the Genomics and Evolution Domains and the Genome Atlas
 
-- **Status:** Accepted; amended by [0045](0045-the-genome-workbench.md) (the Genome Atlas renamed the Genome Workbench, with a Toolbox and the user's files)
+- **Status:** Accepted; amended by [0045](0045-the-genome-workbench.md) (the Genome Atlas renamed the Genome Workbench, with a Toolbox and the user's files); amended by [0047](0047-group-grammars-and-advanced-genome-analysis.md) (group grammars, and the survey's new modules)
 - **Date:** 2026-10-24
 - **Decided by:** the user asked for "a tremendous new infrastructure and application" for genome analysis, proposing the name "genom-lab": "various algorithms implemented at low level ... classical algorithms ... also advanced high speed and high quality algorithms ... distributed parallel structures ... as some high speed algorithms support distributed parallel computing in heterogeneous devices", and left Claude "fully free to design and implement", asking for high quality, creativity and effort. While the work went on they told another session that domains must reuse the foundations and never reimplement them. Claude designed the domains, the foundations' parts, the engine and the application, wrote the core and the application, had seven builders write modules to one contract in parallel, and wrote this record.
 

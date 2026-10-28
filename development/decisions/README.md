@@ -55,10 +55,11 @@ Decisions that concern only one library are recorded in that library's own `deve
 | [0040](0040-the-generation-of-spacetime.md) | The generation of spacetime by field theories; spin foams in the Complex Atlas | Accepted, provisionally |
 | [0041](0041-the-history-domain.md) | The history domain and the History Complex | Accepted; amended by 0042 |
 | [0042](0042-the-history-as-a-field-theory.md) | The history as a field theory, on the foundations | Accepted, provisionally; amends 0041 |
-| [0043](0043-the-genome-infrastructure.md) | The genome infrastructure: the genomics and evolution domains and the Genome Atlas | Accepted; amended by 0045 |
+| [0043](0043-the-genome-infrastructure.md) | The genome infrastructure: the genomics and evolution domains and the Genome Atlas | Accepted; amended by 0045 and 0047 |
 | [0044](0044-value-in-space-and-time.md) | Value in space and time: the economics domain and the Economy Atlas | Accepted, provisionally; amended by 0046 |
 | [0045](0045-the-genome-workbench.md) | The Genome Workbench: the Genome Atlas renamed, its Toolbox, the user's files and a shell built from registries | Accepted, provisionally; amends 0043 |
 | [0046](0046-the-economy-atlas-data-and-plugins.md) | The Economy Atlas: one's own data, plug-ins over networks of places, and a ledger in gold | Accepted, provisionally; amends 0044 |
+| [0047](0047-group-grammars-and-advanced-genome-analysis.md) | Group grammars for genomes (the user's GE-CSG draft made exact), and a survey of advanced genome analysis | Accepted, provisionally; amends 0043 |
 | [0049](0049-the-spacetime-of-the-earth-and-the-moon.md) | The spacetime of the Earth and the Moon: the domains' C++ of time, frames and figures, the navigation bridge, and the globe | Accepted, provisionally |
 | [0050](0050-instruments-and-their-acquisition.md) | Instruments and their acquisition: addresses of events, the models instruments read, and scheduling with deadlines | Accepted, provisionally |
 | [0051](0051-the-chemistry-workbench.md) | The Chemistry Workbench, and the manuscript on chemical structure generation made exact | Accepted, provisionally |

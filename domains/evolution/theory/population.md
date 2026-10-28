@@ -300,6 +300,7 @@ Each step raises ℓ.
 | 9 | `diversity.hpp`, `structure.hpp` | `fst_hudson`, `fst_weir_cockerham`, `window_statistics`, `simulate_structure` |
 | 10 | `structure.hpp` | `kinship`, `pca`, `tracy_widom_statistic` |
 | 11 | `structure.hpp` | `admixture`, `admixture_log_likelihood` |
+| [haplotypes.md](haplotypes.md) §5 | `sweep.hpp` | `sweep`: a selective sweep forward in time, its one-generation law, fixation and hitchhiking |
 
 ## 13. References
 

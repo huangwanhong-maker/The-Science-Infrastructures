@@ -27,6 +27,7 @@ export const TOOL_GROUPS = [
   ['expression', 'Expression', 'expression'],
   ['phylogeny', 'Trees and selection', 'trees'],
   ['population', 'Populations', 'populations'],
+  ['grammar', 'Grammars and symmetry', 'grammar'],
   ['statistics', 'Statistics', 'statistics'],
 ];
 

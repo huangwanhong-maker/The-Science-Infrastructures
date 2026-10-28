@@ -14,6 +14,7 @@ import * as assembly from './views/assembly.js';
 import * as expression from './views/expression.js';
 import * as trees from './views/trees.js';
 import * as populations from './views/populations.js';
+import * as grammar from './views/grammar.js';
 import * as toolbox from './views/toolbox.js';
 import * as data from './views/data.js';
 import * as run from './views/run.js';
@@ -27,6 +28,7 @@ view({ id: 'assembly', title: 'Assembly', tagline: 'a genome rebuilt from its re
 view({ id: 'expression', title: 'Expression', tagline: 'RNA-seq quantified, and two conditions compared', icon: 'expression', group: 'analyse', module: expression });
 view({ id: 'trees', title: 'Trees', tagline: 'genes and genomes on the tree of their descent', icon: 'trees', group: 'analyse', module: trees });
 view({ id: 'populations', title: 'Populations', tagline: 'genealogies, drift and structure', icon: 'populations', group: 'analyse', module: populations });
+view({ id: 'grammar', title: 'Grammar', tagline: 'genomes under a group: the bases, parsing up to symmetry, strands, the code', icon: 'grammar', group: 'analyse', module: grammar });
 view({ id: 'toolbox', title: 'Toolbox', tagline: 'every instrument, on your own sequences and files', icon: 'toolbox', group: 'make', module: toolbox, full: true });
 view({ id: 'data', title: 'Your data', tagline: 'genomes and files, yours and the library\'s', icon: 'data', group: 'make', module: data, needsEngine: false });
 view({ id: 'run', title: 'Engine', tagline: 'the machine, the workers, the jobs', icon: 'run', group: 'system', module: run, needsEngine: false });

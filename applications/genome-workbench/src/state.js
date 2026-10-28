@@ -6,7 +6,7 @@
 //
 // The view is the first word when it stands alone; links of the older form, view=align, are read too.
 
-export const VIEWS = ['genome', 'align', 'index', 'reads', 'assembly', 'expression', 'trees', 'populations', 'toolbox', 'data', 'run'];
+export const VIEWS = ['genome', 'align', 'index', 'reads', 'assembly', 'expression', 'trees', 'populations', 'grammar', 'toolbox', 'data', 'run'];
 
 export function readHash(hash = typeof location !== 'undefined' ? location.hash : '') {
   const p = new URLSearchParams(String(hash).replace(/^#/, ''));

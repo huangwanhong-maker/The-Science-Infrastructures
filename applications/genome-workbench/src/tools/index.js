@@ -6,3 +6,4 @@ import './sequence.js';
 import './alignment.js';
 import './annotation.js';
 import './data.js';
+import './grammar.js';

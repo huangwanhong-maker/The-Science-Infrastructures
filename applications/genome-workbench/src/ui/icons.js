@@ -16,6 +16,8 @@ const PATHS = {
   run: '<rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/>',
   toolbox: '<rect x="3.5" y="8" width="17" height="11" rx="2"/><path d="M9 8V6.2a1.7 1.7 0 0 1 1.7-1.7h2.6A1.7 1.7 0 0 1 15 6.2V8"/><path d="M3.5 12.5h17M10.5 11.2v2.6M13.5 11.2v2.6"/>',
   data: '<ellipse cx="12" cy="6" rx="7.5" ry="2.8"/><path d="M4.5 6v12c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8V6"/><path d="M4.5 12c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8"/>',
+  // a parse tree folded on its axis of symmetry
+  grammar: '<circle cx="12" cy="4.8" r="1.9"/><path d="M12 6.7v2.6M12 9.3 6.8 14.2M12 9.3l5.2 4.9"/><circle cx="6.2" cy="16" r="1.9"/><circle cx="17.8" cy="16" r="1.9"/><path d="M12 12.2v8.8" stroke-dasharray="1.4 2"/><path d="M4.5 20.5h4M15.5 20.5h4"/>',
   // tool groups
   sequence: '<path d="M7 3c0 4.5 10 4.5 10 9S7 16.5 7 21M17 3c0 4.5-10 4.5-10 9s10 4.5 10 9"/><path d="M8.5 6h7M9.5 9.5h5M9.5 14.5h5M8.5 18h7"/>',
   annotation: '<path d="M4 15h16"/><rect x="5" y="11.5" width="5" height="3.5" rx="1"/><rect x="12" y="15" width="6" height="3.5" rx="1"/><path d="M7.5 11.5V7l2 1.5L11 6"/>',

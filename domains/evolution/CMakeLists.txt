@@ -1,5 +1,5 @@
-# The evolution domain's C++ (ADR 0043): phylogeny, population genetics and selection, on the
-# genomics domain. Header-only; each module a directory with its own CMakeLists.txt and the
+# The evolution domain's C++ (ADR 0043): phylogeny, population genetics, haplotypes and
+# selection, on the genomics domain. Header-only; each module a directory with its own CMakeLists.txt and the
 # target evolution::<module>, joining the build when it exists.
 #
 # The domain stands on genomics (sequences, alignments, variants) and uses calx (linear
@@ -48,7 +48,7 @@ function(evolution_add_check name)
 endfunction()
 
 # The modules in their order (README §2).
-foreach(module phylogeny population selection)
+foreach(module phylogeny population haplotypes selection)
   if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${module}/CMakeLists.txt)
     add_subdirectory(${module})
   endif()

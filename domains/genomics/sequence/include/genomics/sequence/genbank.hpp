@@ -233,6 +233,7 @@ inline std::vector<GenBank> read_genbank(std::string_view text, std::vector<Prob
   bool joined = false;           // continued without spaces (/translation)
   bool open_quote = false;
   std::string keyword;           // the last keyword of the header
+  bool lineage_open = false;     // the lineage's last name continues on the next line
 
   const auto finish_location = [&] {
     if (!feature || location_text.empty()) return;
@@ -313,7 +314,7 @@ inline std::vector<GenBank> read_genbank(std::string_view text, std::vector<Prob
     }
     switch (section) {
       case Section::header: {
-        if (detail::starts_with(line, "  ORGANISM")) { g->organism = std::string(detail::field(line)); section = Section::organism; return; }
+        if (detail::starts_with(line, "  ORGANISM")) { g->organism = std::string(detail::field(line)); section = Section::organism; lineage_open = false; return; }
         if (line.size() > 2 && line[2] != ' ') { keyword = std::string(detail::trim(line.substr(0, 12))); return; }  // a sub-keyword
         // A continuation of DEFINITION.
         if (keyword == "DEFINITION" && line.size() > 12 && line.substr(0, 12) == std::string(12, ' '))
@@ -323,11 +324,17 @@ inline std::vector<GenBank> read_genbank(std::string_view text, std::vector<Prob
       case Section::organism: {
         if (line.size() > 12 && line.substr(0, 12) == std::string(12, ' ')) {
           std::string_view f = detail::field(line);
+          bool first = true;
           while (!f.empty()) {
             std::size_t sc = f.find(';');
             std::string_view item = detail::trim(f.substr(0, sc));
+            const bool ends = sc != std::string_view::npos || (!item.empty() && item.back() == '.');
             if (!item.empty() && item.back() == '.') item.remove_suffix(1);
-            if (!item.empty()) g->lineage.emplace_back(item);
+            // A name wrapped from the line before (phiX174's "Sinsheimervirus / phiX174") is one name.
+            if (!item.empty() && first && lineage_open && !g->lineage.empty()) g->lineage.back() += " " + std::string(item);
+            else if (!item.empty()) g->lineage.emplace_back(item);
+            lineage_open = !ends;
+            first = false;
             if (sc == std::string_view::npos) break;
             f = f.substr(sc + 1);
           }

@@ -13,7 +13,7 @@ A running record, for readers, of what each commit made possible or better, in t
 
 | Date | Commits |
 |---|---|
-| [2026-10-29](2026-10-29.md) | The Chemistry Workbench; Fields known in part; the planetary-science domain |
+| [2026-10-29](2026-10-29.md) | Group grammars for genomes, and a survey of advanced genome analysis; The Chemistry Workbench; Fields known in part; the planetary-science domain |
 | [2026-10-28](2026-10-28.md) | Instruments and their acquisition; the spacetime of the Earth and the Moon |
 | [2026-10-24](2026-10-24.md) | The Economy Atlas: your data, plug-ins and a ledger in gold; the Genome Workbench; value in space and time: the economics domain and the Economy Atlas; genomes: the genomics and evolution domains and the Genome Atlas; the history as a field theory; the history domain and the History Complex |
 | [2026-10-23](2026-10-23.md) | The generation of spacetime; spin foams, vertex by vertex; complexes, symmetry and fields; the Complex Atlas; the simulator in the Quick Start; spiking networks in the gallery; the simulator's visualizer and profiler; the Spiking Simulator; a quantum neuron; seven new neuron models; the mathematical foundations and the first C++; spiking networks; biosignals on the brain; the Brain Atlas rebuilt; the API; observations, scores and hazards |

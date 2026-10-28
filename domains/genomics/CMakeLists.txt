@@ -61,7 +61,7 @@ function(genomics_add_check name)
 endfunction()
 
 # The modules in their order (README §2).
-foreach(module sequence simulate kmers align index sketch mapping assembly variant hmm msa expression annotation)
+foreach(module sequence simulate kmers align index sketch mapping assembly variant hmm msa expression annotation grammar rna signal classify comparative)
   if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${module}/CMakeLists.txt)
     add_subdirectory(${module})
   endif()
