@@ -3,9 +3,16 @@
 // et al. (1992) and Lamb (1932); tropical cyclones found in constructed fields;
 // the Fire Weather Index System against its standard test data; the wet-bulb
 // temperature and the heat index; the standard atmosphere and settling parcels.
+// And its C++ (the U.S. Standard Atmosphere 1976 to 86 km, atmosphere/standard.hpp), built
+// with CMake and run on calx's verification; the JavaScript standard atmosphere of
+// settling.js is held to the same references (tests/fixtures/atmosphere-reference.txt).
 // Run from the repository root:  node domains/meteorology/tests/run-tests.mjs
 
-import { suite, seeded } from '../../../development/tools/checks.mjs';
+import { readFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { suite, seeded, cppChecks } from '../../../development/tools/checks.mjs';
 import {
   windFromDirection, BarotropicModel, GRAVITY, EARTH_RADIUS as RADIUS, OMEGA, ShallowWaterModel,
   lanczosWeights, detect, stitch, arcDeg, positionAt,
@@ -17,7 +24,8 @@ import {
   standardAtmosphere, pressureAltitude, stokesSettling, windAtHeight, settlingPath,
 } from '../js/index.js';
 
-const { check, assert, done } = suite();
+const { check, assert, skip, lines, done } = suite();
+const HERE = dirname(fileURLToPath(import.meta.url));
 
 // ---- the wind ---------------------------------------------------------------------
 {
@@ -315,5 +323,31 @@ const { check, assert, done } = suite();
   check('settling: in a uniform wind along the equator, the displacement is U t', (windy.coords[2 * n] * Math.PI * 6371008.8) / 180 - U * 86400, 1e-6, 'm');
   check('settling: winds between levels are linear in height', Math.abs(windAtHeight(3000, [{ z: 10, u: 2, v: 0 }, { z: 5010, u: 12, v: -5 }])[0] - 7.98) + Math.abs(windAtHeight(9e4, [{ z: 10, u: 2, v: 0 }, { z: 5010, u: 12, v: -5 }])[1] + 5), 1e-12);
 }
+
+// ---- the JavaScript standard atmosphere against the C++'s references ------------------------------
+{
+  // fluids' U.S. Standard Atmosphere 1976 (Z T_M P rho C_s mu k g), against which the C++ is held to
+  // 1e-12, from sea level to 20 km. settling.js takes geopotential heights and ICAO's R = 287.052 87
+  // J kg-1 K-1, where the 1976 has R*/M0 = 287.053 07: its pressure and density differ by up to 3e-6.
+  const R0 = 6356766;
+  const rows = readFileSync(resolve(HERE, 'fixtures/atmosphere-reference.txt'), 'utf8').split('\n')
+    .filter((l) => l.startsWith('fluids ')).map((l) => l.split(/\s+/).slice(1).map(Number)).filter((r) => r[0] >= 0 && r[0] <= 20000);
+  let T = 0, p = 0, rho = 0, mu = 0;
+  for (const [z, TM, P, density, , viscosity] of rows) {
+    const s = standardAtmosphere((R0 * z) / (R0 + z));
+    T = Math.max(T, Math.abs(s.T - TM));
+    p = Math.max(p, Math.abs(s.p - P) / P);
+    rho = Math.max(rho, Math.abs(s.rho - density) / density);
+    mu = Math.max(mu, Math.abs(s.mu - viscosity) / viscosity);
+  }
+  assert(`standard atmosphere: ${rows.length} reference heights from 0 to 20 km`, rows.length > 40);
+  check('standard atmosphere: settling.js temperature against the 1976 (fluids)', T, 1e-9, 'K');
+  check('standard atmosphere: settling.js pressure, relative (ICAO\'s R)', p, 5e-6);
+  check('standard atmosphere: settling.js density, relative (ICAO\'s R)', rho, 5e-6);
+  check('standard atmosphere: settling.js viscosity, relative', mu, 1e-12);
+}
+
+// The C++.
+cppChecks({ assert, skip, lines }, { project: resolve(HERE, '..'), name: 'meteorology' });
 
 done();

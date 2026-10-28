@@ -1,7 +1,7 @@
 {
   "name": "navigation",
   "kind": "bridge",
-  "status": "planned",
+  "status": "draft",
   "depends": [
     "astronomy",
     "geodesy",

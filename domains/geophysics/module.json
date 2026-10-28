@@ -3,7 +3,8 @@
   "kind": "field",
   "status": "draft",
   "depends": [
-    "geodesy"
+    "geodesy",
+    "metrology"
   ],
   "foundations": [
     "calx",

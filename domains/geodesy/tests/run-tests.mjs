@@ -1,14 +1,19 @@
 // Checks of the geodesy domain: the Earth as a sphere, latitudes on the WGS 84
 // ellipsoid, distances, and directions in the local horizon.
+// And its C++ (ellipsoids, geodetic and Earth-centred coordinates, local level frames), against
+// ERFA, built with CMake and run on calx's verification.
 // Run from the repository root:  node domains/geodesy/tests/run-tests.mjs
 
-import { suite, seeded } from '../../../development/tools/checks.mjs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { suite, seeded, cppChecks } from '../../../development/tools/checks.mjs';
 import {
   DEG, EARTH_RADIUS_M, toVector, fromVector, eastNorth, centralAngle, distanceM, move, wrapLongitude,
   geocentricLatitude, geodeticLatitude, distanceKm, nearestPlace, compassPoint, meanDirection,
 } from '../js/index.js';
 
-const { check, assert, done } = suite();
+const { check, assert, skip, lines, done } = suite();
 const random = seeded(20261022);
 
 // ---- the sphere ------------------------------------------------------------
@@ -60,5 +65,8 @@ const random = seeded(20261022);
   assert('compass points', compassPoint(225) === 'SW' && compassPoint(359) === 'N' && compassPoint(100) === 'E');
   check('mean of 350 and 10 degrees is 0', Math.min(meanDirection([350, 10]), 360 - meanDirection([350, 10])), 1e-9, 'deg');
 }
+
+// The C++.
+cppChecks({ assert, skip, lines }, { project: resolve(dirname(fileURLToPath(import.meta.url)), '..'), name: 'geodesy' });
 
 done();

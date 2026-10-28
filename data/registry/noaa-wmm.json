@@ -1,0 +1,43 @@
+{
+  "id": "noaa-wmm",
+  "domain": "geophysics",
+  "title": "The World Magnetic Model 2025 (WMM2025): Gauss coefficients of the Earth's main magnetic field and its secular variation to degree 12, with NOAA's test values and the technical report",
+  "provider": "NOAA National Centers for Environmental Information (NCEI) and the British Geological Survey (BGS), for the US National Geospatial-Intelligence Agency (NGA) and the UK Defence Geographic Centre (DGC)",
+  "credit": "Geomagnetic field: WMM2025 (NOAA NCEI and BGS)",
+  "files": [
+    {
+      "url": "https://www.ncei.noaa.gov/sites/default/files/2024-12/WMM2025COF.zip",
+      "member": "WMM2025COF/WMM.COF",
+      "file": "WMM.COF",
+      "size": 4554,
+      "sha256": "dfa8597825af4e0b87ff4198a5b4fb661b3c49f4cd090cd0164e0259b075582f"
+    },
+    {
+      "url": "https://www.ncei.noaa.gov/sites/default/files/2024-12/WMM2025COF.zip",
+      "member": "WMM2025COF/WMM2025_TestValues.txt",
+      "file": "WMM2025_TestValues.txt",
+      "size": 21774,
+      "sha256": "e6975b093dddeb6153e0b23cc418425c438167e7c5b1dd795da379cb654f5819"
+    },
+    {
+      "url": "https://www.ncei.noaa.gov/sites/default/files/2025-02/WMM2025_TEST_VALUES.txt",
+      "file": "WMM2025_TEST_VALUES.txt",
+      "size": 2652,
+      "sha256": "ae289c94e2200e4deeae2dfdedf543a8a0e93096512b30d6a754199731f570d0"
+    },
+    {
+      "url": "https://library.oarcloud.noaa.gov/noaa_documents.lib/NESDIS/NCEI/WWM_Report_2025.pdf",
+      "file": "WMM_Report_2025.pdf",
+      "size": 22501299,
+      "sha256": "3bed06a4381b06caa0ca04296aa428a6647974bbc06ec936cf744876e4fc0f28"
+    }
+  ],
+  "format": "WMM.COF: NOAA's coefficient format, ASCII. A header line (epoch 2025.0 as a decimal year, the model's name WMM-2025, its release date 11/13/2024), then one row per degree n and order m to n = m = 12: n, m, g and h (nT), and their secular variation g-dot and h-dot (nT per year); h is 0 for m = 0; two lines of 9s end the file. Schmidt semi-normalised Gauss coefficients of the internal potential on the reference sphere a = 6 371 200 m, in geocentric spherical coordinates. WMM2025_TestValues.txt: 100 points (decimal year, height above the WGS 84 ellipsoid in km, geodetic latitude and longitude in degrees) with D and I (degrees, 2 decimals), H, X, Y, Z, F (nT, 6 decimals) and their rates (per year, 6 decimals). WMM2025_TEST_VALUES.txt: the 12 points of the report's Table 6 with the grid variation, to 0.1 nT and 0.01 degree. WMM_Report_2025.pdf: the technical report, whose section 1.2 states the model's equations and whose Tables 3a and 3b give a high-precision numerical example; domains/geophysics/tests/make_wmm_fixtures.py takes its values from it. Members of WMM2025COF.zip are read by range requests.",
+  "coverage": "Global; from 2025.0 to 2030.0 (to be used from 1 January 2025 to 31 December 2029); specified from 1 km below the WGS 84 ellipsoid to 850 km above it (report section 1.1, after MIL-PRF-89500B)",
+  "licence": "Public domain, a work of the US Government. NCEI states: 'The WMM source code is in the public domain and not licensed or under copyright. The information and software may be used freely by the public.' Works consisting predominantly of it must say that it is US Government material not subject to copyright (17 U.S.C. 403).",
+  "citation": "Chulliat, A., W. Brown, M. Nair, N. Gomez Perez, L.-Y. Young, C. Watson, N. Boneh, C. Beggan, B. Meyer and M. Paniccia (2025). The US/UK World Magnetic Model for 2025-2030: Technical Report, National Centers for Environmental Information, NOAA, https://doi.org/10.25923/prbc-s316; NOAA NCEI Geomagnetic Modeling Team and British Geological Survey (2024). World Magnetic Model 2025, https://doi.org/10.25921/aqfd-sd83.",
+  "used_by": [
+    "domains/geophysics (C++: geomagnetism, and its checks)",
+    "applications/cosmopoiesis-lab"
+  ]
+}

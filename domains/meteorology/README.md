@@ -6,6 +6,7 @@
 
 | Module | Scope | Status |
 |---|---|---|
+| `atmosphere` | The U.S. Standard Atmosphere 1976 from −5 km′ to 86 km: temperature (molecular-scale and kinetic, with Table 8's molecular weight from 80 to 86 km), pressure, density, the 1976's gravity and geopotential height, the speed of sound, viscosities and conductivity, number density, mean free path, particle speed and collision frequency, the layer and its name; the pressure altitude; columns of levels for an instrument rising or falling through it. No value above 86 km, where the 1976 is a diffusive model of each species (not implemented) | draft (C++: `atmosphere/standard.hpp`, target `meteorology::atmosphere`; held to the document's Tables I–III, to fluids' 1976 and to ICAO's 1993 in ambiance) |
 | `dynamics` | Atmospheric dynamics. Two models of our own, by the spectral transform method: the barotropic vorticity equation of the first numerical forecast (1950), and the shallow-water equations, started by a digital filter | draft (JavaScript: `barotropic.js`, `shallowwater.js`) |
 | `prediction` | Weather analysis and prediction: tropical cyclones found and tracked in sea-level pressure (after TempestExtremes); the wind | draft (JavaScript: `cyclones.js`, `wind.js`) |
 | `hazards` | Hazards read from forecasts: fire weather by the Canadian Fire Weather Index System; heat stress (Stull's wet-bulb temperature, the NWS heat index); daily weather from a forecast's samples (local noon, local days, amounts from rates) | draft (JavaScript: `fireweather.js`, `heat.js`) |
@@ -18,7 +19,7 @@
 ## 2. Dependencies
 
 - **Domains:** geodesy, for reference surfaces.
-- **Foundations:** physis (`continuum`, `thermodynamics`, `radiation`, `chemistry`; today the spectral transform of its JavaScript stand-in); calx.
+- **Foundations:** physis (`continuum`, `thermodynamics`, `radiation`, `chemistry`; today the spectral transform of its JavaScript stand-in); calx (the C++ checks' verification).
 
 The Earth's radius and rotation rate, as Williamson et al. (1992) give them for the standard tests, are this domain's (`EARTH_RADIUS`, `OMEGA` in `barotropic.js`): physis's spectral transform takes the radius as an argument.
 
@@ -30,7 +31,11 @@ The Earth's radius and rotation rate, as Williamson et al. (1992) give them for 
 node domains/meteorology/tests/run-tests.mjs
 ```
 
+The C++ (header-only, target `meteorology::atmosphere`, the domain's first) runs in the same suite, built with CMake and run on calx's verification. Its references are in `tests/fixtures/atmosphere-reference.txt`, made by `tests/make_atmosphere_fixtures.py`: the document's Tables I–III, transcribed from its scan at thirty-eight heights; fluids' `ATMOSPHERE_1976`; ambiance's ICAO 1993 atmosphere. The JavaScript standard atmosphere of `settling.js` is held to the same references, so the two agree to 3 × 10⁻⁶ below 20 km.
+
 ## 4. Notes
+
+- [The U.S. Standard Atmosphere 1976 to 86 km](theory/standard-atmosphere.md)
 
 - [The barotropic vorticity model](theory/barotropic-vorticity-model.md)
 - [The shallow-water model](theory/shallow-water-model.md)
@@ -43,4 +48,4 @@ node domains/meteorology/tests/run-tests.mjs
 
 ## 5. Used By
 
-air-sea, tides and climate (planned); the Earth Atlas.
+air-sea, tides and climate (planned); the Earth Atlas; Cosmopoiesis, whose virtual instruments (barometer, thermometer, radiosonde) read the standard atmosphere ([ADR 0050](../../development/decisions/0050-instruments-and-their-acquisition.md)).

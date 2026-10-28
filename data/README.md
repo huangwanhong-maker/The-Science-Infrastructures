@@ -30,6 +30,7 @@ Data of different kinds are kept apart ([ADR 0014](../development/decisions/0014
 | [`acquisition/`](acquisition/) | `fetch.py`: fixed files, catalogue queries, gridded subsets and web requests into `data/cache/`, with `retrieval.json`. `erddap.py`: a client for ERDDAP's griddap. `ncss.py`: a client for THREDDS's NetCDF Subset Service. `opendap.py`: a client for OPeNDAP (DAP2) servers, for strided grids or the column beneath a place. `remotezip.py`: members of zip archives on the web, by range requests. `on_demand.py`: requests made while an application waits (§3.1). `stac.py`: a minimal client of the STAC API (Item Search with geometry, time, query on properties, sort and paging), with Element 84's Earth Search over Sentinel-2 Level-2A; Copernicus Sentinel data are free, full and open, credited "Contains modified Copernicus Sentinel data <year>". `recipe.py`: an application's recipe, the datasets and products it needs, run in order from the command line or by the application's server (§3.2). `schedule.py`: an application's schedule (`schedule.json`), its recipe's steps and other scripts run again every hour, six hours or day, one job at a time (§3.4). | draft |
 | [`catalogs/`](catalogs/) | `tap.py`: a minimal client for the IVOA Table Access Protocol, used for ESA Gaia, CDS VizieR and SIMBAD | draft |
 | [`formats/`](formats/) | Readers and writers: netCDF classic (`netcdf3.py`). FITS, netCDF-4/HDF5 and Zarr are planned. | draft |
+| [`tiles/`](tiles/) | Terrain tiles of the Earth and the Moon in the globes' geographic pyramid, built on demand from ETOPO 2022, Mapzen's Terrarium, LOLA, EGM96 and Natural Earth's land, the sea at its surface with its floor beneath, every sample's provenance coded, synthetic detail below the data only on request and labelled (ADR 0049) | draft |
 | [`products/`](products/) | Derived artefacts, built reproducibly from registered datasets, and their index `index.json` (§4). `ai_forecast.py` runs an AI weather model to make one. `archive.py` keeps each run of each forecast product in `data/cache/archive/`; `verification.py` scores the kept runs against analyses, station reports and best tracks. `observation_set.py` builds observations from station networks, with a rolling window; our own sensors' products come from [`observation/sensors/`](../observation/sensors/). | draft |
 | `provenance` | Records of which data and which code produced each result. For now this is `retrieval.json` for each retrieval, and a `source` block in each product. | seed |
 
@@ -144,6 +145,9 @@ Products are written to `data/cache/products/` and listed by kind in `index.json
 | `anatomy` | `brain_anatomy.py` | The human brain in the MNI 152 ICBM 2009c space: surfaces of the cortex (its vertices labelled by gyrus), the white matter and the cerebellum, and meshes of the nuclei, ventricles and fibre bundles, shaded by baked obscurance and sulcal depth, in three packs; the joined labels of all sources on the template's grid, with each structure's measures and contacts (ADR 0032). Read by the Brain Atlas. | `.json`, `.bin.gz` packs (int16 positions, int8 normals, uint16 or uint32 indices) and `.nii.gz` |
 | `trade` | `trade_flows.py` | Exports of goods between economies by year (OECD BIMTS, balanced and adjusted for re-exports, millions of US dollars), each economy with Natural Earth's label point as its place, keyed by ISO alpha-3; flows to aggregates left out and listed | `.json` |
 | `currencies` | `currency_record.py` | Currencies month by month: the ECB's average rate against the euro and the BIS's policy rate at the end of the month (the euro's, the ECB's deposit facility rate), null where missing; the record of the economics domain's spacetime of currencies | `.json` |
+| `places` | `place_names.py` | Place names for searching a globe: the Earth's populated places and countries at their label points (Natural Earth 1:50m), and the Moon's features the IAU has adopted, with their type, diameter and gazetteer link (USGS Astrogeology), in the frames of each body | `.json` (`places/earth.json`, `places/moon.json`) |
+| `geoid` | `geoid_grid.py` | The EGM96 geoid at 15′, taken out of GeographicLib's archive, for heights above mean sea level (the terrain tiles and geodesy's C++). Not listed in the index. | `.pgm` and `.json` |
+| `land-mask` | `land_mask.py` | Land and sea: Natural Earth's land at 1:50m rasterised at 20 pixels per degree and eroded by a pixel, the Caspian kept as land, for telling the sea from land below sea level. Not listed in the index. | `.png` and `.json` |
 
 ## 5. Datasets
 
@@ -201,12 +205,21 @@ Products are written to `data/cache/products/` and listed by kind in `index.json
 | `allen-mouse-ccf` | files | Allen Institute | The mouse brain: CCFv3 template, annotation and ontology |
 | `physionet-eegmmidb` | files | PhysioNet (Schalk et al. 2004) | EEG: four runs of one person, 64 channels, at rest and moving a fist |
 | `neurovault-ibc` | files | NeuroVault (Individual Brain Charting) | fMRI: six z maps of one person, motor, language, faces, memory, social |
+| `naif-lunar-frames` | files | NASA JPL and NAIF | The Moon's orientation in DE440 (binary PCK) and the frame kernel of its mean-Earth frame |
+| `iers-eop` | http | IERS Rapid Service/Prediction Centre (Bulletin A) | Earth orientation: polar motion, UT1 − UTC, length of day and celestial pole offsets, daily since 1973 with a year of predictions |
+| `iana-leap-seconds` | http | IANA (from the IERS's Bulletin C) | The leap seconds, with the list's expiry |
+| `egm96-geoid` | files | NGA, through GeographicLib | The EGM96 geoid on a 15′ grid |
+| `aws-terrain-tiles` | tiles, on demand | Mapzen's terrain tiles on the AWS Open Data registry | Elevation of the land and the sea floor to zoom 15, each tile naming its sources |
+| `lola-gdr` | files, and blocks on demand | NASA GSFC, LOLA's gridded data records (PDS) | The Moon's radius at 4, 16, 64 and 128 pixels per degree, with the count of laser shots per pixel |
+| `usgs-moon-nomenclature` | files | IAU WGPSN and USGS Astrogeology (the Gazetteer of Planetary Nomenclature) | The names of the Moon's features at their centres, with type and diameter |
+| `celestrak-gp` | http | CelesTrak (T. S. Kelso) | Satellites' general perturbations element sets (two-line elements) by group: stations, GNSS, weather, the brightest |
+| `noaa-wmm` | files | NOAA NCEI and the British Geological Survey | The World Magnetic Model 2025: Gauss coefficients to degree 12 with their secular variation, NOAA's test values and the technical report |
+| `noaa-swpc` | http | NOAA Space Weather Prediction Center | Space weather in real time: the solar wind and interplanetary field at L1, the planetary K index, GOES's X-rays and energetic protons |
 
 ### 5.2 Planned
 
 | Dataset | Provider | Use |
 |---|---|---|
-| Earth-orientation parameters, leap seconds | IERS | Time scales and reference frames |
 | Tide-gauge records and predictions | NOAA CO-OPS | Tidal analysis and validation |
 | Cosmicflows-4 distances and peculiar velocities | Tully et al. 2023, via VizieR | Flows of galaxies |
 | ERA5 reanalysis | ECMWF / Copernicus (needs an account) | The atmosphere's past, hourly since 1940 |

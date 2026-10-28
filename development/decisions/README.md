@@ -59,6 +59,8 @@ Decisions that concern only one library are recorded in that library's own `deve
 | [0044](0044-value-in-space-and-time.md) | Value in space and time: the economics domain and the Economy Atlas | Accepted, provisionally; amended by 0046 |
 | [0045](0045-the-genome-workbench.md) | The Genome Workbench: the Genome Atlas renamed, its Toolbox, the user's files and a shell built from registries | Accepted, provisionally; amends 0043 |
 | [0046](0046-the-economy-atlas-data-and-plugins.md) | The Economy Atlas: one's own data, plug-ins over networks of places, and a ledger in gold | Accepted, provisionally; amends 0044 |
+| [0049](0049-the-spacetime-of-the-earth-and-the-moon.md) | The spacetime of the Earth and the Moon: the domains' C++ of time, frames and figures, the navigation bridge, and the globe | Accepted, provisionally |
+| [0050](0050-instruments-and-their-acquisition.md) | Instruments and their acquisition: addresses of events, the models instruments read, and scheduling with deadlines | Accepted, provisionally |
 
 ## 2. Template
 

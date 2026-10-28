@@ -6,9 +6,9 @@
 
 | Module | Scope | Status |
 |---|---|---|
-| `ephemerides` | An evaluator for the JPL DE format (SPK); the bodies of the Solar System; osculating orbits; small bodies | draft (JavaScript: `spk.js`, `bodies.js`, `kepler.js`) |
+| `ephemerides` | An evaluator for the JPL DE format (SPK); the bodies of the Solar System; osculating orbits; small bodies | draft (JavaScript: `spk.js`, `bodies.js`, `kepler.js`; C++: DAF files, SPK segments of types 2 and 3 summed to the common centre of target and observer, NAIF's binary PCK of type 2; held to JPL Horizons) |
 | `positional` | Apparent places, the celestial sphere, rising, transit and setting; the Sun seen from the Earth | draft (JavaScript: `sky.js`, `sun.js`) |
-| `rotation` | The IAU rotation models of the Sun, the Moon and the planets (Archinal et al. 2018) | draft (JavaScript: `rotation.js`) |
+| `rotation` | The IAU rotation models of the Sun, the Moon and the planets (Archinal et al. 2018) | draft (JavaScript: `rotation.js`; C++: the IAU models, and the Moon's principal-axes and mean-Earth frames of DE440 from NAIF's PCK and frame kernel, held to NAIF's worked example to 0.44 m) |
 | `galaxies` | The supergalactic frame, tidal indices and groups of galaxies | draft (JavaScript: `galaxies.js`) |
 | `astrometry` | Astrometric reduction of images | planned |
 | later | Astrophysics and cosmology | planned |
@@ -30,6 +30,8 @@ node domains/astronomy/tests/run-tests.mjs
 
 The ephemeris checks need DE440s (`python data/acquisition/fetch.py jpl-de440s`), and those of the galaxies their catalogues (`tully-2mass-groups`, `ungc`). The reference values are in `tests/fixtures/`, fetched again by `fetch_horizons.py`, `fetch_orientation.py` and `fetch_subsolar.py`.
 
+The C++ (header-only, targets `astronomy::ephemerides` and `astronomy::rotation`; [ADR 0049](../../development/decisions/0049-the-spacetime-of-the-earth-and-the-moon.md)) runs in the same suite, against Horizons' states and orientations (`tests/fixtures/horizons.txt`, `orientation.txt`, made by `tests/cpp_fixtures.py`) and NAIF's example of the Moon's frames; the Moon's checks need NAIF's kernels (`python data/acquisition/fetch.py naif-lunar-frames`).
+
 ## 4. Notes
 
 - [Relations between galaxies: supergalactic frame, tidal index, Hubble flow](theory/galaxy-relations.md)
@@ -41,4 +43,4 @@ The ephemeris checks need DE440s (`python data/acquisition/fetch.py jpl-de440s`)
 
 ## 6. Used By
 
-climate (orbital forcing, planned), tides and navigation (planned); the Celestial Atlas and the Earth Atlas.
+the navigation bridge (its catalogue of frames); climate (orbital forcing, planned) and tides (planned); the Celestial Atlas, the Earth Atlas and Cosmopoiesis.

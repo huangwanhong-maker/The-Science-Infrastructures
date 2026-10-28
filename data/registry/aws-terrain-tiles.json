@@ -1,0 +1,17 @@
+{
+  "id": "aws-terrain-tiles",
+  "kind": "tiles",
+  "domain": "geography",
+  "title": "Terrain Tiles: global elevation of land and sea floor in Web Mercator tiles to zoom 15, compiled from SRTM, EU-DEM, 3DEP, ETOPO1 and others",
+  "provider": "Mapzen (Linux Foundation), on the AWS Open Data registry (s3://elevation-tiles-prod)",
+  "credit": "Elevation: Mapzen Terrain Tiles (SRTM, EU-DEM, 3DEP, ETOPO1 and others)",
+  "service": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png",
+  "format": "PNG tiles of 256 x 256 pixels in Web Mercator (EPSG:3857), zooms 0 to 15; elevation in metres above mean sea level = R x 256 + G + B / 256 - 32768 (the Terrarium encoding). Each tile names its source datasets in the HTTP header x-amz-meta-x-imagery-sources (for example srtm/N45E006.hgt, eudem/eudem_dem_5deg_n45e005.tif, etopo1/ETOPO1_Bed_g.tif). Read by the data library's tile service (data/tiles), which fetches the tiles a terrain tile needs on demand, keeps them in data/cache/aws-terrain-tiles/terrarium/<z>/<x>/<y>.png with their sources, and records each tile's sources and the resolution behind each sample.",
+  "coverage": "Global between 85.05 S and 85.05 N (Web Mercator); land at 3 to 90 m (SRTM 30 m between 60 N and 56 S; EU-DEM 25 m in Europe; 3DEP 10 m in the United States; ArcticDEM, CDEM, LINZ and others), the sea floor at ETOPO1's 1 arc-minute (about 1.85 km), GMTED's 250 m to 1 km elsewhere.",
+  "licence": "Mixed; attribution required. The data sources and the attribution each requires are listed at https://github.com/tilezen/joerd/blob/master/docs/attribution.md; among them SRTM, 3DEP, ETOPO1 and GMTED are US Government works in the public domain, EU-DEM is 'Produced using Copernicus data and information funded by the European Union - EU-DEM layers', CDEM is under the Open Government Licence - Canada, and LINZ under CC BY 4.0. The page names the sources of what it shows.",
+  "citation": "Mapzen, Terrain Tiles, https://registry.opendata.aws/terrain-tiles/ (tiles retrieved on demand; each tile's retrieval is recorded beside it).",
+  "used_by": [
+    "data/tiles",
+    "applications/cosmopoiesis-lab"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "id": "noaa-swpc",
+  "kind": "http",
+  "domain": "geophysics",
+  "title": "Space weather in real time: the solar wind and interplanetary field at L1, the planetary K index, the Sun's X-rays and energetic protons from GOES",
+  "provider": "NOAA Space Weather Prediction Center (SWPC), from DSCOVR, ACE and IMAP's real-time solar wind, ground magnetometers, and the GOES satellites",
+  "credit": "Space weather: NOAA SWPC",
+  "requests": [
+    {"url": "https://services.swpc.noaa.gov/json/rtsw/rtsw_wind_1m.json", "file": "rtsw_wind_1m.json"},
+    {"url": "https://services.swpc.noaa.gov/json/rtsw/rtsw_mag_1m.json", "file": "rtsw_mag_1m.json"},
+    {"url": "https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json", "file": "noaa-planetary-k-index.json"},
+    {"url": "https://services.swpc.noaa.gov/json/goes/primary/xrays-6-hour.json", "file": "xrays-6-hour.json"},
+    {"url": "https://services.swpc.noaa.gov/json/goes/primary/integral-protons-6-hour.json", "file": "integral-protons-6-hour.json"}
+  ],
+  "parameters": {},
+  "profiles": {"now": {"description": "The feeds as they are at the retrieval", "parameters": {}}},
+  "default_profile": "now",
+  "feeds": [
+    {"id": "rtsw-wind", "url": "https://services.swpc.noaa.gov/json/rtsw/rtsw_wind_1m.json", "cadence_s": 60,
+     "about": "the solar wind's protons at L1, one-minute values of the last day, newest first; rows flagged active are from the spacecraft in use (proton_speed km/s, proton_density cm⁻³, proton_temperature K; time_tag UTC)"},
+    {"id": "rtsw-mag", "url": "https://services.swpc.noaa.gov/json/rtsw/rtsw_mag_1m.json", "cadence_s": 60,
+     "about": "the interplanetary magnetic field at L1, one-minute values, newest first (bt, bx, by, bz in nT, in GSE and GSM axes)"},
+    {"id": "kp", "url": "https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json", "cadence_s": 10800,
+     "about": "the estimated planetary K index, three-hourly, of the last week, oldest first"},
+    {"id": "goes-xrays", "url": "https://services.swpc.noaa.gov/json/goes/primary/xrays-6-hour.json", "cadence_s": 60,
+     "about": "the primary GOES satellite's X-ray flux in 0.05–0.4 nm and 0.1–0.8 nm (W/m²), one-minute values of six hours, oldest first"},
+    {"id": "goes-protons", "url": "https://services.swpc.noaa.gov/json/goes/primary/integral-protons-6-hour.json", "cadence_s": 300,
+     "about": "the primary GOES satellite's integral proton fluxes above 1, 5, 10, 30, 50, 60, 100 and 500 MeV (pfu = cm⁻² s⁻¹ sr⁻¹), five-minute values, oldest first"}
+  ],
+  "format": "JSON arrays of records with a UTC time tag. Read live by applications' servers (applications/cosmopoiesis-lab/runtime.py) at the feeds' cadences; a retrieval through the fetcher keeps a snapshot.",
+  "coverage": "The present: the last six hours to the last week, depending on the feed; the real-time solar wind is preliminary, not the science-quality record",
+  "licence": "US Government work, public domain (NOAA SWPC's data are freely available; SWPC asks that it be credited)",
+  "citation": "NOAA Space Weather Prediction Center, https://www.swpc.noaa.gov/",
+  "used_by": ["applications/cosmopoiesis-lab"]
+}

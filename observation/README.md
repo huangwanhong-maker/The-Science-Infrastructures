@@ -12,7 +12,7 @@ This directory covers practical astronomy and oceanography with real instruments
 |---|---|---|
 | `instruments` | Control of telescopes, mounts and cameras through INDI or ASCOM | planned |
 | `field` | Sextant sights, tide-pole readings, observation logs | planned |
-| [`sensors`](sensors/) | Tide, weather and ocean sensors, including home-built ones: a store of their readings in SI units ([store.py](sensors/store.py)), ingestion from files and loggers ([ingest.py](sensors/ingest.py)), a simulated sensor as the template for a device ([simulate.py](sensors/simulate.py)), and an observations product the Earth Atlas draws | draft |
+| [`sensors`](sensors/) | Tide, weather and ocean sensors, including home-built ones: a store of their readings in SI units ([store.py](sensors/store.py)), ingestion from files and loggers ([ingest.py](sensors/ingest.py)), a simulated sensor as the template for a device ([simulate.py](sensors/simulate.py)), and an observations product the Earth Atlas draws; Cosmopoiesis reads the store as one of its physical sources ([ADR 0050](../development/decisions/0050-instruments-and-their-acquisition.md)) | draft |
 
 ## 3. Dependencies
 

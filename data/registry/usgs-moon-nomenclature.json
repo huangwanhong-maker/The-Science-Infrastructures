@@ -1,0 +1,22 @@
+{
+  "id": "usgs-moon-nomenclature",
+  "domain": "astronomy",
+  "title": "The names of the Moon's features: the IAU's Gazetteer of Planetary Nomenclature, at their centres",
+  "provider": "U.S. Geological Survey Astrogeology Science Center, for the IAU Working Group for Planetary System Nomenclature",
+  "credit": "Gazetteer of Planetary Nomenclature, IAU WGPSN and USGS Astrogeology",
+  "files": [
+    {
+      "url": "https://asc-planetarynames-data.s3.us-west-2.amazonaws.com/MOON_nomenclature_center_pts.zip",
+      "file": "MOON_nomenclature_center_pts.zip",
+      "size": 23845070,
+      "sha256": "5961e2a163e3dc0c86cd62376d9097986a0aeb70ec7ad5a2b26af38009bbb6f0"
+    }
+  ],
+  "format": "ESRI shapefile of points in a ZIP archive; its dBASE table holds for each feature its name, origin, diameter (km), centre (center_lon 0 to 360 E, center_lat; planetocentric, the Moon 2000 sphere of 1737.4 km in the mean-Earth frame), type, approval and a link to its page. 9087 features when registered (2026-10-28).",
+  "coverage": "The whole Moon; the gazetteer is revised as names are adopted",
+  "licence": "Public domain (U.S. Government work)",
+  "citation": "Gazetteer of Planetary Nomenclature. International Astronomical Union (IAU) Working Group for Planetary System Nomenclature (WGPSN). https://planetarynames.wr.usgs.gov/",
+  "used_by": [
+    "applications/cosmopoiesis-lab (data/products/place_names.py)"
+  ]
+}

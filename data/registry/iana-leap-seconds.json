@@ -1,0 +1,23 @@
+{
+  "id": "iana-leap-seconds",
+  "kind": "http",
+  "domain": "metrology",
+  "title": "The leap seconds: TAI - UTC since 1972 and the date until which the list is known to be complete",
+  "provider": "IERS Earth Orientation Centre (Bulletin C), as distributed by IANA with the time zone database",
+  "credit": "Leap seconds: IERS Bulletin C, via IANA",
+  "requests": [
+    {"url": "https://data.iana.org/time-zones/data/leap-seconds.list", "file": "leap-seconds.list"}
+  ],
+  "parameters": {},
+  "profiles": {
+    "latest": {"description": "the current list (a few kilobytes); fetch with --refresh after each IERS Bulletin C, every six months", "parameters": {}}
+  },
+  "default_profile": "latest",
+  "format": "Text: lines of NTP seconds (from 1900-01-01 00:00 UTC) and TAI - UTC in seconds; '#@' gives the expiry, the NTP second until which the list is known to be complete. Read by the metrology domain's C++ (time/leap_seconds.hpp).",
+  "coverage": "1972-01-01 onward",
+  "licence": "Public domain (the time zone database and its data files are in the public domain).",
+  "citation": "IERS Bulletin C; leap-seconds.list, IANA time zone database, https://data.iana.org/time-zones/data/leap-seconds.list (retrieved on the date of retrieval.json).",
+  "used_by": [
+    "applications/cosmopoiesis-lab"
+  ]
+}

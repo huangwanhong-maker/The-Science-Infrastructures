@@ -1,14 +1,19 @@
 // Checks of the metrology domain: time scales, precession and horizontal
-// coordinates, against the IERS and Meeus.
+// coordinates, against the IERS and Meeus (the provisional JavaScript); and its C++
+// (time scales, leap seconds, Earth orientation, IAU 2006/2000A, the geocentric frames)
+// against SOFA's test values and ERFA, built with CMake and run on calx's verification.
 // Run from the repository root:  node domains/metrology/tests/run-tests.mjs
 
-import { suite } from '../../../development/tools/checks.mjs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { suite, cppChecks } from '../../../development/tools/checks.mjs';
 import {
   scalesFromUnixMs, gmst, taiMinusUtc, deltaTBefore1972, DEG, fromSpherical, toSpherical, apply,
   precessionMatrix, horizontal,
 } from '../js/index.js';
 
-const { check, done } = suite();
+const { check, assert, skip, lines, done } = suite();
 const hms = (h, m, s) => (h + m / 60 + s / 3600) * 15 * DEG;
 const dms = (sign, d, m, s) => sign * (d + m / 60 + s / 3600) * DEG;
 
@@ -40,5 +45,8 @@ check('Delta T in 1950 near 29.07 s', deltaTBefore1972(1950) - 29.07, 1e-9, 's')
   check('altitude (Meeus 13.b)', h.alt / DEG - 15.1249, 0.001, 'deg');
   check('azimuth from north (Meeus 13.b)', h.az / DEG - (68.0337 + 180), 0.001, 'deg');
 }
+
+// The C++.
+cppChecks({ assert, skip, lines }, { project: resolve(dirname(fileURLToPath(import.meta.url)), '..'), name: 'metrology' });
 
 done();

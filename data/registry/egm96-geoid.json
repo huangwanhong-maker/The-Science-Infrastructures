@@ -1,0 +1,19 @@
+{
+  "id": "egm96-geoid",
+  "domain": "geodesy",
+  "title": "The EGM96 geoid on a 15-minute grid: the height of the geoid above the WGS 84 ellipsoid",
+  "provider": "US National Geospatial-Intelligence Agency (NGA) and NASA (EGM96); the grid as GeographicLib distributes it (C. F. F. Karney)",
+  "credit": "Geoid: EGM96 (NGA/NASA), grid by GeographicLib",
+  "files": [
+    {"url": "https://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm96-15.tar.bz2/download", "file": "egm96-15.tar.bz2", "size": 1490277, "sha256": "8b1ebad1ebae0a045502d0edb9cc51553da1d3914f01e07470c11b3bed75048e"}
+  ],
+  "format": "A bzip2 tar archive holding geoids/egm96-15.pgm: a binary PGM (P5) of 1440 x 721 big-endian 16-bit values, point-registered at 15 arc-minutes from 90 N and 0 E; the undulation N = -108 + 0.003 x value metres (its comments' Offset and Scale). data/products/geoid_grid.py extracts it to data/cache/products/geoid/egm96-15.pgm. Bilinear interpolation errs by 4 cm RMS and 1.2 m at most, cubic by 0.7 cm and 17 cm (GeographicLib's statement in the file).",
+  "coverage": "Global",
+  "licence": "EGM96 is a US Government work in the public domain; GeographicLib distributes its geoid files with the library, under the MIT licence.",
+  "citation": "Lemoine, F. G., et al. (1998), The Development of the Joint NASA GSFC and the National Imagery and Mapping Agency (NIMA) Geopotential Model EGM96, NASA/TP-1998-206861; Karney, C. F. F., GeographicLib, https://geographiclib.sourceforge.io/C++/doc/geoid.html.",
+  "used_by": [
+    "data/tiles",
+    "domains/geodesy (C++ checks)",
+    "applications/cosmopoiesis-lab"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "id": "celestrak-gp",
+  "kind": "http",
+  "domain": "navigation",
+  "title": "General perturbations element sets of Earth satellites (two-line elements), by group: space stations, GNSS constellations, weather and bright satellites",
+  "provider": "CelesTrak (T. S. Kelso), from the 18th and 19th Space Defense Squadrons' public catalogue",
+  "credit": "Satellite elements: CelesTrak",
+  "requests": [
+    {"url": "https://celestrak.org/NORAD/elements/gp.php?GROUP={group}&FORMAT=tle", "file": "gp.tle"}
+  ],
+  "parameters": {
+    "group": {"type": "str", "default": "stations", "pattern": "[a-z0-9-]+", "description": "A CelesTrak group (https://celestrak.org/NORAD/elements/)"}
+  },
+  "profiles": {
+    "stations": {"description": "Space stations and the vehicles visiting them (about 30)", "parameters": {"group": "stations"}},
+    "visual": {"description": "The hundred or so brightest satellites", "parameters": {"group": "visual"}},
+    "gps-ops": {"description": "The operational GPS constellation", "parameters": {"group": "gps-ops"}},
+    "galileo": {"description": "The Galileo constellation", "parameters": {"group": "galileo"}},
+    "glo-ops": {"description": "The operational GLONASS constellation", "parameters": {"group": "glo-ops"}},
+    "beidou": {"description": "The BeiDou constellation", "parameters": {"group": "beidou"}},
+    "weather": {"description": "Weather satellites", "parameters": {"group": "weather"}},
+    "science": {"description": "Science satellites", "parameters": {"group": "science"}}
+  },
+  "default_profile": "stations",
+  "format": "Three-line element sets: a name line, then lines 1 and 2 of the two-line element format (NORAD, Spacetrack Report No. 3; CelesTrak, 'Frequently Asked Questions: Two-Line Element Set Format'), mean elements in the TEME frame for the SGP4/SDP4 model, the epoch in UTC. Read by the navigation bridge's C++ (orbits/tle.hpp).",
+  "coverage": "The satellites of the group at the retrieval; elements are renewed several times a day, and their accuracy decays with their age (a kilometre or more after a few days for low orbits).",
+  "licence": "Distributed freely by CelesTrak; CelesTrak asks that a group be fetched no more often than its data change (about every two hours) and that CelesTrak be credited.",
+  "citation": "Kelso, T. S. CelesTrak, https://celestrak.org/NORAD/elements/ (retrieved on the date of retrieval.json). Vallado, D. A., Crawford, P., Hujsak, R. and Kelso, T. S. (2006), Revisiting Spacetrack Report #3, AIAA 2006-6753.",
+  "used_by": [
+    "applications/cosmopoiesis-lab"
+  ]
+}

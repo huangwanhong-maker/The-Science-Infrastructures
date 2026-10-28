@@ -1,0 +1,47 @@
+{
+  "id": "lola-gdr",
+  "domain": "astronomy",
+  "title": "The Moon's shape from the Lunar Orbiter Laser Altimeter: gridded radius at 4 and 16 pixels per degree, with the count of laser shots in each pixel (the finer grids read on demand)",
+  "provider": "NASA Goddard Space Flight Center, LRO LOLA team (D. E. Smith), distributed by the PDS Geosciences Node, Washington University in St. Louis",
+  "credit": "Moon: LRO LOLA (NASA/GSFC)",
+  "files": [
+    {
+      "url": "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_gdr/cylindrical/img/ldem_4.img",
+      "file": "ldem_4.img",
+      "size": 2073600,
+      "sha256": "c04632eba6449af49e3108ed7c25b3b1c450600abd3690df4fc815853a1af476"
+    },
+    {
+      "url": "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_gdr/cylindrical/img/ldec_4.img",
+      "file": "ldec_4.img",
+      "size": 2073600,
+      "sha256": "10ccc1253a7adab1ecb651d26b00ef6cbfa41107fd40f8998b5ab9fa5f9ee943"
+    },
+    {
+      "url": "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_gdr/cylindrical/img/ldem_16.img",
+      "file": "ldem_16.img",
+      "size": 33177600,
+      "sha256": "a511e40d7a3ea3275945b4da2a1df377133264fab0be94b7434b1cf8907254cb"
+    },
+    {
+      "url": "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_gdr/cylindrical/img/ldec_16.img",
+      "file": "ldec_16.img",
+      "size": 33177600,
+      "sha256": "a4fa284b0ef567dce6694644348069e0b0d5818d40204e12fa819cd516f1765d"
+    },
+    {
+      "url": "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_gdr/cylindrical/img/ldem_16.lbl",
+      "file": "ldem_16.lbl",
+      "size": 5121,
+      "sha256": "9aef29463ccc6ed3a3fbe0df3ecd830a99c69e16b564f455507dee2697096579"
+    }
+  ],
+  "format": "PDS3 IMG, simple cylindrical, pixel-registered, little-endian 16-bit integers, one row per 1/ppd degree from 90 N, columns from 0 E eastward to 360 E. LDEM: height = DN x 0.5 m above a sphere of 1737.4 km (the radius less 1737.4 km). LDEC: the number of LOLA shots in each pixel; zero where the grid was filled by GMT's surface (tension 0.5). Frame: the Moon's mean-Earth/polar-axis frame of DE421, which MOON_ME of DE440 follows. The grids at 64 and 128 ppd at the same address (LDEM_64 and LDEC_64, 531 MB each; LDEM_128 and LDEC_128, 2.1 GB each) are read by the data library's tile service in blocks of 128 x 512 pixels by HTTP multi-range requests, and kept in data/cache/lola-gdr/blocks/.",
+  "coverage": "The whole Moon; LDEM_4 at 7.6 km, LDEM_16 at 1.9 km, LDEM_64 at 474 m, LDEM_128 at 237 m per pixel at the equator. Laser tracks are dense toward the poles and kilometres apart near the equator; LDEC says where.",
+  "licence": "NASA data, freely available without restriction; cite the reference below.",
+  "citation": "Smith, D. E., et al. (2010), The Lunar Orbiter Laser Altimeter investigation on the Lunar Reconnaissance Orbiter mission, Space Science Reviews 150, 209-241; LRO-L-LOLA-4-GDR-V1.0, NASA Planetary Data System, PDS Geosciences Node.",
+  "used_by": [
+    "data/tiles",
+    "applications/cosmopoiesis-lab"
+  ]
+}

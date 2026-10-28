@@ -1,13 +1,16 @@
 // Checks of the shared visualization layer's provisional JavaScript: isolines and
 // extrema, particles carried by a flow, the units in which quantities are shown,
-// and the tiles of a map service.
+// the tiles of a map service, cell complexes, and the globes (their pyramid, figures,
+// horizon test, terrain meshes, level of detail, sampled motions, imagery and sky, flights between
+// bodies and a body's map as two root tiles).
 // Run from the repository root:  node visualization/tests/run-tests.mjs
 
 import { suite, seeded } from '../../development/tools/checks.mjs';
 import {
   isolines, levels, extrema, ParticleSystem, uniformSpawn, displayUnit, toShown, toStored, format, tilesFor,
+  globe, bvToTemperature, starRgb,
 } from '../js/index.js';
-import { DEG, EARTH_RADIUS_M } from '../../domains/geodesy/js/index.js';
+import { DEG, EARTH_RADIUS_M, geocentricLatitude } from '../../domains/geodesy/js/index.js';
 
 const { check, assert, done } = suite();
 
@@ -263,6 +266,249 @@ const { check, assert, done } = suite();
   check('complex: the regular tetrahedron of unit edge has volume 1/(6√2)', regular.volume - 1 / (6 * Math.SQRT2), 1e-12);
   assert('complex: lengths that admit no tetrahedron are flagged', !embedTetrahedron([1, 1, 1, 1, 1, 3]).euclidean && regular.euclidean);
   assert('complex: colour 0 of a Feynman graph is the propagators\' pale cream, the others warm hues', indexColour(0).every((x) => x > 0.8) && indexColour(1).join() !== indexColour(2).join());
+}
+
+// ---- globes -------------------------------------------------------------------
+{
+  const G = globe;
+  const D = Math.PI / 180;
+  // The pyramid: the data library's (data/tiles/pyramid.py, checked there by the same closed forms).
+  assert('globe: level 0 is two tiles of 180 degrees', JSON.stringify(G.tileBounds(0, 0, 0)) === '[-180,-90,0,90]' && JSON.stringify(G.tileBounds(0, 1, 0)) === '[0,-90,180,90]');
+  assert('globe: a tile\'s four children are its quarters, and their parent is it',
+    G.children(4, 9, 3).every(([z, x, y]) => JSON.stringify(G.parent(z, x, y)) === '[4,9,3]'));
+  assert('globe: the tile holding a point', JSON.stringify(G.tileAt(5, 23.47, 0.67)) === JSON.stringify([5, Math.floor((23.47 + 180) / (180 / 32)), Math.floor((90 - 0.67) / (180 / 32))]));
+  assert('globe: an ancestor\'s image covers a tile in its subregion', JSON.stringify(G.subregion(3, 5, 6, 1)) === '[0.25,0.5,0.25]');
+
+  // The figure: geodetic coordinates against ERFA's gc2gd on WGS 84 (ERFA 2.0.1.5 via pyerfa,
+  // 2026-10-28, as in geodesy's fixtures: x, y, z (m), then lon, lat (rad) and h (m)).
+  const earth = G.figure('earth'), moon = G.figure('moon');
+  const rows = [
+    [-3907506.3442530744, -2918994.365758571, 4080641.369600935, -2.5, 0.7, -10000.000000000166],
+    [25046836.213172656, 7747894.378769327, 33005081.035749096, 0.3, 0.9000000000224246, 35786000.0],
+    [-2319116.050416112, 96513.8516141715, -5930369.386036745, 3.1, -1.2, 8848.85999999969],
+    [0.0926491210066378, -0.14429245673822447, 6356752.314245177, -1.0, 1.5707963, 0.0],
+    [5223973.527982615, 2853869.745214953, -3231481.1222935067, 0.5, -0.5000000000000021, 400000.0000000004],
+    [-9821358.740961608, -992676.5313214818, -16760006.35136899, -3.0408615023369467, -1.0394764993669778, 13088765.338814525],
+    [-7411300.626813564, -1014511.3273494664, 1428004.9186368214, -3.005551084404751, 0.18966783958348377, 1238115.676066864],
+  ];
+  let worstAngle = 0, worstHeight = 0;
+  for (const [x, y, z, lon, lat, h] of rows) {
+    const g = G.geodetic(earth, x, y, z);
+    const dl = Math.abs(Math.atan2(Math.sin(g.lon - lon), Math.cos(g.lon - lon)));
+    worstAngle = Math.max(worstAngle, Math.abs(g.lat - lat), Math.cos(lat) > 1e-9 ? dl : 0);
+    worstHeight = Math.max(worstHeight, Math.abs(g.h - h));
+  }
+  check('globe: geodetic latitude and longitude against ERFA gc2gd (WGS 84)', worstAngle, 1e-10, 'rad');
+  check('globe: geodetic height against ERFA gc2gd', worstHeight, 1e-3, 'm');
+  let round = 0;
+  for (const [lon, lat, h] of [[0.3, 0.7, 1200], [-2.9, -1.2, -8000], [1.1, 1.5707, 4e5]]) {
+    const g = G.geodetic(earth, ...G.cartesian(earth, lon, lat, h));
+    round = Math.max(round, Math.abs(g.lat - lat) * 6.4e6, Math.abs(g.h - h));
+  }
+  check('globe: geodetic to Cartesian and back', round, 1e-4, 'm');
+  // On the ellipsoid, the geocentric latitude of a geodetic one is atan((1 − e²) tan φ) (geodesy's).
+  const onEllipsoid = G.cartesian(earth, 0.4, 0.8, 0);
+  check('globe: the figure agrees with geodesy on the geocentric latitude', Math.atan2(onEllipsoid[2], Math.hypot(onEllipsoid[0], onEllipsoid[1])) - geocentricLatitude(0.8), 1e-12, 'rad');
+  const hit = G.rayHit(earth, [2e7, 0, 0], [-1, 0, 0], 0);
+  check('globe: a ray down the x axis meets the ellipsoid at a', hit[0] - earth.a, 1e-6, 'm');
+
+  // The horizon test is conservative: whenever the point standing for a set is hidden, every point of
+  // it is (random tiles, random viewers above the ground).
+  const rnd = seeded(11);
+  let wrong = 0, culled = 0;
+  for (let k = 0; k < 400; k++) {
+    const z = 2 + Math.floor(rnd() * 8);
+    const x = Math.floor(rnd() * 2 ** (z + 1)), y = Math.floor(rnd() * 2 ** z);
+    const [w, s, e, n] = G.tileBounds(z, x, y);
+    const pts = [];
+    for (const fx of [0, 0.25, 0.5, 0.75, 1]) for (const fy of [0, 0.25, 0.5, 0.75, 1]) pts.push(G.cartesian(earth, (w + (e - w) * fx) * D, (n - (n - s) * fy) * D, 3000));
+    const point = G.horizonCullingPoint(earth, pts, 11001);
+    const viewer = G.cartesian(earth, (rnd() * 360 - 180) * D, (rnd() * 180 - 90) * D, 100 + rnd() ** 3 * 4e7);
+    if (point && G.occluded(earth, viewer, point, 11001)) {
+      culled++;
+      if (pts.some((p) => !G.occluded(earth, viewer, p, 11001))) wrong++;
+    }
+  }
+  assert('globe: a tile hidden by its horizon point has every sample hidden', wrong === 0 && culled > 20, `${wrong} wrong of ${culled} culled`);
+  const big = []; for (const fx of [0, 0.5, 1]) for (const fy of [0, 0.5, 1]) big.push(G.cartesian(earth, (-180 + 180 * fx) * D, (90 - 180 * fy) * D, 0));
+  assert('globe: a set wrapping round the body has no horizon point (never culled)', G.horizonCullingPoint(earth, big, 0) === null);
+
+  // A terrain tile as the data library encodes it (data/tiles/terrain.py), with its floor.
+  const n = 65, b = 1, m = n + 2 * b;
+  const header = { z: 6, x: 70, y: 20, n, border: b, min: -50, max: 900, floor_min: -3000, floor_max: 900, layers: ['heights', 'provenance', 'floor'] };
+  const text = new TextEncoder().encode(JSON.stringify(header));
+  const pad = (4 - (text.length % 4)) % 4;
+  const L = text.length + pad;
+  const size = 8 + L + 5 * m * m;
+  const floorAt = size + ((4 - (size % 4)) % 4);
+  const buf = new ArrayBuffer(floorAt + 4 * m * m);
+  const bytes = new Uint8Array(buf);
+  bytes.set([0x43, 0x50, 0x54, 0x31]);
+  new DataView(buf).setUint32(4, L, true);
+  bytes.set(text, 8);
+  for (let i = 0; i < pad; i++) bytes[8 + text.length + i] = 32;
+  const hs = new Float32Array(buf, 8 + L, m * m), fl = new Float32Array(buf, floorAt, m * m);
+  const pv = new Uint8Array(buf, 8 + L + 4 * m * m, m * m);
+  for (let i = 0; i < m * m; i++) { hs[i] = (i % 97) * 9 - 50; pv[i] = i % 2 ? 6 : 3; fl[i] = pv[i] === 6 ? -3000 + (i % 13) : hs[i]; }
+  const tile = G.decodeTile(buf);
+  assert('globe: a terrain tile decodes with its heights, provenance and floor',
+    tile.m === m && tile.heights[123] === hs[123] && tile.provenance[124] === pv[124] && tile.floor && tile.floor[124] === fl[124]);
+  const mesh = G.buildMesh(earth, tile, { exaggeration: 2 });
+  const total = n * n + 6 * n;
+  assert('globe: a mesh has the grid, its skirts and the walls between its quarters', mesh.position.length === 3 * total && mesh.index.every((v) => v < total));
+  // Corners at their places (with the exaggeration), relative to the tile's centre.
+  const [w0, s0, e0, n0] = G.tileBounds(6, 70, 20);
+  const corner = G.cartesian(earth, w0 * D, n0 * D, hs[b * m + b] * 2);
+  check('globe: the north-west corner of the mesh is where its height puts it', Math.hypot(...[0, 1, 2].map((k) => mesh.position[k] + mesh.centre[k] - corner[k])), 0.05, 'm');
+  // The quarters: each cell once, the four ranges covering the index buffer.
+  const covered = mesh.quarters.reduce((acc, [start, count]) => acc + count, 0);
+  const contiguous = mesh.quarters.every(([start], q) => q === 0 || start === mesh.quarters[q - 1][0] + mesh.quarters[q - 1][1]);
+  assert('globe: the quarters of a mesh are contiguous and cover its triangles', contiguous && covered === mesh.index.length);
+  const inQuarter = (q, v) => {
+    if (v >= n * n) return true; // a skirt's lowered copy
+    const i = v % n, j = Math.floor(v / n);
+    return ((q & 1) ? i >= 32 : i <= 32) && ((q & 2) ? j >= 32 : j <= 32);
+  };
+  let stray = 0;
+  mesh.quarters.forEach(([start, count], q) => { for (let k = start; k < start + count; k++) if (!inQuarter(q, mesh.index[k])) stray++; });
+  assert('globe: each quarter\'s triangles lie in that quarter', stray === 0, `${stray} vertices outside`);
+  // A quarter drawn alone beside a child: walls under both its lines to the other quarters, 32
+  // segments each, two triangles a segment, the second vertex of each the lowered copy.
+  const walls = mesh.quarters.map(([start, count]) => { let w = 0; for (let k = start; k < start + count; k += 3) if (mesh.index[k + 1] >= n * n + 4 * n) w++; return w; });
+  assert('globe: each quarter hangs walls under its two lines to the other quarters', walls.every((w) => w === 2 * 32 * 2), walls.join(' '));
+  const floorMesh = G.buildMesh(earth, tile, { surface: 'floor' });
+  assert('globe: a mesh of the floor takes the floor\'s heights and gives the sea\'s samples the source\'s code',
+    floorMesh.height[0] === fl[b * m + b] && Array.from(floorMesh.provenance.slice(0, n * n)).every((c) => c !== 6) && floorMesh.min === -3000);
+
+  // The level of detail: a view brought close at once refines in parallel, never draws a tile with a
+  // descendant, and settles.
+  const tree = new G.TileTree({ fig: earth, maxLevel: 16, heightRange: [-11000, 8900], maxLoads: 12,
+    loadTerrain: async (z, x, y) => G.buildMesh(earth, G.flatTile(z, x, y)), on: {} });
+  const cam = G.cameraOf(earth, { lon: 7.66 * D, lat: 45.98 * D, height: 0, range: 15000, heading: 0.5, tilt: 60 * D });
+  const f = cam.forward, u = cam.up, r = [f[1] * u[2] - f[2] * u[1], f[2] * u[0] - f[0] * u[2], f[0] * u[1] - f[1] * u[0]];
+  const vh = 20 * D, hh = Math.atan(Math.tan(vh) * 1.5);
+  const plane = (nn) => [...nn, -(nn[0] * cam.position[0] + nn[1] * cam.position[1] + nn[2] * cam.position[2])];
+  const mix = (a, ca, c, cc) => [0, 1, 2].map((k) => a[k] * ca + c[k] * cc);
+  const planes = [plane(mix(r, Math.cos(hh), f, Math.sin(hh))), plane(mix(r, -Math.cos(hh), f, Math.sin(hh))), plane(mix(u, Math.cos(vh), f, Math.sin(vh))), plane(mix(u, -Math.cos(vh), f, Math.sin(vh)))];
+  let overlap = 0, sel = [], frames = 0, deepest = 0;
+  for (; frames < 400; frames++) {
+    sel = tree.update({ camera: cam.position, planes, height: 900, fovY: 40 * D });
+    // A tile drawn overlaps a drawn ancestor when the ancestor is drawn whole, or in the quarter
+    // that holds the tile.
+    const drawn = new Map(sel.map((e) => [e.tile, e.quarters]));
+    for (const e of sel) {
+      for (let c = e.tile, a = c.parent; a; c = a, a = a.parent) {
+        if (!drawn.has(a)) continue;
+        const quarters = drawn.get(a), q = (c.x & 1) + 2 * (c.y & 1);
+        if (!quarters || quarters.includes(q)) overlap++;
+      }
+    }
+    deepest = Math.max(deepest, ...sel.map((e) => e.tile.z));
+    await new Promise((resolveTick) => setTimeout(resolveTick, 0));
+    if (tree.stats.loading === 0 && frames > 5) break;
+  }
+  assert('globe: no tile is drawn with one of its descendants', overlap === 0, `${overlap} overlaps`);
+  assert('globe: a close view settles on deep tiles', deepest >= 12 && tree.stats.loading === 0, `deepest ${deepest} after ${frames} frames`);
+  const parts = sel.filter((e) => e.quarters);
+  assert('globe: a tile drawn in part names its quarters (0 to 3)', parts.every((e) => e.quarters.every((q) => q >= 0 && q < 4)));
+  check('globe: a terrain\'s height is read back from the tiles drawn (flat: 0)', tree.heightAt(7.66 * D, 45.98 * D), 1e-9, 'm');
+
+  // Sampled motions: a uniform spin about z interpolated exactly with the spin factored out, and the
+  // cubic Hermite path exact for a cubic.
+  const w = 7.2921150e-5, times = [0, 600, 1200, 1800];
+  const qs = times.map((t) => G.quatAboutZ(w * t + 0.3));
+  const spin = new G.SampledRotation(times, qs, { spin: G.EARTH_SPIN });
+  let worstQ = 0;
+  for (const t of [137, 451, 999, 1777]) worstQ = Math.max(worstQ, G.quatAngle(spin.at(t), G.quatAboutZ(w * t + 0.3)));
+  check('globe: a sampled spin interpolated with the spin factored out', worstQ, 1e-12, 'rad');
+  const plain = new G.SampledRotation([0, 43200], [G.quatAboutZ(0), G.quatAboutZ(Math.PI)]);
+  check('globe: slerp halfway between rotations half a turn apart is the quarter turn', G.quatAngle(plain.at(21600), G.quatAboutZ(Math.PI / 2)), 1e-12, 'rad');
+  const cubic = (t) => [t ** 3 - 2 * t, 5 * t * t, 7], vel = (t) => [3 * t * t - 2, 10 * t, 0];
+  const pts = [0, 1, 2, 3].map(cubic), vs = [0, 1, 2, 3].map(vel);
+  const path = new G.SampledPath([0, 1, 2, 3], pts, vs);
+  check('globe: Hermite interpolation of a cubic path is exact', Math.max(...[0.3, 1.7, 2.5].map((t) => Math.hypot(...path.at(t).map((x, k) => x - cubic(t)[k])))), 1e-12);
+  const R = G.quatToMatrix(G.quatNormalise([0.3, -0.4, 0.5, 0.7]));
+  const RtR = [0, 1, 2].map((i) => [0, 1, 2].map((j) => R[0][i] * R[0][j] + R[1][i] * R[1][j] + R[2][i] * R[2][j]));
+  check('globe: a quaternion\'s matrix is orthogonal', Math.max(...RtR.flatMap((row, i) => row.map((x, j) => Math.abs(x - (i === j ? 1 : 0))))), 1e-15);
+
+  // Imagery: a WMS 1.3.0 box is latitude first in EPSG:4326, a WMTS on the pyramid names row and column.
+  const wms = G.imageryUrl(G.IMAGERY['gibs-sst'], 3, 5, 2, { date: '2026-10-26' });
+  assert('globe: a WMS 1.3.0 request orders its EPSG:4326 box latitude first, and asks for the day', wms.includes('BBOX=22.5,-67.5,45,-45') && wms.includes('TIME=2026-10-26') && wms.includes('TRANSPARENT=TRUE'));
+  assert('globe: a WMTS on the pyramid is asked by level, row and column', G.imageryUrl(G.IMAGERY['eox-s2cloudless-2016'], 13, 8540, 2003).endsWith('/WGS84/13/2003/8540.jpg'));
+  assert('globe: every service names its body, role and credit', Object.values(G.IMAGERY).every((s) => s.body && s.role && s.credit && s.maxLevel >= 0));
+
+  // The sky: a star's colour from its colour index (the Sun, B−V 0.65, about 5800 K).
+  check('stars: B−V 0.65 is about 5800 K (Ballesteros 2012)', Math.abs(bvToTemperature(0.65) - 5800) / 5800, 0.03);
+  const blue = starRgb(-0.3), red = starRgb(1.8);
+  assert('stars: a hot star is bluer than a cool one', blue[2] > blue[0] && red[0] > red[2]);
+  assert('globe: the Moon is a sphere of 1737.4 km', moon.a === 1737400 && moon.f === 0);
+}
+
+// ---- flights between bodies, and a body's map as two root tiles ------------------------------------------
+{
+  const { slerpVec, transferCamera, ease, mapLayer } = globe;
+  const rng = seeded(41);
+  const unitRandom = () => { const v = [rng() - 0.5, rng() - 0.5, rng() - 0.5]; const n = Math.hypot(...v); return v.map((x) => x / n); };
+  let worst = 0, angle = 0;
+  for (let i = 0; i < 200; i++) {
+    const a = unitRandom(), b = unitRandom(), s = rng();
+    const v = slerpVec(a, b, s);
+    worst = Math.max(worst, Math.abs(Math.hypot(...v) - 1));
+    // The angle from a is the fraction s of the angle between a and b.
+    const total = Math.acos(Math.min(1, a[0] * b[0] + a[1] * b[1] + a[2] * b[2]));
+    angle = Math.max(angle, Math.abs(Math.acos(Math.min(1, a[0] * v[0] + a[1] * v[1] + a[2] * v[2])) - s * total));
+  }
+  check('transfer: the spherical interpolation stays on the unit sphere', worst, 1e-13);
+  check('transfer: and turns at an even rate along the great circle', angle, 1e-7, 'rad');
+  const half = slerpVec([0, 0, 1], [0, 0, -1], 0.5);
+  check('transfer: between opposite directions it turns a quarter of the way at half', Math.abs(half[2]) + Math.abs(Math.hypot(...half) - 1), 1e-12);
+  assert('transfer: the easing holds its ends and is even about the middle', ease(0) === 0 && ease(1) === 1 && ease(0.5) === 0.5 && Math.abs(ease(0.2) + ease(0.8) - 1) < 1e-15);
+
+  // From 3.8e8 m above the Moon's centre to a globe's view 6e6 m from it.
+  const from = { position: [3.8e8, 0, 0], forward: [-1, 0, 0], up: [0, 0, 1] };
+  const to = { position: [0, 6e6, 0], forward: [0, -1, 0], up: [0, 0, 1] };
+  const dist = (c) => Math.hypot(...c.position);
+  const c0 = transferCamera(from, to, 4e8, 0), c1 = transferCamera(from, to, 4e8, 1);
+  const err = (c, d) => Math.max(...['position', 'forward', 'up'].map((k) => Math.hypot(...[0, 1, 2].map((i) => c[k][i] - d[k][i])) / (k === 'position' ? Math.hypot(...d.position) : 1)));
+  check('transfer: a flight begins at the camera it leaves', err(c0, from), 1e-12);
+  check('transfer: and ends at the view it is going to', err(c1, to), 1e-12);
+  check('transfer: at its middle it stands at the peak distance', dist(transferCamera(from, to, 4e8, 0.5)) / 4e8 - 1, 1e-12);
+  // With no rise (a peak below both ends) the distance is interpolated in its logarithm.
+  const low = transferCamera(from, to, 0, 0.25);
+  const expected = Math.exp(0.75 * Math.log(3.8e8) + 0.25 * Math.log(6e6));
+  check('transfer: without a rise its distance is geometric between the ends', dist(low) / expected - 1, 1e-12);
+  let ortho = 0;
+  for (let i = 0; i <= 20; i++) {
+    const c = transferCamera(from, to, 4e8, i / 20);
+    ortho = Math.max(ortho, Math.abs(Math.hypot(...c.forward) - 1), Math.abs(Math.hypot(...c.up) - 1), Math.abs(c.forward[0] * c.up[0] + c.forward[1] * c.up[1] + c.forward[2] * c.up[2]));
+  }
+  check('transfer: its view stays orthonormal all the way', ortho, 1e-12);
+}
+{
+  // A body's map (one equirectangular image) split into the two root tiles of the geographic pyramid,
+  // fetched once; finer levels from the map's WMTS, when it has one. fetch and createImageBitmap are
+  // the browser's: stood in for here.
+  const { mapLayer } = globe;
+  const saved = { fetch: globalThis.fetch, createImageBitmap: globalThis.createImageBitmap };
+  const fetched = [];
+  globalThis.fetch = async (url) => { fetched.push(String(url)); return { ok: true, blob: async () => ({ type: 'image/jpeg' }) }; };
+  globalThis.createImageBitmap = async (source, ...crop) => (crop.length >= 4 ? { crop: crop.slice(0, 4), flip: crop[4]?.imageOrientation } : { width: 4096, height: 2048 });
+  try {
+    const plain = mapLayer('mars-map', { body: 'mars', title: 'Mars', credit: 'a map', url: 'maps/mars.jpg' });
+    const west = await plain.load(0, 0, 0), east = await plain.load(0, 1, 0);
+    assert('map: the root tiles are the western and the eastern halves, flipped for the GPU',
+      west.crop.join() === '0,0,2048,2048' && east.crop.join() === '2048,0,2048,2048' && west.flip === 'flipY', JSON.stringify([west, east]));
+    assert('map: the whole image is fetched once for both', fetched.filter((u) => u === 'maps/mars.jpg').length === 1, fetched.join());
+    assert('map: without a service, no finer level and no tile beyond the roots', plain.maxLevel === 0 && (await plain.load(1, 0, 0)) === null);
+    const live = mapLayer('mars-trek', { body: 'mars', title: 'Mars', credit: 'a map', url: 'maps/mars.jpg',
+      live: { template: 'https://trek.example/{z}/{row}/{col}.jpg', levels: 8, credit: 'Trek' } });
+    await live.load(3, 5, 2);
+    assert('map: with a WMTS, a finer tile is its row and column at its level', fetched.at(-1) === 'https://trek.example/3/2/5.jpg' && live.maxLevel === 7, fetched.at(-1));
+    assert('map: and the credit names both', live.service.credit === 'a map; at close range Trek');
+  } finally {
+    globalThis.fetch = saved.fetch;
+    globalThis.createImageBitmap = saved.createImageBitmap;
+  }
 }
 
 done();

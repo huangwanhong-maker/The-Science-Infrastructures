@@ -6,12 +6,14 @@
 // The ephemeris and the galaxy catalogues come through the data library
 // (python data/acquisition/fetch.py jpl-de440s | tully-2mass-groups | ungc);
 // the checks that need them are skipped, and say so, when they are missing.
+// The domain's C++ (the DE440 ephemeris and the Moon's DE440 frames, against Horizons and NAIF's
+// worked example; the IAU rotation models) is built with CMake and run on calx's verification.
 
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { suite, CACHE } from '../../../development/tools/checks.mjs';
+import { suite, CACHE, cppChecks } from '../../../development/tools/checks.mjs';
 import {
   SPK, GM_SUN, osculating, bodyFixedMatrix, supergalactic, tidalIndices, tidalGroups,
   inferDisturberLuminosities, displayName, subsolarPoint, sunAltAz, gmst, julianDate, daylight,
@@ -22,7 +24,7 @@ import {
 } from '../../metrology/js/index.js';
 import { wrapLongitude, centralAngle, eastNorth, fromVector } from '../../geodesy/js/index.js';
 
-const { check, assert, skip, done } = suite();
+const { check, assert, skip, lines, done } = suite();
 const here = dirname(fileURLToPath(import.meta.url));
 const fixture = (name) => JSON.parse(readFileSync(resolve(here, 'fixtures', name), 'utf8'));
 
@@ -227,5 +229,8 @@ if (existsSync(UNGC)) {
     ['UGCA086', 'UGCA 86'], ['KKH011', 'KKH 11'], ['Milky Way', 'Milky Way'], ['And XXX', 'And XXX']];
   check('display names', cases.filter(([a, b]) => displayName(a) !== b).length, 0, 'mismatches');
 }
+
+// The C++.
+cppChecks({ assert, skip, lines }, { project: resolve(dirname(fileURLToPath(import.meta.url)), '..'), name: 'astronomy' });
 
 done();

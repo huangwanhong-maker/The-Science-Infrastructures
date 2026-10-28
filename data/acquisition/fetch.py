@@ -672,7 +672,14 @@ def acquire_opendap(manifest: dict, profile: str | None, overrides: dict, refres
     return True
 
 
-ACQUIRE = {"tap": acquire_tap, "griddap": acquire_griddap, "http": acquire_http, "ncss": acquire_ncss,
+def acquire_tiles(manifest: dict, profile: str | None, overrides: dict, refresh: bool) -> bool:
+    """Datasets of the kind 'tiles' are read on demand by the data library's tile service
+    (data/tiles), a tile at a time, and are not fetched as a whole."""
+    print(f"  {manifest['id']}: read on demand by data/tiles (nothing to fetch ahead of time)")
+    return True
+
+
+ACQUIRE = {"tiles": acquire_tiles, "tap": acquire_tap, "griddap": acquire_griddap, "http": acquire_http, "ncss": acquire_ncss,
            "opendap": acquire_opendap, "ecmwf": ecmwf_open.acquire}
 
 

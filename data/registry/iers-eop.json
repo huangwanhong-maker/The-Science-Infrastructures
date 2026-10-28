@@ -1,0 +1,23 @@
+{
+  "id": "iers-eop",
+  "kind": "http",
+  "domain": "metrology",
+  "title": "Earth orientation parameters: polar motion, UT1 - UTC, length of day and celestial pole offsets, daily since 1973 with a year of predictions (IERS Bulletin A, finals2000A)",
+  "provider": "International Earth Rotation and Reference Systems Service (IERS), Rapid Service/Prediction Centre at the US Naval Observatory; distributed by the IERS Data Centre (BKG, Frankfurt)",
+  "credit": "Earth orientation: IERS Bulletin A",
+  "requests": [
+    {"url": "https://datacenter.iers.org/data/9/finals2000A.all", "file": "finals2000A.all"}
+  ],
+  "parameters": {},
+  "profiles": {
+    "latest": {"description": "the whole series, renewed daily by the IERS (about 3.8 MB); fetch with --refresh for the latest measurements and predictions", "parameters": {}}
+  },
+  "default_profile": "latest",
+  "format": "Fixed-column text, one day per line (IERS, readme.finals2000A): year, month, day, MJD (cols 8-15); polar motion x_p, y_p in arcseconds (19-27, 38-46) with an I or P flag for measured or predicted (17); UT1 - UTC in seconds (59-68, flag at 58); LOD in milliseconds (80-86); dX, dY with respect to IAU 2006/2000A in milliarcseconds (98-106, 117-125, flag at 96); then the Bulletin B values. Read by the metrology domain's C++ (earth_orientation/eop.hpp).",
+  "coverage": "1973-01-02 to about a year after the retrieval; measurements to a few days before it, predictions after.",
+  "licence": "IERS products are free of charge; the IERS asks that its products be cited (https://www.iers.org/IERS/EN/Organization/ProductCentres/ProductCentres.html).",
+  "citation": "IERS Rapid Service/Prediction Centre, Bulletin A, finals2000A.all, https://datacenter.iers.org/data/9/finals2000A.all (retrieved on the date of retrieval.json). Petit, G. and Luzum, B. (eds.) (2010), IERS Conventions (2010), IERS Technical Note 36.",
+  "used_by": [
+    "applications/cosmopoiesis-lab"
+  ]
+}

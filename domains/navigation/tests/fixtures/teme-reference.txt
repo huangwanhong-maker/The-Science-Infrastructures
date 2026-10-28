@@ -1,0 +1,6 @@
+# skyfield 1.55 TEME_to_ITRF (GMST 1982, AIAA 2006-6753 Appendix C), computed 2026-10-28
+# by domains/navigation/tests/make_sgp4_fixtures.py: the paper's example at its instant exactly (UT1 in two parts),
+# the rotation's rate dθ_GMST82/dt (skyfield's), no LOD. ut1 d1 d2; r_itrf (km); v_itrf (km/s)
+ut1 2453101.5 0.3274067829525463
+r -1.033479391506723e+03 7.901295274280846e+03 6.380356595751125e+03
+v -3.225636450600629e+00 -2.872451444144231e+00 5.531924446303755e+00

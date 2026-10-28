@@ -3,15 +3,19 @@
 // earthquake mechanisms against double couples and the Global CMT catalogue;
 // the crust (CRUST1.0); sections along great circles; and aftershock rates
 // and probabilities (Reasenberg and Jones 1989).
+// And its C++ (the geomagnetic field: the World Magnetic Model 2025), built with CMake and run on
+// calx's verification, against NOAA's test values and the WMM2025 report's numerical example; its
+// coefficients come through the data library (python data/acquisition/fetch.py noaa-wmm).
 // Run from the repository root:  node domains/geophysics/tests/run-tests.mjs
 // The checks on real data need the products of data/products/; they are
 // skipped, and say so, when a product is missing. The checks of the plates'
 // boundaries, which need geography's rasters as well, are the Earth Atlas's.
 
 import { existsSync, readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-import { suite, seeded, PRODUCTS } from '../../../development/tools/checks.mjs';
+import { suite, seeded, cppChecks, PRODUCTS } from '../../../development/tools/checks.mjs';
 import {
   NNR_MORVEL56, poleOf, omega, poleOfOmega, velocityAt, subtract, acrossStep, azimuth, morvelCode, itrfOmega,
   itrfVelocityAt, mechanism, tensorNED, eigenSymmetric, radiation, fromEqualArea, toEqualArea, planeDifference,
@@ -19,7 +23,7 @@ import {
 } from '../js/index.js';
 import { GENERIC_CALIFORNIA, aftershockRate, expectedAftershocks, aftershockProbability, subsurfaceRuptureLengthKm } from '../js/index.js';
 
-const { check, assert, skip, done } = suite();
+const { check, assert, skip, lines, done } = suite();
 const random = seeded(20261022);
 
 // ---- the motion of the tectonic plates ------------------------------------------------
@@ -228,5 +232,8 @@ const random = seeded(20261022);
   // Wells and Coppersmith (1994), Table 2A, subsurface rupture length, all slip types: M 7 → 10^1.69 = 49.0 km.
   check('aftershocks: the subsurface rupture length of an M 7 is 49.0 km', subsurfaceRuptureLengthKm(7) - 48.98, 0.01, 'km');
 }
+
+// The C++.
+cppChecks({ assert, skip, lines }, { project: resolve(dirname(fileURLToPath(import.meta.url)), '..'), name: 'geophysics' });
 
 done();
