@@ -33,6 +33,7 @@ Every application says which of the three activities it serves:
 | [Genome Workbench](genome-workbench/) | use, learning, research | genomics and evolution (its C++ engine, kept alive as workers of a cluster), the foundations calx and morphe; the user's files | draft |
 | [Cosmopoiesis](cosmopoiesis-lab/) (its own repository) | research, learning, use | metrology, geodesy, astronomy, geophysics, meteorology and the navigation bridge (its C++ engine, kept alive), the foundations physis and calx; the data library's terrain tiles, WMM and space weather; the visualization layer's globe (ADR 0049, ADR 0050) | draft |
 | [Economy Atlas](economy-atlas/) | research, learning, use | economics (its C++ engine), the foundations calx, morphe and physis, the geography domain's projections in the page; one's own data; plug-ins in Python and C++ through the API's `science.networks` | draft |
+| [Chemistry Workbench](chemistry-workbench/) | research, learning | plug-ins; the first, Symmetry and generation, on the foundations morphe (graph rewriting) and physis (point groups, stranded field theories, reaction kinetics), with its C++ engine kept alive | draft |
 | Orbital sandbox | learning | astronomy | planned |
 | Ephemeris calculator | use | metrology, astronomy | planned |
 | Map projections | learning | geography | planned |

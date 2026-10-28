@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chemistry Workbench</title>
+  <meta name="description" content="A workbench for chemistry, built of plug-ins: the first executes and audits a manuscript on chemical structure generation through symmetry breaking, with its group-equivariant grammars, point groups, autocatalytic selection, and group-field complexes.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 4 L26.4 10 L26.4 22 L16 28 L5.6 22 L5.6 10 Z' fill='none' stroke='%232e2638' stroke-width='1.6'/%3E%3Ccircle cx='16' cy='16' r='5.2' fill='none' stroke='%238e7cc3' stroke-width='2.4'/%3E%3Ccircle cx='16' cy='4' r='2.2' fill='%23d9915e'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" media="print" onload="this.media='all'"
+        href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..600&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module" src="src/app.js"></script>
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="#">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4 L26.4 10 L26.4 22 L16 28 L5.6 22 L5.6 10 Z"/><circle class="ring" cx="16" cy="16" r="5.2"/><circle class="dot" cx="16" cy="4" r="2.2"/></svg>
+      <span>Chemistry Workbench</span>
+    </a>
+    <span class="where" id="where"></span>
+    <span class="grow"></span>
+    <span class="lamp" id="lamp" title="the engines">engine</span>
+    <button class="plain" id="theme" title="day or night">night</button>
+  </header>
+  <nav class="rail" id="rail"></nav>
+  <main id="main"></main>
+  <div id="hover" class="hover" hidden></div>
+</body>
+</html>

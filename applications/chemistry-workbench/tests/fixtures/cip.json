@@ -1,0 +1,12 @@
+{
+  "source": "RDKit 2026.09.1: AssignStereochemistryFrom3D and rdCIPLabeler on the engine's coordinates",
+  "made": "2026-10-29",
+  "plus": {
+    "tau": 1,
+    "cip": "R"
+  },
+  "minus": {
+    "tau": -1,
+    "cip": "S"
+  }
+}

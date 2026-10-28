@@ -1,0 +1,16 @@
+{
+  "title": "The Chemistry Workbench's engines",
+  "about": "The plug-ins' C++ on the foundations (morphe's graph rewriting, algebra and topology; physis's point groups, stranded field theories and reaction kinetics; calx's integrators and random streams), compiled with g++ 11 or later, natively or in WSL, into data/cache/engines/chemistry/. A minute or two; compiled again when a source changes.",
+  "steps": [
+    {
+      "id": "symmetry-generation",
+      "title": "The engine of the plug-in Symmetry and generation, compiled with g++",
+      "run": [
+        "applications/chemistry-workbench/engine.py",
+        "build",
+        "symmetry-generation"
+      ],
+      "done": "data/cache/engines/chemistry/symmetry-generation/build.json"
+    }
+  ]
+}

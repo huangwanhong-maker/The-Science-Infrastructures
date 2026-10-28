@@ -1,0 +1,46 @@
+{
+  "title": "Symmetry and generation",
+  "summary": "The manuscript An Inquiry into Chemical Structure Generation through Symmetry Breaking (v1.4), made exact: its group-equivariant grammar and its group-field-inspired complexes, executed and verified, with a note on what the revision should change.",
+  "status": "draft",
+  "activity": "research",
+  "views": [
+    {
+      "id": "grammar",
+      "title": "Grammar",
+      "module": "views/grammar.js",
+      "about": "Formalism I: typed graph grammars by double pushout, their derivations, orbits and accounting."
+    },
+    {
+      "id": "stereo",
+      "title": "Stereocentre",
+      "module": "views/stereo.js",
+      "about": "Case Study I in three dimensions: the two configurations of CHBrClF, τ and its CIP descriptor."
+    },
+    {
+      "id": "symmetry",
+      "title": "Point groups",
+      "module": "views/symmetry.js",
+      "about": "Molecules, their point groups, character tables and the responses symmetry allows."
+    },
+    {
+      "id": "kinetics",
+      "title": "Selection",
+      "module": "views/kinetics.js",
+      "about": "Frank's autocatalysis as mass action and as a Markov chain: a symmetric law with asymmetric outcomes."
+    },
+    {
+      "id": "complexes",
+      "title": "Complexes",
+      "module": "views/complexes.js",
+      "about": "Case Study II: the six-cycle, its filled complex, and the two-vertex complex with their homology."
+    },
+    {
+      "id": "field",
+      "title": "Field",
+      "module": "views/field.js",
+      "about": "Formalism II: the tetrahedral interaction over a finite group, its symmetries, order parameters and Feynman graphs."
+    }
+  ],
+  "engine": "engine/main.cpp",
+  "source": "Wanhong Huang, An Inquiry into Chemical Structure Generation through Symmetry Breaking: Two Formalisms Drawing on Group-Equivariant Grammar and Group Field Theory, manuscript v1.4 (2026-10-28)"
+}
