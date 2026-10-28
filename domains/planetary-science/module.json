@@ -1,0 +1,15 @@
+{
+  "name": "planetary-science",
+  "kind": "bridge",
+  "status": "draft",
+  "depends": [
+    "astronomy",
+    "geophysics",
+    "meteorology"
+  ],
+  "foundations": [
+    "calx",
+    "morphe",
+    "physis"
+  ]
+}

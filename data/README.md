@@ -215,6 +215,7 @@ Products are written to `data/cache/products/` and listed by kind in `index.json
 | `celestrak-gp` | http | CelesTrak (T. S. Kelso) | Satellites' general perturbations element sets (two-line elements) by group: stations, GNSS, weather, the brightest |
 | `noaa-wmm` | files | NOAA NCEI and the British Geological Survey | The World Magnetic Model 2025: Gauss coefficients to degree 12 with their secular variation, NOAA's test values and the technical report |
 | `noaa-swpc` | http | NOAA Space Weather Prediction Center | Space weather in real time: the solar wind and interplanetary field at L1, the planetary K index, GOES's X-rays and energetic protons |
+| `moon-magnetic-t2015` | files | Tsunakawa et al. (2015), expanded by Wieczorek; Zenodo, CC BY 4.0 | The Moon's crustal magnetic field, T2015_449: an internal potential to degree 449 from Kaguya's and Lunar Prospector's magnetometers, in tesla on a sphere of 1737.4 km, decompressed on retrieval |
 
 ### 5.2 Planned
 

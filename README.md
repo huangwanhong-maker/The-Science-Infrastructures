@@ -266,7 +266,7 @@ The domains are ordered by what each may depend on:
 
 ```
 height 4   climate
-height 3   tides · navigation · air-sea
+height 3   tides · navigation · air-sea · planetary-science
 height 2   astronomy · geophysics · geography · oceanography · meteorology
 height 1   geodesy · evolution
 height 0   metrology · neuroscience · history · genomics · economics
@@ -334,7 +334,7 @@ Fifty-five domains, ten of them built. A name links to the domain's directory wh
 | [navigation](domains/navigation/) | bridge | astronomy, geodesy, geography | The catalogue of the Solar System's frames, satellites' orbits by SGP4, the attitude of vehicles; later celestial navigation, charts and routes, satellite positioning | built |
 | cryosphere | field | geodesy | Ice sheets, glaciers, sea ice, snow, permafrost | 3.4 |
 | geology | field | geophysics, chemistry | Minerals, rocks, strata, the geological time scale | 3.5 |
-| planetary-science | bridge | astronomy, geophysics, meteorology | The planets and moons as worlds: surfaces, interiors, atmospheres | 3.6 |
+| [planetary-science](domains/planetary-science/) | bridge | astronomy, geophysics, meteorology | The planets and moons as worlds: surfaces, interiors, atmospheres; first the Moon's crustal magnetism and the solar wind's field about it | built |
 | space-weather | bridge | astronomy, geophysics, meteorology | The Sun's activity, the magnetosphere, the ionosphere | 4 |
 
 **Matter.**
@@ -460,7 +460,7 @@ The domains built and those of tiers 1 to 3 in the order, by height; a superscri
 ```
 height 5   ecology³
 height 4   climate
-height 3   tides² · navigation · air-sea² · geology³ · planetary-science³
+height 3   tides² · navigation · air-sea² · geology³ · planetary-science
 height 2   astronomy · geophysics · geography · oceanography · meteorology · cryosphere³
 height 1   geodesy · drug-discovery¹ · chemistry³ · evolution³ · cell-biology³ · epidemiology³
 height 0   metrology · neuroscience · history · economics · linguistics¹ · genomics¹ · molecular-science¹ · demography³
@@ -481,7 +481,7 @@ height 0   metrology · neuroscience · history · economics · linguistics¹ ·
 - **Tier 3** opens the next branches where the existing works already reach:
   - chemistry, for the chemistry of the ocean and the air, and for geology;
   - evolution and cell biology, on genomics;
-  - the cryosphere, geology and planetary science, for sea ice, the rocks beneath the plates, and the bodies of the Celestial Atlas;
+  - the cryosphere, geology and planetary science, for sea ice, the rocks beneath the plates, and the bodies of the Celestial Atlas. Planetary science was founded early, at the user's request, for the Moon's magnetic field in Cosmopoiesis ([ADR 0052](development/decisions/0052-fields-known-in-part.md)); its surfaces, interiors and atmospheres remain in this tier;
   - ecology, over the Earth Atlas's vegetation and climate classes;
   - the quantitative social methods, and on them demography and epidemiology, over the Earth Atlas's population grids and its measures of exposure.
 
@@ -518,7 +518,7 @@ The three atlases run online on the project's server, the [Celestial Atlas](http
 ├── foundations/     calx · morphe · physis (git submodules); inference planned
 ├── domains/         metrology · geodesy · astronomy · geophysics · geography · oceanography ·
 │                    meteorology · tides · navigation · air-sea · climate · neuroscience (submodule) ·
-│                    history · genomics · evolution · economics
+│                    history · genomics · evolution · economics · planetary-science
 ├── data/            registry · acquisition · formats · products · terrain tiles · requests on demand
 ├── visualization/   scene model · renderers · styles; provisional drawing helpers
 ├── observation/     instruments · field work · sensors
@@ -550,7 +550,7 @@ To run an application, follow the Quick Start at the top of this page; each appl
 
 ## 7. Status
 
-**As of 2026-10-28.** Nine applications work. The three atlases run online and on any computer (Quick Start). Six more run on any computer with g++, each computing with a C++ engine on its domains: the Spiking Simulator ([ADR 0038](development/decisions/0038-the-spiking-simulator.md)), the Complex Atlas ([ADR 0039](development/decisions/0039-complexes-symmetry-and-fields.md)), the History Complex ([ADR 0041](development/decisions/0041-the-history-domain.md)), the Genome Workbench ([ADR 0045](development/decisions/0045-the-genome-workbench.md)), the Economy Atlas ([ADR 0044](development/decisions/0044-value-in-space-and-time.md), [ADR 0046](development/decisions/0046-the-economy-atlas-data-and-plugins.md)) and Cosmopoiesis ([ADR 0049](development/decisions/0049-the-spacetime-of-the-earth-and-the-moon.md)). Fourteen domains have code. Those of the Earth and the sky are provisional JavaScript, with C++ beneath metrology, geodesy and astronomy and the navigation bridge founded in C++ ([ADR 0049](development/decisions/0049-the-spacetime-of-the-earth-and-the-moon.md)), tested against published references and closed-form answers in 847 checks. Neuroscience, the first domain beyond the Earth and the sky, is a repository of its own attached as a submodule, drawn by the Brain Atlas ([ADR 0028](development/decisions/0028-neuroscience-and-the-brain-atlas.md)). History, the first domain of the humanities, genomics and evolution, the first of the life sciences, and economics, the first of the social sciences beside history, are C++ from the start. Each domain writes no general method of its own: what it needs that names no object in nature goes to the foundations, calx, morphe and physis, and the domain uses it there. The [map of the mathematics](docs/mathematics.md) places every area of mathematics in a foundation ([ADR 0035](development/decisions/0035-the-mathematical-foundations.md)). The whole run counts 6862 checks in thirty-two suites, and each domain passes its checks on its own but genomics, where work is in progress. Two applications take plug-ins in Python and C++. The Earth Atlas's run on fields, for prediction, assimilation and analysis ([ADR 0027](development/decisions/0027-earth-atlas-plugins.md), [ADR 0029](development/decisions/0029-plugins-in-python-and-cpp.md)). The Economy Atlas's run on networks of places, on the world's trade or on data of one's own, and their results are drawn as its layers. The neuroscience domain's networks of spiking neurons simulate Brunel's network of 12,500 neurons and 15.6 million synapses at 2.6 times real time on a laptop, with the same spikes on any number of threads ([ADR 0036](development/decisions/0036-spiking-networks.md)). The next steps are in the [roadmap](development/roadmap.md), in the order of §4.6:
+**As of 2026-10-28.** Nine applications work. The three atlases run online and on any computer (Quick Start). Six more run on any computer with g++, each computing with a C++ engine on its domains: the Spiking Simulator ([ADR 0038](development/decisions/0038-the-spiking-simulator.md)), the Complex Atlas ([ADR 0039](development/decisions/0039-complexes-symmetry-and-fields.md)), the History Complex ([ADR 0041](development/decisions/0041-the-history-domain.md)), the Genome Workbench ([ADR 0045](development/decisions/0045-the-genome-workbench.md)), the Economy Atlas ([ADR 0044](development/decisions/0044-value-in-space-and-time.md), [ADR 0046](development/decisions/0046-the-economy-atlas-data-and-plugins.md)) and Cosmopoiesis ([ADR 0049](development/decisions/0049-the-spacetime-of-the-earth-and-the-moon.md)). Fifteen domains have code. Those of the Earth and the sky are provisional JavaScript, with C++ beneath metrology, geodesy and astronomy and the navigation bridge founded in C++ ([ADR 0049](development/decisions/0049-the-spacetime-of-the-earth-and-the-moon.md)), tested against published references and closed-form answers in 847 checks. Neuroscience, the first domain beyond the Earth and the sky, is a repository of its own attached as a submodule, drawn by the Brain Atlas ([ADR 0028](development/decisions/0028-neuroscience-and-the-brain-atlas.md)). History, the first domain of the humanities, genomics and evolution, the first of the life sciences, and economics, the first of the social sciences beside history, are C++ from the start. Each domain writes no general method of its own: what it needs that names no object in nature goes to the foundations, calx, morphe and physis, and the domain uses it there. The [map of the mathematics](docs/mathematics.md) places every area of mathematics in a foundation ([ADR 0035](development/decisions/0035-the-mathematical-foundations.md)). The whole run counts 6862 checks in thirty-two suites, and each domain passes its checks on its own but genomics, where work is in progress. Two applications take plug-ins in Python and C++. The Earth Atlas's run on fields, for prediction, assimilation and analysis ([ADR 0027](development/decisions/0027-earth-atlas-plugins.md), [ADR 0029](development/decisions/0029-plugins-in-python-and-cpp.md)). The Economy Atlas's run on networks of places, on the world's trade or on data of one's own, and their results are drawn as its layers. The neuroscience domain's networks of spiking neurons simulate Brunel's network of 12,500 neurons and 15.6 million synapses at 2.6 times real time on a laptop, with the same spikes on any number of threads ([ADR 0036](development/decisions/0036-spiking-networks.md)). The next steps are in the [roadmap](development/roadmap.md), in the order of §4.6:
 
 - Phase 0, the toolchain and the build;
 - tier 1: the foundations morphe, the algebraic foundation (category theory, algebra, topology, geometry), and physis, the foundation of theoretical physics; then spiking neural networks, computational linguistics, genomics, molecular science and drug discovery;

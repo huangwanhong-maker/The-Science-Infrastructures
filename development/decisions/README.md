@@ -61,6 +61,7 @@ Decisions that concern only one library are recorded in that library's own `deve
 | [0046](0046-the-economy-atlas-data-and-plugins.md) | The Economy Atlas: one's own data, plug-ins over networks of places, and a ledger in gold | Accepted, provisionally; amends 0044 |
 | [0049](0049-the-spacetime-of-the-earth-and-the-moon.md) | The spacetime of the Earth and the Moon: the domains' C++ of time, frames and figures, the navigation bridge, and the globe | Accepted, provisionally |
 | [0050](0050-instruments-and-their-acquisition.md) | Instruments and their acquisition: addresses of events, the models instruments read, and scheduling with deadlines | Accepted, provisionally |
+| [0052](0052-fields-known-in-part.md) | Fields known in part: potential fields, the Moon's magnetism, the planetary-science domain, the kernel asked, and instruments declared | Accepted, provisionally |
 
 ## 2. Template
 

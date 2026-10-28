@@ -45,6 +45,7 @@ height 4   climate                                                       (bridge
 | [meteorology](meteorology/) | field | Atmospheric science: dynamics, moist processes, radiation, chemistry, prediction | geodesy | draft |
 | [tides](tides/) | bridge | The tide-generating potential, ocean and atmospheric tides, tidal analysis and prediction | astronomy, geodesy, oceanography, meteorology | planned |
 | [navigation](navigation/) | bridge | The catalogue of the Solar System's frames and the loops between standards; orbits by SGP4 and TEME; the attitude and air data of vehicles; later celestial navigation, charts and routes, GNSS (ADR 0049) | astronomy, geodesy, geography | draft |
+| [planetary-science](planetary-science/) | bridge | The planets and moons as worlds: interiors and crusts, surfaces, atmospheres, the fields about them; first the Moon's crustal magnetism and the interplanetary field carried to it (ADR 0052) | astronomy, geophysics, meteorology | draft |
 | [air-sea](air-sea/) | bridge | Exchange of momentum, heat, water and gases at the sea surface; wind waves | meteorology, oceanography | planned |
 | [climate](climate/) | bridge | The coupled system, energy balance, climatic zones, variability, orbital forcing | meteorology, oceanography, geography, astronomy, air-sea | draft |
 

@@ -1,0 +1,24 @@
+{
+  "id": "moon-magnetic-t2015",
+  "domain": "planetary science (the Moon), used through physis's analysis",
+  "title": "T2015_449: a spherical-harmonic model of the Moon's crustal magnetic field to degree and order 449, the expansion by Wieczorek (2018) of the surface vector mapping of Kaguya and Lunar Prospector magnetometer data by Tsunakawa et al. (2015)",
+  "provider": "M. A. Wieczorek (Observatoire de la Côte d'Azur), on Zenodo; from the global surface vector mapping of H. Tsunakawa, F. Takahashi, H. Shimizu, H. Shibuya and M. Matsushima",
+  "credit": "Lunar crustal field: T2015_449 (Wieczorek 2018, from Tsunakawa et al. 2015), CC BY 4.0",
+  "files": [
+    {
+      "url": "https://zenodo.org/api/records/3873648/files/T2015_449.sh.gz/content",
+      "file": "T2015_449.sh",
+      "gunzip": true,
+      "sha256": "78a0abcd9f982f13d246677d01c3814bf9e5b1a2c00ac26ab1010e5afc141c92",
+      "size": 5531426
+    }
+  ],
+  "format": "T2015_449.sh, SHTOOLS's text format with a header: a first line giving the reference radius (in metres) and the maximum degree, then one line per degree l and order m from l = 0 to 449: l, m, and the coefficients g and h of the internal magnetic potential, Schmidt semi-normalised without the Condon–Shortley phase, in tesla (the Zenodo record's description). The potential is V = a Σ (a/r)^(l+1) Σ (g cos mφ + h sin mφ) P̆(sin ψ), in the Moon's mean-Earth frame (planetocentric latitude ψ and east longitude φ), as the surface vector mapping was. The archive T2015_449.sh.gz has md5 a332b1210761855b9bbf85215ff28a41 (Zenodo) and sha256 4db0b77b3863f38d6fb6e62c5c1116bf7123b77c5aad65df7dae598714edd655 (pyshtools's registry); it is kept decompressed.",
+  "coverage": "The whole Moon, from its reference sphere outward. The field of crustal sources only, static: the external fields of the solar wind and of the Earth's magnetotail are not in it. The surface vector mapping resolves wavelengths of some tens of kilometres where the anomalies are strong, and the expansion's high degrees carry the mapping's own smoothing, not the crust's spectrum (Wieczorek 2018).",
+  "licence": "CC BY 4.0 (Zenodo record 10.5281/zenodo.3873648); credit Wieczorek (2018) and Tsunakawa et al. (2015)",
+  "citation": "Wieczorek, M. A. (2018). Spherical harmonic model of the Moon's magnetic field derived from gridded data in Tsunakawa et al. (2015), Zenodo, https://doi.org/10.5281/zenodo.3873648. Wieczorek, M. A. (2018). Strength, depth, and geometry of magnetic sources in the crust of the Moon from localized power spectrum analysis, Journal of Geophysical Research: Planets 123, 291–316, https://doi.org/10.1002/2017JE005418. Tsunakawa, H., Takahashi, F., Shimizu, H., Shibuya, H. and Matsushima, M. (2015). Surface vector mapping of magnetic anomalies over the Moon using Kaguya and Lunar Prospector observations, Journal of Geophysical Research: Planets 120, 1160–1185, https://doi.org/10.1002/2014JE004785.",
+  "used_by": [
+    "foundations/physis (the checks of analysis, against pyshtools's expansion of the same file)",
+    "applications/cosmopoiesis-lab (the lunar magnetometer)"
+  ]
+}

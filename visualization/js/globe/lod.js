@@ -311,20 +311,23 @@ export class TileTree {
 
   wantImages(t, e) {
     for (const layer of this.layers) {
-      if (t.z > layer.maxLevel) continue; // drawn from an ancestor's image
-      let img = t.images.get(layer.id);
-      if (!img) t.images.set(layer.id, (img = { state: 'new' }));
+      // A tile deeper than the layer's levels is drawn from its ancestor's image at the layer's last
+      // level, which is asked for here (a whole map, of level 0, seen close).
+      let a = t;
+      while (a.z > layer.maxLevel && a.parent) a = a.parent;
+      let img = a.images.get(layer.id);
+      if (!img) a.images.set(layer.id, (img = { state: 'new' }));
       if (img.state === 'new' && this.imageLoading < this.maxImageLoads) {
         img.state = 'loading';
         img.abort = new AbortController();
         this.imageLoading++;
-        layer.load(t.z, t.x, t.y, img.abort.signal).then((image) => {
+        layer.load(a.z, a.x, a.y, img.abort.signal).then((image) => {
           this.imageLoading--;
           img.abort = null;
           if (!image) { img.state = 'failed'; return; }
           img.state = 'ready';
           img.image = image;
-          this.on.imageReady?.(t, layer.id, image);
+          this.on.imageReady?.(a, layer.id, image);
         }, (err) => {
           this.imageLoading--;
           img.abort = null;

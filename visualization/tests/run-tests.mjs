@@ -412,6 +412,19 @@ const { check, assert, done } = suite();
   const parts = sel.filter((e) => e.quarters);
   assert('globe: a tile drawn in part names its quarters (0 to 3)', parts.every((e) => e.quarters.every((q) => q >= 0 && q < 4)));
   check('globe: a terrain\'s height is read back from the tiles drawn (flat: 0)', tree.heightAt(7.66 * D, 45.98 * D), 1e-9, 'm');
+  // A layer of one level (a whole map) laid on a view already close: its image is asked of the drawn
+  // tiles' ancestor at that level, and draws every tile.
+  const asked = [];
+  tree.setLayers([{ id: 'whole', maxLevel: 0, load: async (z, x, y) => { asked.push(z); return { z, x, y }; } }]);
+  let wholeSel = [];
+  for (let k = 0; k < 50; k++) {
+    wholeSel = tree.update({ camera: cam.position, planes, height: 900, fovY: 40 * D });
+    await new Promise((resolveTick) => setTimeout(resolveTick, 0));
+    if (wholeSel.every((e) => e.images[0])) break;
+  }
+  assert('globe: a whole map seen close is asked at its level and draws every tile from it',
+    asked.length > 0 && asked.every((z) => z === 0) && wholeSel.length > 0 && wholeSel.every((e) => e.images[0]?.owner.z === 0) && Math.max(...wholeSel.map((e) => e.tile.z)) >= 12,
+    `${asked.length} asked, ${wholeSel.filter((e) => e.images[0]).length} of ${wholeSel.length} drawn with it`);
 
   // Sampled motions: a uniform spin about z interpolated exactly with the spin factored out, and the
   // cubic Hermite path exact for a cubic.

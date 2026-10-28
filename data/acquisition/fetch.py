@@ -7,7 +7,8 @@ A dataset is described by a manifest in ``data/registry/`` (schema:
     Fixed files, downloaded as they are, such as the DE440 kernel. Their
     checksums are recorded in the manifest and verified on every retrieval.
     A file may be a member of a zip archive on the web, read by range
-    requests without downloading the archive.
+    requests without downloading the archive, or a gzipped file kept
+    decompressed (``"gunzip": true``; its checksum is the decompressed file's).
 ``tap``
     A query to an astronomical archive through the Table Access Protocol, such
     as Gaia.
@@ -59,6 +60,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import gzip
 import hashlib
 import json
 import re
@@ -172,6 +174,12 @@ def acquire_files(path: Path, manifest: dict, record: bool) -> bool:
             print(f"  {entry['file']}: cached")
         elif "member" in entry:
             extract_member(entry["url"], entry["member"], dest, archives)
+        elif entry.get("gunzip"):
+            packed = dest.with_name(dest.name + ".gz")
+            download(entry["url"], packed, timeout=120, attempts=5)
+            dest.write_bytes(gzip.decompress(packed.read_bytes()))
+            packed.unlink()
+            print(f"  {dest.name}: {dest.stat().st_size / 1e6:.2f} MB decompressed")
         else:
             download(entry["url"], dest, timeout=120, attempts=5)
         digest, size = sha256_of(dest), dest.stat().st_size
@@ -186,7 +194,8 @@ def acquire_files(path: Path, manifest: dict, record: bool) -> bool:
             else:
                 print(f"  {entry['file']}: unverified (no recorded checksum); run with --record")
         retrieved.append({"file": entry["file"], "url": entry["url"], "size": size, "sha256": digest}
-                         | ({"member": entry["member"]} if "member" in entry else {}))
+                         | ({"member": entry["member"]} if "member" in entry else {})
+                         | ({"gunzip": True} if entry.get("gunzip") else {}))
     (CACHE / ident / "retrieval.json").write_text(json.dumps(
         {"dataset": ident, "retrieved_at": now(), "files": retrieved}, indent=2) + "\n", encoding="utf-8")
     if changed:
