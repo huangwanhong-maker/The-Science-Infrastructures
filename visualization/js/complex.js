@@ -30,6 +30,8 @@
 //
 // Everything here is deterministic: a layout depends only on the complex and its seed.
 
+import { categoricalColour, hexRgb } from '../styles/index.js';
+
 // ---- the complex --------------------------------------------------------------------------------
 
 const letterEdge = (k) => Math.abs(k) - 1;
@@ -946,46 +948,9 @@ export function hasse(complex, options = {}) {
 
 // ---- colour maps in the warm family ---------------------------------------------------------------
 
-// sRGB <-> OKLab (Ottosson 2020), so that maps are interpolated where distances are perceptual.
-const toLinear = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
-const toGamma = (c) => (c <= 0.0031308 ? 12.92 * c : 1.055 * c ** (1 / 2.4) - 0.055);
-function oklab([r, g, b]) {
-  const R = toLinear(r), G = toLinear(g), B = toLinear(b);
-  const l = Math.cbrt(0.4122214708 * R + 0.5363325363 * G + 0.0514459929 * B);
-  const m = Math.cbrt(0.2119034982 * R + 0.6806995451 * G + 0.1073969566 * B);
-  const s = Math.cbrt(0.0883024619 * R + 0.2817188376 * G + 0.6299787005 * B);
-  return [0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s, 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s, 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s];
-}
-function rgbOf([L, a, b]) {
-  const l = (L + 0.3963377774 * a + 0.2158037573 * b) ** 3, m = (L - 0.1055613458 * a - 0.0638541728 * b) ** 3, s = (L - 0.0894841775 * a - 1.291485548 * b) ** 3;
-  const clamp = (x) => Math.min(1, Math.max(0, toGamma(x)));
-  return [clamp(4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s), clamp(-1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s), clamp(-0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s)];
-}
-const hexRgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16) / 255);
-export const cssColour = (rgb) => `#${rgb.map((c) => Math.round(Math.min(1, Math.max(0, c)) * 255).toString(16).padStart(2, '0')).join('')}`;
-
-function ramp(stops, cyclic = false) {
-  const labs = stops.map((h) => oklab(hexRgb(h)));
-  const n = cyclic ? labs.length : labs.length - 1;
-  return (t) => {
-    t = cyclic ? ((t % 1) + 1) % 1 : Math.min(1, Math.max(0, t));
-    const x = t * n, i = Math.min(Math.floor(x), n - 1), f = x - i;
-    const a = labs[i], b = labs[(i + 1) % labs.length];
-    return rgbOf([a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f, a[2] + (b[2] - a[2]) * f]);
-  };
-}
-
-// For angles: plum, Old Rose, gold, blush lilac, and round again; θ in radians, any period of 2π.
-const cyclicRamp = ramp(['#6b4a86', '#c08081', '#e9b872', '#d9b8d6'], true);
-export const cyclicColour = (theta) => cyclicRamp(theta / (2 * Math.PI));
-// For magnitudes in [0, 1]: plum night to Old Rose to cream.
-export const sequentialColour = ramp(['#2a1f3a', '#6b4a86', '#c08081', '#f0d9b5']);
-// For signed values in [-1, 1]: lavender through a pale rose to Old Rose and deep rust.
-const divergingRamp = ramp(['#5d5aa0', '#a99ad0', '#f2e6ee', '#d38e8a', '#9c4a45']);
-export const divergingColour = (t) => divergingRamp((t + 1) / 2);
-// For telling cells apart: ten warm, distinct hues.
-const CATEGORICAL = ['#e0a3b6', '#e9b872', '#9fc2b8', '#b9a2e0', '#e48f78', '#c9d38a', '#8fb3dd', '#d987c6', '#f0cf9a', '#a6d6c4'];
-export const categoricalColour = (i) => hexRgb(CATEGORICAL[((i % CATEGORICAL.length) + CATEGORICAL.length) % CATEGORICAL.length]);
+// The maps are the shared styles' (visualization/styles/palettes.js, made in OKLab and validated for
+// colour-vision deficiencies), kept here under the names this module has always exported.
+export { cssColour, cyclicColour, sequentialColour, divergingColour, categoricalColour } from '../styles/index.js';
 
 // ---- coloured graphs and quantum simplices ----------------------------------------------------------
 //

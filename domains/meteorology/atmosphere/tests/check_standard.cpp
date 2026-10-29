@@ -7,7 +7,8 @@
 // 80 km, which shares its temperature profile but not all its constants. And by construction: the
 // continuity of temperature and pressure at the bases of the layers, the hydrostatic equation
 // dP/dZ = -rho g by finite differences, the inverse of the pressure, Table 8 and T7 (eq. 25), the
-// bounds of the model, and the columns of levels.
+// bounds of the model, and the columns of levels. And the standard as fields (field.hpp): each
+// quantity on the line of heights, with its unit and its base, and carried into space by a pullback.
 
 #include <cmath>
 #include <fstream>
@@ -20,7 +21,9 @@
 #include <vector>
 
 #include <calx/verification/check.hpp>
+#include <meteorology/atmosphere/field.hpp>
 #include <meteorology/atmosphere/standard.hpp>
+#include <physis/fields/compose.hpp>
 
 using namespace meteorology::atmosphere;
 using calx::verification::relative;
@@ -313,6 +316,44 @@ int main() {
     try { profile(0, 90000, 1000); } catch (const std::domain_error&) { threw_domain = true; }
     try { profile(0, 1000, 0); } catch (const std::invalid_argument&) { threw_step = true; }
     s.require("a column beyond 86 km, or with no step, is refused", threw_domain && threw_step);
+  }
+
+  // ---- the standard as fields (physis fields) -----------------------------------------------------------------------
+  {
+    namespace pf = physis::fields;
+    namespace dim = physis::units::dim;
+    const StandardAtmosphereField T(Quantity::temperature), P(Quantity::pressure), rho(Quantity::density), c(Quantity::speed_of_sound);
+    const auto d = [](const auto& f) { return pf::described(f); };
+    s.require("fields: four scalars on a line of heights, in K, Pa, kg/m³ and m/s, of the model, analytic",
+              d(T).fibre.dimension == dim::temperature && d(P).fibre.dimension == dim::pressure && d(rho).fibre.dimension == dim::mass / dim::volume &&
+                  d(c).fibre.dimension == dim::velocity && d(T).base.kind == pf::BaseKind::curve && d(T).base.dimension == 1 &&
+                  d(P).fibre.kind == pf::FibreKind::scalar && d(rho).provenance == pf::Provenance::model && d(c).representation.kind == pf::RepresentationKind::analytic &&
+                  d(T).name == "atmosphere.temperature" && d(c).name == "atmosphere.speed_of_sound");
+    // At every geometric height of the document's tables each field is the standard's own value.
+    bool same = true;
+    for (const auto& e : table) {
+      const State st = *at_geometric_height(e.z);
+      same = same && T.at({0, e.z}).value == st.temperature_K && P.at({0, e.z}).value == st.pressure_Pa && rho.at({0, e.z}).value == st.density_kg_m3 &&
+             c.at({0, e.z}).value == st.speed_of_sound_m_s;
+    }
+    s.require("fields: at the tables' 272 geometric heights, each field is the standard", same);
+    const auto above = T.at({0, 86000.001}), below = P.at({0, -5005});
+    s.require("fields: above 86 km and below -5 km', outside the base, with the reason",
+              above.quality == pf::Quality::outside && below.quality == pf::Quality::outside && above.reason == "outside the 1976 standard's heights, −5 km′ to 86 km" &&
+                  T.at({0, 86000}).ok() && P.at({0, -4996}).ok());
+    // Into space about a sphere of 6 371 km by the height |x| − R: the pullback asks the standard at
+    // each point's height, and refuses where the standard does.
+    constexpr double R = 6371e3;
+    pf::Descriptor dd;
+    dd.name = "atmosphere.temperature";
+    dd.frame = "a sphere's centred axes";
+    dd.base = {pf::BaseKind::region, 3, "a sphere of 6371 km from 5 km below to 86 km above"};
+    const auto Tx = pf::pullback<pf::Vec3>(dd, T, [](const pf::Query<pf::Vec3>& q) { return pf::valid(physis::geometry::norm(q.x) - R); });
+    // 15 km up (14 965 m′) lies in the isothermal layer from 11 to 20 km′, at 216.65 K (Table 4).
+    const pf::Vec3 x{(R + 15000) * 0.6, 0, (R + 15000) * 0.8};
+    s.check("fields: pulled back into space, the temperature 15 km up is the isothermal layer's 216.65 K", Tx.at({0, x}).value - 216.65, 1e-12, "K");
+    s.require("fields: and 100 km up outside, with the standard's reason, the fibre the standard's",
+              Tx.at({0, {R + 1e5, 0, 0}}).reason == "outside the 1976 standard's heights, −5 km′ to 86 km" && Tx.descriptor().fibre.dimension == dim::temperature);
   }
   return s.done();
 }

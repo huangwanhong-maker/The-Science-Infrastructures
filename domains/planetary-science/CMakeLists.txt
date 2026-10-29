@@ -6,8 +6,8 @@
 # when set) and skip those checks, saying so, when it is missing.
 #
 # The domain may use astronomy, geophysics and meteorology (module.json); magnetism uses only the
-# foundations: physis (potential fields and random fields, physis::analysis) and calx (the report of
-# its checks). Inside The Science Infrastructures they are the sibling foundations, added here when no
+# foundations: physis (potential fields and random fields, physis::analysis; fields, physis::fields) and
+# calx (the report of its checks). Inside The Science Infrastructures they are the sibling foundations, added here when no
 # larger project has added them.
 
 cmake_minimum_required(VERSION 3.20)
@@ -47,12 +47,13 @@ if(PLANETARY_SCIENCE_CHECKS)
   enable_testing()
 endif()
 
-# magnetism: the crustal field of a body without a dynamo, and the interplanetary field carried to it.
+# magnetism: the crustal field of a body without a dynamo, and the interplanetary field carried to it; the
+# Moon's crust as fields (field.hpp).
 add_library(planetary_science_magnetism INTERFACE)
 add_library(planetary_science::magnetism ALIAS planetary_science_magnetism)
 target_include_directories(planetary_science_magnetism INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/magnetism/include)
 target_compile_features(planetary_science_magnetism INTERFACE cxx_std_20)
-target_link_libraries(planetary_science_magnetism INTERFACE physis::analysis)
+target_link_libraries(planetary_science_magnetism INTERFACE physis::analysis physis::fields)
 
 if(PLANETARY_SCIENCE_CHECKS)
   calx_add_check(check_planetary_science_magnetism SOURCES magnetism/tests/check_magnetism.cpp LIBRARIES planetary_science::magnetism)

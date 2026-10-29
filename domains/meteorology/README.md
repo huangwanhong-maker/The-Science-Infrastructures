@@ -6,7 +6,7 @@
 
 | Module | Scope | Status |
 |---|---|---|
-| `atmosphere` | The U.S. Standard Atmosphere 1976 from −5 km′ to 86 km: temperature (molecular-scale and kinetic, with Table 8's molecular weight from 80 to 86 km), pressure, density, the 1976's gravity and geopotential height, the speed of sound, viscosities and conductivity, number density, mean free path, particle speed and collision frequency, the layer and its name; the pressure altitude; columns of levels for an instrument rising or falling through it. No value above 86 km, where the 1976 is a diffusive model of each species (not implemented) | draft (C++: `atmosphere/standard.hpp`, target `meteorology::atmosphere`; held to the document's Tables I–III, to fluids' 1976 and to ICAO's 1993 in ambiance) |
+| `atmosphere` | The U.S. Standard Atmosphere 1976 from −5 km′ to 86 km: temperature (molecular-scale and kinetic, with Table 8's molecular weight from 80 to 86 km), pressure, density, the 1976's gravity and geopotential height, the speed of sound, viscosities and conductivity, number density, mean free path, particle speed and collision frequency, the layer and its name; the pressure altitude; columns of levels for an instrument rising or falling through it; each quantity as one of physis's fields on the line of heights (`StandardAtmosphereField`, `atmosphere/field.hpp`), which a world carries into space by a pullback along the height above its geoid ([ADR 0053](../../development/decisions/0053-fields-and-their-visual-expression.md)). No value above 86 km, where the 1976 is a diffusive model of each species (not implemented) | draft (C++: `atmosphere/standard.hpp`, `atmosphere/field.hpp`, target `meteorology::atmosphere`; held to the document's Tables I–III, to fluids' 1976 and to ICAO's 1993 in ambiance) |
 | `dynamics` | Atmospheric dynamics. Two models of our own, by the spectral transform method: the barotropic vorticity equation of the first numerical forecast (1950), and the shallow-water equations, started by a digital filter | draft (JavaScript: `barotropic.js`, `shallowwater.js`) |
 | `prediction` | Weather analysis and prediction: tropical cyclones found and tracked in sea-level pressure (after TempestExtremes); the wind | draft (JavaScript: `cyclones.js`, `wind.js`) |
 | `hazards` | Hazards read from forecasts: fire weather by the Canadian Fire Weather Index System; heat stress (Stull's wet-bulb temperature, the NWS heat index); daily weather from a forecast's samples (local noon, local days, amounts from rates) | draft (JavaScript: `fireweather.js`, `heat.js`) |
@@ -19,7 +19,7 @@
 ## 2. Dependencies
 
 - **Domains:** geodesy, for reference surfaces.
-- **Foundations:** physis (`continuum`, `thermodynamics`, `radiation`, `chemistry`; today the spectral transform of its JavaScript stand-in); calx (the C++ checks' verification).
+- **Foundations:** physis (`continuum`, `thermodynamics`, `radiation`, `chemistry`; today the spectral transform of its JavaScript stand-in, and `fields` for the standard atmosphere as fields); calx (the C++ checks' verification).
 
 The Earth's radius and rotation rate, as Williamson et al. (1992) give them for the standard tests, are this domain's (`EARTH_RADIUS`, `OMEGA` in `barotropic.js`): physis's spectral transform takes the radius as an argument.
 

@@ -262,7 +262,7 @@ The programme will grow over decades and change direction as it learns. Its gove
 | Works | Applications and studies, organised by purpose, each composing domains | `applications/`, `research/`, `notebooks/` |
 | Shared edges | Data (registry, acquisition, products, requests on demand), visualization, observation and sensors, and the API for other programs | `data/`, `visualization/`, `observation/`, `api/` |
 | Domains | One library per science, pure and tested; fields, and bridges between them | `domains/` |
-| Foundations | [calx](https://github.com/huangwanhong-maker/calx) (computation), [morphe](https://github.com/huangwanhong-maker/morphe) (mathematical structures), [physis](https://github.com/huangwanhong-maker/physis) (geometry and physics); inference, and the quantitative social sciences, planned (§4.3) | `foundations/` (submodules) |
+| Foundations | [calx](https://github.com/huangwanhong-maker/calx) (computation), [morphe](https://github.com/huangwanhong-maker/morphe) (mathematical structures), [physis](https://github.com/huangwanhong-maker/physis) (geometry and physics), [tyche](https://github.com/huangwanhong-maker/tyche) (chance and inference); the quantitative social sciences planned (§4.3) | `foundations/` (submodules) |
 
 The domains are ordered by what each may depend on:
 
@@ -271,7 +271,7 @@ height 4   climate
 height 3   tides · navigation · air-sea · planetary-science
 height 2   astronomy · geophysics · geography · oceanography · meteorology
 height 1   geodesy · evolution
-height 0   metrology · neuroscience · history · genomics · economics
+height 0   metrology · neuroscience · history · genomics · economics · robotics
            ─────────────────────────────── foundations: physis ─► calx, morphe
 ```
 
@@ -411,7 +411,7 @@ Fifty-five domains, ten of them built. A name links to the domain's directory wh
 | mechanical-engineering | field | — | Machines and mechanisms; flight | 4 |
 | civil-engineering | field | — | Structures, hydraulics, transport | 4 |
 | chemical-engineering | field | chemistry | Processes and reactors at scale | 4 |
-| robotics | field | mechanical-engineering, electrical-engineering | Systems that sense and act | 4 |
+| [robotics](domains/robotics/) | field | the foundations; later mechanical-engineering, electrical-engineering | Systems that sense and act: first vehicles on a sphere at two fidelities, following waypoints, surveys and sensors' mounts | built |
 | energy-systems | bridge | meteorology, electrical-engineering, economics | Power from wind and sun, storage, grids | 4 |
 
 ### 4.5 Disciplines Held as Modules
@@ -465,7 +465,7 @@ height 4   climate
 height 3   tides² · navigation · air-sea² · geology³ · planetary-science
 height 2   astronomy · geophysics · geography · oceanography · meteorology · cryosphere³
 height 1   geodesy · drug-discovery¹ · chemistry³ · evolution³ · cell-biology³ · epidemiology³
-height 0   metrology · neuroscience · history · economics · linguistics¹ · genomics¹ · molecular-science¹ · demography³
+height 0   metrology · neuroscience · history · economics · robotics · linguistics¹ · genomics¹ · molecular-science¹ · demography³
 ```
 
 *Rationale.*
@@ -519,10 +519,10 @@ The three atlases run online on the project's server, the [Celestial Atlas](http
 
 ```
 .
-├── foundations/     calx · morphe · physis (git submodules); inference planned
+├── foundations/     calx · morphe · physis · tyche (git submodules); the quantitative social sciences planned
 ├── domains/         metrology · geodesy · astronomy · geophysics · geography · oceanography ·
 │                    meteorology · tides · navigation · air-sea · climate · neuroscience (submodule) ·
-│                    history · genomics · evolution · economics · planetary-science
+│                    history · genomics · evolution · economics · planetary-science · robotics
 ├── data/            registry · acquisition · formats · products · terrain tiles · requests on demand
 ├── visualization/   scene model · renderers · styles; provisional drawing helpers
 ├── observation/     instruments · field work · sensors
@@ -554,7 +554,7 @@ To run an application, follow the Quick Start at the top of this page; each appl
 
 ## 7. Status
 
-**As of 2026-10-29.** Ten applications work. The three atlases run online and on any computer (Quick Start). Seven more run on any computer with g++, each computing with a C++ engine on its domains or the foundations: the Spiking Simulator ([ADR 0038](development/decisions/0038-the-spiking-simulator.md)), the Complex Atlas ([ADR 0039](development/decisions/0039-complexes-symmetry-and-fields.md)), the History Complex ([ADR 0041](development/decisions/0041-the-history-domain.md)), the Genome Workbench ([ADR 0045](development/decisions/0045-the-genome-workbench.md)), the Economy Atlas ([ADR 0044](development/decisions/0044-value-in-space-and-time.md), [ADR 0046](development/decisions/0046-the-economy-atlas-data-and-plugins.md)) Cosmopoiesis ([ADR 0049](development/decisions/0049-the-spacetime-of-the-earth-and-the-moon.md)) and the Chemistry Workbench, whose first plug-in executes and verifies the user's manuscript on chemical structure generation ([ADR 0051](development/decisions/0051-the-chemistry-workbench.md)). Fifteen domains have code. Those of the Earth and the sky are provisional JavaScript, with C++ beneath metrology, geodesy and astronomy and the navigation bridge founded in C++ ([ADR 0049](development/decisions/0049-the-spacetime-of-the-earth-and-the-moon.md)), tested against published references and closed-form answers in 847 checks. Neuroscience, the first domain beyond the Earth and the sky, is a repository of its own attached as a submodule, drawn by the Brain Atlas ([ADR 0028](development/decisions/0028-neuroscience-and-the-brain-atlas.md)). History, the first domain of the humanities, genomics and evolution, the first of the life sciences, and economics, the first of the social sciences beside history, are C++ from the start. Each domain writes no general method of its own: what it needs that names no object in nature goes to the foundations, calx, morphe and physis, and the domain uses it there. The [map of the mathematics](docs/mathematics.md) places every area of mathematics in a foundation ([ADR 0035](development/decisions/0035-the-mathematical-foundations.md)). The whole run counts 6862 checks in thirty-two suites, and each domain passes its checks on its own but genomics, where work is in progress. Two applications take plug-ins in Python and C++. The Earth Atlas's run on fields, for prediction, assimilation and analysis ([ADR 0027](development/decisions/0027-earth-atlas-plugins.md), [ADR 0029](development/decisions/0029-plugins-in-python-and-cpp.md)). The Economy Atlas's run on networks of places, on the world's trade or on data of one's own, and their results are drawn as its layers. The neuroscience domain's networks of spiking neurons simulate Brunel's network of 12,500 neurons and 15.6 million synapses at 2.6 times real time on a laptop, with the same spikes on any number of threads ([ADR 0036](development/decisions/0036-spiking-networks.md)). The next steps are in the [roadmap](development/roadmap.md), in the order of §4.6:
+**As of 2026-10-29.** Ten applications work. The three atlases run online and on any computer (Quick Start). Seven more run on any computer with g++, each computing with a C++ engine on its domains or the foundations: the Spiking Simulator ([ADR 0038](development/decisions/0038-the-spiking-simulator.md)), the Complex Atlas ([ADR 0039](development/decisions/0039-complexes-symmetry-and-fields.md)), the History Complex ([ADR 0041](development/decisions/0041-the-history-domain.md)), the Genome Workbench ([ADR 0045](development/decisions/0045-the-genome-workbench.md)), the Economy Atlas ([ADR 0044](development/decisions/0044-value-in-space-and-time.md), [ADR 0046](development/decisions/0046-the-economy-atlas-data-and-plugins.md)) Cosmopoiesis ([ADR 0049](development/decisions/0049-the-spacetime-of-the-earth-and-the-moon.md)) and the Chemistry Workbench, whose first plug-in executes and verifies the user's manuscript on chemical structure generation ([ADR 0051](development/decisions/0051-the-chemistry-workbench.md)). Sixteen domains have code. Those of the Earth and the sky are provisional JavaScript, with C++ beneath metrology, geodesy and astronomy and the navigation bridge founded in C++ ([ADR 0049](development/decisions/0049-the-spacetime-of-the-earth-and-the-moon.md)), tested against published references and closed-form answers in 847 checks. Neuroscience, the first domain beyond the Earth and the sky, is a repository of its own attached as a submodule, drawn by the Brain Atlas ([ADR 0028](development/decisions/0028-neuroscience-and-the-brain-atlas.md)). History, the first domain of the humanities, genomics and evolution, the first of the life sciences, and economics, the first of the social sciences beside history, are C++ from the start; so is robotics, the first of engineering, founded for Cosmopoiesis's rover, whose mission learns the Moon's crustal field from its readings ([ADR 0054](development/decisions/0054-bodies-dynamics-and-knowledge.md)). Each domain writes no general method of its own: what it needs that names no object in nature goes to the foundations, calx, morphe and physis, and the domain uses it there. The [map of the mathematics](docs/mathematics.md) places every area of mathematics in a foundation ([ADR 0035](development/decisions/0035-the-mathematical-foundations.md)). The whole run counts 7472 checks in thirty-five suites, and each domain passes its checks on its own but genomics, where work is in progress. Two applications take plug-ins in Python and C++. The Earth Atlas's run on fields, for prediction, assimilation and analysis ([ADR 0027](development/decisions/0027-earth-atlas-plugins.md), [ADR 0029](development/decisions/0029-plugins-in-python-and-cpp.md)). The Economy Atlas's run on networks of places, on the world's trade or on data of one's own, and their results are drawn as its layers. The neuroscience domain's networks of spiking neurons simulate Brunel's network of 12,500 neurons and 15.6 million synapses at 2.6 times real time on a laptop, with the same spikes on any number of threads ([ADR 0036](development/decisions/0036-spiking-networks.md)). The next steps are in the [roadmap](development/roadmap.md), in the order of §4.6:
 
 - Phase 0, the toolchain and the build;
 - tier 1: the foundations morphe, the algebraic foundation (category theory, algebra, topology, geometry), and physis, the foundation of theoretical physics; then spiking neural networks, computational linguistics, genomics, molecular science and drug discovery;

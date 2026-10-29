@@ -2,7 +2,11 @@
 // extrema, particles carried by a flow, the units in which quantities are shown,
 // the tiles of a map service, cell complexes, and the globes (their pyramid, figures,
 // horizon test, terrain meshes, level of detail, sampled motions, imagery and sky, flights between
-// bodies and a body's map as two root tiles).
+// bodies and a body's map as two root tiles); and the scene model, its styles and its renderers'
+// arithmetic (ADR 0053): colour-vision deficiencies against colorspacious (tests/fixtures/cvd.json, made by
+// tests/make_cvd_fixtures.py), the colour maps' lightness and separations in every vision, the samplings'
+// places and orders, a field's answers decoded, scales and their ticks, visual expressions and the
+// formalism's rules, legends, the arithmetic of volumes, drapes and coloured curves.
 // Run from the repository root:  node visualization/tests/run-tests.mjs
 
 import { suite, seeded } from '../../development/tools/checks.mjs';
@@ -11,6 +15,12 @@ import {
   globe, bvToTemperature, starRgb,
 } from '../js/index.js';
 import { DEG, EARTH_RADIUS_M, geocentricLatitude } from '../../domains/geodesy/js/index.js';
+import { readFileSync } from 'node:fs';
+import * as styles from '../styles/index.js';
+import * as scene from '../scene/index.js';
+import * as renderers from '../renderers/index.js';
+import { fieldMarks } from '../renderers/three/index.js';
+import { sequentialColour as complexSequential, categoricalColour as complexCategorical } from '../js/index.js';
 
 const { check, assert, done } = suite();
 
@@ -522,6 +532,175 @@ const { check, assert, done } = suite();
     globalThis.fetch = saved.fetch;
     globalThis.createImageBitmap = saved.createImageBitmap;
   }
+}
+
+// ---- styles: colour-vision deficiencies, and the colour maps in every vision --------------------------
+{
+  const fixture = JSON.parse(readFileSync(new URL('./fixtures/cvd.json', import.meta.url), 'utf8'));
+  let same = 0;
+  for (const kind of styles.DEFICIENCIES) for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) same = Math.max(same, Math.abs(styles.MACHADO_2009[kind][r][c] - fixture.matrices[kind][r][c]));
+  check('cvd: Machado et al.\'s three matrices are colorspacious\'s', same, 0);
+  let worst = 0;
+  for (const row of fixture.colours) for (const kind of styles.DEFICIENCIES) {
+    const sim = styles.simulate(styles.hexRgb(row.hex), kind);
+    worst = Math.max(worst, ...sim.map((x, k) => Math.abs(x - row[kind][k])));
+  }
+  check(`cvd: ${fixture.colours.length} colours seen with each deficiency as colorspacious simulates them (unclamped sRGB)`, worst, 1e-12);
+  const round = styles.rgbOfLab(styles.oklab([0.79, 0.55, 0.75]));
+  // Ottosson's published matrices are given to ten digits; his pair from LMS′ to Lab and back is inverse
+  // only to 6.3e-8 (the product of the two differs from the identity by that), which bounds the round trip.
+  check('colour: OKLab and back, to the agreement of the published matrices', Math.max(...round.map((x, k) => Math.abs(x - [0.79, 0.55, 0.75][k]))), 1e-7);
+  for (const name of Object.keys(styles.MAPS).filter((m) => styles.MAPS[m].kind === 'sequential')) {
+    const profile = styles.lightnessProfile(styles.colourMap(name).colour);
+    assert(`maps: ${name} is monotone in lightness in normal vision and with each deficiency, so its order reads without hue`,
+      Object.values(profile).every((v) => v.monotone), JSON.stringify(Object.fromEntries(Object.entries(profile).map(([k, v]) => [k, v.least_step.toFixed(4)]))));
+  }
+  for (const name of Object.keys(styles.MAPS).filter((m) => styles.MAPS[m].kind === 'diverging')) {
+    const map = styles.colourMap(name);
+    const low = styles.lightnessProfile((u) => map.colour(u / 2)), high = styles.lightnessProfile((u) => map.colour(0.5 + u / 2));
+    const rising = Object.values(low).every((v) => v.to > v.from), falling = Object.values(high).every((v) => v.to < v.from);
+    assert(`maps: ${name}'s arms are each monotone, lightest at the middle, in every vision`,
+      Object.values(low).every((v) => v.monotone) && Object.values(high).every((v) => v.monotone) && rising && falling);
+    const ends = styles.separation([map.colour(0), map.colour(1)]);
+    // Its two ends, the strongest values of each sign, apart by more than the categorical floor (0.06) in every vision.
+    check(`maps: ${name}'s two ends stay apart in every vision (least ΔE in OKLab, against 0.06)`, Math.max(0, 0.06 - Math.min(...Object.values(ends))), 0);
+  }
+  const apart = styles.separation(styles.MAPS['categorical-apart'].stops.map(styles.hexRgb));
+  check('maps: categorical-apart, each hue from the next, in normal vision (least ΔE, floor 0.15)', Math.max(0, 0.15 - apart.normal), 0);
+  check('maps: and with each deficiency (least ΔE, floor 0.06)', Math.max(0, 0.06 - Math.min(apart.protan, apart.deutan, apart.tritan)), 0);
+  assert('maps: categorical-apart holds the same ten hues as categorical, reordered',
+    [...styles.MAPS['categorical-apart'].stops].sort().join() === [...styles.MAPS.categorical.stops].sort().join());
+  assert('maps: the provisional layer\'s maps are the styles\' own', complexSequential === styles.sequentialColour && complexCategorical === styles.categoricalColour);
+  const tbl = styles.colourMap('plum').table(4, (u) => u);
+  assert('maps: a table of four steps, opaque at its top and clear at its foot', tbl.length === 16 && tbl[3] === 0 && tbl[15] === 255);
+}
+
+// ---- scene: samplings, answers, scales -----------------------------------------------------------------
+{
+  const sphere = { kind: 'sphere', centre: [0, 0, 0], radius_m: 2, nlat: 4, nlon: 8 };
+  const p0 = scene.pointOf(sphere, 0), last = scene.pointOf(sphere, 31);
+  check('grid: the first cell of a sphere is the north-western, at 67.5° N, 157.5° W',
+    Math.hypot(p0[0] - 2 * Math.cos(67.5 * DEG) * Math.cos(-157.5 * DEG), p0[1] - 2 * Math.cos(67.5 * DEG) * Math.sin(-157.5 * DEG), p0[2] - 2 * Math.sin(67.5 * DEG)), 1e-15);
+  assert('grid: the last is the south-eastern', last[2] < 0 && Math.abs(Math.atan2(last[1], last[0]) - 157.5 * DEG) < 1e-12);
+  const box = { kind: 'volume', centre: [10, 20, 30], axes: [[0, 1, 0], [-1, 0, 0], [0, 0, 1]], edges: [6, 8, 10], n: [3, 4, 5] };
+  let roundTrip = true;
+  for (let idx = 0; idx < scene.sizeOf(box); idx++) roundTrip = roundTrip && scene.volumeIndex(box, ...scene.volumeCell(box, idx)) === idx;
+  assert('grid: a volume\'s index and cell are inverse, the first axis fastest', roundTrip && scene.volumeCell(box, 1).join() === '1,0,0' && scene.volumeCell(box, 3).join() === '0,1,0');
+  const c = scene.pointOf(box, scene.volumeIndex(box, 1, 1, 2)), q = scene.pointOf(box, scene.volumeIndex(box, 2, 1, 2));
+  // Cell (1, 1, 2) of 3 × 4 × 5 is offset (0, −1, 0) along the axes; one step along the first axis is +2 along y.
+  check('grid: a cell lies at centre + axesᵀ offset', Math.hypot(c[0] - 11, c[1] - 20, c[2] - 30) + Math.hypot(q[0] - c[0], q[1] - c[1] - 2, q[2] - c[2]), 1e-12);
+  const plane = { kind: 'plane', origin: [0, 0, 0], u: [4, 0, 0], v: [0, 2, 0], nu: 4, nv: 2 };
+  assert('grid: a plane\'s cells, u fastest', scene.pointOf(plane, 1).join() === '1.5,0.5,0' && scene.pointOf(plane, 4).join() === '0.5,1.5,0');
+
+  // An answer as the engine encodes it: two vectors and one refused point, f32 and json alike.
+  const values = [3, 4, 0, NaN, NaN, NaN, 0, 0, 2];
+  const b64 = (typed) => Buffer.from(typed.buffer).toString('base64');
+  const answer = {
+    size: 3, components: 3, values_f32: b64(Float32Array.from(values)), quality_u8: b64(Uint8Array.from([0, 1, 0])), why_u16: b64(Uint16Array.from([0, 1, 1])),
+    reasons: [{ text: 'below the base', count: 1 }], notes: [{ text: 'read above', count: 1 }], counts: { valid: 2, outside: 1, missing: 0, invalid: 0 },
+  };
+  const s = scene.samplesOf(answer), sj = scene.samplesOf({ ...answer, values_f32: undefined, quality_u8: undefined, why_u16: undefined, values: values.map((v) => (Number.isNaN(v) ? null : v)), quality: [0, 1, 0], why: [0, 1, 1] });
+  const mag = scene.scalarOf(s);
+  assert('samples: decoded from base64 and from JSON alike, the refused point without a value',
+    s.values.length === 9 && sj.values.every((v, i) => Object.is(v, s.values[i]) || (Number.isNaN(v) && Number.isNaN(s.values[i]))) && mag[0] === 5 && Number.isNaN(mag[1]) && mag[2] === 2);
+  assert('samples: the reason of a refused point, the note of a qualified one',
+    scene.reasonOf(s, 1) === 'below the base' && scene.noteOf(s, 2) === 'read above' && scene.reasonOf(s, 0) === null && scene.noteOf(s, 0) === null);
+
+  const lin = scene.scaleOf([2, 4, 6]), log = scene.scaleOf([1e-9, 3e-7]), div = scene.scaleOf([-3, 1], { centre: 0 }), sym = scene.scaleOf([-1e-7, 4e-8], { kind: 'diverging', centre: 0, floor: 1e-9 });
+  assert('scale: auto is linear over a narrow span, logarithmic over decades, diverging about a centre', lin.kind === 'linear' && log.kind === 'log' && div.kind === 'diverging');
+  check('scale: the ends of each at 0 and 1, a diverging centre at ½', Math.abs(lin.u(2)) + Math.abs(lin.u(6) - 1) + Math.abs(log.u(1e-9)) + Math.abs(log.u(3e-7) - 1) + Math.abs(div.u(0) - 0.5) + Math.abs(div.u(-3)), 1e-12);
+  check('scale: a diverging scale is symmetric, the weaker arm short of its end', div.u(3) - 1 + Math.abs(div.u(1) - (0.5 + 0.5 / 3)), 1e-12);
+  check('scale: logarithmic on each arm from its floor: 10 nT of 100 nT at ¾, within the floor at the middle',
+    Math.abs(sym.u(1e-8) - 0.75) + Math.abs(sym.u(-1e-8) - 0.25) + Math.abs(sym.u(5e-10) - 0.5), 1e-12);
+  assert('scale: a value that is not finite has no place', Number.isNaN(lin.u(NaN)) && Number.isNaN(div.u(Infinity - Infinity)));
+  assert('scale: nice ticks in steps of 1, 2 or 5 tens', JSON.stringify(scene.niceTicks(0, 1, 5)) === '[0,0.2,0.4,0.6000000000000001,0.8,1]' || scene.niceTicks(0, 1, 5).length === 6, JSON.stringify(scene.niceTicks(0, 1, 5)));
+  assert('scale: a log scale ticks its decades', log.ticks().map((t) => t.value).filter((v) => [1e-9, 1e-8, 1e-7].some((d) => Math.abs(v / d - 1) < 1e-9)).length === 3);
+  assert('scale: a diverging scale with a floor ticks the centre and the decades either side', sym.ticks().some((t) => t.value === 0 && t.u === 0.5) && sym.ticks().some((t) => Math.abs(t.value + 1e-7) < 1e-20));
+}
+
+// ---- scene: visual expressions and the formalism's rules -----------------------------------------------
+{
+  const B = { name: 'moon.magnetic.crust', title: "The Moon's crustal field", frame: 'MOON_ME', fibre: { kind: 'vector', unit: 'T', basis: 'frame' }, provenance: 'assimilated', parts: [], source: 'T2015_449' };
+  const T = { name: 'earth.atmosphere.temperature', title: 'Temperature', frame: 'ITRS', fibre: { kind: 'scalar', unit: 'K' }, provenance: 'model' };
+  const L = { name: 'land', title: 'Land cover', frame: 'ITRS', fibre: { kind: 'label', unit: '1' }, provenance: 'archive' };
+  const sphere = { kind: 'sphere', radius_m: 1737400, nlat: 90, nlon: 180 };
+  const mag = scene.express(B, sphere), rad = scene.express(B, sphere, { reduction: { kind: 'radial' } }), lines = scene.express(B, { kind: 'curves', seeds: [[2e6, 0, 0]] });
+  assert('expression: a vector on a sphere is drawn as its magnitude, a drape, sequential', mag.reduction.kind === 'magnitude' && mag.mark.kind === 'drape' && mag.colour.map === 'plum' && mag.frame === null && mag.shows === '|B|');
+  assert('expression: its radial part is diverging about zero', rad.colour.scale === 'diverging' && rad.colour.centre === 0 && rad.colour.map === 'lavender-rust' && rad.shows === 'B_r');
+  assert('expression: a vector over a region, as its field lines', lines.mark.kind === 'curves' && lines.reduction.kind === 'none');
+  const comp = scene.express(B, sphere, { reduction: { kind: 'component', axis: 2 } });
+  assert('expression: a component names its frame', comp.frame === 'MOON_ME' && comp.shows === 'B_z (MOON_ME)');
+  const fails = (f, r, o) => { try { scene.express(f, r, o); return ''; } catch (e) { return e.message; } };
+  const rules = [
+    ['a scalar has no field lines', fails(T, { kind: 'curves', seeds: [] }), 'integral curves are of a vector field'],
+    ['a vector is not coloured without a reduction', fails(B, sphere, { reduction: { kind: 'none' } }), "a vector's colour needs a reduction"],
+    ['a magnitude does not diverge about zero', fails(B, sphere, { scale: 'diverging', map: 'lavender-rust' }), 'a magnitude has no sign'],
+    ['an absolute temperature does not diverge about zero', fails(T, sphere, { scale: 'diverging', about: 0, map: 'lavender-rust' }), 'no natural zero'],
+    ['a label is not drawn on an ordered map', fails(L, sphere, { map: 'plum' }), 'categorical hues'],
+    ['a diverging map needs its scale', fails(B, sphere, { map: 'orchid-gold' }), 'a diverging map needs a diverging scale'],
+    ['a signed value has no logarithm', fails(B, sphere, { reduction: { kind: 'radial' }, scale: 'log' }), 'no logarithmic scale'],
+    ['a drape is of a surface', fails(B, { kind: 'volume', centre: [0, 0, 0], edges: [1, 1, 1], n: [2, 2, 2] }, { mark: { kind: 'drape' } }), 'a volume is drawn as'],
+  ];
+  for (const [what, message, expected] of rules) assert(`expression: ${what}`, message.includes(expected), message || 'accepted');
+  const component = { ...comp, frame: null, reduction: { kind: 'component', axis: 2 } };
+  assert('expression: a component is never drawn without its frame', scene.validate(component).some((m) => m.includes('without its frame')));
+  assert('expression: a temperature departing from a reference diverges about it', scene.express(T, sphere, { about: 288.15 }).colour.centre === 288.15);
+  assert('expression: a field offers its curves and its drapes by its fibre', scene.offers(B).map((o) => o.restriction).join() === 'curves,sphere,sphere,volume' && scene.offers(T)[0].restriction === 'sphere');
+
+  // The legend: a unit with the prefix of its values, the scale's ticks, the provenance.
+  const sc = scene.scaleOf([3e-10, 3.7e-7]);
+  const legend = scene.legendOf(mag, sc, { size: 4, reasons: [{ text: 'below the ground', count: 1 }], notes: [], counts: { valid: 3, outside: 1, missing: 0, invalid: 0 } });
+  assert('legend: nanotesla for the Moon\'s crust, with its ticks, provenance and refusals',
+    legend.unit === 'nT' && legend.ticks.length >= 3 && legend.ticks.some((t) => t.label === '1.0 nT' || t.label === '1.00 nT') && legend.provenance === 'assimilated' && legend.refused[0].share === 0.25, JSON.stringify(legend.ticks.map((t) => t.label)));
+  assert('legend: microtesla for the Earth\'s field, kelvin unprefixed, prettier units',
+    scene.quantityText(4.9128e-5, 'T') === '49.1 μT' && scene.quantityText(216.65, 'K') === '217 K' && scene.unitText('m s^-2') === 'm/s²' && scene.quantityText(-2.5e-8, 'T') === '−25.0 nT',
+    [scene.quantityText(4.9128e-5, 'T'), scene.quantityText(216.65, 'K'), scene.quantityText(-2.5e-8, 'T')].join(' | '));
+  // Normal gravity 400 km up spans 8.655 to 8.690 m/s²: its ticks need a third decimal's worth of figures.
+  const g = { name: 'g', title: 'g', frame: 'ITRS', fibre: { kind: 'vector', unit: 'm s^-2' }, provenance: 'model' };
+  const narrow = scene.legendOf(scene.express(g, { kind: 'sphere', radius_m: 1, nlat: 2, nlon: 4 }), scene.scaleOf([8.655, 8.69])).ticks.map((t) => t.label);
+  assert('legend: ticks over a narrow span get the figures that tell them apart; 10⁻⁷ T is 100 nT, not 99.99',
+    new Set(narrow).size === narrow.length && narrow.length >= 3 && scene.quantityText(1e-7, 'T') === '100 nT', narrow.join(' | '));
+}
+
+// ---- scene: the arithmetic of a volume -----------------------------------------------------------------
+{
+  const g = { kind: 'volume', centre: [0, 0, 0], edges: [500, 600, 700], n: [5, 6, 7] };
+  const size = scene.sizeOf(g), grad = [3.5e-3, -1.25e-3, -2e-2], a = 42;
+  const values = Float32Array.from({ length: size }, (_, idx) => { const x = scene.volumeOffset(g, ...scene.volumeCell(g, idx)); return a + grad[0] * x[0] + grad[1] * x[1] + grad[2] * x[2]; });
+  for (const idx of [0, 7, 100]) values[idx] = NaN;
+  const fit = scene.gradientOf(values, g);
+  // float32 values of about 42 carry 2.5e-6 of rounding, over offsets of hundreds of metres: a gradient good to some 1e-8.
+  check('volume: the linear fit recovers the gradient of a linear field on a box of 5 × 6 × 7, cells unread', Math.max(...fit.gradient.map((x, k) => Math.abs(x - grad[k]))), 1e-7, '/m');
+  check('volume: and its mean', fit.mean - a, 1e-5);
+  const even = Float32Array.from({ length: size }, (_, idx) => scene.volumeCell(g, idx)[1]);
+  check('volume: the centre of an even axis is the mean of its two middle layers', scene.centreValue(even, g) - 2.5, 0);
+  const full = Float32Array.from({ length: size }, () => 1);
+  check('volume: the shell is n₀n₁n₂ − (n₀−2)(n₁−2)(n₂−2) cells', scene.visibleCells(full, g, 'shell').length - (size - 3 * 4 * 5), 0);
+  check('volume: three slices through a cell', scene.visibleCells(full, g, 'slices', [2, 3, 3]).length - (6 * 7 + 5 * 7 + 5 * 6 - 5 - 6 - 7 + 1), 0);
+  const level = scene.levelData(values);
+  assert('volume: a level surface\'s data has no gap: unread cells below every level', level.every(Number.isFinite) && level[0] < Math.min(...[...values].filter(Number.isFinite)));
+}
+
+// ---- renderers: colouring, drapes, coloured curves -----------------------------------------------------
+{
+  const B = { name: 'b', title: 'B', frame: 'MOON_ME', fibre: { kind: 'vector', unit: 'T' }, provenance: 'model' };
+  const sphere = { kind: 'sphere', radius_m: 1, nlat: 2, nlon: 4 };
+  const radial = scene.express(B, sphere, { reduction: { kind: 'radial' }, map: 'orchid-gold', opacity: 'rising' });
+  const sc = scene.scaleOf([-2, 2], { centre: 0 });
+  const colourOf = renderers.colouring(radial, sc);
+  assert('colouring: rising from clear at a diverging middle to opaque at each end', colourOf(0)[3] === 0 && colourOf(2)[3] === 1 && colourOf(-2)[3] === 1 && colourOf(NaN) === null);
+  const img = renderers.drapeImage(Float32Array.from([2, 0, -2, NaN, 1, 1, 1, 1]), sphere, colourOf);
+  assert('drape: a sphere\'s image is its grid as it lies, north row first, a cell without a value clear',
+    img.width === 4 && img.height === 2 && img.data[3] === 255 && img.data[7] === 0 && img.data[15] === 0 && img.data[16 + 3] > 0);
+  const gold = styles.colourMap('orchid-gold').colour(1);
+  check('drape: the strongest outward value is the map\'s outward end', Math.max(...[0, 1, 2].map((k) => Math.abs(img.data[k] - Math.round(255 * gold[k])))), 0);
+  const plane = { kind: 'plane', origin: [0, 0, 0], u: [1, 0, 0], v: [0, 1, 0], nu: 2, nv: 2 };
+  const pimg = renderers.drapeImage(Float32Array.from([2, NaN, NaN, NaN]), plane, colourOf);
+  assert('drape: a plane\'s image has its v axis up: its first cell at the foot', pimg.data[3] === 0 && pimg.data[8 + 3] === 255);
+  const curves = [{ seeded: true, points: Float32Array.from([0, 0, 0, 1, 0, 0, 2, 0, 0, 3, 0, 0]), magnitude: Float32Array.from([1, 2, NaN, 2]) }, { seeded: false, points: new Float32Array(0), magnitude: new Float32Array(0) }];
+  const seg = renderers.curveSegments(curves, renderers.colouring(scene.express(B, { kind: 'curves', seeds: [] }), scene.scaleOf([1, 2])));
+  assert('curves: one segment for each step with a colour at both ends, the unseeded curve none', seg.segments === 1 && seg.positions.length === 6 && seg.positions[3] === 1 && seg.colours.length === 8);
+  assert('renderers: the three.js marks load without three.js, which is passed in', typeof fieldMarks === 'function');
 }
 
 done();

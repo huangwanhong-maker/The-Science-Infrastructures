@@ -153,10 +153,10 @@ The representation layer applies the same separation of content from realisation
 
 | Component | Responsibility |
 |---|---|
-| `scene/` | A device-neutral, serialisable description of what is shown: bodies, fields, trajectories, reference frames, annotations, cameras, time. It carries units, time scales and frames from the domains, so renderers never guess them. |
-| `renderers/` | One per technique. Examples: static figures (Matplotlib, SVG, PDF); web (WebGPU, three.js, CesiumJS); native (Vulkan); immersive (WebXR); physical (3D printing); non-visual (sonification). |
-| `styles/` | Palette, typography and marks, shared by all renderers |
-| `js/` | Provisional: the drawing helpers the atlases share (contours, particles on the sphere, display units, map tiles), until the scene model exists |
+| `scene/` | A device-neutral, serialisable description of what is shown: bodies, fields, trajectories, reference frames, annotations, cameras, time. It carries units, time scales and frames from the domains, so renderers never guess them. Written for fields (ADR 0053): a drawing is a visual expression, a restriction, a reduction and a mark, checked by the formalism's rules, with its samplings, scales and legend |
+| `renderers/` | One per technique. Examples: static figures (Matplotlib, SVG, PDF); web (WebGPU, three.js, CesiumJS); native (Vulkan); immersive (WebXR); physical (3D printing); non-visual (sonification). Written: the arithmetic they share (colouring, drapes, coloured curves) and three.js's marks |
+| `styles/` | Palette, typography and marks, shared by all renderers. Written: the colour maps, made in OKLab and validated for colour-vision deficiencies |
+| `js/` | Provisional: the drawing helpers the atlases share (contours, particles on the sphere, display units, map tiles, globes), and the layer's public interface, which exports the scene model, the styles and the renderers |
 
 *Remark.* Astronomical scenes span roughly 10⁻³ m to 10²⁶ m, far beyond the range of single-precision graphics coordinates. The scene model therefore uses a hierarchy of local frames with floating origins, not one global coordinate system, as OpenSpace does.
 

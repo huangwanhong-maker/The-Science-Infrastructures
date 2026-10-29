@@ -9,6 +9,8 @@
 // - the 12 test points of the report's Table 6, with the grid variation: wmm2025-table6.txt.
 // And the mathematics: the field as the gradient of the potential; the rates as derivatives in time; the Earth-fixed vector against the geocentric basis; the degree-1 model
 // as the field of the centred dipole; McIlwain's L constant along the dipole's field lines.
+// The model as a field (field.hpp): NOAA's points through it on the Earth-fixed axes, its base in
+// height and time, and its divergence and curl by physis's central differences.
 // The Schmidt functions are calx's and are checked there (special_functions/tests/check_legendre.cpp).
 // The coefficients come from the data library's cache (noaa-wmm/WMM.COF); without them only the
 // checks of the mathematics run.
@@ -19,6 +21,7 @@
 #include <filesystem>
 #include <fstream>
 #include <map>
+#include <memory>
 #include <numbers>
 #include <sstream>
 #include <string>
@@ -26,7 +29,9 @@
 
 #include <calx/random/stream.hpp>
 #include <calx/verification/check.hpp>
+#include <geophysics/geomagnetism/field.hpp>
 #include <geophysics/geomagnetism/wmm.hpp>
+#include <physis/fields/analytic.hpp>
 
 using namespace geophysics::geomagnetism;
 using calx::verification::Suite;
@@ -399,6 +404,75 @@ int main() {
     s.check("the greatest H on the ellipsoid at 2025.0 is the report's 41875 nT (§3.4)", best / nT - rv("uncertainty.horizontal"), 0.5000001, "nT");
     s.check("WMM2025's error model gives δD = 0.29° there (eq. 43)", wmm2025_uncertainty(rv("uncertainty.horizontal") * nT).declination_rad / deg - rv("uncertainty.declination"), 0.0050001, "°");
     s.require("δD grows without bound towards a dip pole", wmm2025_uncertainty(100 * nT).declination_rad > 50 * deg);
+  }
+
+  // ---- the model as a field (physis fields) --------------------------------------------------------------------------------
+  {
+    namespace pf = physis::fields;
+    using namespace physis::geometry::operators;
+    // The field's time coordinate is here the decimal year itself.
+    const WmmField B(std::make_shared<const Coefficients>(c), [](double year) { return year; });
+    const pf::Descriptor d = pf::described(B);
+    s.require("field: B on the ITRS's axes, a vector in tesla, spectral, of the model; evaluated at points, with no exact derivative",
+              d.frame == "ITRS" && d.fibre.kind == pf::FibreKind::vector && d.fibre.dimension == physis::units::dim::magnetic_field &&
+                  d.representation.kind == pf::RepresentationKind::spectral && d.provenance == pf::Provenance::model &&
+                  d.capabilities.has(pf::Capability::point) && !d.capabilities.has(pf::Capability::jacobian));
+    // NOAA's places carried to the Earth-fixed axes, queried there, and the answers turned back to
+    // north, east and down: the field finds each place again on WGS 84.
+    double worst = 0;
+    bool all = true;
+    for (const auto& p : points) {
+      const Geodetic place{p[2] * deg, p[3] * deg, p[1] * 1000};
+      const auto e = B.at({p[0], wgs84().cartesian(place)});
+      all = all && e.ok();
+      const physis::geometry::Vec3 ned = geodesy::figure::ecef_to_ned(place.latitude, place.longitude) * e.value;
+      worst = std::max({worst, std::fabs(ned[0] / nT - p[7]), std::fabs(ned[1] / nT - p[8]), std::fabs(ned[2] / nT - p[9])});
+    }
+    s.require("field: NOAA's 100 points lie in its base", all);
+    s.check("field: NOAA's 100 points, queried on the Earth-fixed axes (X, and Z through it, as above to 7.2e-4 nT)", worst, 1e-3, "nT");
+    const auto at = [&](double lat, double h, double year) { return B.at({year, wgs84().cartesian(Geodetic{lat * deg, 10 * deg, h})}); };
+    const auto low = at(45, -1500, 2027), high = at(45, 900e3, 2027), early = at(45, 0, 2024.9), late = at(45, 0, 2030.1);
+    s.require("field: 1.5 km below the ellipsoid, 900 km above it, and before and after its five years, outside its base, each with its reason",
+              low.quality == pf::Quality::outside && low.reason == "more than 1 km below the WGS 84 ellipsoid, beneath WMM's base" &&
+                  high.quality == pf::Quality::outside && high.reason == "more than 850 km above the WGS 84 ellipsoid, above WMM's base" &&
+                  early.reason == "outside the model's five years" && late.reason == "outside the model's five years");
+    s.require("field: and inside it just within each bound", at(-30, -999, 2027).ok() && at(-30, 849e3, 2027).ok() && at(80, 0, 2025.0).ok() && at(80, 0, 2030.0).ok());
+    // A potential field of degree 12 has no divergence or curl. By central differences of step
+    // h = 10⁻⁴ r each derivative errs by h²/6 times the third derivative, which the dipole dominates:
+    // for B ∝ r⁻³ it is 3·4·5 |B|/r³, so the divergence errs by about 30 (h/r)² |B|/r = 3·10⁻⁷ |B|/r.
+    calx::random::Stream rnd(20261029, 4, 0, 0);
+    double div = 0, cur = 0;
+    for (int i = 0; i < 20; i++) {
+      const physis::geometry::Vec3 x = wgs84().cartesian(Geodetic{std::asin(rnd.uniform(-0.98, 0.98)), rnd.uniform(-pi, pi), rnd.uniform(10e3, 800e3)});
+      const double r = physis::geometry::norm(x), year = rnd.uniform(2025.1, 2029.9);
+      const auto D = pf::central_differences(B, {year, x}, 1e-4 * r);
+      const double scale = physis::geometry::norm(B.at({year, x}).value) / r;
+      div = std::max(div, std::fabs(pf::divergence(D.value)) / scale);
+      cur = std::max(cur, physis::geometry::norm(pf::curl(D.value)) / scale);
+    }
+    s.check("field: no divergence, by differences of step 10⁻⁴ r (20 points 10 to 800 km up, of |B|/r; 3·10⁻⁷ expected)", div, 1e-6);
+    s.check("field: nor curl", cur, 1e-6);
+    // Continued outward: the same field within the base, and beyond it the core's, noted.
+    const WmmField core(std::make_shared<const Coefficients>(c), [](double year) { return year; }, WmmField::Extent::continued);
+    const auto in = core.at({2027, wgs84().cartesian(Geodetic{20 * deg, 30 * deg, 400e3})}), in_model = B.at({2027, wgs84().cartesian(Geodetic{20 * deg, 30 * deg, 400e3})});
+    const physis::geometry::Vec3 far_x = wgs84().cartesian(Geodetic{20 * deg, 30 * deg, 2 * 6371.2e3});
+    const auto far = core.at({2027, far_x}), far_model = B.at({2027, far_x});
+    s.require("field continued outward: named apart; within 850 km the model's own value, without a note",
+              pf::described(core).name == "earth.magnetic.core" && in.ok() && in.value == in_model.value && in.note.empty());
+    s.require("field continued outward: two Earth radii up, where the model refuses, the core's field, with the note",
+              !far_model.ok() && far.ok() && far.note == "above 850 km: the core's field continued outward, without the magnetosphere's currents" &&
+                  core.at({2031, far_x}).reason == "outside the model's five years");
+    double div_far = 0, cur_far = 0;
+    for (int i = 0; i < 20; i++) {
+      const physis::geometry::Vec3 x = wgs84().cartesian(Geodetic{std::asin(rnd.uniform(-0.98, 0.98)), rnd.uniform(-pi, pi), rnd.uniform(6371.2e3, 3 * 6371.2e3)});
+      const double r = physis::geometry::norm(x);
+      const auto D = pf::central_differences(core, {2027.5, x}, 1e-4 * r);
+      const double scale = physis::geometry::norm(core.at({2027.5, x}).value) / r;
+      div_far = std::max(div_far, std::fabs(pf::divergence(D.value)) / scale);
+      cur_far = std::max(cur_far, physis::geometry::norm(pf::curl(D.value)) / scale);
+    }
+    s.check("field continued outward: no divergence 1 to 3 Earth radii up (of |B|/r)", div_far, 1e-6);
+    s.check("field continued outward: nor curl", cur_far, 1e-6);
   }
   return s.done();
 }

@@ -245,7 +245,7 @@ inline State state(double Z, double H, int b) {
 }
 }  // namespace detail
 
-// The air at a geometric height Z (m), from Z(−5 km′) = −5 003.9 m to 86 km; none outside.
+// The air at a geometric height Z (m), from Z(−5 km′) = r₀H/(r₀ − H) = −4 996.1 m to 86 km; none outside.
 inline std::optional<State> at_geometric_height(double geometric_height_m) {
   const double Z = geometric_height_m;
   if (!(Z <= us1976::top_geometric_m && Z > -us1976::r0_m)) return std::nullopt;

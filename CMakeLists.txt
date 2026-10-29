@@ -19,6 +19,7 @@ option(SCIENCE_CHECKS "Build the checks of every library" ON)
 set(CALX_CHECKS ${SCIENCE_CHECKS})
 set(MORPHE_CHECKS ${SCIENCE_CHECKS})
 set(PHYSIS_CHECKS ${SCIENCE_CHECKS})
+set(TYCHE_CHECKS ${SCIENCE_CHECKS})
 set(NEUROSCIENCE_CHECKS ${SCIENCE_CHECKS})
 set(METROLOGY_CHECKS ${SCIENCE_CHECKS})
 set(GEODESY_CHECKS ${SCIENCE_CHECKS})
@@ -35,10 +36,11 @@ if(SCIENCE_CHECKS)
   enable_testing()
 endif()
 
-# The foundations: calx and morphe stand alone; physis uses both.
+# The foundations: calx and morphe stand alone; physis uses both; tyche (chance and inference) uses the three.
 add_subdirectory(foundations/calx)
 add_subdirectory(foundations/morphe)
 add_subdirectory(foundations/physis)
+add_subdirectory(foundations/tyche)
 
 # The domains with C++, in the order of the domains.
 if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/domains/neuroscience/CMakeLists.txt)
@@ -47,6 +49,7 @@ endif()
 add_subdirectory(domains/metrology)
 add_subdirectory(domains/history)
 add_subdirectory(domains/economics)
+add_subdirectory(domains/robotics)
 add_subdirectory(domains/genomics)
 add_subdirectory(domains/geodesy)
 add_subdirectory(domains/evolution)

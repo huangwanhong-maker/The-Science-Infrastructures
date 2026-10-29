@@ -10,3 +10,6 @@
 [submodule "neuroscience"]
 	path = domains/neuroscience
 	url = https://github.com/huangwanhong-maker/neuroscience.git
+[submodule "tyche"]
+	path = foundations/tyche
+	url = https://github.com/huangwanhong-maker/tyche.git

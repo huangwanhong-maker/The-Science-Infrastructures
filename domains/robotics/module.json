@@ -1,0 +1,10 @@
+{
+  "name": "robotics",
+  "kind": "field",
+  "status": "draft",
+  "depends": [],
+  "foundations": [
+    "calx",
+    "physis"
+  ]
+}

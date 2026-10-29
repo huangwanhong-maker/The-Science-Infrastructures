@@ -9,3 +9,8 @@ export * from './isosurface.js'; // a surface at a level of a volume, by surface
 export * from './complex.js';    // cell complexes: realised in space, unfolded into nets, as Hasse diagrams; words and facets read
 export * from './stars.js';   // the colour of a star from its colour index
 export * as globe from './globe/index.js'; // virtual globes: tiles, figures, terrain, level of detail, imagery, controls, a three.js renderer
+// The scene model, the styles and the renderers (ADR 0005, 0053), each under its name.
+export * as scene from '../scene/index.js';         // samplings, a field's answers, scales, visual expressions and their rules, legends, volumes
+export * as styles from '../styles/index.js';       // colour in OKLab, the colour maps, colour-vision deficiencies
+export * as renderers from '../renderers/index.js'; // a renderer's arithmetic: colouring, drapes, coloured curves
+export { fieldMarks, canvasOf } from '../renderers/three/index.js'; // the marks in three.js, which is passed in

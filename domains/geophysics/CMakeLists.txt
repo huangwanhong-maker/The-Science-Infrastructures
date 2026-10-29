@@ -1,12 +1,13 @@
 # The geophysics domain's C++: the geomagnetic field (geomagnetism: the World Magnetic Model 2025,
 # its elements and secular variation at a geodetic place, the field on the Earth-fixed axes, the
-# centred dipole and its L, the model's validity and error model). Header-only; each module a target
+# centred dipole and its L, the model's validity and error model, the model as a field). Header-only; each module a target
 # geophysics::<module>. The domain's plates, mechanisms, crust and aftershocks are still JavaScript
 # (js/). The checks read WMM2025's coefficients from the data library's cache (noaa-wmm/WMM.COF, or
 # under SCIENCE_CACHE when set) and skip them, saying so, when they are missing.
 #
 # The domain uses geodesy (the figure of the Earth: WGS 84, geodetic coordinates, local frames),
-# metrology (the calendar, for decimal years), physis (vectors and rotations, physis::geometry) and
+# metrology (the calendar, for decimal years), physis (vectors and rotations, physis::geometry; fields,
+# physis::fields) and
 # calx (special functions, random streams and the report of its checks). Inside The Science
 # Infrastructures they are the sibling foundations and domains, added here when no larger project
 # has added them.
@@ -56,12 +57,13 @@ if(GEOPHYSICS_CHECKS)
 endif()
 
 # geomagnetism: the World Magnetic Model (WMM2025): coefficients, the field and its secular variation,
-# the centred dipole and L, validity and the error model (the Schmidt functions are calx's).
+# the centred dipole and L, validity and the error model (the Schmidt functions are calx's); and the
+# model as a field (field.hpp).
 add_library(geophysics_geomagnetism INTERFACE)
 add_library(geophysics::geomagnetism ALIAS geophysics_geomagnetism)
 target_include_directories(geophysics_geomagnetism INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/geomagnetism/include)
 target_compile_features(geophysics_geomagnetism INTERFACE cxx_std_20)
-target_link_libraries(geophysics_geomagnetism INTERFACE geodesy::figure metrology::time physis::geometry calx::special_functions)
+target_link_libraries(geophysics_geomagnetism INTERFACE geodesy::figure metrology::time physis::geometry physis::fields calx::special_functions)
 
 if(GEOPHYSICS_CHECKS)
   calx_add_check(check_geophysics_wmm SOURCES geomagnetism/tests/check_wmm.cpp LIBRARIES geophysics::geomagnetism calx::random)

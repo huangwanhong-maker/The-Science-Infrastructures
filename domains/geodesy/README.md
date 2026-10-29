@@ -11,14 +11,14 @@
 | `projection` | Map projections and grids: the transverse Mercator, UTM and UPS, MGRS | draft (C++: Krüger's series to n⁶ after Karney 2011; UTM's zones with the Norway and Svalbard exceptions, UPS, MGRS with its polar lettering; held to PROJ to 5 nm and to GEOTRANS's references exactly) |
 | `geoid` | The geoid's undulation and heights above mean sea level | draft (C++: EGM96's 15′ grid, bilinear or cubic; bilinear held to PROJ's grid to its 3 mm quantum) |
 | `directions` | Azimuths in the local horizon, the points of the compass, and their means | draft (JavaScript: `compass.js`) |
-| `gravity` | The normal gravity field: the level ellipsoid of WGS 84 and GRS 80 (or any four defining constants, with f or J₂) and its derived constants (b, E, m, q₀, U₀, γₑ, γₚ, k, f*, J₂ to J₈, mean gravity); Somigliana's formula; the exact closed field at any height in ellipsoidal-harmonic coordinates, with its vector in Earth-fixed axes and the local frame; the second-order series in height | draft (C++: `gravity/normal.hpp`, target `geodesy::gravity`; every derived constant NGA and Moritz print, to their last digit; boule's field to 100 km) |
+| `gravity` | The normal gravity field: the level ellipsoid of WGS 84 and GRS 80 (or any four defining constants, with f or J₂) and its derived constants (b, E, m, q₀, U₀, γₑ, γₚ, k, f*, J₂ to J₈, mean gravity); Somigliana's formula; the exact closed field at any height in ellipsoidal-harmonic coordinates, with its vector in Earth-fixed axes and the local frame; the second-order series in height; normal gravity as one of physis's fields (`NormalGravityField`, `gravity/field.hpp`: on the ITRS axes, its continuation to 11 km below the ellipsoid noted, its divergence $2\omega^2$; [ADR 0053](../../development/decisions/0053-fields-and-their-visual-expression.md)) | draft (C++: `gravity/normal.hpp`, `gravity/field.hpp`, target `geodesy::gravity`; every derived constant NGA and Moritz print, to their last digit; boule's field to 100 km) |
 | `rotation` | The rotation of the Earth | planned |
 | `reference_systems` | Coordinate reference systems, ITRF and its realisations | planned |
 
 ## 2. Dependencies
 
 - **Domains:** metrology, for time scales, frames and Earth orientation.
-- **Foundations:** physis (`geometry`: rotations and motions; `gravitation` later); calx (`quadrature`, for the mean of normal gravity; the checks' verification).
+- **Foundations:** physis (`geometry`: rotations and motions; `fields`, for normal gravity as a field; `gravitation` later); calx (`quadrature`, for the mean of normal gravity; the checks' verification).
 
 ## 3. Code
 

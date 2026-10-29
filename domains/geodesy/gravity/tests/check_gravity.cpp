@@ -19,8 +19,11 @@
 #include <tuple>
 #include <vector>
 
+#include <calx/random/stream.hpp>
 #include <calx/verification/check.hpp>
+#include <geodesy/gravity/field.hpp>
 #include <geodesy/gravity/normal.hpp>
+#include <physis/fields/analytic.hpp>
 
 using namespace geodesy::gravity;
 using calx::verification::relative;
@@ -247,6 +250,44 @@ int main() {
     // 6 gamma d^2/a^2 (3.6e-7 m s-2), to the O(f) the series neglects.
     const double second = above.down_m_s2 - 2 * on.down_m_s2 + below.down_m_s2, predicted = 6 * on.down_m_s2 * 500.0 * 500.0 / (wgs84.a() * wgs84.a());
     s.check("below the ellipsoid the field continues it smoothly (second difference over +-500 m against 6 gamma d^2/a^2)", second - predicted, 1e-8, "m/s2");
+  }
+
+  // ---- normal gravity as a field (physis fields) -----------------------------------------------------------------------
+  {
+    namespace pf = physis::fields;
+    const NormalGravityField g(wgs84);
+    const pf::Descriptor d = pf::described(g);
+    s.require("field: gamma on the Earth-fixed axes, a vector in m/s2, analytic, of the model, static",
+              d.name == "earth.gravity.normal" && d.frame == "ITRS" && d.time == "none" && d.fibre.dimension == physis::units::dim::acceleration &&
+                  d.representation.kind == pf::RepresentationKind::analytic && d.provenance == pf::Provenance::model);
+    // The field at a point is the closed field at its geodetic place, found again on the ellipsoid.
+    double same = 0;
+    for (double lat = -88; lat <= 88; lat += 8)
+      for (double h : {0.0, 5000.0, 100000.0, 1e6}) {
+        const Geodetic p{lat * deg, 0.7 * lat * deg, h};
+        const Vec3 a = g.at({0, wgs84.figure().cartesian(p)}).value, b = wgs84.at(p).ecef_m_s2;
+        for (int i = 0; i < 3; i++) same = std::max(same, std::fabs(a[i] - b[i]));
+      }
+    s.check("field: at 92 places to 1000 km, the closed field at the place", same, 1e-12, "m/s2");
+    const auto below = g.at({0, wgs84.figure().cartesian({0.5, 1.0, -5000.0})}), deep = g.at({0, wgs84.figure().cartesian({0.5, 1.0, -12000.0})});
+    s.require("field: 5 km below the ellipsoid, the continuation, with the note; 12 km below, outside, with the reason",
+              below.ok() && below.note == "below the ellipsoid: its analytic continuation, as free-air reduction takes it" &&
+                  deep.quality == pf::Quality::outside && deep.reason == "more than 11 km below the ellipsoid, beneath the field's continuation");
+    // A gradient has no curl; outside the masses its divergence is the centrifugal potential's
+    // Laplacian, 2 omega^2 = 1.0635e-8 s-2. By central differences of step h = 1e-4 r each derivative errs
+    // by h^2/6 times the third derivative, 24 GM/r^5 for GM/r^2: the divergence by about
+    // 12 (h/r)^2 gamma/r, 2e-13 s-2 at the ground.
+    calx::random::Stream rnd(20261029, 5, 0, 0);
+    double div = 0, cur = 0;
+    for (int i = 0; i < 20; i++) {
+      const Vec3 x = wgs84.figure().cartesian({std::asin(rnd.uniform(-0.99, 0.99)), rnd.uniform(-std::numbers::pi, std::numbers::pi), rnd.uniform(0, 1e6)});
+      const double r = std::hypot(x[0], x[1], x[2]);
+      const auto D = pf::central_differences(g, {0, x}, 1e-4 * r);
+      div = std::max(div, std::fabs(pf::divergence(D.value) - 2 * wgs84.omega() * wgs84.omega()));
+      cur = std::max(cur, std::hypot(pf::curl(D.value)[0], pf::curl(D.value)[1], pf::curl(D.value)[2]));
+    }
+    s.check("field: its divergence is 2 omega^2, by differences of step 1e-4 r (20 points to 1000 km)", div, 1e-12, "1/s2");
+    s.check("field: its curl vanishes", cur, 1e-12, "1/s2");
   }
   return s.done();
 }

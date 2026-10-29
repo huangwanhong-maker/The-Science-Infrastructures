@@ -15,7 +15,7 @@ The methods are the foundations': potential fields, their spectra and random fie
 
 | Module | Scope | Status |
 |---|---|---|
-| `magnetism` | The crustal field of a body without a dynamo: T2015_449 read, the law of its spectrum on degrees 30–250 and its effective depth, the unresolved part drawn from a seed, the reading on low ground; the interplanetary field carried from L1 to a body near the Earth, the magnetotail, GSE's axes ([`magnetism/`](magnetism/include/planetary_science/magnetism/)) | draft |
+| `magnetism` | The crustal field of a body without a dynamo: T2015_449 read, the law of its spectrum on degrees 30–250 and its effective depth, the unresolved part drawn from a seed, the reading on low ground; the interplanetary field carried from L1 to a body near the Earth, the magnetotail, GSE's axes; the Moon's crust as one of physis's fields (`LunarCrustalField`, `field.hpp`: the model or its unresolved part, low ground read at the sphere above with a note, the expansion shared; [ADR 0053](../../development/decisions/0053-fields-and-their-visual-expression.md)) ([`magnetism/`](magnetism/include/planetary_science/magnetism/)) | draft |
 | `gravity` | The bodies' gravity fields (GRAIL's GRGM1200A for the Moon) on physis's expansions, with gravitation's normalisation | planned |
 | `surfaces` | The bodies' figures and terrain beyond the data library's tiles: craters, slopes, illumination | planned |
 | `interiors` | Density, pressure and temperature with depth; tides of solid bodies | planned |
@@ -29,7 +29,7 @@ The methods are the foundations': potential fields, their spectra and random fie
 
 ## 4. Dependencies
 
-It may use astronomy, geophysics and meteorology (`module.json`). `magnetism` uses only the foundations: physis `analysis` and calx.
+It may use astronomy, geophysics and meteorology (`module.json`). `magnetism` uses only the foundations: physis `analysis` and `fields`, and calx.
 
 ## 5. Checks
 
@@ -41,7 +41,8 @@ It may use astronomy, geophysics and meteorology (`module.json`). `magnetism` us
 - low ground, on a dipole;
 - T2015_449 at five mounts on and above the Moon against pyshtools (`tests/fixtures/lunar-field.txt`, made by `tests/make_fixtures.py`);
 - the law: bounded, and fitted to its spectrum;
-- the unresolved part's power above degree 449 against the law, and its determinism.
+- the unresolved part's power above degree 449 against the law, and its determinism;
+- the crust as a field: pyshtools's mounts on the frame's axes, low ground read at the sphere above with its note, the base's bounds with their reasons, a sphere read by rows against point by point, and the composite of the model and its unresolved part, synthetic, with its parts.
 
 The model comes through the data library (`python data/acquisition/fetch.py moon-magnetic-t2015`); without it those checks are skipped, and say so.
 

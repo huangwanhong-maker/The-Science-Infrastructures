@@ -64,6 +64,8 @@ Decisions that concern only one library are recorded in that library's own `deve
 | [0050](0050-instruments-and-their-acquisition.md) | Instruments and their acquisition: addresses of events, the models instruments read, and scheduling with deadlines | Accepted, provisionally |
 | [0051](0051-the-chemistry-workbench.md) | The Chemistry Workbench, and the manuscript on chemical structure generation made exact | Accepted, provisionally |
 | [0052](0052-fields-known-in-part.md) | Fields known in part: potential fields, the Moon's magnetism, the planetary-science domain, the kernel asked, and instruments declared | Accepted, provisionally |
+| [0053](0053-fields-and-their-visual-expression.md) | Fields and their visual expression: one model of fields, their laws apart, and the scene model | Accepted, provisionally |
+| [0054](0054-bodies-dynamics-and-knowledge.md) | Bodies, their dynamics, and what is known: discrete mechanics, the robotics domain, and a mission that learns | Accepted, provisionally |
 
 ## 2. Template
 

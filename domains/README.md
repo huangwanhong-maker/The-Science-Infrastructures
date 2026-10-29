@@ -18,10 +18,10 @@ Let D be the set of domains, and let d → e mean that domain d may depend on do
 - **Works compose domains.** An application or a study uses a set S of domains, and so needs the order ideal ↓S = ⋃_{d∈S} ↓d. Two works may share domains freely: the domains are covered by the works, not partitioned among them.
 
 ```
-height 0   metrology · neuroscience · history · genomics · economics
+height 0   metrology · neuroscience · history · genomics · economics · robotics
 height 1   geodesy · evolution
 height 2   astronomy · geophysics · geography · oceanography · meteorology
-height 3   tides · navigation · air-sea                                  (bridges)
+height 3   tides · navigation · air-sea · planetary-science              (bridges)
 height 4   climate                                                       (bridge)
 ```
 
@@ -36,6 +36,7 @@ height 4   climate                                                       (bridge
 | [history](history/) | field | Records of histories by a codebook; chronology and calendars; the history complex, its topology and its signed ties as a ℤ₂ field, their spin foam computed exactly on physis; the history as a field theory (ADR 0041, 0042) | — | draft |
 | [genomics](genomics/) | field | Genomes and their sequences: alphabets, formats and genetic codes; alignment as a semiring sum and its fast schedules; indexes and sketches; k-mers and assembly; mapping and variants; HMMs and annotation; multiple alignment; expression; simulation with its truth (ADR 0043) | — | draft |
 | [economics](economics/) | field | Value carried between positions and through time: transfer networks, their loop deficits and prices; the circulation of flows on a network with faces; production as a circular flow; the spacetime complex of a record of transactions; places and the faces of a map (ADR 0044) | — | draft |
+| [robotics](robotics/) | field | Systems that sense and act: vehicles on a sphere at two fidelities and the translation between them, following waypoints, surveys (a lawnmower, the least known place next), sensors' mounts and noise (ADR 0054) | — | draft |
 | [geodesy](geodesy/) | field | The figure of the Earth, its gravity field and rotation, reference systems; places, distances, directions | metrology | draft |
 | [evolution](evolution/) | field | Phylogeny (distances, trees, likelihood, parsimony, the bootstrap, dating), population genetics (the coalescent, Wright–Fisher, diversity, linkage, structure), selection (dN/dS, McDonald–Kreitman) (ADR 0043) | genomics | draft |
 | [astronomy](astronomy/) | field | Positional astronomy, ephemerides, the rotation of the bodies, galaxies; later astrophysics and cosmology | metrology, geodesy | draft |
@@ -49,7 +50,7 @@ height 4   climate                                                       (bridge
 | [air-sea](air-sea/) | bridge | Exchange of momentum, heat, water and gases at the sea surface; wind waves | meteorology, oceanography | planned |
 | [climate](climate/) | bridge | The coupled system, energy balance, climatic zones, variability, orbital forcing | meteorology, oceanography, geography, astronomy, air-sea | draft |
 
-Future domains join the same order, each beside or above the domains it stands on. The root README lists all fifty-five, with what each would stand on and its priority ([§4.4](../README.md#44-the-domains)), and the disciplines held as modules of them ([§4.5](../README.md#45-disciplines-held-as-modules)). Neuroscience, the first beyond the Earth and the sky, stands beside metrology; history, the first of the humanities, beside both ([ADR 0041](../development/decisions/0041-the-history-domain.md)); genomics, the first of the life sciences' molecular half, beside them, and evolution above it ([ADR 0043](../development/decisions/0043-the-genome-infrastructure.md)).
+Future domains join the same order, each beside or above the domains it stands on. The root README lists all fifty-five, with what each would stand on and its priority ([§4.4](../README.md#44-the-domains)), and the disciplines held as modules of them ([§4.5](../README.md#45-disciplines-held-as-modules)). Neuroscience, the first beyond the Earth and the sky, stands beside metrology; history, the first of the humanities, beside both ([ADR 0041](../development/decisions/0041-the-history-domain.md)); genomics, the first of the life sciences' molecular half, beside them, and evolution above it ([ADR 0043](../development/decisions/0043-the-genome-infrastructure.md)); robotics, the first of engineering, beside them on the foundations alone until mechanical and electrical engineering are founded ([ADR 0054](../development/decisions/0054-bodies-dynamics-and-knowledge.md)).
 
 ## 4. The Contract of a Domain
 

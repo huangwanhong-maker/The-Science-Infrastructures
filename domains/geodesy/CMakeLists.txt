@@ -1,14 +1,14 @@
 # The geodesy domain's C++: the figure of the Earth (ellipsoids, geodetic and Earth-centred
 # coordinates, local level frames), geodesics (Karney 2013), map projections and grids (the
 # transverse Mercator, UTM, UPS, MGRS), the geoid (EGM96's grid, heights above mean sea level) and normal
-# gravity (the level ellipsoid of WGS 84 and GRS 80, its field at any height). Header-only; each module a
-# target geodesy::<module>. The geoid's checks read the data library's grid from the cache
-# (products/geoid/egm96-15.pgm) and skip it when it is missing.
+# gravity (the level ellipsoid of WGS 84 and GRS 80, its field at any height, and that field as one of
+# physis's fields). Header-only; each module a target geodesy::<module>. The geoid's checks read the data
+# library's grid from the cache (products/geoid/egm96-15.pgm) and skip it when it is missing.
 #
-# The domain uses physis (rotations and rigid motions, physis::geometry) and calx (quadrature, and the
-# report of its checks); it may use metrology, beneath it in the order of the domains. Inside The Science
-# Infrastructures they are the sibling foundations and domains, added here when no larger project
-# has added them.
+# The domain uses physis (rotations and rigid motions, physis::geometry; fields, physis::fields) and calx
+# (quadrature, and the report of its checks); it may use metrology, beneath it in the order of the
+# domains. Inside The Science Infrastructures they are the sibling foundations and domains, added here
+# when no larger project has added them.
 
 cmake_minimum_required(VERSION 3.20)
 project(geodesy LANGUAGES CXX)
@@ -79,15 +79,16 @@ add_library(geodesy::geoid ALIAS geodesy_geoid)
 target_include_directories(geodesy_geoid INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/geoid/include)
 target_compile_features(geodesy_geoid INTERFACE cxx_std_20)
 
-# gravity: the level ellipsoid (WGS 84, GRS 80), its derived constants and normal gravity at any height.
+# gravity: the level ellipsoid (WGS 84, GRS 80), its derived constants and normal gravity at any height,
+# and normal gravity as a field (field.hpp).
 add_library(geodesy_gravity INTERFACE)
 add_library(geodesy::gravity ALIAS geodesy_gravity)
 target_include_directories(geodesy_gravity INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/gravity/include)
 target_compile_features(geodesy_gravity INTERFACE cxx_std_20)
-target_link_libraries(geodesy_gravity INTERFACE geodesy::figure calx::quadrature)
+target_link_libraries(geodesy_gravity INTERFACE geodesy::figure physis::fields calx::quadrature)
 
 if(GEODESY_CHECKS)
-  calx_add_check(check_geodesy_gravity SOURCES gravity/tests/check_gravity.cpp LIBRARIES geodesy::gravity)
+  calx_add_check(check_geodesy_gravity SOURCES gravity/tests/check_gravity.cpp LIBRARIES geodesy::gravity calx::random)
   target_compile_definitions(check_geodesy_gravity PRIVATE GEODESY_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures")
   calx_add_check(check_geodesy_geodesic SOURCES geodesic/tests/check_geodesic.cpp LIBRARIES geodesy::geodesic)
   target_compile_definitions(check_geodesy_geodesic PRIVATE GEODESY_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures")
