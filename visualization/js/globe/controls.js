@@ -121,8 +121,15 @@ export class GlobeControls {
     const to = { ...from, ...target };
     const a = cartesian(this.fig, from.lon, from.lat, 0), b = cartesian(this.fig, to.lon, to.lat, 0);
     const ua = unit(a), ub = unit(b);
-    const angle = Math.acos(clamp(ua[0] * ub[0] + ua[1] * ub[1] + ua[2] * ub[2], -1, 1));
-    const axis = angle > 1e-9 ? unit([ua[1] * ub[2] - ua[2] * ub[1], ua[2] * ub[0] - ua[0] * ub[2], ua[0] * ub[1] - ua[1] * ub[0]]) : [0, 0, 1];
+    // The arc between them as atan2(|a × b|, a · b), exact for small arcs; a flight to where one is
+    // already looking has no axis (acos of a rounded dot product gave an arc of 1.5e-8 rad about the
+    // normalised zero cross product: a NaN camera).
+    const c = [ua[1] * ub[2] - ua[2] * ub[1], ua[2] * ub[0] - ua[0] * ub[2], ua[0] * ub[1] - ua[1] * ub[0]];
+    const sinAngle = Math.hypot(c[0], c[1], c[2]), cosAngle = ua[0] * ub[0] + ua[1] * ub[1] + ua[2] * ub[2];
+    const angle = Math.atan2(sinAngle, cosAngle);
+    const axis = sinAngle > 1e-15 ? unit(c)
+      : cosAngle < 0 ? unit(Math.abs(ua[2]) < 0.9 ? [-ua[1], ua[0], 0] : [0, -ua[2], ua[1]])   // antipodes: any axis across
+        : [0, 0, 1];
     // Rise by the ground covered, so that the flight sees where it goes.
     const peak = Math.max(from.range, to.range, angle * this.fig.a * 1.1);
     let dh = to.heading - from.heading;

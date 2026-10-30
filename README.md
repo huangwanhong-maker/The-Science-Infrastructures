@@ -73,15 +73,15 @@ An integrative infrastructure for learning, using and researching all domains of
 
 <p align="center">
 <a href="docs/gallery.md"><img src="assets/gallery/cosmo-10-field-lines.jpg" width="32%" alt="The Earth's magnetic field lines coloured by the field's strength, beside the world's catalogue of fields, in Cosmopoiesis"></a>
-<a href="docs/gallery.md"><img src="assets/gallery/cosmo-11-moon-field.jpg" width="32%" alt="The Moon's crustal magnetic field over its near side, with the magnetometer at Reiner Gamma, in Cosmopoiesis"></a>
-<a href="docs/gallery.md"><img src="assets/gallery/cosmo-12-field-cube.jpg" width="32%" alt="A cube above Reiner Gamma filled with the magnetic field's strength, placed in the world, in Cosmopoiesis"></a>
+<a href="docs/gallery.md"><img src="assets/gallery/cosmo-20-beneath-mantle.jpg" width="32%" alt="A section through Japan to 800 km at true scale, the earthquakes tracing the sinking plate, beside the speeds and density to the centre of the Earth, in Cosmopoiesis"></a>
+<a href="docs/gallery.md"><img src="assets/gallery/cosmo-18-terrain-provenance.jpg" width="32%" alt="The Moon's ground near Hadley Rille coloured by where its heights come from, in Cosmopoiesis"></a>
 </p>
 <p align="center">
 <a href="docs/gallery.md"><img src="assets/gallery/cosmo-06-tycho.jpg" width="32%" alt="The crater Tycho by day, its address answered in every frame and the observer's environment on the Moon, in Cosmopoiesis"></a>
-<a href="docs/gallery.md"><img src="assets/gallery/cosmo-07-address-from-fuji.jpg" width="32%" alt="An address stepped from the summit of Fuji, answered in UTM, MGRS and the celestial frames, the camera looking back at the mountain, in Cosmopoiesis"></a>
-<a href="docs/gallery.md"><img src="assets/gallery/cosmo-08-loops-and-schedule.jpg" width="32%" alt="The holonomies of the catalogue's loops and a simulation of the scheduling policies, in Cosmopoiesis"></a>
+<a href="docs/gallery.md"><img src="assets/gallery/cosmo-12-field-cube.jpg" width="32%" alt="A cube above Reiner Gamma filled with the magnetic field's strength, placed in the world, in Cosmopoiesis"></a>
+<a href="docs/gallery.md"><img src="assets/gallery/cosmo-22-sea-temperature.jpg" width="32%" alt="The sea's temperature around Japan, the Kuroshio along the south coast, in Cosmopoiesis"></a>
 </p>
-<p align="center"><i>Cosmopoiesis: the Solar System as one world, from a crater's floor to the orbit of Pluto, on a console drawn as a precision instrument; its fields, the Earth's magnetic field and the Moon's crust, drawn in the world and read over a cube about any point; any point written in one line and answered in every frame; the catalogue's loops measuring how far its standards disagree; and instruments, virtual and physical, read on a schedule with deadlines, each reading marked by whether it was observed, modelled or assimilated.</i></p>
+<p align="center"><i>Cosmopoiesis: the Solar System as one world, from a crater's floor to the orbit of Pluto, on a console drawn as a precision instrument; its fields, the Earth's magnetic field, the Moon's crust and the Earth's interior, drawn in the world and read over a cube about any point; the ground saying where each of its heights comes from, the sea floor and the sea's temperature; the Earth beneath any place, to its centre, with the earthquakes of the sinking plates; any point written in one line and answered in every frame; and instruments, virtual and physical, each reading marked by whether it was observed, modelled or assimilated.</i></p>
 
 ## Quick Start
 

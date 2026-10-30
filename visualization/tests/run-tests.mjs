@@ -703,4 +703,26 @@ const { check, assert, done } = suite();
   assert('renderers: the three.js marks load without three.js, which is passed in', typeof fieldMarks === 'function');
 }
 
+// ---- the globe's controls: flights ----------------------------------------------------------------------
+{
+  const element = { addEventListener() {}, setPointerCapture() {}, releasePointerCapture() {} };
+  const fly = (from, to) => {
+    const c = new globe.GlobeControls(element, { fig: globe.figure('moon'), rayAt: () => null });
+    Object.assign(c.view, from);
+    c.flyTo(to, 1);
+    const start = c.flight.start, views = [];
+    for (const s of [0, 0.25, 0.5, 0.75, 1]) { c.tick(start + s * 1000); views.push({ ...c.view }); }
+    return views;
+  };
+  const finite = (views) => views.every((v) => Object.values(v).every(Number.isFinite));
+  const here = { lon: 0.06335545184739416, lat: 0.4560545335461183, height: 0, range: 55000, heading: 0.26, tilt: 1.26 };
+  const same = fly(here, { lon: here.lon, lat: here.lat, range: 60000, tilt: 0.61, heading: 0 });
+  assert('controls: a flight to where one already looks stays finite and ends there (the arc as atan2, no axis for no arc)',
+    finite(same) && Math.abs(same[4].lon - here.lon) < 1e-12 && Math.abs(same[4].lat - here.lat) < 1e-12 && Math.abs(same[4].range - 60000) < 1e-6, JSON.stringify(same[4]));
+  const near = fly(here, { lon: here.lon + 7e-12, lat: here.lat });
+  assert('controls: and to a place 7e-12 rad away', finite(near) && Math.abs(near[4].lon - here.lon - 7e-12) < 1e-13);
+  const far = fly({ ...here, lon: 0, lat: 0 }, { lon: Math.PI, lat: 0 });
+  assert('controls: a flight to the antipodes turns about an axis across, and arrives', finite(far) && Math.abs(Math.abs(far[4].lon) - Math.PI) < 1e-9 && Math.abs(far[4].lat) < 1e-9, JSON.stringify(far[4]));
+}
+
 done();
