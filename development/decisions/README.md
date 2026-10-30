@@ -36,7 +36,7 @@ Decisions that concern only one library are recorded in that library's own `deve
 | [0021](0021-the-sky-from-a-place.md) | The sky from a place: choosing where to stand, and links between the atlases | Accepted, provisionally |
 | [0022](0022-ai-forecast-cyclones-and-disasters.md) | An AI weather model run in the laboratory, tropical cyclones tracked, and disaster alerts | Accepted, provisionally |
 | [0023](0023-ocean-column-and-data-on-demand.md) | The ocean beneath a place, and data requested on demand | Accepted, provisionally |
-| [0024](0024-the-solid-earth.md) | The solid Earth: plates, GPS, earthquake mechanisms, the crust and sections | Accepted, provisionally; geophysics a domain by 0026 |
+| [0024](0024-the-solid-earth.md) | The solid Earth: plates, GPS, earthquake mechanisms, the crust and sections | Accepted, provisionally; geophysics a domain by 0026; its crust and sections in C++, with PREM beneath, by 0055 |
 | [0025](0025-an-umbrella-of-laboratories.md) | An umbrella of laboratories for all the sciences (the umbrella's 0001) | Superseded in part by 0026 |
 | [0026](0026-domains-as-libraries.md) | Domains as libraries, and works that compose them | Accepted |
 | [0027](0027-earth-atlas-plugins.md) | Plug-ins of the Earth Atlas: algorithms loaded on request, shown through the layers | Accepted, provisionally |
@@ -66,6 +66,7 @@ Decisions that concern only one library are recorded in that library's own `deve
 | [0052](0052-fields-known-in-part.md) | Fields known in part: potential fields, the Moon's magnetism, the planetary-science domain, the kernel asked, and instruments declared | Accepted, provisionally |
 | [0053](0053-fields-and-their-visual-expression.md) | Fields and their visual expression: one model of fields, their laws apart, and the scene model | Accepted, provisionally |
 | [0054](0054-bodies-dynamics-and-knowledge.md) | Bodies, their dynamics, and what is known: discrete mechanics, the robotics domain, and a mission that learns | Accepted, provisionally |
+| [0055](0055-the-earth-beneath.md) | The Earth beneath: CRUST1.0 over PREM, sections along geodesics, and the world below the ground and the sea | Accepted, provisionally |
 
 ## 2. Template
 

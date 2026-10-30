@@ -18,6 +18,7 @@
   "citation": "Laske, G., Masters, G., Ma, Z. and Pasyanos, M. (2013), Update on CRUST1.0: a 1-degree global model of Earth's crust, Geophys. Res. Abstracts 15, EGU2013-2658.",
   "used_by": [
     "data/products/crust_model.py",
-    "applications/earth-atlas"
+    "applications/earth-atlas",
+    "applications/cosmopoiesis-lab"
   ]
 }
