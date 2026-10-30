@@ -5,6 +5,7 @@
   "depends": [],
   "foundations": [
     "calx",
-    "physis"
+    "physis",
+    "tyche"
   ]
 }

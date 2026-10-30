@@ -411,7 +411,7 @@ Fifty-five domains, ten of them built. A name links to the domain's directory wh
 | mechanical-engineering | field | — | Machines and mechanisms; flight | 4 |
 | civil-engineering | field | — | Structures, hydraulics, transport | 4 |
 | chemical-engineering | field | chemistry | Processes and reactors at scale | 4 |
-| [robotics](domains/robotics/) | field | the foundations; later mechanical-engineering, electrical-engineering | Systems that sense and act: first vehicles on a sphere at two fidelities, following waypoints, surveys and sensors' mounts | built |
+| [robotics](domains/robotics/) | field | the foundations; later mechanical-engineering, electrical-engineering | Systems that sense and act: first vehicles on a sphere at two fidelities, following waypoints, surveys and sensors' mounts; then a hopping rabbit with joints, its controller and three methods of its motion ([ADR 0058](development/decisions/0058-a-body-with-joints.md)) | built |
 | energy-systems | bridge | meteorology, electrical-engineering, economics | Power from wind and sun, storage, grids | 4 |
 
 ### 4.5 Disciplines Held as Modules

@@ -68,6 +68,8 @@ Decisions that concern only one library are recorded in that library's own `deve
 | [0054](0054-bodies-dynamics-and-knowledge.md) | Bodies, their dynamics, and what is known: discrete mechanics, the robotics domain, and a mission that learns | Accepted, provisionally |
 | [0055](0055-the-earth-beneath.md) | The Earth beneath: CRUST1.0 over PREM, sections along geodesics, and the world below the ground and the sea | Accepted, provisionally |
 | [0057](0057-a-project-of-serendip-commons-society.md) | A project of Serendip Commons Society: stewardship without ownership, and the record of contributors | Accepted |
+| [0058](0058-a-body-with-joints.md) | A body with joints: a rabbit on the Moon, and three methods of one motion | Accepted, provisionally |
+| [0059](0059-robots-in-their-environments.md) | Robots in their environments: what a world presumes of a place, what a body feels there, and the fields at a point | Accepted, provisionally (the rabbit, the fish and the dog written) |
 
 ## 2. Template
 

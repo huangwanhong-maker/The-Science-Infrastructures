@@ -1,6 +1,6 @@
 // Checks of the robotics domain: its C++ (vehicles on a sphere at two fidelities and the translation
-// between them, the waypoint follower, survey planning, sensors on a vehicle), built with CMake and run
-// on calx's verification.
+// between them, the waypoint follower, survey planning, sensors on a vehicle, and the rabbit: a body with
+// joints, its controller and three methods of its motion), built with CMake and run on calx's verification.
 // Run from the repository root:  node domains/robotics/tests/run-tests.mjs
 
 import { dirname, resolve } from 'node:path';

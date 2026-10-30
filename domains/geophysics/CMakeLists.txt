@@ -75,10 +75,20 @@ target_include_directories(geophysics_structure INTERFACE ${CMAKE_CURRENT_SOURCE
 target_compile_features(geophysics_structure INTERFACE cxx_std_20)
 target_link_libraries(geophysics_structure INTERFACE geodesy::geodesic physis::fields calx::optimisation)
 
+# ground: the Earth's ground as a foot meets it; its class presumed from CRUST1.0's layers, each class's contact
+# law presumed and realised for a world's seed, as fields (presumed.hpp, ADR 0059).
+add_library(geophysics_ground INTERFACE)
+add_library(geophysics::ground ALIAS geophysics_ground)
+target_include_directories(geophysics_ground INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/ground/include)
+target_compile_features(geophysics_ground INTERFACE cxx_std_20)
+target_link_libraries(geophysics_ground INTERFACE geophysics::structure physis::analysis physis::fields)
+
 if(GEOPHYSICS_CHECKS)
   calx_add_check(check_geophysics_structure SOURCES structure/tests/check_structure.cpp LIBRARIES geophysics::structure geodesy::gravity)
   target_compile_definitions(check_geophysics_structure PRIVATE GEOPHYSICS_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures"
                              GEOPHYSICS_ROOT="${CMAKE_CURRENT_SOURCE_DIR}")
+  calx_add_check(check_geophysics_ground SOURCES ground/tests/check_ground.cpp LIBRARIES geophysics::ground)
+  target_compile_definitions(check_geophysics_ground PRIVATE GEOPHYSICS_ROOT="${CMAKE_CURRENT_SOURCE_DIR}")
   calx_add_check(check_geophysics_wmm SOURCES geomagnetism/tests/check_wmm.cpp LIBRARIES geophysics::geomagnetism calx::random)
   target_compile_definitions(check_geophysics_wmm PRIVATE GEOPHYSICS_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures"
                              GEOPHYSICS_ROOT="${CMAKE_CURRENT_SOURCE_DIR}")

@@ -3,9 +3,12 @@
 #   vehicles  a vehicle on a sphere at two fidelities, kinematic and dynamic, and the translation between them;
 #   control   following waypoints;
 #   planning  surveys: a lawnmower pattern, rings of candidates, the greedy choice of the next place;
-#   sensing   mounts and white noise.
+#   sensing   mounts and white noise;
+#   legged    a rabbit: a hopping robot's body, motors, tendon and feet in its plane, its controller (standing,
+#             hopping in place and forward, stopping), and its simulation by three methods of one motion (ADR 0058).
 #
-# The domain stands on the foundations alone (module.json): physis (rotations, physis::geometry) and calx
+# The domain stands on the foundations alone (module.json): physis (rotations, physis::geometry; articulated
+# bodies and contact, physis::mechanics) and calx
 # (RATTLE, calx::integrators; counter-based streams, calx::random; the report of its checks). Inside The
 # Science Infrastructures they are the sibling foundations, added here when no larger project has added them.
 
@@ -42,6 +45,9 @@ endif()
 if(NOT TARGET physis::geometry)
   add_subdirectory(${SCIENCE_ROOT}/foundations/physis ${CMAKE_CURRENT_BINARY_DIR}/physis)
 endif()
+if(NOT TARGET tyche::spatial)
+  add_subdirectory(${SCIENCE_ROOT}/foundations/tyche ${CMAKE_CURRENT_BINARY_DIR}/tyche)
+endif()
 if(ROBOTICS_CHECKS)
   enable_testing()
 endif()
@@ -59,9 +65,13 @@ function(robotics_module name)
 endfunction()
 
 robotics_module(vehicles LIBRARIES physis::geometry calx::integrators)
+robotics_module(actuation)
 robotics_module(control LIBRARIES robotics::vehicles)
 robotics_module(planning LIBRARIES robotics::vehicles)
 robotics_module(sensing LIBRARIES robotics::vehicles calx::random)
+robotics_module(legged LIBRARIES robotics::actuation physis::mechanics calx::integrators calx::differentiation calx::linalg calx::random tyche::spatial physis::analysis)
+robotics_module(swimming LIBRARIES robotics::actuation physis::mechanics calx::integrators calx::differentiation calx::linalg)
+robotics_module(quadruped LIBRARIES robotics::actuation robotics::legged physis::mechanics calx::integrators calx::differentiation calx::linalg calx::random)
 if(ROBOTICS_CHECKS)
   target_link_libraries(check_robotics_control PRIVATE robotics::planning)
 endif()

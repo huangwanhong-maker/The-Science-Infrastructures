@@ -1,6 +1,6 @@
 # planetary-science
 
-*Status: draft. Bridge, height 3.* The planets and moons as worlds: their interiors and crusts, their surfaces, their atmospheres, and the fields about them ([ADR 0052](../../development/decisions/0052-fields-known-in-part.md)). Founded at the user's request, earlier than its place in tier 3 of the order (README §4.6), for the Moon's magnetic field in [Cosmopoiesis](../../applications/cosmopoiesis-lab/). Its first module is the Moon's crustal magnetism and the interplanetary field about the Moon. Serves use and research.
+*Status: draft. Bridge, height 3.* The planets and moons as worlds: their interiors and crusts, their surfaces, their atmospheres, and the fields about them ([ADR 0052](../../development/decisions/0052-fields-known-in-part.md)). Founded at the user's request, earlier than its place in tier 3 of the order (README §4.6), for the Moon's magnetic field in [Cosmopoiesis](../../applications/cosmopoiesis-lab/). Its first module is the Moon's crustal magnetism and the interplanetary field about the Moon; its second, the Moon's ground as a robot's foot meets it ([ADR 0059](../../development/decisions/0059-robots-in-their-environments.md)). Serves use and research.
 
 ## 1. Concepts
 
@@ -8,6 +8,8 @@
 - **What a model does not resolve has a law.** The model's spectrum follows $A\,n^\beta\rho^{2n}$ over the degrees it resolves. The power the model lacks below that law, at its own highest degrees and above them, is drawn as a Gaussian field, labelled synthetic ([theory §2](theory/magnetism.md)).
 - **An expansion is not continued downward.** Below its reference sphere, on the low ground of the maria, the model is read at the sphere above the mount ([theory §3](theory/magnetism.md)).
 - **The solar wind brings a field.** The interplanetary field measured at L1 reaches the Moon about an hour later, except inside the Earth's magnetotail ([theory §4](theory/magnetism.md)).
+
+- **Where nothing has measured the ground, its law is presumed.** A foot on regolith meets a friction, a stiffness and a damping no instrument has measured at most places. Each is presumed: a median and a spread, from the regolith's measured angle of internal friction where that exists, assumed and labelled where it does not, varying over a metre. A simulated world stands on a realisation of the presumption, which its robots' feet read and the presumption does not know ([theory](theory/surfaces.md)).
 
 The methods are the foundations': potential fields, their spectra and random fields are physis's `analysis`; the Legendre functions are calx's. This domain names the bodies, the models, their bands and their ground.
 
@@ -17,7 +19,7 @@ The methods are the foundations': potential fields, their spectra and random fie
 |---|---|---|
 | `magnetism` | The crustal field of a body without a dynamo: T2015_449 read, the law of its spectrum on degrees 30–250 and its effective depth, the unresolved part drawn from a seed, the reading on low ground; the interplanetary field carried from L1 to a body near the Earth, the magnetotail, GSE's axes; the Moon's crust as one of physis's fields (`LunarCrustalField`, `field.hpp`: the model or its unresolved part, low ground read at the sphere above with a note, the expansion shared; [ADR 0053](../../development/decisions/0053-fields-and-their-visual-expression.md)) ([`magnetism/`](magnetism/include/planetary_science/magnetism/)) | draft |
 | `gravity` | The bodies' gravity fields (GRAIL's GRGM1200A for the Moon) on physis's expansions, with gravitation's normalisation | planned |
-| `surfaces` | The bodies' figures and terrain beyond the data library's tiles: craters, slopes, illumination | planned |
+| `surfaces` | The ground as a robot's foot meets it: the Moon's regolith, its contact law presumed (friction from the angle of internal friction, stiffness and damping assumed) and realised for a world's seed, as fields (`regolith.hpp`, [theory](theory/surfaces.md), ADR 0059). Planned: the bodies' figures and terrain beyond the data library's tiles, craters, slopes, illumination ([`surfaces/`](surfaces/include/planetary_science/surfaces/)) | draft |
 | `interiors` | Density, pressure and temperature with depth; tides of solid bodies | planned |
 | `atmospheres` | The atmospheres of Mars, Venus, Titan and the giants, on the methods meteorology shares through physis | planned |
 
@@ -29,7 +31,7 @@ The methods are the foundations': potential fields, their spectra and random fie
 
 ## 4. Dependencies
 
-It may use astronomy, geophysics and meteorology (`module.json`). `magnetism` uses only the foundations: physis `analysis` and `fields`, and calx.
+It may use astronomy, geophysics and meteorology (`module.json`). `magnetism` and `surfaces` use only the foundations: physis `analysis` and `fields`, and calx.
 
 ## 5. Checks
 
@@ -44,6 +46,12 @@ It may use astronomy, geophysics and meteorology (`module.json`). `magnetism` us
 - the unresolved part's power above degree 449 against the law, and its determinism;
 - the crust as a field: pyshtools's mounts on the frame's axes, low ground read at the sphere above with its note, the base's bounds with their reasons, a sphere read by rows against point by point, and the composite of the model and its unresolved part, synthetic, with its parts.
 
+And `surfaces/tests/check_surfaces.cpp`:
+
+- the friction's presumed 95 % interval, tan 30° to tan 50°; the median load, the rabbit's contact as built;
+- over 2000 places a kilometre apart, each parameter's z of mean 0 and deviation 1; feet 5 cm apart on nearly the same ground, places 4 m apart on independent ground; a seed fixing the realisation;
+- the ground as fields: presumed (model), realised (synthetic), and refused off the ground with the reason.
+
 The model comes through the data library (`python data/acquisition/fetch.py moon-magnetic-t2015`); without it those checks are skipped, and say so.
 
 ## 6. References
@@ -54,10 +62,12 @@ The model comes through the data library (`python data/acquisition/fetch.py moon
 - Smith, D. E. et al. (2010), Initial observations from the Lunar Orbiter Laser Altimeter (LOLA), *Geophysical Research Letters* 37, L18204.
 - Mailyan, B., Munteanu, C. and Haaland, S. (2008), What is the best method to calculate the solar wind propagation delay?, *Annales Geophysicae* 26, 2383–2394.
 - Lue, C. et al. (2011), Strong influence of lunar crustal fields on the solar wind flow, *Geophysical Research Letters* 38, L03202.
+- Carrier, W. D., Olhoeft, G. R. and Mendell, W. (1991), Physical properties of the lunar surface, in Heiken, G. H., Vaniman, D. T. and French, B. M. (eds.), *Lunar Sourcebook*, Cambridge University Press, ch. 9.
 
 ## 7. Open Questions
 
 - **Space weather.** The carriage of the interplanetary field and the Earth's magnetotail belong to the space-weather bridge (README §4.4, tier 4) when it is founded; they are here until then.
 - **Other models.** Ravat, Purucker and Olsen (2020)'s lunar model, from along-track gradients, could not be fetched (its host challenges automatic clients); Mars's crustal field (Langlais et al. 2019) is the next body's.
+- **The ground's measured mechanics.** The stiffness and damping of a small foot on regolith are assumed; Apollo's penetrometer and footprint data, and the plastic sinkage that keeps a print, are the next step ([theory §4](theory/surfaces.md)).
 - **A non-stationary prior.** The unresolved part is drawn from a stationary, isotropic law; the Moon's anomalies cluster.
 - **The lobes' field.** Inside the magnetotail the lobes' field (some 10 nT) is not given.

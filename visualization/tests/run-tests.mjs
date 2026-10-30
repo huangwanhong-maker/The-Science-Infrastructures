@@ -723,6 +723,15 @@ const { check, assert, done } = suite();
   assert('controls: and to a place 7e-12 rad away', finite(near) && Math.abs(near[4].lon - here.lon - 7e-12) < 1e-13);
   const far = fly({ ...here, lon: 0, lat: 0 }, { lon: Math.PI, lat: 0 });
   assert('controls: a flight to the antipodes turns about an axis across, and arrives', finite(far) && Math.abs(Math.abs(far[4].lon) - Math.PI) < 1e-9 && Math.abs(far[4].lat) < 1e-9, JSON.stringify(far[4]));
+  // On an ellipsoid the arc's direction is put on the surface before its latitude is read: a point on the sphere
+  // of radius a lies above WGS 84 along the centre's ray, and its geodetic latitude is not the one flown to.
+  const D = Math.PI / 180, earth = new globe.GlobeControls(element, { fig: globe.figure('earth'), rayAt: () => null });
+  Object.assign(earth.view, { lon: -42.967 * D, lat: 68.6 * D, height: 2500, range: 60000, heading: 0, tilt: 0.6 });
+  const greenland = { lon: -42.967 * D, lat: 68.667 * D, height: 2581.6, range: 1.6, heading: 0, tilt: 1.3 };
+  earth.flyTo(greenland, 1);
+  earth.tick(earth.flight.start + 1000);
+  check('controls: a flight on WGS 84 arrives at the latitude flown to (on the Greenland ice sheet, 68.667° N; m)',
+    Math.hypot(earth.view.lat - greenland.lat, earth.view.lon - greenland.lon) * 6.4e6, 1e-6);
 }
 
 done();

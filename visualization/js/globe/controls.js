@@ -59,6 +59,7 @@ export class GlobeControls {
     this.view = { lon: 0, lat: 0, height: 0, range: 2.6 * fig.a, heading: 0, tilt: 0 };
     this.flight = null;
     this.minRange = 2;
+    this.clearance = 2;  // m, the least height of the camera above the ground beneath it
     this.maxRange = 60 * fig.a;
     this.attach();
   }
@@ -106,9 +107,9 @@ export class GlobeControls {
     const cam = cameraOf(this.fig, v).position;
     const g = geodetic(this.fig, ...cam);
     const ground = this.heightAt(g.lon, g.lat);
-    if (g.h < ground + 2) {
+    if (g.h < ground + this.clearance) {
       // Lower the tilt, then lengthen the range, until it clears.
-      for (let i = 0; i < 40 && geodetic(this.fig, ...cameraOf(this.fig, v).position).h < ground + 2; i++) {
+      for (let i = 0; i < 40 && geodetic(this.fig, ...cameraOf(this.fig, v).position).h < ground + this.clearance; i++) {
         if (v.tilt > 0.02) v.tilt *= 0.9;
         else v.range *= 1.05;
       }
@@ -143,8 +144,13 @@ export class GlobeControls {
     if (!f) return false;
     const t = clamp((now - f.start) / (f.seconds * 1000), 0, 1);
     const s = t * t * (3 - 2 * t); // ease in and out
+    // The direction carried along the arc, placed on the figure's surface before its latitude is read: a point
+    // on the sphere of radius a stands above an ellipsoid along the centre's ray, not its normal, and its
+    // geodetic latitude is not the one flown to (42 m off at 68.7° N on WGS 84).
     const p = rotate(f.ua, f.axis, f.angle * s);
-    const g = geodetic(this.fig, ...p.map((x) => x * this.fig.a));
+    const b = this.fig.b ?? this.fig.a * (1 - (this.fig.f || 0));
+    const onSurface = 1 / Math.sqrt((p[0] * p[0] + p[1] * p[1]) / (this.fig.a * this.fig.a) + (p[2] * p[2]) / (b * b));
+    const g = geodetic(this.fig, ...p.map((x) => x * onSurface));
     const rise = Math.sin(Math.PI * s);
     const logR = (1 - s) * Math.log(f.from.range) + s * Math.log(f.to.range);
     const range = Math.exp(logR) + rise * Math.max(0, f.peak - Math.exp(logR)) * 0.6;

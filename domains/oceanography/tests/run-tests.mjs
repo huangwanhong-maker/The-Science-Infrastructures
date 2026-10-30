@@ -1,9 +1,13 @@
 // Checks of the oceanography domain: the ocean column beneath a place (inertial
 // period, mixed layer, sampling in time and depth), the propagation of waves,
-// and tsunami travel times over constructed oceans.
+// and tsunami travel times over constructed oceans; and its C++ (the ocean's water presumed and realised,
+// ADR 0059), built with CMake and run on calx's verification.
 // Run from the repository root:  node domains/oceanography/tests/run-tests.mjs
 
-import { suite } from '../../../development/tools/checks.mjs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { suite, cppChecks } from '../../../development/tools/checks.mjs';
 import {
   inertialPeriodHours, flowToward, mixedLayerDepth, columnSampler, symmetricRange, atDepth,
   deepWaterGroupSpeed, waveEnergyVelocity,
@@ -11,7 +15,8 @@ import {
 import { TravelTimes, travelTimes, longWaveSpeed } from '../js/index.js';
 import { distanceM } from '../../geodesy/js/index.js';
 
-const { check, assert, done } = suite();
+const { check, assert, skip, done, lines } = suite();
+cppChecks({ assert, skip, lines }, { project: resolve(dirname(fileURLToPath(import.meta.url)), '..'), name: 'oceanography' });
 
 // ---- the ocean beneath a place -------------------------------------------------------
 {

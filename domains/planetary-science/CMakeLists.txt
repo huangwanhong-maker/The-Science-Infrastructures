@@ -55,8 +55,17 @@ target_include_directories(planetary_science_magnetism INTERFACE ${CMAKE_CURRENT
 target_compile_features(planetary_science_magnetism INTERFACE cxx_std_20)
 target_link_libraries(planetary_science_magnetism INTERFACE physis::analysis physis::fields)
 
+# surfaces: the ground as a robot's foot meets it; the Moon's regolith, its contact law presumed and a
+# realisation of it (regolith.hpp, ADR 0059).
+add_library(planetary_science_surfaces INTERFACE)
+add_library(planetary_science::surfaces ALIAS planetary_science_surfaces)
+target_include_directories(planetary_science_surfaces INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/surfaces/include)
+target_compile_features(planetary_science_surfaces INTERFACE cxx_std_20)
+target_link_libraries(planetary_science_surfaces INTERFACE physis::analysis physis::fields)
+
 if(PLANETARY_SCIENCE_CHECKS)
   calx_add_check(check_planetary_science_magnetism SOURCES magnetism/tests/check_magnetism.cpp LIBRARIES planetary_science::magnetism)
   target_compile_definitions(check_planetary_science_magnetism PRIVATE PLANETARY_SCIENCE_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures"
                              PLANETARY_SCIENCE_ROOT="${CMAKE_CURRENT_SOURCE_DIR}")
+  calx_add_check(check_planetary_science_surfaces SOURCES surfaces/tests/check_surfaces.cpp LIBRARIES planetary_science::surfaces)
 endif()
