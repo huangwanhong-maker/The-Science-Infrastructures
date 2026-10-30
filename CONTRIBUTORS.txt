@@ -1,0 +1,224 @@
+CONTRIBUTORS
+============
+
+Repository:  The Science Infrastructures
+             https://github.com/huangwanhong-maker/The-Science-Infrastructures
+Part of:     The Science Infrastructures, a project of Serendip Commons
+             Society (Project Approval SCS/PA/2026/05, 30 October 2026)
+Licence:     MIT, in LICENSE
+This file:   the record of who made this repository and of the terms on
+             which they made it. Terms version 1, 30 October 2026.
+
+The foundations under foundations/ and the neuroscience domain under
+domains/neuroscience/ are repositories of their own, as is Cosmopoiesis
+under applications/cosmopoiesis-lab/; each has its own CONTRIBUTORS.txt
+on these same terms.
+
+
+1. WHO HOLDS WHAT
+-----------------
+
+1.1 Each contributor keeps the copyright in what they contributed. No
+    one is asked to assign it, to the Society or to anyone else.
+
+1.2 Everything in this repository, except where section 5 says
+    otherwise, is licensed to everyone under the MIT License in
+    LICENSE. Its copyright line, "Wanhong Huang and the contributors
+    listed in CONTRIBUTORS.txt", names the people of section 6.
+
+1.3 Serendip Commons Society, a Delaware nonstock nonprofit
+    corporation, is the project's steward and not its owner. It holds
+    no copyright, patent, database right or other intellectual
+    property in this repository, receives no licence from contributors
+    beyond the MIT licence that everyone receives, and has no power to
+    relicense the work. This is the default of its Intellectual
+    Property Policy (SCS/POL/2026/01), confirmed for this project by
+    the Project Approval.
+
+1.4 The MIT licence cannot be taken back from a copy already received.
+    Anyone may use, study, change, sell and redistribute the work, and
+    fork it and carry it on, with or without the project and with or
+    without the Society, provided the copyright notice and the licence
+    go with it.
+
+
+2. HOW A CONTRIBUTION IS MADE
+-----------------------------
+
+2.1 Inbound = outbound. A contribution is licensed under the same MIT
+    License as the repository, to everyone, when it is submitted. There
+    is no contributor licence agreement, and no agreement with the
+    Society.
+
+2.2 Each commit carries a sign-off (git commit -s):
+
+        Signed-off-by: Full Name <address>
+
+    by which its author makes the Developer Certificate of Origin 1.1,
+    reproduced in section 7: that they have the right to submit the
+    work under this licence.
+
+2.3 Name the source of anything you did not write yourself and keep
+    its notices. Do not commit material whose licence is incompatible
+    with MIT: copyleft code (the GPL and its kin) or material under a
+    non-commercial licence. Datasets are fetched into data/cache/ by
+    the data library and are never committed.
+
+2.4 The commits made before this file existed carry no sign-off. Their
+    one author is the contributor first listed in section 6, who
+    certifies by this file that section 7 holds for each of them.
+
+2.5 A contributor is added to section 6 in the same change as their
+    first contribution, under the name they choose. Anyone may ask to
+    be listed differently or not at all; the history of the repository
+    keeps what it keeps.
+
+
+3. TOOLS, AND AI ASSISTANCE
+---------------------------
+
+3.1 Much of this repository was written with AI coding assistants:
+    Anthropic's Claude models, used through Claude Code. A commit in
+    which an assistant took part says so in a "Co-Authored-By:"
+    trailer. The trailer records the tool used; it does not name a
+    contributor.
+
+3.2 An AI system is not a person in law. It holds no rights in the
+    work, is not a party to these terms and is not listed in section 6.
+    No rights are claimed on its behalf or on its provider's.
+
+3.3 The person who submits AI-assisted material is its contributor:
+    they directed it and answer for it under section 7. Where part of
+    such material is not protected by copyright, it is distributed on
+    the same MIT terms all the same, and no one claims more in it than
+    the law gives.
+
+
+4. THE STEWARD
+--------------
+
+4.1 The Society keeps the project's record (its approval, notices and
+    reports, under its Bylaws, sections 3.4 and 5.11) and presents the
+    project at
+        https://serendip.ngo/science-infrastructures/
+    A contribution whose author cannot be identified is recorded as
+    such; it remains under the MIT licence, and the Society holds it
+    only as custodian (Intellectual Property Policy, section 6), never
+    as owner.
+
+4.2 The Society does not direct the technical work, which the
+    maintainers decide and record in development/decisions/; it does
+    not receive anything of value from contributors; and it does not
+    speak for them.
+
+4.3 The maintainers may end the stewardship by written notice to the
+    Society, and the Society may end it by an instrument of its own.
+    Nothing is then transferred, because nothing is held; the work and
+    its licence are unaffected.
+
+4.4 The name and marks of Serendip Commons Society remain the
+    Society's. A fork needs no one's permission. If it is not this
+    project, please give it a name of its own, and do not present it
+    as endorsed by the Society or by the contributors.
+
+
+5. MATERIAL OF OTHERS
+---------------------
+
+5.1 Some files carry material of others under their own permissive
+    licences, with the notices kept in the files:
+
+    - the series of the IAU SOFA models as distributed by ERFA (BSD
+      3-clause, NumFOCUS Foundation, derived with permission from
+      SOFA), in domains/metrology/frames/include/metrology/frames/
+      series_cio.hpp and series_nutation.hpp, in domains/metrology/
+      time/include/metrology/time/series_tdb.hpp, and in the script
+      that transcribed them, domains/metrology/tools/transcribe_erfa.py;
+    - Karney's geodesic algorithms (MIT/X11, Charles Karney), in
+      domains/geodesy/geodesic/include/geodesy/geodesic/geodesic.hpp;
+    - entries of the cmocean colour maps (MIT, Kristen M. Thyng), in
+      applications/earth-atlas/src/render/colormaps.js and
+      applications/brain-atlas/src/render/colormaps.js.
+
+5.4 Three screenshots in assets/gallery/ show Pangu-Weather's forecasts
+    (earth-15-cyclone-forecasts.jpg, earth-16-ai-verification.jpg,
+    earth-17-ai-week-ahead.jpg). They are shared under CC BY-NC-SA 4.0,
+    the licence of the model's parameters, and not under MIT. The data
+    shown in every screenshot keep their own licences, listed in
+    docs/gallery.md section 10.
+
+5.2 The reference values in tests/fixtures/ are facts taken from the
+    published references that each fixture names, with its source and
+    the date it was retrieved.
+
+5.3 Datasets are not part of the repository and keep their own
+    licences, some of them non-commercial; the data library records
+    each with its source and licence.
+
+
+6. THE CONTRIBUTORS
+-------------------
+
+In the order of their first contribution.
+
+  Name:        Wanhong Huang (黄万鴻)
+  Account:     github.com/huangwanhong-maker
+  Commits as:  HUANG WANHONG
+  Since:       2026-10-22
+  Role:        founder and maintainer
+  Contributed: the repository as it stands, except the material of
+               section 5
+
+
+7. DEVELOPER CERTIFICATE OF ORIGIN 1.1
+--------------------------------------
+
+The certificate is reproduced verbatim; it is not covered by the MIT
+licence of the repository.
+
+Developer Certificate of Origin
+Version 1.1
+
+Copyright (C) 2004, 2006 The Linux Foundation and its contributors.
+
+Everyone is permitted to copy and distribute verbatim copies of this
+license document, but changing it is not allowed.
+
+
+Developer's Certificate of Origin 1.1
+
+By making a contribution to this project, I certify that:
+
+(a) The contribution was created in whole or in part by me and I
+    have the right to submit it under the open source license
+    indicated in the file; or
+
+(b) The contribution is based upon previous work that, to the best
+    of my knowledge, is covered under an appropriate open source
+    license and I have the right under that license to submit that
+    work with modifications, whether created in whole or in part
+    by me, under the same open source license (unless I am
+    permitted to submit under a different license), as indicated
+    in the file; or
+
+(c) The contribution was provided directly to me by some other
+    person who certified (a), (b) or (c) and I have not modified
+    it.
+
+(d) I understand and agree that this project and the contribution
+    are public and that a record of the contribution (including all
+    personal information I submit with it, including my sign-off) is
+    maintained indefinitely and may be redistributed consistent with
+    this project or the open source license(s) involved.
+
+
+8. CHANGES TO THESE TERMS
+-------------------------
+
+8.1 Sections 1 to 5 and 7 change only by a change to this file in
+    every repository of the project, recorded in a decision of the
+    project. A change applies to contributions made after it;
+    contributions already made stay under the terms in force when they
+    were made.
+
+8.2 Section 6 grows with each new contributor and needs no decision.

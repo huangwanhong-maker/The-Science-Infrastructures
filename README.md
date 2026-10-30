@@ -564,3 +564,7 @@ To run an application, follow the Quick Start at the top of this page; each appl
 ## 8. License
 
 The software is released under the MIT License. See [`LICENSE`](LICENSE). The foundation libraries carry the same licence, and datasets keep their own.
+
+Each contributor keeps the copyright in what they contributed. Contributions are made under the same MIT License, to everyone, with a sign-off (`git commit -s`) that certifies the [Developer Certificate of Origin](https://developercertificate.org/); there is no contributor agreement. [`CONTRIBUTORS.txt`](CONTRIBUTORS.txt) holds these terms and the register of contributors, and each repository of the infrastructure has its own.
+
+The infrastructure is a project of [Serendip Commons Society](https://serendip.ngo/science-infrastructures/), a nonprofit, under its Project Approval `SCS/PA/2026/05` ([ADR 0057](development/decisions/0057-a-project-of-serendip-commons-society.md)). The Society is its steward, not its owner: it holds no copyright or other intellectual property in it and cannot relicense it. Anyone may use it, change it, fork it and carry it on, with or without the Society.

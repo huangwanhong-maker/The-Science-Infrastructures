@@ -67,6 +67,7 @@ Decisions that concern only one library are recorded in that library's own `deve
 | [0053](0053-fields-and-their-visual-expression.md) | Fields and their visual expression: one model of fields, their laws apart, and the scene model | Accepted, provisionally |
 | [0054](0054-bodies-dynamics-and-knowledge.md) | Bodies, their dynamics, and what is known: discrete mechanics, the robotics domain, and a mission that learns | Accepted, provisionally |
 | [0055](0055-the-earth-beneath.md) | The Earth beneath: CRUST1.0 over PREM, sections along geodesics, and the world below the ground and the sea | Accepted, provisionally |
+| [0057](0057-a-project-of-serendip-commons-society.md) | A project of Serendip Commons Society: stewardship without ownership, and the record of contributors | Accepted |
 
 ## 2. Template
 

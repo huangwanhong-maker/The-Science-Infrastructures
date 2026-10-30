@@ -13,7 +13,7 @@ A running record, for readers, of what each commit made possible or better, in t
 
 | Date | Commits |
 |---|---|
-| [2026-10-30](2026-10-30.md) | Cosmopoiesis in the gallery, and a flight to where one already looks; the Earth beneath: CRUST1.0 over PREM, sections along geodesics; Cosmopoiesis's world beneath and its precision console |
+| [2026-10-30](2026-10-30.md) | Contributors, their terms, and a steward; Cosmopoiesis in the gallery, and a flight to where one already looks; the Earth beneath: CRUST1.0 over PREM, sections along geodesics; Cosmopoiesis's world beneath and its precision console |
 | [2026-10-29](2026-10-29.md) | Fields and their visual expression; bodies, their dynamics, and what is known; Cosmopoiesis: the world first, and the field about a point; group grammars for genomes, and a survey of advanced genome analysis; The Chemistry Workbench; Fields known in part; the planetary-science domain |
 | [2026-10-28](2026-10-28.md) | Instruments and their acquisition; the spacetime of the Earth and the Moon |
 | [2026-10-24](2026-10-24.md) | The Economy Atlas: your data, plug-ins and a ledger in gold; the Genome Workbench; value in space and time: the economics domain and the Economy Atlas; genomes: the genomics and evolution domains and the Genome Atlas; the history as a field theory; the history domain and the History Complex |
