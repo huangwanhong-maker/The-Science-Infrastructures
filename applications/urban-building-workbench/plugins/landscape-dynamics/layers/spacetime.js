@@ -13,6 +13,7 @@
 // The run is the engine's (urban-science, landscape/process.hpp), the same as the layer "the landscape running".
 
 import { ensureDistrict, frameAt as frameOf, on, runDay, state } from '../shared.js';
+import { swatches } from '../ui.js';
 
 export const RISE = 10;   // metres of height for an hour
 const z = (t) => RISE * t;
@@ -37,7 +38,7 @@ export async function layer(ctx) {
     events: ctx.layerId(':events'), threads: ctx.layerId(':threads'), now: ctx.layerId(':now'), nowEdge: ctx.layerId(':now-edge'),
   };
   state.active.add('spacetime');
-  const status = h('div', { class: 'faint' }, 'running the day…');
+  const status = h('div', { class: 'ld-quiet' }, 'running the day…');
   const nowLine = h('div', {}), rampBox = h('div', {});
   const kindOf = (m) => KINDS.find((k) => k.mechanism === m) || KINDS[6];
   const colourOf = (m) => kindOf(m)[night ? 'night' : 'day'];
@@ -45,14 +46,12 @@ export async function layer(ctx) {
   const ink = night ? [0.78, 0.84, 0.88] : [0.3, 0.38, 0.45], faint = night ? [0.42, 0.5, 0.56] : [0.68, 0.74, 0.78];
   const laneColour = night ? [0.89, 0.67, 0.54] : [0.79, 0.55, 0.42], laneDeep = night ? [0.94, 0.5, 0.38] : [0.6, 0.31, 0.2];
   const open = night ? [0.55, 0.72, 0.86] : [0.25, 0.48, 0.66];
-  const legend = h('div', { class: 'card' }, h('b', {}, 'The district\'s spacetime (a model)'),
-    h('div', { class: 'faint' }, `time rises ${RISE} m an hour from midnight at the ground: a slice of the streets each hour, faint frames every six`),
+  const legend = h('div', { class: 'card' }, h('b', {}, 'The district\'s spacetime'),
+    h('div', { class: 'ld-quiet' }, `time rises ${RISE} m an hour above the district`),
     rampBox,
-    h('div', { class: 'legend', style: 'flex-direction:column;gap:2px;margin-top:4px' },
-      h('span', {}, h('i', { style: `background:${css(open)};height:7px` }), 'a store\'s worldline, thick while open'),
-      h('span', {}, h('i', { style: `background:${css(laneColour)};height:7px` }), 'the lane\'s sheet, deep once recognised'),
-      KINDS.slice(0, 6).map((k) => h('span', {}, h('i', { class: 'dot', style: `background:${css(k[night ? 'night' : 'day'])}` }), k.name))),
-    h('div', { class: 'faint' }, 'a thread joins an event to the next ones that read what it wrote'),
+    swatches(h, [{ color: css(open), label: 'store open', kind: 'line' }, { color: css(laneColour), label: 'the lane', kind: 'line' },
+      ...[2, 3, 5].map((i) => ({ color: css(KINDS[i][night ? 'night' : 'day']), label: ['', '', 'permit', 'built', '', 'recognised'][i], kind: 'dot' })),
+      { color: css(KINDS[0][night ? 'night' : 'day']), label: 'opens', kind: 'dot' }]),
     nowLine, status);
 
   const paper = night ? [0.08, 0.11, 0.15] : [0.95, 0.965, 0.973];
@@ -72,7 +71,7 @@ export async function layer(ctx) {
     for (const f of R.frames) for (const id of Object.keys(f.flow)) top = Math.max(top, traffic(f, id));
     const scale = Math.max(1, top);
     const flowColour = G.sequential(0, Math.log1p(scale), 'sea', { from: night ? 0.14 : 0.16, to: 1 });
-    rampBox.replaceChildren(ctx.chart.ramp('sea', 0, Math.round(scale), 'walkers an hour along a street, both ways (logarithmic)'));
+    rampBox.replaceChildren(ctx.chart.ramp('sea', 0, Math.round(scale), 'walkers an hour'));
     const slices = [];
     for (let t = Math.ceil(R.frames[0].time - 1e-9); t < R.frames[R.frames.length - 1].time + 0.25 - 1e-9; t++) {
       const F = frameAt(t), C = configs[F.stratum];
@@ -158,8 +157,8 @@ export async function layer(ctx) {
     const done = R.events.filter((e) => e.time <= hour).length;
     const S = R.strata[F.stratum];
     nowLine.replaceChildren(
-      h('div', { style: 'margin-top:4px' }, `${hhmm(hour)}, at the plane: ${done} of the day's ${R.events.length} events have happened`),
-      h('div', { class: 'faint' }, `${S.counts[0]} junctions, ${S.counts[1]} ways, ${S.counts[2]} blocks${F.lane ? `; the lane ${F.recognised ? 'recognised' : 'standing'}` : F.permit ? '; a permit, no lane yet' : ''}; can happen now: ${(F.enabled || []).map((k) => kindOf(k).name.replace(/^.*: /, '')).join(', ') || 'nothing'}`));
+      h('div', { class: 'ld-line', style: 'margin-top:4px' }, `${hhmm(hour)} · ${done} of ${R.events.length} events so far${F.lane ? ` · the lane ${F.recognised ? 'recognised' : 'standing'}` : F.permit ? ' · a permit' : ''}`));
+    void S;
     for (const id of [ids.slices, ids.lane, ids.lines, ids.events, ids.threads]) gis.restyle(id, {});
   }
 

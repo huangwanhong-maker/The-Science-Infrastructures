@@ -13,10 +13,10 @@ export async function layer(ctx) {
   const { dom, gis, G } = ctx;
   const { h, fmt } = dom;
   const ids = { blocks: ctx.layerId(':blocks'), edges: ctx.layerId(':edges'), crowd: ctx.layerId(':crowd'), arrows: ctx.layerId(':arrows'), stores: ctx.layerId(':stores'), walkers: ctx.layerId(':walkers') };
-  const status = h('div', { class: 'faint' }, 'running the day…');
+  const status = h('div', { class: 'ld-quiet' }, 'running the day…');
   const now = h('div', {});
-  const recent = h('div', { class: 'faint' });
-  const legend = h('div', { class: 'card' }, h('b', {}, 'The landscape running (a model)'), ctx.chart.ramp('gold', 14, 34, 'block warmth, °C'), now, recent, status);
+  const recent = h('div', {});
+  const legend = h('div', { class: 'card' }, h('b', {}, 'The landscape running'), ctx.chart.ramp('gold', 14, 34, 'blocks, °C'), now, recent, status);
   state.active.add('landscape');
   const warmth = G.sequential(14, 34, 'gold', { from: 0.05, to: 1 });
   let drawnStratum = -1, frame = null, stop = null, clock = ctx.clock;
@@ -80,13 +80,10 @@ export async function layer(ctx) {
     else restyle();
     const S = state.run.strata[frame.stratum];
     const names = S.stores.map((s) => s.name);
-    now.replaceChildren(
-      h('div', {}, `${String(Math.floor(clock.hour)).padStart(2, '0')}:${String(Math.round((clock.hour % 1) * 60)).padStart(2, '0')} — ${names[0]} ${frame.a ? 'open' : 'shut'}, ${names[1]} ${frame.b ? 'open' : 'shut'}`),
-      h('div', {}, frame.lane ? `the lane is there${frame.recognised ? ', recognised (it cannot be removed)' : ''}` : frame.permit ? 'a permit for the lane, not yet built' : 'no permit for a lane'),
-      h('div', { class: 'faint' }, `${S.counts[0]} junctions, ${S.counts[1]} segments, ${S.counts[2]} blocks; b₁ = ${S.betti[1]}`));
-    const past = state.run.events.filter((e) => e.time <= clock.hour).slice(-4).reverse();
-    recent.replaceChildren(...past.map((e) => h('div', {}, `${hhmm(e.time)} ${e.mechanism}${e.match && !e.mechanism.includes('store') ? '' : `: ${e.match}`}`)));
-    status.textContent = `${state.run.events.length} events through ${state.run.date}; walkers kept to ${fmt(Math.abs(state.run.balance.residual), 2)}; ${state.run.entriesSource}`;
+    now.replaceChildren(h('div', { class: 'ld-line' }, `${hhmm(clock.hour)} · ${names[0]} ${frame.a ? 'open' : 'shut'} · ${names[1]} ${frame.b ? 'open' : 'shut'}${frame.lane ? ` · the lane${frame.recognised ? ', recognised' : ''}` : ''}`));
+    const last = state.run.events.filter((e) => e.time <= clock.hour).slice(-1)[0];
+    recent.replaceChildren(last ? h('div', { class: 'ld-quiet' }, `last: ${hhmm(last.time)} ${last.mechanism}`) : '');
+    status.textContent = `${state.run.date} · a model`;
   }
   const off = on((what) => { if (what === 'run') { drawnStratum = -1; show(); } });
   try {

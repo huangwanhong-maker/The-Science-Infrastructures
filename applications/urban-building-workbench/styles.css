@@ -233,3 +233,61 @@ canvas.raster { width: 100%; image-rendering: pixelated; border-radius: 6px; dis
 .rail .keys.tight { margin: 2px 0 6px 6px; gap: 4px; }
 .rail .keys.tight .key { padding: 1px 8px; font-size: 0.82rem; }
 .rail .form-label { margin: 6px 0 0 6px; font-size: 0.8rem; }
+
+/* ---- §7 quiet pieces: tabs, segmented keys, switches, figures, swatches, folds ----------------------------------- */
+/* One thing at a time, numbers before prose, explanations folded away (used by Landscape Dynamics, ld-). */
+.ld-tabs { display: flex; gap: 22px; border-bottom: 1px solid var(--hair); margin: 14px 0 16px; position: sticky; top: -18px; background: var(--paper); z-index: 1; padding-top: 6px; }
+.ld-tab { background: none; border: none; padding: 6px 0 9px; margin-bottom: -1px; color: var(--ink-faint); cursor: pointer; font-size: 0.98rem; border-bottom: 2px solid transparent; letter-spacing: 0.01em; }
+.ld-tab:hover { color: var(--ink-2); }
+.ld-tab.on { color: var(--ink); border-bottom-color: var(--accent); }
+.ld-tab-body > div > * + * { margin-top: 12px; }
+.ld-seg { display: inline-flex; border: 1px solid var(--hair-2); border-radius: 99px; padding: 2px; gap: 2px; }
+.ld-seg button { background: none; border: none; border-radius: 99px; padding: 3px 12px; font-size: 0.86rem; color: var(--ink-2); cursor: pointer; }
+.ld-seg button.on { background: var(--accent-soft); color: var(--ink); }
+.ld-switch { display: inline-flex; align-items: center; gap: 9px; font-size: 0.92rem; color: var(--ink-2); cursor: pointer; margin: 3px 18px 3px 0; }
+.ld-switch input { position: absolute; opacity: 0; width: 0; height: 0; }
+.ld-track { width: 28px; height: 16px; border-radius: 99px; background: var(--hair-2); position: relative; transition: background 0.15s; flex: none; }
+.ld-track::after { content: ""; position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border-radius: 50%; background: var(--surface); transition: left 0.15s; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15); }
+.ld-switch input:checked + .ld-track { background: var(--accent); }
+.ld-switch input:checked + .ld-track::after { left: 14px; }
+.ld-figures { display: flex; flex-wrap: wrap; gap: 6px 26px; }
+.ld-figure b { display: block; font-size: 1.32rem; font-weight: 500; font-variant-numeric: tabular-nums; line-height: 1.2; }
+.ld-figure span { font-size: 0.8rem; color: var(--ink-faint); }
+.ld-swatches { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 0.82rem; color: var(--ink-2); }
+.ld-sw { display: inline-block; vertical-align: -1px; margin-right: 6px; }
+.ld-sw.block { width: 11px; height: 11px; border-radius: 2px; }
+.ld-sw.line { width: 16px; height: 3px; border-radius: 2px; vertical-align: 3px; }
+.ld-sw.dot { width: 8px; height: 8px; border-radius: 50%; vertical-align: 1px; }
+.ld-fold { margin-top: 8px; }
+.ld-fold > summary { cursor: pointer; font-size: 0.84rem; color: var(--ink-faint); list-style: none; display: inline-flex; align-items: center; gap: 6px; }
+.ld-fold > summary::-webkit-details-marker { display: none; }
+.ld-fold > summary::before { content: "›"; display: inline-block; transition: transform 0.15s; font-size: 1rem; line-height: 1; }
+.ld-fold[open] > summary::before { transform: rotate(90deg); }
+.ld-fold > summary:hover { color: var(--ink-2); }
+.ld-fold-body { margin-top: 6px; font-size: 0.88rem; color: var(--ink-2); padding-left: 12px; border-left: 1px solid var(--hair); }
+.ld-fold-body p { margin: 4px 0; }
+.ld-hint { font-size: 0.86rem; color: var(--ink-faint); margin: 4px 0; }
+.ld-slider { display: grid; grid-template-columns: 9em 1fr 4.4em; align-items: center; gap: 10px; font-size: 0.88rem; color: var(--ink-2); margin: 2px 0; }
+.ld-slider input { accent-color: var(--accent); width: 100%; }
+.ld-slider output { text-align: right; font-variant-numeric: tabular-nums; color: var(--ink-faint); }
+.ld-card { border: 1px solid var(--hair); border-radius: 10px; padding: 12px 14px; background: var(--surface); }
+.ld-card .ld-title { font-weight: 560; }
+.ld-card .ld-sub { font-size: 0.86rem; color: var(--ink-faint); }
+.ld-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.ld-label { font-size: 0.78rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-faint); margin: 2px 0 6px; }
+.ld-list { list-style: none; padding: 0; margin: 4px 0; }
+.ld-list li { padding: 5px 0; border-bottom: 1px solid var(--hair); font-size: 0.9rem; display: flex; gap: 10px; align-items: baseline; }
+.ld-list li .faint { margin-left: auto; font-size: 0.8rem; }
+.ld-list.stack li { display: block; padding: 8px 0; }
+.ld-list.stack li .ld-row { justify-content: space-between; }
+.ld-list.stack li .ld-switch { margin: 0; }
+.ld-slider.bare { grid-template-columns: 1fr 3.4em; width: 11em; }
+.ld-quiet { font-size: 0.82rem; color: var(--ink-faint); margin-top: 2px; }
+.ld-link { background: none; border: none; padding: 0; color: var(--accent-deep); cursor: pointer; font-size: 0.86rem; }
+.ld-link:hover { text-decoration: underline; }
+.legend-stack .card .ld-seg { margin: 4px 0 6px; }
+.legend-stack .card .ld-swatches { font-size: 0.78rem; gap: 2px 10px; margin-top: 4px; }
+.finding .ld-fold { margin-top: 4px; }
+.ld-number { border: 1px solid var(--hair-2); border-radius: var(--r); padding: 2px 8px; background: var(--surface); font-variant-numeric: tabular-nums; }
+.legend-stack .card .ld-line { font-size: 0.8rem; color: var(--ink-2); }
+.legend-stack .card .ld-quiet { font-size: 0.76rem; color: var(--ink-faint); }

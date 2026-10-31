@@ -14,6 +14,7 @@
 // clock's hour.
 
 import { airByHour, around, emit, ensureDistrict, ensureMassing, frameAt, on, state } from '../shared.js';
+import { seg, swatches } from '../ui.js';
 
 export const LIFT = { 0: 0, 1: 32, 2: 64, 3: 104 };   // metres above the ground of each dimension, drawn by dimension
 let hourNow = 12;
@@ -22,17 +23,20 @@ export async function layer(ctx) {
   const { dom } = ctx;
   const { h } = dom;
   const ids = complexIds(ctx.layerId);
-  const status = h('div', { class: 'faint' }, 'cutting the district from the city model…');
-  const keys = h('div', { class: 'keys tight', style: 'margin:4px 0' });
+  const status = h('div', { class: 'ld-quiet' }, 'cutting the district from the city model…');
+  const keys = h('div', {});
+  const night = ctx.theme === 'night', rgb = (a) => `rgb(${a.map((v) => Math.round(v * 255)).join(',')})`;
   const legend = h('div', { class: 'card' }, h('b', {}, 'The district as a complex'), keys, status,
-    h('div', { class: 'faint' }, 'buildings (3-cells): a soft hue for each terrace, the walls they share in sand; after a run, sea where cooler than the air, brick where warmer'));
+    swatches(h, [{ color: rgb(night ? [0.3, 0.44, 0.55] : [0.6, 0.74, 0.84]), label: 'block' }, { color: rgb(night ? [0.75, 0.83, 0.9] : [0.2, 0.32, 0.43]), label: 'street', kind: 'line' },
+      { color: rgb([0.6, 0.62, 0.8]), label: 'building' }, { color: rgb(night ? [0.89, 0.67, 0.54] : [0.79, 0.55, 0.42]), label: 'shared wall', kind: 'line' }, { color: rgb([0.86, 0.66, 0.52]), label: 'hole' }]));
   state.active.add('cells');
-  const drawKeys = () => keys.replaceChildren(...[['ground', 'on the ground'], ['dimension', 'by dimension']].map(([v, name]) =>
-    h('button', { class: `key${state.view === v ? ' on' : ''}`, onclick: () => { state.view = v; emit('view'); } }, name)));
+  const drawKeys = () => keys.replaceChildren(seg(h, [['ground', 'On the ground'], ['dimension', 'By dimension']], state.view, (v) => { state.view = v; emit('view'); }));
   const draw = () => {
     if (!state.district) return;
     paintComplex(ctx, ids, state.district);
-    status.replaceChildren(...summary(h, state.district));
+    const t = state.district.topology, [V, E, F] = t.counts, M = state.massing;
+    status.replaceChildren(h('div', { class: 'ld-line' }, `${V} junctions · ${E} streets · ${F} blocks${M ? ` · ${M.buildings.length} buildings` : ''}`),
+      h('div', { class: 'ld-quiet' }, `b₀ ${t.betti[0]} · b₁ ${t.betti[1]} · χ ${t.euler}${state.heat ? ' · buildings: sea cooler than the air, brick warmer' : M ? ' · a hue per terrace' : ''}`));
     drawKeys();
   };
   const off = on((what) => { if (['district', 'picked', 'freedom', 'view', 'massing', 'run'].includes(what)) draw(); });

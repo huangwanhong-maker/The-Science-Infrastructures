@@ -7,6 +7,7 @@
 // the ones the analysis "The landscape and its events" runs the day with.
 
 import { state } from '../shared.js';
+import { brief, figures, fold, hint, seg, slider, tabs } from '../ui.js';
 
 const PART = { A: 'the first store', B: 'the second store', P: 'the permit', W: 'the lane', R: 'its recognition' };
 const MECHANISM = {
@@ -20,131 +21,119 @@ const ROWS = ['no permit', 'a rule in force', 'the rule carried out', 'a meaning
 const ROW_NOTE = ['', 'the permit', 'the lane built', 'the lane recognised'];
 
 export async function render(root, ctx) {
-  const { h, svg, busy, failure, fmt, css } = ctx.dom;
-  const { lines, bars, legend } = ctx.chart;
+  const { h, svg, failure, fmt, css } = ctx.dom;
+  const { lines, bars } = ctx.chart;
   const names = state.district ? state.district.stores.map((s) => s.name) : ['the first store', 'the second store'];
   const COLS = [['both', 'shut'], [tiny(names[0]), 'open'], [tiny(names[1]), 'open'], ['both', 'open']];
-  root.append(h('div', { class: 'view-head' }, h('h1', {}, 'The landscape\'s events, exactly'),
-    h('span', { class: 'lede' }, `${names[0]} and ${names[1]} open and shut; a rule may come into force, be carried out as a lane between them, and the lane take on a meaning as it is used. Five parts, composed where they meet, and solved without simulation.`)));
+  root.append(h('div', { class: 'view-head' }, h('h1', {}, 'The events, exactly'),
+    h('span', { class: 'lede' }, 'Two stores, a rule, the lane it brings and the meaning it takes on — solved without simulation.')));
 
   const R = state.rules;
   const P = { alphaA: 1.6, alphaB: 1.6, beta: 0.7, etaA: R.eta, etaB: R.eta, xi: R.xi, draw: 0.5, grant: R.permit, revoke: 0.05, build: R.build, remove: 0.06, recognise: R.recognise, lapse: 0.02, gain: 0.5, hours: 500, seed: 5 };
-  const slider = (key, name, min, max, step, after = () => {}) => {
-    const input = h('input', { type: 'range', min, max, step, value: P[key] });
-    const o = h('output', {}, fmt(P[key]));
-    input.addEventListener('input', () => { o.textContent = fmt(+input.value); });
-    input.addEventListener('change', () => { P[key] = +input.value; after(); run(); });
-    return h('label', { class: 'slider' }, name, input, o);
-  };
   const share = () => Object.assign(state.rules, { eta: (P.etaA + P.etaB) / 2, xi: P.xi, permit: P.grant, build: P.build, recognise: P.recognise });
-  root.append(h('div', { class: 'grid', style: 'margin-top:10px;gap:10px' },
-    h('div', { class: 'panel' }, h('h3', {}, 'The stores'),
-      slider('alphaA', `${short(names[0])} opens`, 0.1, 4, 0.1), slider('alphaB', `${short(names[1])} opens`, 0.1, 4, 0.1), slider('beta', 'each shuts', 0.1, 3, 0.1),
-      slider('etaA', `${short(names[0])} answers the other`, 0, 3, 0.05, share), slider('etaB', `${short(names[1])} answers the other`, 0, 3, 0.05, share),
-      slider('xi', 'each answers the lane', 0, 3, 0.05, share)),
-    h('div', { class: 'panel' }, h('h3', {}, 'The rule, the lane, its meaning'),
-      slider('grant', 'a permit granted', 0.01, 2, 0.01, share), slider('revoke', 'withdrawn', 0.01, 1, 0.01), slider('build', 'the lane built', 0.05, 2, 0.05, share),
-      slider('remove', 'removed', 0.01, 1, 0.01), slider('recognise', 'recognised', 0.05, 2, 0.05, share), slider('draw', 'each open store adds to its use', 0, 3, 0.05),
-      slider('lapse', 'its meaning lapses', 0.005, 0.5, 0.005))),
-    h('p', { class: 'caption' }, 'Rates per hour. A store opens at its rate times 1 + how much it answers the other (when that one is open) + how much it answers the lane (when the lane stands); the lane is recognised at its rate times its use, which grows with each store open. The lane can stand only under a permit and be recognised only while it stands, so a permit cannot be withdrawn under a standing lane, nor a recognised lane removed.'));
+  const rate = (key, label, min, max, step, after) => slider(h, fmt, { label, min, max, step, value: P[key], unit: '/h', onChange: (v) => { P[key] = v; if (after) after(); run(); } });
+  root.append(fold(h, 'the rates',
+    h('div', { class: 'ld-label' }, 'The stores'),
+    rate('alphaA', `${short(names[0])} opens`, 0.1, 4, 0.1), rate('alphaB', `${short(names[1])} opens`, 0.1, 4, 0.1), rate('beta', 'each shuts', 0.1, 3, 0.1),
+    rate('etaA', `${tiny(names[0])} answers the other`, 0, 3, 0.05, share), rate('etaB', `${tiny(names[1])} answers the other`, 0, 3, 0.05, share), rate('xi', 'each answers the lane', 0, 3, 0.05, share),
+    h('div', { class: 'ld-label', style: 'margin-top:10px' }, 'The rule, the lane, its meaning'),
+    rate('grant', 'a permit granted', 0.01, 2, 0.01, share), rate('revoke', 'withdrawn', 0.01, 1, 0.01), rate('build', 'the lane built', 0.05, 2, 0.05, share), rate('remove', 'removed', 0.01, 1, 0.01),
+    rate('recognise', 'recognised', 0.05, 2, 0.05, share), rate('draw', 'use per open store', 0, 3, 0.05), rate('lapse', 'meaning lapses', 0.005, 0.5, 0.005),
+    hint(h, 'A store opens faster when the other is open and when the lane stands. The lane stands only under a permit, and once recognised it cannot be removed.')));
   const out = h('div', {});
   root.append(out);
+  let r = null, outcome = 'both';
 
-  async function run() {
-    busy(out, 'composing the five parts and solving the sixteen joint states…');
-    let r;
-    try {
-      r = await ctx.ask('skeleton', { alphaA: P.alphaA, alphaB: P.alphaB, betaA: P.beta, betaB: P.beta, etaA: P.etaA, etaB: P.etaB, xiA: P.xi, xiB: P.xi, draw: P.draw,
-        grant: P.grant, revoke: P.revoke, build: P.build, remove: P.remove, recognise: P.recognise, lapse: P.lapse, gain: P.gain, hours: P.hours, seed: P.seed });
-    } catch (e) { return failure(out, e); }
+  const partsPanel = () => h('div', {},
+    compositionDiagram(h, svg, css, names),
+    brief(ctx, { title: r.coherent ? 'Composed either way, one process' : 'The two orders of composition disagree', kind: 'proved',
+      statement: `Five parts, joined where their states must agree: no lane without a permit, no meaning without the lane. ${r.states.length} joint states.`,
+      method: 'Open systems with ports, joined by fibre products of their states at the relations of their ports; each change that reads several parts added once, at the first composition holding them all; the two orders compared rate by rate (physis composition).' }));
+
+  const lawPanel = () => {
     const cellOf = (s) => [STORES.findIndex(([a, b]) => a === s.A && b === s.B), INSTITUTIONS.findIndex(([p, w, q]) => p === s.P && w === s.W && q === s.R)];
-    const lawBox = h('div', {});
-    const drawLaw = (mark = null) => lawBox.replaceChildren(lawGrid(h, svg, css, fmt, r, cellOf, COLS, mark));
-    drawLaw();
-
-    // ---- the parts ----
-    const parts = h('div', { class: 'section' }, h('h2', {}, 'Five parts, composed where they meet'),
-      compositionDiagram(h, svg, css, names),
-      ctx.finding({ title: r.coherent ? 'Composed in either order, the same process' : 'The two orders of composition disagree', kind: 'proved',
-        statement: `Each part keeps its own changes; each joint change is declared once, on the parts it reads — a store's opening reads both stores and the lane, the lane's building reads the permit, its recognition reads the lane and both stores. Composing ((the stores, the permit), the lane), its meaning and the stores with (the permit with (the lane with its meaning)) give the same rate for every change between every two of the ${r.states.length} joint states. Where two parts meet, only states that agree are joined: no lane without a permit, no meaning without the lane.`,
-        method: 'Open systems with ports, joined by fibre products of their states at the relations of their ports; each joint mechanism added at the first composition that holds all its parts (physis composition).' }));
-
-    // ---- the law ----
     const top = [...r.cycles].sort((a, b) => Math.abs(b.current * b.affinity) - Math.abs(a.current * a.affinity))[0];
-    const law = h('div', { class: 'section' }, h('h2', {}, 'How often each joint state holds, and whether it runs round'),
-      lawBox,
-      h('p', { class: 'caption' }, 'Each square a joint state, shaded by the share of time it holds in the long run. Hover a row of the table below to see the two states a description confuses.'),
-      ctx.finding({ title: r.detailedBalance ? 'In balance: every cycle of states is run as often one way as the other' : `Driven: it runs round its cycles, producing entropy at ${fmt(r.entropyProduction, 3)} an hour`, kind: 'proved',
-        statement: r.detailedBalance
-          ? 'The shares of time are those of an energy, the stores\' and the institutions\' separately: the stores open more readily together, and nothing runs one way round.'
-          : `The stores answer the lane, and the lane's meaning answers the stores (it is recognised faster when they are open): influences that do not return in kind. Round its busiest cycle (${top ? top.states.length : 0} states) the process runs ${fmt(Math.abs(top ? top.current : 0), 3)} times an hour net, against an affinity of ${fmt(Math.abs(top ? top.affinity : 0), 3)}. It would be in balance only if neither store answered the lane, the lane's use did not depend on them, and each answered the other equally.`,
-        method: 'The stationary law by the GTH algorithm; the cycles of a spanning tree\'s chords with their currents and affinities; Schnakenberg\'s entropy production (physis).' }));
+    return h('div', {},
+      lawGrid(h, svg, css, fmt, r, cellOf, COLS, null),
+      brief(ctx, { title: r.detailedBalance ? 'In balance' : `Driven: entropy produced at ${fmt(r.entropyProduction, 3)} an hour`, kind: 'proved',
+        statement: r.detailedBalance ? 'Every cycle of states is run as often one way as the other.'
+          : `It runs round its cycles${top ? `, the busiest ${fmt(Math.abs(top.current), 3)} times an hour net` : ''}: the stores answer the lane, and the lane's meaning answers the stores.`,
+        method: 'The stationary law by the GTH algorithm; the currents and affinities of a spanning tree\'s chords; Schnakenberg\'s entropy production (physis).',
+        limits: 'It would be in balance only if neither store answered the lane, the lane\'s use did not depend on them, and each answered the other equally.' }));
+  };
 
-    // ---- coarser descriptions ----
+  const descriptionsPanel = () => {
+    const cellOf = (s) => [STORES.findIndex(([a, b]) => a === s.A && b === s.B), INSTITUTIONS.findIndex(([p, w, q]) => p === s.P && w === s.W && q === s.R)];
+    const lawBox = h('div', {}, lawGrid(h, svg, css, fmt, r, cellOf, COLS, null));
     const rows = r.views.map((v) => {
-      const verdict = v.eventwise ? 'exact for every change' : v.whole ? 'exact as a whole' : 'not exact';
+      const verdict = v.eventwise ? 'exact' : v.whole ? 'exact as a whole' : 'not exact';
       const kind = v.eventwise ? 'pass' : v.whole ? 'amended' : 'model';
       const a = r.states[v.state], b = r.states[v.other];
       const differ = a && b ? Object.keys(PART).filter((k) => a[k] !== b[k]) : [];
       const confused = differ.length === 2 && differ.includes('A') && differ.includes('B') ? 'which store is open' : differ.map((k) => PART[k]).join(' and ');
-      const mech = MECHANISM[v.mechanism] || v.mechanism;
-      const why = v.eventwise ? 'no change it keeps reads what it forgets'
-        : v.whole ? `the whole is a process of its own, but "${mech}" alone is not: it leaves two states it cannot tell apart, differing in ${confused}, at rates ${fmt(v.by, 3)} an hour apart`
-          : `"${mech}" goes at rates ${fmt(v.by, 3)} an hour apart from two states it cannot tell apart, which differ in ${confused}`;
-      const tr = h('tr', {}, h('td', { class: 'left' }, v.name), h('td', {}, String(v.blocks)), h('td', { class: 'left' }, h('span', { class: `chip ${kind}` }, verdict)),
-        h('td', {}, v.horizon == null ? 'always' : hours(v.horizon, fmt)), h('td', { class: 'left faint' }, why));
+      const tr = h('tr', { title: v.eventwise ? '' : `"${MECHANISM[v.mechanism] || v.mechanism}" tells apart two states it cannot: they differ in ${confused}` },
+        h('td', { class: 'left' }, v.name), h('td', { class: 'left' }, h('span', { class: `chip ${kind}` }, verdict)), h('td', {}, v.horizon == null ? '—' : hours(v.horizon, fmt)));
       if (!v.eventwise && a && b) {
-        tr.addEventListener('mouseenter', () => drawLaw([cellOf(a), cellOf(b)]));
-        tr.addEventListener('mouseleave', () => drawLaw());
+        tr.addEventListener('mouseenter', () => lawBox.replaceChildren(lawGrid(h, svg, css, fmt, r, cellOf, COLS, [cellOf(a), cellOf(b)])));
+        tr.addEventListener('mouseleave', () => lawBox.replaceChildren(lawGrid(h, svg, css, fmt, r, cellOf, COLS, null)));
       }
       return tr;
     });
     const alone = r.views[0];
-    const coarse = h('div', { class: 'section' }, h('h2', {}, 'What a coarser description forgets'),
-      h('table', { class: 'data', style: 'width:100%' }, h('thead', {}, h('tr', {}, h('th', { class: 'left' }, 'description'), h('th', {}, 'states'), h('th', { class: 'left' }, 'verdict'), h('th', {}, 'within 10%'), h('th', { class: 'left' }, 'why'))), h('tbody', {}, rows)),
-      ctx.finding({ title: alone.eventwise ? 'The stores alone can forget the institutions exactly' : 'The stores alone remember the lane', kind: 'proved',
-        statement: `A description that keeps some parts and forgets others is a process of its own exactly when no change it keeps reads what it forgets. ${alone.eventwise ? 'Neither store answers the lane, so the two stores are a process of their own.' : `A store opens faster when the lane stands, so the stores alone are not a process of their own; the best they can do, averaging what they forget by how often it holds, stays within 10% of the whole for ${hours(alone.horizon, fmt)}.`} The permit cannot be forgotten, for building the lane reads it; nor the recognition, for while it holds the lane cannot be removed: a meaning adopted changes what may happen next. Counting the open stores without saying which is exact as a whole only when the two stores are alike, and never change by change.`,
-        method: 'Strong lumpability tested for each mechanism and for the whole; the aggregation by the stationary law, its outward discrepancy δ, and the coupling bound 1 − exp(−δT) on its paths (physis lumping).' }),
-      lines([{ name: 'both shut, the true law', x: r.dwell.tau, y: r.dwell.density, color: css('--accent-deep'), width: 2 }, { name: 'an exponential of the same mean', x: r.dwell.tau, y: r.dwell.exponential, color: css('--minor'), dash: '5 4' }],
-        { xlabel: 'hours both stores stay shut', ylabel: 'density (logarithmic)', height: 170, logy: true }),
-      legend([{ name: 'how long both stay shut', color: css('--accent-deep') }, { name: 'exponential, the same mean', color: css('--minor') }]),
-      h('p', { class: 'caption' }, `Seen by the stores alone, a stretch with both shut lasts ${fmt(60 * r.dwell.mean, 3)} minutes on average; its spread (squared coefficient of variation ${fmt(r.dwell.cv2, 4)}, 1 for an exponential) is the memory of what the description forgot: ${Math.abs(r.dwell.cv2 - 1) < 1e-6 ? 'none' : 'whether the lane stood when the stretch began'}.`));
+    return h('div', {},
+      h('table', { class: 'data', style: 'width:100%' }, h('thead', {}, h('tr', {}, h('th', { class: 'left' }, 'a description that keeps'), h('th', { class: 'left' }, ''), h('th', {}, 'within 10% for'))), h('tbody', {}, rows)),
+      hint(h, 'Hover a row: the two states it confuses light up below.'),
+      lawBox,
+      brief(ctx, { title: alone.eventwise ? 'The stores alone forget the institutions exactly' : 'The stores alone remember the lane', kind: 'proved',
+        statement: 'A description is a process of its own exactly when no change it keeps reads what it forgets. The permit and the meaning can never be forgotten: building reads the one, removal waits on the other.',
+        method: 'Strong lumpability for each mechanism and for the whole; the aggregation by the stationary law, its outward discrepancy δ, and the coupling bound 1 − exp(−δT) (physis lumping).' }),
+      fold(h, 'how long both stores stay shut',
+        lines([{ name: 'the true law', x: r.dwell.tau, y: r.dwell.density, color: css('--accent-deep'), width: 2 }, { name: 'an exponential of the same mean', x: r.dwell.tau, y: r.dwell.exponential, color: css('--minor'), dash: '5 4' }],
+          { xlabel: 'hours', ylabel: 'density (log)', height: 150, logy: true }),
+        h('p', {}, `Seen by the stores alone, ${fmt(60 * r.dwell.mean, 3)} minutes on average; its spread (squared coefficient of variation ${fmt(r.dwell.cv2, 4)}, an exponential's 1) is what the description remembers.`)));
+  };
 
-    // ---- interventions ----
-    const outcomeKeys = [['both', 'both open'], ['open', 'stores open'], ['recognised', 'the lane recognised']];
-    let outcome = 'both';
-    const interBox = h('div', {});
-    const drawInter = () => {
-      const g = r.interventions[outcome];
-      const main = [[1, 'the first'], [2, 'the second'], [4, 'permits']];
-      const joint = [[3, 'both stores'], [5, 'first, permits'], [6, 'second, permits'], [7, 'all three']];
-      const strongest = joint.reduce((m, j) => (Math.abs(g[j[0]]) > Math.abs(g[m[0]]) ? j : m), joint[0]);
-      const jointName = { 3: 'the two promotions', 5: `promoting ${short(names[0])} with faster permits`, 6: `promoting ${short(names[1])} with faster permits`, 7: 'all three together' };
-      interBox.replaceChildren(
-        h('div', { class: 'grid cols-2' },
-          h('div', {}, h('h3', {}, 'each alone'), h('div', { class: 'faint' }, `promoting ${short(names[0])}, ${short(names[1])}, or granting permits faster`), bars(main.map(([s], i) => ({ x: i, y: g[s], color: css('--series-1'), label: `${main[i][1]}: ${fmt(g[s], 3)}` })), { labels: main.map((m) => m[1]), height: 190, width: 300 })),
-          h('div', {}, h('h3', {}, 'beyond each alone'), bars(joint.map(([s], i) => ({ x: i, y: g[s], color: g[s] >= 0 ? css('--series-4') : css('--series-5'), label: `${joint[i][1]}: ${fmt(g[s], 3)}` })), { labels: joint.map((j) => j[1]), height: 190, width: 300 }))),
-        ctx.finding({ title: `On "${outcomeKeys.find((k) => k[0] === outcome)[1]}", the strongest interaction is ${jointName[strongest[0]]} (${fmt(g[strongest[0]], 3)})`, kind: 'proved',
-          statement: `Each promotion multiplies its store's opening by ${fmt(1 + P.gain)}, and permits granted faster multiply the grant by as much. An interaction is what doing several together adds beyond doing each: for two, Y(both) − Y(one) − Y(other) + Y(neither); for three, the alternating sum over all eight. It belongs to the outcome, not to the stores: stores that answer nothing have none on how many are open, yet one on the chance both are open, which needs both. Here, with the outcome ${fmt(g[0], 4)} without any intervention, ${outcome === 'recognised' ? 'the promotions reach the lane\'s meaning only through its use, which the open stores make' : 'permits reach the stores only through the lane they answer'}.`,
-          method: 'The anchored Möbius inversion over the subsets of the three interventions, each outcome at stationarity (morphe mobius).' }));
-    };
-    const keys = h('div', { class: 'keys' }, outcomeKeys.map(([k, name]) => h('button', { class: `key${k === outcome ? ' on' : ''}`, onclick: (e) => { outcome = k; for (const b of keys.children) b.classList.toggle('on', b === e.target); drawInter(); } }, name)));
-    drawInter();
-    const inter = h('div', { class: 'section' }, h('h2', {}, 'Three interventions and how they interact'),
-      h('div', { class: 'panel' }, slider('gain', 'each intervention adds', 0.05, 2, 0.05)), keys, interBox);
+  const interventionsPanel = () => {
+    const g = r.interventions[outcome];
+    const main = [[1, 'the first'], [2, 'the second'], [4, 'permits']];
+    const joint = [[3, 'both stores'], [5, 'first, permits'], [6, 'second, permits'], [7, 'all three']];
+    const strongest = joint.reduce((m, j) => (Math.abs(g[j[0]]) > Math.abs(g[m[0]]) ? j : m), joint[0]);
+    return h('div', {},
+      h('div', { class: 'ld-row' }, seg(h, [['both', 'Both open'], ['open', 'Stores open'], ['recognised', 'Lane recognised']], outcome, (v) => { outcome = v; T.show('Interventions'); })),
+      slider(h, fmt, { label: 'each one adds', min: 0.05, max: 2, step: 0.05, value: P.gain, onChange: (v) => { P.gain = v; run(); } }),
+      h('div', { class: 'grid cols-2' },
+        h('div', {}, h('div', { class: 'ld-label' }, 'each alone'), bars(main.map(([s], i) => ({ x: i, y: g[s], color: css('--series-1'), label: `${main[i][1]}: ${fmt(g[s], 3)}` })), { labels: main.map((m) => m[1]), height: 170, width: 300 })),
+        h('div', {}, h('div', { class: 'ld-label' }, 'beyond each alone'), bars(joint.map(([s], i) => ({ x: i, y: g[s], color: g[s] >= 0 ? css('--series-4') : css('--series-5'), label: `${joint[i][1]}: ${fmt(g[s], 3)}` })), { labels: joint.map((j) => j[1]), height: 170, width: 300 }))),
+      brief(ctx, { title: `Strongest together: ${strongest[1]} (${fmt(g[strongest[0]], 3)})`, kind: 'proved',
+        statement: 'What doing several together adds beyond each alone. It belongs to the outcome: stores that ignore each other show none on how many are open, yet one on whether both are.',
+        method: 'The anchored Möbius inversion over the subsets of the three interventions (promote the first store, the second, grant permits faster), each outcome at stationarity (morphe).' }));
+  };
 
-    // ---- evidence ----
+  const evidencePanel = () => {
     const ev = r.evidence;
-    const evidence = h('div', { class: 'section' }, h('h2', {}, 'What a record says of the stores\' answer to each other'),
+    return h('div', {},
       bars(ev.worlds.map((w, k) => ({ x: k, y: ev.posterior[k], color: w === 0 ? css('--series-3') : css('--accent'), label: `${fmt(w)}: ${fmt(100 * ev.posterior[k], 3)}%` })),
-        { labels: ev.worlds.map((w) => `answers by ${fmt(w)}`), ylabel: 'probability after the record', height: 200 }),
-      h('div', { class: 'panel' }, slider('hours', 'hours of record', 50, 3000, 50), slider('seed', 'which record', 1, 40, 1)),
-      ctx.finding({ title: `After ${fmt(ev.hours)} hours: they answer each other with probability ${fmt(ev.coupled, 3)}, strongly (by 1 or more) ${fmt(ev.strong, 3)}`, kind: 'model',
-        statement: `A record of ${ev.events} changes, made with the stores answering each other by ${fmt(P.etaA)} and ${fmt(P.etaB)}, weighs seven possible answers, alike for both stores, by how likely each makes the record. Overlapping propositions are weighed through the answers they hold for: "strongly" holds in fewer of them than "at all", and never has the larger probability.`,
-        method: 'Each answer\'s exact path density of the record under the composed process; a uniform prior over the seven.',
-        limits: 'A record made by the model itself, every change seen; a real one would leave the other rates to be learnt too, and some changes unseen.' }));
+        { labels: ev.worlds.map((w) => fmt(w)), ylabel: 'how much they answer each other, after the record', height: 180 }),
+      figures(h, [{ value: fmt(ev.coupled, 3), label: 'P(they answer each other)' }, { value: fmt(ev.strong, 3), label: 'P(by 1 or more)' }, { value: ev.events, label: `changes in ${fmt(ev.hours)} h` }]),
+      fold(h, 'the record',
+        slider(h, fmt, { label: 'hours of record', min: 50, max: 3000, step: 50, value: P.hours, onChange: (v) => { P.hours = v; run(); } }),
+        slider(h, fmt, { label: 'which record', min: 1, max: 40, step: 1, value: P.seed, onChange: (v) => { P.seed = v; run(); } }),
+        h('p', {}, 'A record made by the model itself, every change seen; each answer weighed by the record\'s exact path density under it, from a uniform prior.')));
+  };
 
-    out.replaceChildren(parts, law, coarse, inter, evidence);
+  const T = tabs(h, [{ name: 'Parts', panel: () => partsPanel() }, { name: 'Law', panel: () => lawPanel() }, { name: 'Descriptions', panel: () => descriptionsPanel() },
+    { name: 'Interventions', panel: () => interventionsPanel() }, { name: 'Evidence', panel: () => evidencePanel() }], { remember: 'landscape-exact', lazy: true });
+  let current = null;
+  async function run() {
+    const shownTab = out.querySelector('.ld-tab.on');
+    current = shownTab ? shownTab.dataset.name : current;
+    if (!r) out.replaceChildren(hint(h, 'solving the sixteen joint states…'));
+    try {
+      r = await ctx.ask('skeleton', { alphaA: P.alphaA, alphaB: P.alphaB, betaA: P.beta, betaB: P.beta, etaA: P.etaA, etaB: P.etaB, xiA: P.xi, xiB: P.xi, draw: P.draw,
+        grant: P.grant, revoke: P.revoke, build: P.build, remove: P.remove, recognise: P.recognise, lapse: P.lapse, gain: P.gain, hours: P.hours, seed: P.seed });
+    } catch (e) { return failure(out, e); }
+    out.replaceChildren(T.el);
+    T.show(current);
   }
   run();
 }
@@ -173,7 +162,7 @@ function lawGrid(h, svg, css, fmt, r, cellOf, cols, mark) {
     s.append(svg('text', { x: x + cw / 2, y: y + ch / 2 + 4, 'text-anchor': 'middle', 'font-size': 12, fill: t > 0.55 ? css('--surface') : css('--ink') }, `${fmt(100 * st.p, 2)}%`));
   }
   if (mark) for (const [i, j] of mark) s.append(svg('rect', { x: L + cw * i + 1, y: T + ch * j + 1, width: cw - 2, height: ch - 2, rx: 4, fill: 'none', stroke: css('--minor'), 'stroke-width': 2.4 }));
-  return h('div', { class: 'panel', style: 'margin:8px 0' }, s);
+  return h('div', { class: 'ld-card', style: 'margin:6px 0' }, s);
 }
 
 // The five parts, where they meet, and the joint changes on the parts they read.
@@ -208,6 +197,6 @@ function compositionDiagram(h, svg, css, names) {
     const nm = label[k].length > 18 ? `${label[k].slice(0, 17)}…` : label[k];
     s.append(svg('text', { x, y: k === 'A' ? y - 32 : y + 40, 'text-anchor': 'middle', 'font-size': 11, fill: css('--ink-2') }, nm));
   }
-  return h('div', { class: 'panel', style: 'margin:8px 0' }, s,
-    h('div', { class: 'faint' }, 'the parts (circles), where they meet (solid, with the relation their states must keep) and the changes that read several parts (diamonds, joined to the parts each reads)'));
+  return h('div', { class: 'ld-card' }, s,
+    h('p', { class: 'ld-hint' }, 'circles: the parts · solid: where they meet · diamonds: changes that read several parts'));
 }
