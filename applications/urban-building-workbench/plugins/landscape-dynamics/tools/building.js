@@ -97,7 +97,7 @@ export async function render(root, ctx) {
         h('td', { class: 'left' }, k.name, ' ', h('span', { class: `chip ${refines ? 'proved' : 'model'}` }, refines ? 'the same cells, another meaning' : 'new cells'), h('div', { class: 'faint' }, k.what)),
         h('td', {}, String(e.rooms)), h('td', {}, String(e.reachable)), h('td', {}, kept ? 'kept' : `${fmt(e.heatChange, 3)} J`));
     });
-    out.replaceChildren(
+    out.replaceChildren(...[
       h('div', { class: 'stat-row' },
         h('div', { class: 'count' }, h('b', {}, String(C)), h('span', {}, 'rooms (3-cells)')),
         h('div', { class: 'count' }, h('b', {}, String(F)), h('span', {}, 'walls, floors, facades')),
@@ -123,7 +123,7 @@ export async function render(root, ctx) {
         h('th', {}, 'rooms'), h('th', {}, 'reached from the street'), h('th', {}, 'heat changed'))), h('tbody', {}, evRows)) : null,
       B.events.length ? ctx.finding({ title: 'Openings change how heat and people pass, never how much heat there is', kind: 'proved',
         statement: `A door or a stair is a wall or a floor read otherwise: the same cell, carrying another conductance, and a way through for people — ${B.events.find((e) => e.kind === 'doors') ? `with doors, ${B.events.find((e) => e.kind === 'doors').reachable} rooms can be reached from the entrance` : 'the rooms reached from the entrance change with them'}. Merging two rooms removes a wall and makes their heat one room's, at the mean temperature their capacities weigh; parting them again copies that temperature to both. Each event keeps the building's heat to rounding and its complex regular.`,
-        method: 'Relabelling of faces; merging and parting of rooms by rewriting the complex (morphe); heat carried as an extensive quantity, temperatures as intensive ones; rooms reached by a search through doors and stairs.' }) : null);
+        method: 'Relabelling of faces; merging and parting of rooms by rewriting the complex (morphe); heat carried as an extensive quantity, temperatures as intensive ones; rooms reached by a search through doors and stairs.' }) : null].filter(Boolean));
   }
 
   ctx.onSelect((sel) => { if (choose(sel)) go(); });

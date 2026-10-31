@@ -12,7 +12,7 @@
 // and a pale plane the clock's hour; beneath it the day as it went, above it, fainter, what the model goes on to do.
 // The run is the engine's (urban-science, landscape/process.hpp), the same as the layer "the landscape running".
 
-import { ensureDistrict, on, runDay, state } from '../shared.js';
+import { ensureDistrict, frameAt as frameOf, on, runDay, state } from '../shared.js';
 
 export const RISE = 10;   // metres of height for an hour
 const z = (t) => RISE * t;
@@ -65,7 +65,7 @@ export async function layer(ctx) {
     if (!R) return;
     const configs = R.strata;
     const configAt = (t) => configs.findIndex((c) => c.intervals.some(([a, b]) => t >= a - 1e-9 && t < b - 1e-9));
-    const frameAt = (t) => R.frames[Math.max(0, Math.min(R.frames.length - 1, Math.round(t / 0.25)))];
+    const frameAt = (t) => frameOf(R, t + 1e-6);
     // The slices: the streets at each whole hour, coloured by the walkers they carry.
     const traffic = (F, id) => (F.forth[id] || 0) + (F.back[id] || 0);
     let top = 0;
@@ -74,7 +74,7 @@ export async function layer(ctx) {
     const flowColour = G.sequential(0, Math.log1p(scale), 'sea', { from: night ? 0.14 : 0.16, to: 1 });
     rampBox.replaceChildren(ctx.chart.ramp('sea', 0, Math.round(scale), 'walkers an hour along a street, both ways (logarithmic)'));
     const slices = [];
-    for (let t = 0; t < 24; t++) {
+    for (let t = Math.ceil(R.frames[0].time - 1e-9); t < R.frames[R.frames.length - 1].time + 0.25 - 1e-9; t++) {
       const F = frameAt(t), C = configs[F.stratum];
       for (const e of C.cells.edges) slices.push({ e, t, flow: traffic(F, e.id), net: F.flow[e.id] || 0, lane: e.id === F.lane, recognised: e.id === F.lane && F.recognised });
     }
@@ -154,7 +154,7 @@ export async function layer(ctx) {
     for (const id of [ids.now, ids.nowEdge]) { const l = gis.layers.get(id); if (l) l.object.position.y = z(hour); }
     const R = state.run;
     if (!R) return;
-    const F = R.frames[Math.max(0, Math.min(R.frames.length - 1, Math.floor(hour / 0.25 + 1e-9)))];
+    const F = frameOf(R, hour);
     const done = R.events.filter((e) => e.time <= hour).length;
     const S = R.strata[F.stratum];
     nowLine.replaceChildren(

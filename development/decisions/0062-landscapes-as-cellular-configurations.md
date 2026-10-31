@@ -1,6 +1,6 @@
 # 0062. Landscapes as Cellular Configurations: Their Events, Their Composition and Their Spacetime
 
-- **Status:** Accepted, provisionally. The rates of the running landscape are declared, and the plug-in is a draft.
+- **Status:** Accepted, provisionally; amended by [ADR 0063](0063-the-district-as-a-complex-to-work-on.md) (the complex shown as a complex, buildings as cells, the freedom on top, the dynamics from a state). The rates of the running landscape are declared, and the plug-in is a draft.
 - **Date:** 2026-10-31
 - **Decided by:**
   - **The request.** The user gave Claude their manuscript on the dynamics of urban landscapes in a unified framework (v0.9, then v2.3), and asked: "Try implementing the idea, and visualization. I think some module may resuable, like CW-complex, QFT, etc. Be carefully, high-quality, comprehensive." Then: "Be high-quality, and make efforts. UI also need well design."

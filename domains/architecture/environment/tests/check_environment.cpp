@@ -12,6 +12,8 @@
 #include <vector>
 
 #include <architecture/environment/heat.hpp>
+#include <architecture/environment/massing_heat.hpp>
+#include <architecture/space/massing.hpp>
 #include <architecture/space/rooms.hpp>
 #include <calx/verification/check.hpp>
 
@@ -81,5 +83,29 @@ int main() {
   as::relabel_face(Bd, slab, "stair");
   const auto K2 = ae::conduction(Bd);
   s.require("a stair opened raises the conduction: the slowest mode faster", K2.H.values.front() >= K.H.values.front() - 1e-12);
+
+  // ---- a district's buildings ----
+  {
+    const auto M = as::massing({{"a", "A", {{0, 0}, {10, 0}, {10, 10}, {0, 10}}, 0, 10}, {"b", "B", {{10, 0}, {20, 0}, {20, 10}, {10, 10}}, 0, 20}});
+    as::Fabric sealed;
+    for (const char* k : {"facade", "roof", "ground"}) sealed.u[k] = 0;
+    const auto H = ae::massing_heat(M, sealed);
+    s.check("one party wall of 100 m² between them: G = U A", H.party.size() == 1 ? H.party[0].G - 1.0 * 100 : 1.0, 1e-9, "W/K");
+    std::vector<double> T{10, 30};
+    const double Q0 = H.capacity[0] * T[0] + H.capacity[1] * T[1];
+    for (int k = 0; k < 2000; k++) T = ae::massing_step(H, T, 0, 0, {0, 0}, 3600 * 6);
+    const double Tm = Q0 / (H.capacity[0] + H.capacity[1]);
+    s.check("sealed but for the wall between them: the heat kept (relative)", (H.capacity[0] * T[0] + H.capacity[1] * T[1] - Q0) / Q0, 1e-9);
+    s.check("and both at the mean their capacities weigh", std::fabs(T[0] - Tm) + std::fabs(T[1] - Tm), 1e-6, "K");
+    const auto open = ae::massing_heat(M);
+    std::vector<double> U{10, 30};
+    for (int k = 0; k < 2000; k++) U = ae::massing_step(open, U, 15, 15, {0, 0}, 3600 * 6);
+    s.check("open to the air and the ground at 15 °C: both relax to it", std::fabs(U[0] - 15) + std::fabs(U[1] - 15), 1e-6, "K");
+    const auto noon = ae::massing_gains(M, 52 * std::numbers::pi / 180, 0);
+    s.require("the noon Sun, due north, gains on both (their north facades and roofs)", noon[0] > 0 && noon[1] > 0);
+    const auto morning = ae::massing_gains(M, 20 * std::numbers::pi / 180, std::numbers::pi / 2);
+    s.require("the morning Sun in the east: the eastern building's open east facade gains more than the western's wall, which its neighbour shades",
+              morning[1] > morning[0], std::to_string(morning[0]) + " " + std::to_string(morning[1]));
+  }
   return s.done();
 }

@@ -60,7 +60,8 @@ struct BuildingSpec {
 };
 
 struct Fabric {
-  std::map<std::string, double> u{{"facade", 1.2}, {"roof", 0.6}, {"ground", 0.4}, {"wall", 2.5}, {"slab", 1.8}, {"stair", 25.0}, {"door", 8.0}, {"entrance", 8.0}};
+  std::map<std::string, double> u{{"facade", 1.2}, {"roof", 0.6}, {"ground", 0.4}, {"wall", 2.5}, {"slab", 1.8}, {"stair", 25.0}, {"door", 8.0}, {"entrance", 8.0},
+                                  {"party", 1.0}};  // a party wall: two buildings' masonry between them
   double capacity_per_m3 = 6.0e4;  // J/(m³ K)
   double absorptance = 0.5;         // of the opaque fabric's outer surface
   double outer_coefficient = 25;    // h_o, W/(m² K): the outer surface to the air

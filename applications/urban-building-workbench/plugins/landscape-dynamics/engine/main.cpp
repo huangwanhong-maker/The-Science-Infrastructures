@@ -6,9 +6,17 @@
 // workbench's server keeps it; otherwise the one request given as an argument. It reads no files.
 //
 //   district  {junctions, segments, stores}            the district as cells: geometry, homology, the stores, the lane's plan
+//   complex   {…the district, edits}                   after the edits (cut, passage, join): the cells with their incidences,
+//                                                       orientations and what they carry, holes, each edit's steps and order
+//   massing   {buildings, altitude, azimuth, air, start, end, initial}
+//                                                       the district's buildings as one 3-complex (shared walls), its
+//                                                       terraces, and the buildings' heat through the hours asked for
+//   (every operation applies the request's edits to its district first)
 //   pairs     {…the district, within?, least?, limit?} of the stores sent, the pairs a lane could join, nearest first
 //   lane      {…the district}                          the lane built between the first two stores and closed again
-//   run       {…the district, params, entries, altitude} the landscape running for a day: events, frames, strata, order
+//   run       {…the district, params, entries, altitude, initial}
+//                                                       the landscape running from params.start to params.end from the state
+//                                                       declared: events, frames, strata, order
 //   skeleton  {alphaA, …, grant, …, gain, seed, hours} the landscape's events composed exactly: law, irreversibility,
 //                                                       what coarser descriptions forget, interventions, evidence
 //   building  {x, y, heading, width, depth, storey, nx, ny, floors, altitude, azimuth, airByHour, events}
@@ -28,6 +36,8 @@ using science::Json;
 Json answer(const Json& r) {
   const std::string op = r["op"].text();
   if (op == "district") return ld::op_district(r);
+  if (op == "complex") return ld::op_complex(r);
+  if (op == "massing") return ld::op_massing(r);
   if (op == "pairs") return ld::op_pairs(r);
   if (op == "lane") return ld::op_lane(r);
   if (op == "run") return ld::op_run(r);

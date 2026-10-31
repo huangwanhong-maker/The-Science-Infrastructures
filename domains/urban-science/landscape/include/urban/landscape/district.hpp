@@ -34,6 +34,7 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <limits>
 #include <map>
 #include <numeric>
 #include <set>
@@ -109,6 +110,7 @@ struct District {
   std::map<std::uint64_t, std::vector<double>> state;  // cell id ↦ its values, in its type's fibre order
   std::size_t holes = 0;                               // bounded faces left open
   double hole_area = 0;
+  std::vector<std::vector<Point>> hole_rings;          // their outlines, a dead end walked both ways
 
   std::size_t at(std::uint64_t id) const {
     const std::size_t i = complex.find(id);
@@ -263,7 +265,17 @@ inline District district(const Network& N, double t0 = 20, double cap_per_m2 = 2
   }
   for (const auto& f : faces) {
     if (!(f.area > 0)) continue;
-    if (!f.simple) { D.holes++, D.hole_area += f.area; continue; }
+    if (!f.simple) {
+      D.holes++, D.hole_area += f.area;
+      std::vector<Point> ring;
+      for (const auto& [e, sgn] : f.edges) {
+        auto l = N.segments[e].line.empty() ? std::vector<Point>{N.junctions[N.segments[e].u], N.junctions[N.segments[e].v]} : N.segments[e].line;
+        if (sgn < 0) std::reverse(l.begin(), l.end());
+        ring.insert(ring.end(), l.begin(), l.end() - 1);
+      }
+      D.hole_rings.push_back(std::move(ring));
+      continue;
+    }
     std::vector<std::size_t> facets;
     std::vector<int> signs;
     for (const auto& [e, sgn] : f.edges) facets.push_back(ecell[e]), signs.push_back(sgn);
@@ -297,6 +309,24 @@ struct LanePlan {
   std::string refused;
 };
 
+namespace detail {
+
+// Whether the chord from a to b, both on the boundary of a block, runs inside it. The ring's edges through its ends
+// are not crossings, whatever the rounding of where on them it starts.
+inline bool chord_inside(const District& D, std::uint64_t block, Point a, Point b) {
+  const auto r = D.ring(block);
+  const Point mid{(a[0] + b[0]) / 2, (a[1] + b[1]) / 2};
+  const auto through = [](Point p, Point c, Point d) { return cg::nearest_on_polyline(std::vector<Point>{c, d}, p).second < 1e-6; };
+  for (std::size_t k = 0; k < r.size(); k++) {
+    const Point c = r[k], d = r[(k + 1) % r.size()];
+    if (through(a, c, d) || through(b, c, d)) continue;
+    if (cg::segments_cross(a, b, c, d)) return false;
+  }
+  return cg::inside_ring(r, mid);
+}
+
+}  // namespace detail
+
 // Where a lane between two stores would run: from the point of each store's segment that faces it, through the
 // block both segments bound.
 inline LanePlan plan_lane(const District& D, std::size_t store_a, std::size_t store_b) {
@@ -317,20 +347,8 @@ inline LanePlan plan_lane(const District& D, std::size_t store_a, std::size_t st
   P.s_a = std::clamp(A.s, 0.08 * la, 0.92 * la), P.s_b = std::clamp(B.s, 0.08 * lb, 0.92 * lb);
   P.a = cg::point_at(D.line.at(A.segment), P.s_a), P.b = cg::point_at(D.line.at(B.segment), P.s_b);
   // The block whose interior holds the chord.
-  for (auto f : common) {
-    const auto r = D.ring(f);
-    const Point mid{(P.a[0] + P.b[0]) / 2, (P.a[1] + P.b[1]) / 2};
-    // The chord starts and ends on the ring: the ring's edges through its ends are not crossings, whatever the
-    // rounding of where on them it starts.
-    const auto through = [](Point p, Point c, Point d) { return cg::nearest_on_polyline(std::vector<Point>{c, d}, p).second < 1e-6; };
-    bool crosses = false;
-    for (std::size_t k = 0; k < r.size() && !crosses; k++) {
-      const Point c = r[k], d = r[(k + 1) % r.size()];
-      if (through(P.a, c, d) || through(P.b, c, d)) continue;
-      crosses = cg::segments_cross(P.a, P.b, c, d);
-    }
-    if (!crosses && cg::inside_ring(r, mid)) { P.block = f; return P; }
-  }
+  for (auto f : common)
+    if (detail::chord_inside(D, f, P.a, P.b)) { P.block = f; return P; }
   P.refused = "a straight lane between the two stores would leave their block";
   return P;
 }
@@ -462,6 +480,82 @@ inline std::vector<Step> close_lane(District& D, std::uint64_t lane) {
     D = std::move(before);
     throw;
   }
+}
+
+// ---- free edits ------------------------------------------------------------------------------------------------
+// What a person may do to the district, each a rewrite of its complex checked for regularity, refused with the
+// reason when it cannot be done: cut a street at a point (a refinement: the same street, described finer); open a
+// passage through a block between two points of its boundary (an intervention: two blocks where there was one);
+// join the two blocks on either side of a street (an intervention: the street gone). State is carried by the
+// schema (§2.3): a passage copies the block's temperature and shares its capacity by area; joining sums the
+// capacities and weighs the temperatures by them; stores that faced a street that is gone face the nearest one.
+
+// A street cut at the point of it nearest to p.
+inline Step cut_street(District& D, std::uint64_t edge, Point p) {
+  if (D.cell(edge).dim != 1) throw std::invalid_argument("a street is cut, not a " + D.cell(edge).type);
+  const double L = D.length(edge);
+  const auto [at, dist] = cg::nearest_on_polyline(D.line.at(edge), p);
+  if (at < 2 || at > L - 2) throw std::invalid_argument("too near a junction to cut: cut the street at least 2 m from its ends");
+  (void)dist;
+  return detail::subdivide(D, edge, at);
+}
+
+// A passage through a block between the points of its boundary nearest to a and to b.
+inline LanePlan plan_passage(const District& D, std::uint64_t block, Point a, Point b) {
+  LanePlan P;
+  if (D.cell(block).dim != 2) { P.refused = "a passage is opened through a block"; return P; }
+  const auto nearest = [&](Point q) {
+    std::uint64_t best = 0;
+    double s = 0, d = std::numeric_limits<double>::infinity();
+    for (const auto& [e, sign] : D.walk(block)) {
+      const auto [at, dist] = cg::nearest_on_polyline(D.line.at(e), q);
+      if (dist < d) d = dist, best = e, s = at;
+    }
+    return std::pair{best, s};
+  };
+  const auto [ea, sa] = nearest(a);
+  const auto [eb, sb] = nearest(b);
+  if (ea == eb) { P.refused = "both ends on one street of the block: a passage joins two of its streets"; return P; }
+  const double la = D.length(ea), lb = D.length(eb);
+  P.edge_a = ea, P.edge_b = eb;
+  P.s_a = std::clamp(sa, 0.08 * la, 0.92 * la), P.s_b = std::clamp(sb, 0.08 * lb, 0.92 * lb);
+  P.a = cg::point_at(D.line.at(ea), P.s_a), P.b = cg::point_at(D.line.at(eb), P.s_b);
+  if (!detail::chord_inside(D, block, P.a, P.b)) { P.refused = "a straight passage between those points would leave the block"; return P; }
+  P.block = block;
+  return P;
+}
+inline std::vector<Step> open_passage(District& D, std::uint64_t block, Point a, Point b) {
+  const auto P = plan_passage(D, block, a, b);
+  if (!P.refused.empty()) throw std::invalid_argument(P.refused);
+  auto steps = build_lane(D, P);
+  D.name[steps.back().created[0]] = "a passage";
+  return steps;
+}
+
+// The two blocks on either side of a street joined into one, the street gone.
+inline Step join_blocks(District& D, std::uint64_t edge) {
+  if (D.cell(edge).dim != 1) throw std::invalid_argument("blocks are joined across a street, not a " + D.cell(edge).type);
+  const auto up = D.complex.cofaces()[D.at(edge)];
+  if (up.size() != 2) throw std::invalid_argument(up.empty() ? "this street bounds no block" : "this street is on the edge of the district: there is no block beyond it");
+  const std::uint64_t f1 = D.complex.cells[up[0]].id, f2 = D.complex.cells[up[1]].id;
+  const double C1 = D.value(f1, "capacity"), C2 = D.value(f2, "capacity"), T1 = D.value(f1, "temperature"), T2 = D.value(f2, "temperature");
+  const auto r = mt::rewrite(D.complex, mt::merge_cells(D.complex, D.at(edge)));
+  if (!r.applied) throw std::invalid_argument("the two blocks cannot be one: " + r.reason);
+  D.complex = r.result;
+  const std::uint64_t merged = r.created[0];
+  D.state[merged] = {(C1 * T1 + C2 * T2) / (C1 + C2), C1 + C2};
+  const std::string name = D.name[edge];
+  for (auto id : {f1, f2, edge}) D.state.erase(id);
+  D.line.erase(edge), D.name.erase(edge);
+  for (auto& st : D.stores)
+    if (st.segment == edge) {
+      double best = std::numeric_limits<double>::infinity();
+      for (const auto& [id, l] : D.line) {
+        const auto [at, dist] = cg::nearest_on_polyline(l, st.at);
+        if (dist < best) best = dist, st.segment = id, st.s = at, st.offset = dist;
+      }
+    }
+  return {"join", name.empty() ? "two blocks" : "two blocks, across " + name, r.created, r.deleted, r.footprint, false};
 }
 
 }  // namespace urban::landscape

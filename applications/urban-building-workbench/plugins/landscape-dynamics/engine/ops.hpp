@@ -24,6 +24,8 @@
 #include <physis/statistical_mechanics/jump_process.hpp>
 #include <science/json.hpp>
 #include <architecture/environment/heat.hpp>
+#include <architecture/environment/massing_heat.hpp>
+#include <architecture/space/massing.hpp>
 #include <architecture/space/rooms.hpp>
 #include <urban/landscape/district.hpp>
 #include <urban/landscape/process.hpp>
@@ -65,9 +67,27 @@ inline std::string id_text(std::uint64_t id) { return std::to_string(id); }
 
 // ---- the district ----------------------------------------------------------------------------------------------
 
+// One edit of a request applied to D: {kind: "cut", segment, at} | {kind: "passage", block, from, to} |
+// {kind: "join", segment}; its steps, or the reason it is refused (thrown).
+inline std::vector<ul::Step> apply_edit(ul::District& D, const Json& e) {
+  const std::string kind = e["kind"].text();
+  const auto id = [&](const char* key) { return static_cast<std::uint64_t>(e[key].is_number() ? e[key].as_number() : std::stod(e[key].text())); };
+  const auto pt = [&](const char* key) { return ul::Point{e[key][0].as_number(), e[key][1].as_number()}; };
+  if (kind == "cut") return {ul::cut_street(D, id("segment"), pt("at"))};
+  if (kind == "passage") return ul::open_passage(D, id("block"), pt("from"), pt("to"));
+  if (kind == "join") return {ul::join_blocks(D, id("segment"))};
+  throw std::invalid_argument("an edit is a cut, a passage or a join, not \"" + kind + "\"");
+}
+
 // The district of a request; with "planarise", of every two segments that cross without a junction the shorter is
-// dropped (and named in `dropped`).
-inline ul::District district_of(const Json& r, std::vector<std::string>* dropped = nullptr) {
+// dropped (and named in `dropped`). The request's edits are applied in order; one refused stops them, and is reported
+// in `refused` when given, thrown otherwise.
+struct Edited {
+  std::vector<std::vector<ul::Step>> steps;  // each edit's steps
+  std::string refused;
+  long long refused_at = -1;
+};
+inline ul::District district_of(const Json& r, std::vector<std::string>* dropped = nullptr, Edited* edited = nullptr) {
   ul::Network N;
   for (const auto& p : r["junctions"].as_array()) N.junctions.push_back({p[0].as_number(), p[1].as_number()});
   for (const auto& s : r["segments"].as_array()) {
@@ -86,25 +106,49 @@ inline ul::District district_of(const Json& r, std::vector<std::string>* dropped
   if (r["stores"].is_array())
     for (const auto& s : r["stores"].as_array())
       ul::attach_store(D, {s["name"].is_string() ? s["name"].text() : "a store", s["use"].is_string() ? s["use"].text() : "", {s["at"][0].as_number(), s["at"][1].as_number()}});
+  if (r["edits"].is_array()) {
+    long long k = 0;
+    for (const auto& e : r["edits"].as_array()) {
+      try {
+        auto st = apply_edit(D, e);
+        if (edited) edited->steps.push_back(std::move(st));
+      } catch (const std::exception& x) {
+        if (!edited) throw std::invalid_argument("edit " + std::to_string(k + 1) + ": " + x.what());
+        edited->refused = x.what(), edited->refused_at = k;
+        break;
+      }
+      k++;
+    }
+  }
   return D;
 }
 
-// The cells of a district with their geometry.
+// The cells of a district with their geometry: each junction with its walkers; each segment with its orientation
+// (tail to head) and the blocks it bounds; each block with its boundary walked counter-clockwise (each segment and
+// +1 where it is walked tail to head), its temperature and capacity.
 inline Json cells(const ul::District& D) {
   Json v = Json::array(), e = Json::array(), f = Json::array();
   const auto up = D.complex.cofaces();
   for (std::size_t i = 0; i < D.complex.size(); i++) {
     const auto& c = D.complex.cells[i];
-    if (c.dim == 0) v.push(Json::object({{"id", id_text(c.id)}, {"type", c.type}, {"at", point(D.point.at(c.id))}, {"degree", static_cast<double>(up[i].size())}}));
+    if (c.dim == 0)
+      v.push(Json::object({{"id", id_text(c.id)}, {"type", c.type}, {"at", point(D.point.at(c.id))}, {"degree", static_cast<double>(up[i].size())},
+                           {"walkers", round(D.value(c.id, "walkers"), 3)}}));
     if (c.dim == 1) {
       const auto ends = D.complex.ends(i);
+      Json co = Json::array();
+      for (auto k : up[i]) co.push(id_text(D.complex.cells[k].id));
       e.push(Json::object({{"id", id_text(c.id)}, {"type", c.type}, {"name", D.name.count(c.id) ? D.name.at(c.id) : ""}, {"line", line(D.line.at(c.id))},
                            {"tail", id_text(D.complex.cells[ends[0]].id)}, {"head", id_text(D.complex.cells[ends[1]].id)}, {"blocks", static_cast<double>(up[i].size())},
-                           {"length", round(D.length(c.id), 1)}}));
+                           {"length", round(D.length(c.id), 1)}, {"cofaces", co}}));
     }
-    if (c.dim == 2)
+    if (c.dim == 2) {
+      Json walk = Json::array();
+      for (const auto& [eid, sign] : D.walk(c.id)) walk.push(Json::array({id_text(eid), static_cast<double>(sign)}));
       f.push(Json::object({{"id", id_text(c.id)}, {"type", c.type}, {"ring", line(D.ring(c.id))}, {"area", round(D.area(c.id), 1)},
-                           {"edges", static_cast<double>(c.facets.size())}, {"temperature", round(D.value(c.id, "temperature"), 3)}}));
+                           {"edges", static_cast<double>(c.facets.size())}, {"temperature", round(D.value(c.id, "temperature"), 3)},
+                           {"capacity", round(D.value(c.id, "capacity"), 0)}, {"boundary", walk}}));
+    }
   }
   return Json::object({{"vertices", v}, {"edges", e}, {"blocks", f}});
 }
@@ -190,6 +234,38 @@ inline Json order_json(const tr::CausalOrder& P, bool count = true) {
   return out;
 }
 
+// The district as a complex after a list of edits: its cells with their incidences, orientations and what they
+// carry, the outlines of its holes, its topology, each edit's steps (refinements or interventions) and the order
+// they need (an edit after those whose cells it read); an edit refused stops the list and is reported.
+inline Json op_complex(const Json& r) {
+  std::vector<std::string> dropped;
+  Edited ed;
+  const auto D = district_of(r, &dropped, &ed);
+  Json edits = Json::array();
+  std::vector<tr::Footprint> fps;
+  for (const auto& st : ed.steps) {
+    Json ss = Json::array();
+    tr::Footprint fp;
+    bool refines = true;
+    for (const auto& x : st) {
+      ss.push(step_json(x));
+      fp.reads.insert(x.footprint.reads.begin(), x.footprint.reads.end());
+      fp.writes.insert(x.footprint.writes.begin(), x.footprint.writes.end());
+      refines = refines && x.refinement;
+    }
+    edits.push(Json::object({{"steps", ss}, {"refinement", refines}}));
+    fps.push_back(std::move(fp));
+  }
+  Json holes = Json::array(), gone = Json::array();
+  for (const auto& ring : D.hole_rings) holes.push(line(ring));
+  for (const auto& d : dropped) gone.push(d);
+  Json out = Json::object({{"cells", cells(D)}, {"topology", topology(D)}, {"stores", stores_json(D)}, {"holes", holes}, {"edits", edits},
+                           {"order", order_json(tr::causal_order(fps))}, {"dropped", gone}});
+  if (!ed.refused.empty()) out.set("refused", ed.refused), out.set("refusedAt", static_cast<double>(ed.refused_at));
+  if (D.stores.size() >= 2) out.set("lane", plan_json(ul::plan_lane(D, 0, 1)));
+  return out;
+}
+
 // Builds the lane between the first two stores, and closes it again.
 inline Json op_lane(const Json& r) {
   auto D = district_of(r);
@@ -238,6 +314,22 @@ inline Json op_run(const Json& r) {
   if (!P.entries.empty() && P.entries.size() != 24) throw std::invalid_argument("entries: 24 values, one each hour");
   if (!P.altitude.empty() && P.altitude.size() != 24) throw std::invalid_argument("altitude: 24 values, one each hour");
   for (const auto id : D.of(0)) D.set(id, "walkers", 0.0);
+  // The state the request declares at the start: walkers at junctions, temperatures of blocks (by id); the stores
+  // and the permit; the hour the run starts and the hour it ends.
+  const Json& init = r["initial"];
+  const auto each = [&](const char* key, std::size_t dim, const char* fibre, double lo) {
+    if (!init[key].is_object()) return;
+    for (const auto& [k, v] : init[key].as_object()) {
+      const std::uint64_t id = std::stoull(k);
+      if (D.complex.find(id) != mt::no_cell && D.cell(id).dim == dim && v.is_number()) D.set(id, fibre, std::max(lo, v.as_number()));
+    }
+  };
+  each("walkers", 0, "walkers", 0.0);
+  each("temperature", 2, "temperature", -60.0);
+  P.start = num(q, "start", 0), P.hours = num(q, "end", P.hours);
+  P.open_a = init["openA"].is_bool() && init["openA"].as_bool();
+  P.open_b = init["openB"].is_bool() && init["openB"].as_bool();
+  P.permit = init["permit"].is_bool() && init["permit"].as_bool();
   const auto run = ul::run_landscape(D, P);
   Json events = Json::array();
   std::vector<tr::Footprint> fps;
@@ -454,6 +546,81 @@ inline Json op_building(const Json& r) {
                        {"timeConstants", numbers(constants, 3)}, {"harmonic", static_cast<double>(K.H.harmonic())}, {"hours", hours}, {"events", events}, {"openings", faces}});
 }
 
+// ---- the district's buildings as cells ---------------------------------------------------------------------
+
+// The buildings of the district as one regular 3-complex (architecture's massing): each a 3-cell, the walls two
+// buildings share one 2-cell; its counts and Euler characteristic, its terraces (buildings joined by shared walls),
+// each building with its neighbours, the shared walls for drawing; and the buildings' heat through the hours asked
+// for, under the Sun of each hour and the air given, from the temperatures set (the air's otherwise).
+inline Json op_massing(const Json& r) {
+  std::vector<as::Footprint> F;
+  for (const auto& b : r["buildings"].as_array()) {
+    as::Footprint f;
+    f.key = b["key"].text(), f.name = b["name"].is_string() ? b["name"].text() : "";
+    for (const auto& q : b["ring"].as_array()) f.ring.push_back({q[0].as_number(), q[1].as_number()});
+    f.base = num(b, "base", 0), f.top = num(b, "top", 10);
+    F.push_back(std::move(f));
+  }
+  if (F.size() > 4000) throw std::invalid_argument("at most 4000 buildings");
+  const auto M = as::massing(F);
+  const auto& X = M.complex;
+  const auto H = ae::massing_heat(M);
+  // Terraces: the buildings joined through shared walls.
+  std::vector<std::size_t> root(M.cell.size());
+  for (std::size_t i = 0; i < root.size(); i++) root[i] = i;
+  const auto find = [&](std::size_t i) { while (root[i] != i) i = root[i] = root[root[i]]; return i; };
+  std::vector<std::vector<std::size_t>> next(M.cell.size());
+  for (const auto& p : H.party) root[find(p.a)] = find(p.b), next[p.a].push_back(p.b), next[p.b].push_back(p.a);
+  std::map<std::size_t, std::size_t> terrace;
+  for (std::size_t i = 0; i < root.size(); i++) terrace.emplace(find(i), terrace.size());
+  Json buildings = Json::array();
+  for (std::size_t i = 0; i < M.cell.size(); i++) {
+    const auto& f = F[M.building[i]];
+    Json nb = Json::array();
+    for (auto j : next[i]) nb.push(F[M.building[j]].key);
+    buildings.push(Json::object({{"key", f.key}, {"name", f.name}, {"cell", id_text(M.cell[i])}, {"base", f.base}, {"top", f.top}, {"volume", round(M.volume[i], 0)},
+                                 {"area", round(M.footprint_area[i], 1)}, {"ring", line(M.ring[i])}, {"neighbours", nb}, {"terrace", static_cast<double>(terrace.at(find(i)))},
+                                 {"toAir", round(H.to_air[i], 1)}}));
+  }
+  // The shared walls, for drawing: each wall piece with two cofaces.
+  Json walls = Json::array();
+  const auto up = X.cofaces();
+  for (std::size_t c = 0; c < X.size(); c++) {
+    if (X.cells[c].dim != 2 || up[c].size() != 2) continue;
+    const auto& w = M.face.at(X.cells[c].id);
+    if (w.kind != "wall") continue;
+    walls.push(Json::object({{"a", F[M.building[M.of_cell.at(X.cells[up[c][0]].id)]].key}, {"b", F[M.building[M.of_cell.at(X.cells[up[c][1]].id)]].key},
+                             {"line", Json::array({point(w.a), point(w.b)})}, {"z0", w.z0}, {"z1", w.z1}, {"area", round(w.area, 1)}}));
+  }
+  Json skipped = Json::array();
+  for (const auto& [i, why] : M.skipped) skipped.push(Json::object({{"key", F[i].key}, {"reason", why}}));
+  // The heat, hour by hour.
+  std::vector<double> alt, az, air;
+  for (const auto& x : r["altitude"].as_array()) alt.push_back(x.as_number());
+  for (const auto& x : r["azimuth"].as_array()) az.push_back(x.as_number());
+  for (const auto& x : r["air"].as_array()) air.push_back(x.as_number());
+  if (alt.size() != 24 || az.size() != 24 || air.size() != 24) throw std::invalid_argument("the Sun's altitude and azimuth and the air, each hour (24 values each)");
+  const double start = num(r, "start", 0), end = num(r, "end", 24), ground = num(r, "ground", 18);
+  std::vector<double> T(M.cell.size(), air[static_cast<std::size_t>(std::clamp(start, 0.0, 23.0))]);
+  if (r["initial"].is_object())
+    for (const auto& [k, v] : r["initial"].as_object())
+      for (std::size_t i = 0; i < M.cell.size(); i++)
+        if (F[M.building[i]].key == k && v.is_number()) T[i] = v.as_number();
+  Json frames = Json::array();
+  const double step = 0.25;
+  for (double t = start; t <= end + 1e-9; t += step) {
+    Json temps = Json::object();
+    for (std::size_t i = 0; i < M.cell.size(); i++) temps.set(F[M.building[i]].key, round(T[i], 3));
+    frames.push(Json::object({{"time", round(t, 4)}, {"temperature", temps}}));
+    if (t + step > end + 1e-9) break;
+    const std::size_t h = static_cast<std::size_t>(std::clamp(std::floor(t), 0.0, 23.0));
+    T = ae::massing_step(H, T, air[h], ground, ae::massing_gains(M, alt[h], az[h]), step * 3600);
+  }
+  return Json::object({{"counts", counts(X.counts())}, {"euler", static_cast<double>(X.euler_characteristic())}, {"regular", mt::admissible(X).regular},
+                       {"terraces", static_cast<double>(terrace.size())}, {"buildings", buildings}, {"walls", walls}, {"skipped", skipped}, {"frames", frames},
+                       {"start", start}, {"end", end}});
+}
+
 // ---- scales and memory ---------------------------------------------------------------------------------------
 
 // The district's scales. Its Hodge Laplacians with the walking stars — a junction weight 1, a segment its
@@ -565,7 +732,7 @@ inline Json op_scales(const Json& r) {
     if (with_shops) {
       std::size_t c = m;
       for (const auto& [key, G] : groups) {
-        for (const auto [i, j] : {std::pair{G.junction, c}, std::pair{c, G.junction}}) ri.push_back(static_cast<std::uint32_t>(i)), ci.push_back(static_cast<std::uint32_t>(j)), av.push_back(-G.rate);
+        for (const auto& [i, j] : {std::pair{G.junction, c}, std::pair{c, G.junction}}) ri.push_back(static_cast<std::uint32_t>(i)), ci.push_back(static_cast<std::uint32_t>(j)), av.push_back(-G.rate);
         diagonal[G.junction] += G.rate, diagonal[c] += G.rate;
         c++;
       }

@@ -105,6 +105,53 @@ int main() {
   const std::size_t B = ul::attach_store(D, {"the bookshop", "retail", {140, 85}});
   s.require("each store faces its nearest segment", std::fabs(D.stores[A].s - 50) < 1e-9 && std::fabs(D.stores[B].s - 40) < 1e-9 && D.name.at(D.stores[A].segment) == "Street 0");
 
+  // ---- free edits ----
+  {
+    namespace cg = physis::computational_geometry;
+    s.check("the hole's outline kept: one ring, its area the hole's", D.hole_rings.size() == 1 ? std::fabs(cg::ring_area(D.hole_rings[0])) - D.hole_area : 1.0, 1e-6, "m²");
+    ul::District E = D;
+    double T = 14;
+    for (const auto id : E.of(2)) E.set(id, "temperature", T += 1.5);
+    const auto heat = [](const ul::District& X) { double q = 0; for (const auto id : X.of(2)) q += X.value(id, "capacity") * X.value(id, "temperature"); return q; };
+    const auto edge = [](const ul::District& X, ul::Point a, ul::Point b) {
+      const auto at = [](ul::Point p, ul::Point q) { return std::hypot(p[0] - q[0], p[1] - q[1]) < 1e-9; };
+      for (const auto& [id, l] : X.line)
+        if ((at(l.front(), a) && at(l.back(), b)) || (at(l.front(), b) && at(l.back(), a))) return id;
+      return std::uint64_t{0};
+    };
+    const auto block = [](const ul::District& X, ul::Point p) {
+      for (const auto id : X.of(2))
+        if (physis::computational_geometry::inside_ring(X.ring(id), p)) return id;
+      return std::uint64_t{0};
+    };
+    const double C0 = total(E, "block", "capacity"), Q0 = heat(E);
+    const auto cut = ul::cut_street(E, edge(E, {100, 0}, {100, 80}), {101, 30});
+    s.require("a street cut: a refinement, a junction and a segment more, the homology kept",
+              cut.refinement && text(E.complex.counts()) == "14 19 5" && text(morphe::algebra::betti(mt::chain_complex(E.complex))) == "1 1 0", text(E.complex.counts()));
+    bool near = false;
+    try { ul::cut_street(E, edge(E, {200, 0}, {200, 80}), {200, 1}); } catch (const std::invalid_argument&) { near = true; }
+    s.require("a cut within 2 m of a junction refused", near);
+    const auto first = block(E, {50, 40});
+    const double area0 = E.area(first);
+    const auto passage = ul::open_passage(E, first, {-1, 40}, {99, 60});
+    s.require("a passage through a block: three rewrites, an intervention last; two junctions, three segments, a block more; the homology kept",
+              passage.size() == 3 && passage[0].refinement && !passage[2].refinement && text(E.complex.counts()) == "16 22 6" && mt::admissible(E.complex).regular &&
+                  text(morphe::algebra::betti(mt::chain_complex(E.complex))) == "1 1 0", text(E.complex.counts()));
+    s.check("its two blocks' areas sum to the old", E.area(passage[2].created[1]) + E.area(passage[2].created[2]) - area0, 1e-9, "m²");
+    bool one = false;
+    try { ul::open_passage(E, block(E, {150, 40}), {120, 1}, {180, 1}); } catch (const std::invalid_argument&) { one = true; }
+    s.require("a passage with both ends on one street refused", one);
+    const auto joined = ul::join_blocks(E, edge(E, {200, 0}, {200, 80}));
+    s.require("two blocks joined across a street: an intervention, a segment and a block fewer, the homology kept",
+              !joined.refinement && text(E.complex.counts()) == "16 21 5" && mt::admissible(E.complex).regular && text(morphe::algebra::betti(mt::chain_complex(E.complex))) == "1 1 0",
+              text(E.complex.counts()));
+    s.check("capacities kept through the edits (relative)", (total(E, "block", "capacity") - C0) / C0, 1e-12);
+    s.check("and heat (relative)", (heat(E) - Q0) / Q0, 1e-12);
+    bool edge_of = false;
+    try { ul::join_blocks(E, edge(E, {200, 160}, {300, 160})); } catch (const std::invalid_argument&) { edge_of = true; }
+    s.require("a street on the district's edge joins no blocks: refused", edge_of);
+  }
+
   // ---- the lane ----
   {
     for (const auto id : D.of(0)) D.set(id, "walkers", 10.0 + id % 7);
@@ -282,6 +329,13 @@ int main() {
         if (k == "the lane is removed" || k == "the lane is recognised") registry = registry && F.lane != 0 && !F.recognised;
       }
     s.require("each frame's registry of events: the lane buildable only under a permit, removable only while unrecognised", registry);
+    auto Q = P;
+    Q.start = 12, Q.hours = 15, Q.open_a = true, Q.permit = true;
+    const auto noon = ul::run_landscape(D, Q);
+    bool from_noon = !noon.frames.empty() && std::fabs(noon.frames.front().time - 12) < 1e-9 && noon.frames.front().a && noon.frames.front().permit;
+    for (const auto& e : noon.events) from_noon = from_noon && e.time >= 12 && e.mechanism != "the permit is granted";
+    s.require("run from noon with the first store open and a permit: frames from 12:00, no event before it, the permit not granted again", from_noon && noon.frames.size() == 12,
+              std::to_string(noon.frames.size()));
   }
 
   // ---- value ----

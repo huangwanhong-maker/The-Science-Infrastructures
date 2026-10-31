@@ -1,6 +1,17 @@
 // What the plug-in's layers and analyses share: the district (its walking network cut from the city model in a
-// box), the two stores, the lane, the day's run and the building, with listeners, so that the map and the drawer
-// show one landscape. A module is loaded once by its URL, so every layer and tool holds this same object.
+// box) as a complex, the edits made to it, the state set on its cells, the two stores, the run and the building,
+// with listeners, so that the map and the drawer show one landscape. A module is loaded once by its URL, so every
+// layer and tool holds this same object.
+//
+// The freedom on top of the complex. Edits are rewrites of its cells — a street cut at a point, a passage opened
+// through a block, two blocks joined across a street — kept as a list that every request carries, so the engine
+// rebuilds the same complex (the same cell ids) each time; an edit the engine refuses is not kept, and its reason is
+// shown. The state set on the cells (walkers at a junction, a block's warmth) and the stores' and the permit's at
+// the start are what a run starts from.
+//
+// The buildings are cells too: those standing in the box (their footprint's centre inside it) are one 3-complex, the
+// engine's massing, each building a 3-cell, a wall two buildings share one 2-cell; their warmth is what they carry,
+// set by hand (state.initial.buildings) and run through the hours with the streets.
 //
 // The network: the city model's ways where people walk (streets, lanes, malls; not motorways, not the separate
 // footway lines drawn beside streets, which would double every street), cut to the box, split at every point two
@@ -17,6 +28,8 @@ import { instantOf } from '/src/clock.js';
 import { subsolarPoint, sunAltAz } from '/domains/astronomy/js/index.js';
 
 export const state = { box: null, network: null, district: null, stores: [], candidates: null, lane: null, run: null, building: null, active: new Set(),
+  edits: [], initial: { walkers: {}, temperature: {}, buildings: {}, openA: false, openB: false, permit: false }, view: 'ground', picked: null,
+  massing: null, heat: null, air: { mean: 18, swing: 5 },
   // The declared rates both analyses share (per hour): how much a store answers the other open (η) and the lane
   // (ξ); a permit granted, the lane built under it, recognised as it is used.
   rules: { eta: 0.5, xi: 0.8, permit: 0.3, build: 0.5, recognise: 0.4 } };
@@ -85,9 +98,9 @@ export function networkOf(model, B) {
   return { junctions: J, segments };
 }
 
-// The district request: the network and the two stores, planarised.
+// The district request: the network, the two stores and the edits, planarised.
 export function request(extra = {}) {
-  return { ...state.network, stores: state.stores.map((s) => ({ name: s.name, use: s.use, at: s.xy })), planarise: true, ...extra };
+  return { ...state.network, stores: state.stores.map((s) => ({ name: s.name, use: s.use, at: s.xy })), planarise: true, edits: state.edits, ...extra };
 }
 
 // Another plug-in's engine, when it is built (Street Oceanography's holdings and profiles); null otherwise.
@@ -168,7 +181,8 @@ export function paintCells(ctx, ids, cells, { highlight = new Set(), lane = null
 // the lane.
 export function frameAt(run, hour) {
   if (!run || !run.frames.length) return null;
-  const k = Math.max(0, Math.min(run.frames.length - 1, Math.floor(hour / 0.25 + 1e-9)));
+  // Frames every quarter hour from the run's first; a run may start at any hour.
+  const k = Math.max(0, Math.min(run.frames.length - 1, Math.floor((hour - run.frames[0].time) / 0.25 + 1e-9)));
   return run.frames[k];
 }
 
@@ -222,7 +236,7 @@ export function ensureDistrict(ctx) {
       const at = (i) => { const a = ring[i], b = ring[(i + 1) % n]; return [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]; };
       state.stores = [{ name: 'a declared store', use: '', xy: at(0) }, { name: 'another declared store', use: '', xy: at(Math.floor(n / 2)) }];
     }
-    state.district = await ctx.ask('district', request());
+    state.district = await ctx.ask('complex', request());
     emit('district');
     return state.district;
   })();
@@ -236,10 +250,107 @@ const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
 export async function setStores(ctx, stores) {
   state.stores = stores;
   state.lane = null, state.run = null;
-  state.district = await ctx.ask('district', request());
+  state.district = await ctx.ask('complex', request());
   emit('district');
   emit('run');
   return state.district;
+}
+
+// ---- the freedom on top of the complex ----------------------------------------------------------------------------
+
+// An edit tried: kept if the engine accepts it (the complex rebuilt, the run forgotten), its reason returned if not.
+export async function edit(ctx, e) {
+  const c = await ctx.ask('complex', request({ edits: [...state.edits, e] }));
+  if (c.refused) return { refused: c.refused };
+  state.edits.push(e);
+  return settle(c);
+}
+export async function undoEdit(ctx) {
+  if (!state.edits.length) return null;
+  state.edits.pop();
+  return settle(await ctx.ask('complex', request()));
+}
+export async function resetEdits(ctx) {
+  state.edits = [];
+  return settle(await ctx.ask('complex', request()));
+}
+function settle(c) {
+  state.district = c, state.run = null, state.picked = null;
+  // State set on cells that are gone is dropped with them.
+  const alive = new Set([...c.cells.vertices, ...c.cells.blocks].map((x) => x.id));
+  for (const k of ['walkers', 'temperature']) for (const id of Object.keys(state.initial[k])) if (!alive.has(id)) delete state.initial[k][id];
+  state.heat = null;
+  emit('district');
+  emit('run');
+  return { complex: c };
+}
+// The state at the start of a run, set on a cell or on the stores and the permit.
+export function setFreedom(kind, id, value) {
+  if (kind === 'walkers' || kind === 'temperature' || kind === 'buildings') {
+    if (value === null || value === undefined || value === '') delete state.initial[kind][id];
+    else state.initial[kind][id] = +value;
+  } else state.initial[kind] = !!value;
+  emit('freedom');
+}
+export function clearFreedom() {
+  state.initial = { walkers: {}, temperature: {}, buildings: {}, openA: false, openB: false, permit: false };
+  emit('freedom');
+}
+
+// The cells about a cell: its closure (the cell and its faces) and its star (the cell and the cells it is a face of).
+// For a building, its faces are its own (ground, roof, walls); what stands out is its neighbours across shared walls.
+export function around(c, cell) {
+  if (cell.dim === 3) return { closure: new Set([cell.key]), star: new Set([cell.key, ...(cell.neighbours || [])]) };
+  const E = new Map(c.cells.edges.map((e) => [e.id, e])), B = new Map(c.cells.blocks.map((b) => [b.id, b]));
+  const closure = new Set([cell.id]), star = new Set([cell.id]);
+  if (cell.dim === 1) { closure.add(cell.tail), closure.add(cell.head); for (const f of cell.cofaces) star.add(f); }
+  if (cell.dim === 2) for (const [e] of cell.boundary) { closure.add(e); const x = E.get(e); if (x) closure.add(x.tail), closure.add(x.head); }
+  if (cell.dim === 0)
+    for (const e of c.cells.edges) if (e.tail === cell.id || e.head === cell.id) { star.add(e.id); for (const f of e.cofaces) star.add(f); }
+  void B;
+  return { closure, star };
+}
+
+// The buildings in the box as the engine's massing, from the city model (once).
+let massingBuilding = null;
+export function ensureMassing(ctx) {
+  if (state.massing) return Promise.resolve(state.massing);
+  if (massingBuilding) return massingBuilding;
+  massingBuilding = (async () => {
+    if (!state.box) await ensureDistrict(ctx);
+    state.massing = await ctx.ask('massing', massingRequest(ctx, 0, 0));
+    emit('massing');
+    return state.massing;
+  })();
+  massingBuilding.catch(() => { massingBuilding = null; });
+  return massingBuilding;
+}
+function massingRequest(ctx, start, end) {
+  const B = state.box;
+  const buildings = [];
+  for (const b of (ctx.model && ctx.model.buildings) || []) {
+    const f = b.footprint;
+    if (!f || f.length < 3) continue;
+    const cx = f.reduce((a, p) => a + p[0], 0) / f.length, cy = f.reduce((a, p) => a + p[1], 0) / f.length;
+    if (cx >= B.x0 && cx <= B.x1 && cy >= B.y0 && cy <= B.y1) buildings.push({ key: b.id, name: b.name || '', ring: f, base: b.min_height_m || 0, top: b.height_m || 10 });
+  }
+  const sun = sunByHour(ctx.clock);
+  return { buildings, altitude: sun.altitude, azimuth: sun.azimuth, air: airByHour(), start, end, initial: state.initial.buildings };
+}
+// The day's air (declared): its mean and how much warmer it is at three in the afternoon.
+export const airByHour = () => Array.from({ length: 24 }, (_, hr) => state.air.mean + state.air.swing * Math.cos((2 * Math.PI * (hr + 0.5 - 15)) / 24));
+
+// The landscape run from the state set, from one hour to another of the clock's date.
+export async function runFrom(ctx, { start = 0, end = 24, seed = 3 } = {}) {
+  await ensureDistrict(ctx);
+  const sun = sunByHour(ctx.clock);
+  const { entries, source } = await entriesByHour(ctx, state.box);
+  const params = { seed, start, end, ...state.rules };
+  const [run, heat] = await Promise.all([ctx.ask('run', request({ params, entries, altitude: sun.altitude, initial: state.initial })), ctx.ask('massing', massingRequest(ctx, start, end))]);
+  state.run = { ...run, date: ctx.clock.date, entriesSource: source, entries, altitude: sun.altitude, params, start, end };
+  state.heat = heat, state.massing = state.massing || heat;
+  emit('run');
+  return state.run;
 }
 
 // A day of the district run as one process, forced by the clock's date: the Sun and the walkers entering.

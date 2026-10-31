@@ -173,7 +173,17 @@ for (const p of plugins) {
     const L = ask({ op: 'lane', ...net });
     assert('landscape: the lane in three rewrites, two refinements then the split; closed, the same district, and planned again the same',
       L.steps.length === 3 && L.steps[0].refinement && L.steps[1].refinement && !L.steps[2].refinement && L.undo.isomorphic && L.undo.again.length === L.lane.length);
+    const edgeAt = (a, b) => D.cells.edges.find((e) => { const p = e.line[0], q = e.line[e.line.length - 1]; return (p[0] === a[0] && p[1] === a[1] && q[0] === b[0] && q[1] === b[1]) || (p[0] === b[0] && p[1] === b[1] && q[0] === a[0] && q[1] === a[1]); });
+    const X = ask({ op: 'complex', ...net, edits: [{ kind: 'cut', segment: edgeAt([100, 0], [100, 100]).id, at: [100, 50] }, { kind: 'join', segment: edgeAt([200, 0], [200, 100]).id },
+      { kind: 'join', segment: edgeAt([0, 0], [100, 0]).id }] });
+    assert('landscape: free edits — a street cut (a refinement), two blocks joined (an intervention), a join across the edge refused with its reason; the complex regular',
+      X.edits.length === 2 && X.edits[0].refinement && !X.edits[1].refinement && X.refusedAt === 2 && /edge/.test(X.refused) && X.topology.regular && X.topology.counts.join() === '18,25,7',
+      `${X.topology.counts} ${X.refused}`);
     const entries = Array.from({ length: 24 }, (_, hr) => 200 + 1400 * Math.exp(-0.5 * ((hr - 13) / 4) ** 2));
+    const S0 = ask({ op: 'run', ...net, edits: [{ kind: 'cut', segment: edgeAt([100, 0], [100, 100]).id, at: [100, 50] }], params: { seed: 3, start: 12, end: 15 },
+      initial: { walkers: { [D.cells.vertices[5].id]: 300 }, openA: true }, entries, altitude: Array(24).fill(0.5) });
+    assert('landscape: a run on the edited complex from noon, from the state set: frames from 12:00, the first store open, the walkers set there and kept',
+      S0.frames[0].time === 12 && S0.frames[0].a && Math.abs(S0.balance.start - 300) < 1e-6 && Math.abs(S0.balance.residual) < 1e-6);
     const R = ask({ op: 'run', ...net, params: { seed: 3 }, entries, altitude: Array(24).fill(0.5) });
     const eachWay = R.frames.every((F) => Object.keys(F.flow).every((id) => Math.abs(F.forth[id] - F.back[id] - F.flow[id]) <= 0.02 + 1e-6 * (F.forth[id] + F.back[id])));
     assert(`landscape: a day of ${R.events.length} events, walkers kept, every configuration regular, each way's hops differing by the net flow`,
@@ -187,6 +197,11 @@ for (const p of plugins) {
     assert('landscape: as many flows round the holes as holes; walkers kept with the shops; with the stays forgotten, all on the streets',
       C.harmonic.length === C.betti[1] && C.memory.kept === 0 && C.memory.onStreetMarkov.every((v) => Math.abs(v - 100) < 1e-6) && C.memory.inside > 0 && C.operators.deviation === 0);
     const sun = { altitude: Array.from({ length: 24 }, (_, hr) => Math.max(-0.3, Math.sin((Math.PI * (hr - 6)) / 14))), azimuth: Array.from({ length: 24 }, (_, hr) => (Math.PI * (hr - 6)) / 12) };
+    const Ms = ask({ op: 'massing', buildings: [{ key: 'a', ring: [[0, 0], [10, 0], [10, 10], [0, 10]], base: 0, top: 10 }, { key: 'b', ring: [[10, 0], [20, 0], [20, 10], [10, 10]], base: 0, top: 20 },
+      { key: 'c', ring: [[40, 0], [50, 0], [50, 10], [40, 10]], base: 0, top: 10 }], ...sun, air: Array(24).fill(18), start: 0, end: 6, initial: { a: 30 } });
+    const T6 = Ms.frames[Ms.frames.length - 1].temperature;
+    assert('landscape: the buildings as one 3-complex — three 3-cells, one wall shared, two terraces; heat from the warmed building into its neighbour, not into the one apart',
+      Ms.regular && Ms.counts[3] === 3 && Ms.walls.length === 1 && Ms.terraces === 2 && T6.b > T6.c && T6.a < 30, JSON.stringify(T6));
     const B = ask({ op: 'building', x: 0, y: 0, heading: 0, width: 20, depth: 12, storey: 3.5, nx: 4, ny: 2, floors: 3, ...sun, events: [{ hour: 9, kind: 'doors' }, { hour: 12, kind: 'merge' }, { hour: 16, kind: 'partition' }] });
     assert('landscape: a building of 24 rooms a ball; doors, a merge and a parting each keep its heat and its complex regular',
       B.counts[3] === 24 && B.betti.join() === '1,0,0,0' && B.events.length === 3 && B.events.every((e) => e.regular && Math.abs(e.heatChange) <= 1e-9 * Math.abs(B.hours[0].heat)));

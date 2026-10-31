@@ -15,7 +15,7 @@ The first plug-in, **Street Oceanography**, reads streets as open systems, and d
 
 It reads real records of Melbourne. Every result says whether it was measured from records, proved for any street, or comes from a model with declared parameters, and gives how it was obtained and its limits.
 
-The second plug-in, **Landscape Dynamics** ([ADR 0062](../../development/decisions/0062-landscapes-as-cellular-configurations.md)), takes a district of the Hoddle Grid as cells — junctions, streets and blocks — and runs it as one process in which structure, use and meaning change one another:
+The second plug-in, **Landscape Dynamics** ([ADR 0062](../../development/decisions/0062-landscapes-as-cellular-configurations.md), [ADR 0063](../../development/decisions/0063-the-district-as-a-complex-to-work-on.md)), takes a district of the Hoddle Grid as cells — junctions, streets, blocks, and its buildings as 3-cells sharing their walls — to be seen as a complex, set and rewritten by hand, and run as one process in which structure, use and meaning change one another:
 - walkers each way along the streets and the warmth of the blocks, between events;
 - two stores of the district opening and shutting; a rule coming into force, carried out as a lane that rewrites the cells, and the lane taking on a meaning as it is used;
 - the day drawn as the district's spacetime, time rising above the map: the streets' traffic slice by slice, the stores' worldlines, the lane's sheet beginning in mid-air and deepening once recognised, the events joined by their causal order;
@@ -39,7 +39,7 @@ Drag to pan, right-drag to turn and tilt, and wheel to zoom. Picking a building,
 | Plug-in | Content | Status |
 |---|---|---|
 | [Street Oceanography](plugins/street-oceanography/README.md) | Six layers and eight analyses (§4) | draft |
-| [Landscape Dynamics](plugins/landscape-dynamics/README.md) | Four layers and four analyses: the district as cells, the landscape running, its spacetime, a building's rooms; its events, exactly; scales and memory | draft |
+| [Landscape Dynamics](plugins/landscape-dynamics/README.md) | Four layers and four analyses: the district as a complex (its buildings among its cells), the landscape running, its spacetime, a building's rooms; the district's complex, freedom and dynamics; its events, exactly; scales and memory | draft |
 | Human flow | Trajectories and origin–destination; what people carry at entry and departure; crowds beyond the kinematic wave | planned |
 | Architecture | Form, space and order; the frontage as an interface; plans and districts as cell complexes | planned |
 | Cultural analysis | Display and description; the record of manners (a survey at fixed positions, after Kon Wajirō) | planned |

@@ -2,8 +2,10 @@
 # Header-only; each module a target architecture::<module>:
 #   space           a building as a complex of rooms: its rooms the 3-cells, walls, floors and facades the 2-cells,
 #                   what each room carries; doors and stairs opened, rooms merged and parted, the rooms reached;
+#                   a district's buildings as one 3-complex, party walls shared (massing.hpp);
 #   environment     the heat of its rooms as the Hodge Laplacian Δ₃ with the fabric in its stars; the Sun's sol-air
-#                   gains on its facades and roof; its thermal modes; each hour propagated exactly.
+#                   gains on its facades and roof; its thermal modes; each hour propagated exactly; the heat of a
+#                   district's buildings through their party walls, facades and roofs (massing_heat.hpp).
 #
 # The domain stands on the foundations alone (module.json): calx (linalg), morphe (topology, formal) and physis
 # (discretisation). Inside The Science Infrastructures they are the sibling foundations, added here when no larger
@@ -57,6 +59,12 @@ function(architecture_module name)
     calx_add_check(check_architecture_${name} SOURCES ${name}/tests/check_${name}.cpp LIBRARIES architecture::${name})
   endif()
 endfunction()
+function(architecture_check module name)
+  if(ARCHITECTURE_CHECKS)
+    calx_add_check(check_architecture_${name} SOURCES ${module}/tests/check_${name}.cpp LIBRARIES architecture::${module})
+  endif()
+endfunction()
 
 architecture_module(space LIBRARIES morphe::topology morphe::formal)
-architecture_module(environment LIBRARIES architecture::space physis::discretisation calx::linalg)
+architecture_module(environment LIBRARIES architecture::space physis::discretisation calx::linalg calx::integrators)
+architecture_check(space massing)

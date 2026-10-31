@@ -205,6 +205,8 @@ async function toggleLayer(plugin, layer, on) {
   const key = `${plugin.name}/${layer.id}`;
   const entry = state.layers.get(key) || { on: false, handle: null, legend: null };
   entry.on = on;
+  // Each load has a token: a layer switched off (or on again) while it loads drops what that load drew.
+  const token = (entry.token = {});
   state.layers.set(key, entry);
   if (!on) {
     if (entry.handle && entry.handle.dispose) entry.handle.dispose();
@@ -217,9 +219,15 @@ async function toggleLayer(plugin, layer, on) {
   try {
     const mod = await import(`/plugins/${plugin.name}/${layer.module}`);
     const ids = [];
-    const ctx = context(plugin, { layerId: (suffix = '') => { const id = `${key}${suffix}`; ids.push(id); return id; } });
-    entry.handle = await mod.layer(ctx);
     entry.ids = ids;
+    const ctx = context(plugin, { layerId: (suffix = '') => { const id = `${key}${suffix}`; ids.push(id); return id; } });
+    const handle = await mod.layer(ctx);
+    if (entry.token !== token) {
+      if (handle && handle.dispose) handle.dispose();
+      if (!entry.on) for (const id of ids) state.gis.remove(id);  // on again: the newer load draws under the same ids
+      return;
+    }
+    entry.handle = handle;
     if (entry.handle && entry.handle.legend) {
       entry.legend = entry.handle.legend;
       document.getElementById('legend').append(entry.legend);

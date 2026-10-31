@@ -3,7 +3,7 @@
 - **Status:** draft
 - **Activity:** research
 - **Modules:** `landscape` (`landscape/include/urban/landscape/`), checked by `landscape/tests/check_landscape.cpp`; the building of §7 is the architecture domain's `space` and `environment` (`domains/architecture/`)
-- **Decision:** [ADR 0062](../../../development/decisions/0062-landscapes-as-cellular-configurations.md)
+- **Decisions:** [ADR 0062](../../../development/decisions/0062-landscapes-as-cellular-configurations.md), amended by [ADR 0063](../../../development/decisions/0063-the-district-as-a-complex-to-work-on.md)
 - **Foundations:** morphe (regular complexes, their rewriting, traces, Möbius inversion; its decision 0008), physis (composition, lumping, jump and piecewise-deterministic processes, elimination, Doi–Peliti operators, Hodge Laplacians, planar faces; its decision 0018), calx (the θ-method, matrix exponentials, random streams)
 
 This note states the formalism the module implements, with its definitions, its results and their proofs or sources, and says where a result is a theorem about any district and where it is a property of a model with declared rates. Notation follows the code: names in `code` are those of the headers.
@@ -80,6 +80,15 @@ Two events are *dependent* when one writes what the other reads or writes (Mazur
 
 A lane between two stores, through the block both face, is three rewrites: the street each store faces subdivided at the point facing it, and the block split between the two new junctions. The two subdivisions are independent; the split reads both. The trace has two linearisations, and the history is one. Closing the lane merges the two blocks across it and the streets at its ends, returning a complex isomorphic to the first. The closed streets get new identifiers, so a plan names the cells of the configuration it was made in; the process makes the plan again after every rewrite (`process.hpp`), and `build_lane` refuses a plan made for another configuration.
 
+### 3.5 Free Edits
+
+Three rewrites of the district are offered to whoever works on it, each checked for regularity and refused with its reason (`district.hpp`):
+- **`cut_street(D, e, p)`** cuts a segment at the point of it nearest to p: a refinement. It is refused within 2 m of a junction.
+- **`open_passage(D, f, a, b)`** opens a passage through a block between the points of its boundary nearest to a and to b: the lane's three rewrites (§3.4), with the chord's test that it stays inside the block. It is refused when both ends fall on one street of the block.
+- **`join_blocks(D, e)`** joins the two blocks on either side of a segment: `merge_cells` across it, an intervention, the capacities summed and the temperatures weighed by them. Stores that faced the segment face the nearest one left. It is refused where the segment bounds fewer than two blocks.
+
+By Proposition 2.6 every free edit conserves the extensive quantities. A list of edits applied to the district as mapped rebuilds the same complex with the same cell ids, so a list is a history, and its trace (§3.3) says which edits could have been made in either order.
+
 ## 4. Composition of Open Systems
 
 **Definition 4.1** (open system). An *open system* $S$ has a finite state space $X_S$, ports $p: X_S \to P$ (a port reads a function of the state), and moves: transitions $x \to y$ with rates, grouped into named mechanisms (`physis::statistical_mechanics::OpenSystem`).
@@ -119,6 +128,10 @@ A store opens at $\alpha(1 + \eta[\text{the other open}] + \xi[\text{the lane th
 ### 5.3 The Registry of Enabled Events
 
 The set $\gamma(z)$ of event kinds that can happen is a function of the state: the lane can be built only under a permit and only when it does not stand; it can be removed or recognised only while it stands and is unrecognised. Each frame of a run carries $\gamma$ (`Frame::enabled`). The page shades, for each kind, the hours it was enabled behind the dots of the hours it happened. The check verifies that every frame's registry obeys these guards.
+
+### 5.4 A Run from a State
+
+A run need not start at midnight with the stores shut. It starts at any hour from a declared state (`LandscapeParams::start`, `open_a`, `open_b`, `permit`, and the walkers and temperatures the district carries), on any complex its edits have made. The next closing is the first after the start.
 
 The continuous part keeps its walkers exactly: $\frac{d}{dt}\sum n = \sum e - \sum n/\tau$, and every rewrite carries them across (Proposition 2.6). The check finds the balance at midnight to rounding.
 
@@ -195,6 +208,24 @@ The Sun's direct normal irradiance on a clear day is $I = 1353 \cdot 0.7^{m^{0.6
 
 A door or a stair is a wall or a floor relabelled: the same cell carrying another conductance, and a way through for people. Merging two rooms across a wall is `merge_cells`: one 3-cell with the facets of both but the wall, its heat and capacity summed. Parting it again along the first room's facets copies the merged temperature to both, each with its share of capacity. By Proposition 2.6 every event keeps the building's heat, and every derived complex is regular. The rooms one can reach from the entrance are found by a search through doors and stairs.
 
+### 7.4 A District's Buildings as One Complex
+
+The buildings of a district are one regular 3-complex (architecture's `space/massing.hpp`). Each building is a 3-cell bounded by its ground face, its roof and its walls. Two buildings standing against each other share the wall between them: one 2-cell with two cofaces.
+
+The construction pools corners and inserts T-junctions, so that two footprints sharing a stretch of edge share its pieces exactly. On a pooled edge it cuts the walls at every height where something begins or ends there, $L_e = \bigcup\{b_i, t_i : i \text{ uses } e\}$. Every face is walked so that each building is oriented outward: the ground $-1$, the roof $+1$, a wall $+1$ where the building's counter-clockwise ring runs along the wall's own direction. A wall two buildings share is $+1$ for one and $-1$ for the other.
+
+**Proposition 7.1.** The construction is a regular 3-complex with $\partial\partial = 0$. Each building's boundary is a 2-sphere. The buildings joined by shared walls (terraces) are its components through 2-cells.
+
+*Proof.* Each wall piece is a quadrilateral whose vertical sides may be cut at further heights: a polygon, a disc bounded by a circuit. Ground and roof faces are discs bounded by the pooled ring, which is checked to be simple. A building's facets close up into a surface: each horizontal edge of its ring lies on its ground or roof face and on the wall piece above or below it. Each vertical piece lies on the two wall pieces of the ring's edges at its corner. Each horizontal edge at an intermediate height lies on the wall pieces below and above it. The surface is the boundary of the prism over a disc, a sphere. The signs are those of the prism's outward orientation, so $\partial\partial = 0$ on each 3-cell, and on 2-cells by their walks. ∎
+
+The check verifies regularity, ∂∂ = 0 and the Betti numbers of a ball on two and on three boxes, one meeting the others at a T-junction.
+
+The heat of the buildings is $C\dot T = -\Delta T + g_\text{air}T_\text{air} + g_\text{ground}T_\text{ground} + S$ (`environment/massing_heat.hpp`). Here $\Delta$ is the Laplacian of the buildings through their shared walls (conductance $U_\text{party}A$), with the losses to the air through facades and roofs and to the ground on its diagonal: $\Delta_3$ on the outward-oriented massing, the stars $1/G$ and $1/C$ (§7.2). The Sun's gains are the sol-air gains on facades and roofs open to the sky; a wall shared with a neighbour sees none. Each step is Crank–Nicolson.
+
+With every outer loss set to zero, two buildings exchange heat only through their party wall, and the total heat is kept to the solver's tolerance. They settle at the mean their capacities weigh. Open to the air, they relax to it.
+
+On the Hoddle Grid's middle the massing has 440 buildings and 565 shared walls in 98 terraces, a regular complex of Euler characteristic 77. The district's streets and blocks and its buildings are then one picture of space. They are still two complexes, joined by where each building stands: the ground beneath the buildings is not yet subdivided by their footprints.
+
 ## 8. Scales, Memory and Two Descriptions
 
 ### 8.1 The District's Frequencies and Its Flows Round the Holes
@@ -258,7 +289,7 @@ A recognised lane cannot be removed: in the skeleton, the move is refused at the
 
 ## 11. What Is Proved and What Is Modelled
 
-**Proved, for any district or building.** Proposition 2.3, Proposition 2.6, the commuting of independent rewrites (§3.1), Proposition 4.3, Proposition 5.1, Propositions 6.1–6.5 (for the skeleton as declared), Proposition 8.1, the exactness of the elimination and of the grouping (§8.2), Proposition 8.2, and the conserved lattice (§9).
+**Proved, for any district or building.** Proposition 2.3, Proposition 2.6, the commuting of independent rewrites (§3.1), Proposition 4.3, Proposition 7.1, Proposition 5.1, Propositions 6.1–6.5 (for the skeleton as declared), Proposition 8.1, the exactness of the elimination and of the grouping (§8.2), Proposition 8.2, and the conserved lattice (§9).
 
 **Modelled, with declared rates.** The stores' openings and the institutions' rates, the walkers' attraction and stay, the blocks' warming, the shops' stays and the rate of entering, the building's fabric. These explore how structure, use and meaning change one another. They do not predict a particular district.
 

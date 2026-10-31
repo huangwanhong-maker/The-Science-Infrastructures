@@ -68,6 +68,8 @@ struct LandscapeParams {
   double air = 16, sun_gain = 9, relax = 1.5, walker_heat = 0.01;  // °C, °C, h, °C a walker
   std::vector<double> altitude;                           // the Sun's altitude in each hour (radians, 24)
   double hours = 24, frame = 0.25, step = 0.005;          // h; the walkers' flow is stiff, of rates up to ~200/h
+  double start = 0;                                       // the hour the run starts (it ends at `hours`)
+  bool open_a = false, open_b = false, permit = false;    // the stores and the permit at the start
   std::uint64_t seed = 1;
 };
 
@@ -163,20 +165,22 @@ inline Layout layout(const District& D, const LandscapeParams& P) {
 
 }  // namespace detail
 
-// Runs the landscape over P.hours from t = 0 (midnight), with stores 0 and 1 of D the two stores.
+// Runs the landscape from P.start to P.hours (hours from midnight), with stores 0 and 1 of D the two stores, from the
+// state D carries and the stores and permit P declares.
 inline LandscapeRun run_landscape(District D, const LandscapeParams& P) {
   if (D.stores.size() < 2) throw std::invalid_argument("urban::landscape::run_landscape: two stores");
   LandscapeRun out;
   calx::random::Stream rng(P.seed, 0x1a, 0x2b, 0x3c);
-  bool a = false, b = false, permit = false, recognised = false;
+  if (!(P.start >= 0 && P.start < P.hours)) throw std::invalid_argument("urban::landscape::run_landscape: a start before the end");
+  bool a = P.open_a, b = P.open_b, permit = P.permit, recognised = false;
   std::uint64_t lane = 0;
-  int day = 0;
+  int day = P.start >= P.open_to ? 1 : 0;  // the next closing comes after the start
   // The lane's plan, made again whenever the cells change: closing a lane merges the streets it cut into new
   // segments, and a plan names the cells of the configuration it was made in.
   LanePlan plan = plan_lane(D, 0, 1);
   out.lane_refused = plan.refused;
   for (const auto id : D.of(0)) out.walkers0 += D.value(id, "walkers");
-  double t = 0;
+  double t = P.start;
   // Footprint items: "a:A", "a:B", "permit", "lane", "recognised", "day", and the rewrites' own.
   const auto fp = [](std::set<std::string> reads, std::set<std::string> writes) { return morphe::formal::traces::Footprint{std::move(reads), std::move(writes)}; };
   std::map<std::uint64_t, double> flow_now;

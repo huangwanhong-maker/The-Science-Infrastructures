@@ -8,11 +8,11 @@
     {
       "id": "cells",
       "group": "The district as cells",
-      "title": "junctions, streets and blocks",
+      "title": "the district as a complex",
       "module": "layers/cells.js",
       "areas": ["melbourne"],
       "default": false,
-      "about": "The walking network of a district as a regular cell complex: its junctions, the segments of its streets and lanes, and the blocks they enclose, each a cell; blocks with a dead end inside left open, as holes. The two stores and where a lane between them would run."
+      "about": "The walking network of a district as a regular cell complex, drawn as a complex: on the ground, or by dimension with each cell joined to its faces and the incidences' signs; each segment's orientation; the holes; a picked cell's closure and star; the state set on the cells and the edits made to them."
     },
     {
       "id": "landscape",
@@ -42,7 +42,7 @@
     }
   ],
   "tools": [
-    { "id": "events", "title": "The landscape and its events", "module": "tools/events.js", "about": "Two stores picked on the map; the lane between them built as three rewrites of the district and closed again; a day of the district run as one process, its record, what could happen at each hour and what did, the order of its events, and the balances it keeps." },
+    { "id": "workspace", "title": "The district: complex, freedom, dynamics", "module": "tools/workspace.js", "about": "The district as a cell complex, on the ground or by dimension, a picked cell with its faces and what it bounds; what its cells carry at the start, set by hand, and the cells themselves rewritten (a street cut, a passage opened, two blocks joined), each edit checked and its order given; the landscape run on that complex from that state from the clock's hour, drawn on the map as the clock plays, with what could happen at each hour and what did." },
     { "id": "exact", "title": "The landscape's events, exactly", "module": "tools/exact.js", "about": "The stores, the rule, the lane and its meaning composed from their parts and solved exactly: how often each joint state holds and whether it runs round; which coarser descriptions forget something exactly, which do not and for how long they stay close; how interventions interact on an outcome; what a record says." },
     { "id": "building", "title": "A building's rooms", "module": "tools/building.js", "about": "A building picked on the map as a complex of rooms: its heat through the day under the Sun, how long it remembers a disturbance, and doors, stairs and merged rooms with the heat they keep and the rooms one can reach." },
     { "id": "scales", "title": "Scales and memory", "module": "tools/scales.js", "about": "How fast the district evens out and along which division; the flows round its holes; what the streets remember of the shops along them; walkers counted one by one and as a flow." }
