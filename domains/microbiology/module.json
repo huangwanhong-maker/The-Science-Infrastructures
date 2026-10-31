@@ -1,0 +1,16 @@
+{
+  "name": "microbiology",
+  "kind": "field",
+  "status": "planned",
+  "depends": [
+    "genomics",
+    "evolution",
+    "cell-biology"
+  ],
+  "foundations": [
+    "calx",
+    "morphe",
+    "physis",
+    "tyche"
+  ]
+}

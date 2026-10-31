@@ -1,0 +1,15 @@
+{
+  "name": "cell-biology",
+  "kind": "field",
+  "status": "planned",
+  "depends": [
+    "genomics",
+    "molecular-science"
+  ],
+  "foundations": [
+    "calx",
+    "morphe",
+    "physis",
+    "tyche"
+  ]
+}

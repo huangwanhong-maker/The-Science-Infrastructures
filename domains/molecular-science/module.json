@@ -1,0 +1,11 @@
+{
+  "name": "molecular-science",
+  "kind": "field",
+  "status": "planned",
+  "depends": [],
+  "foundations": [
+    "calx",
+    "morphe",
+    "physis"
+  ]
+}

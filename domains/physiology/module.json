@@ -1,0 +1,14 @@
+{
+  "name": "physiology",
+  "kind": "field",
+  "status": "planned",
+  "depends": [
+    "cell-biology",
+    "neuroscience"
+  ],
+  "foundations": [
+    "calx",
+    "physis",
+    "tyche"
+  ]
+}

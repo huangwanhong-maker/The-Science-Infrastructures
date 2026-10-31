@@ -281,11 +281,14 @@ The programme will grow over decades and change direction as it learns. Its gove
 The domains are ordered by what each may depend on:
 
 ```
+height 5   ecology
 height 4   climate
 height 3   tides · navigation · air-sea · planetary-science
-height 2   astronomy · geophysics · geography · oceanography · meteorology
-height 1   geodesy · evolution
-height 0   metrology · neuroscience · history · genomics · economics · robotics · urban-science · architecture
+height 2   astronomy · geophysics · geography · oceanography · meteorology ·
+           microbiology · physiology · developmental-biology
+height 1   geodesy · evolution · cell-biology
+height 0   metrology · neuroscience · history · genomics · economics · robotics · urban-science ·
+           architecture · molecular-science
            ─────────────────────────────── foundations: physis ─► calx, morphe
 ```
 
@@ -331,7 +334,7 @@ A priority such as 1.3 is the third place in tier 1. Within a tier, a domain com
 
 ### 4.4 The Domains
 
-Fifty-six domains, ten of them built. A name links to the domain's directory where it exists; the others are placed in the order only when their work begins.
+Fifty-seven domains: seventeen built, and nine more placed in the order as planned, each with a directory of its own. A name links to the domain's directory where it exists; the others are placed in the order only when their work begins.
 
 **The Earth and the sky.**
 
@@ -357,24 +360,24 @@ Fifty-six domains, ten of them built. A name links to the domain's directory whe
 
 | Domain | Kind | Stands on | Scope | Priority |
 |---|---|---|---|---|
-| molecular-science | field | — | Atoms, molecules, proteins and their interactions: molecular graphs, conformers, reaction networks and their dynamics | 1.6 |
+| [molecular-science](domains/molecular-science/) | field | — | Atoms and molecules: their graphs, shapes, energies and motions; proteins and nucleic acids in space; reactions between named molecules and their rates ([ADR 0061](development/decisions/0061-the-domains-of-life.md)) | 1.6 |
 | chemistry | field | molecular-science | Substances in bulk: equilibria, solutions, electrochemistry; inorganic, organic and analytical chemistry | 3.1 |
 | condensed-matter | field | — | Crystals and their defects; electronic, magnetic and mechanical properties; materials | 4 |
 | nuclear-physics | field | — | Nuclides, their decays and reactions; radiometric dating | 4 |
 | particle-physics | field | — | The particles and their interactions; scattering | 4 |
 
-**Life.**
+**Life**, from the molecule to the ecosystem, every domain placed in the order ([ADR 0061](development/decisions/0061-the-domains-of-life.md)).
 
 | Domain | Kind | Stands on | Scope | Priority |
 |---|---|---|---|---|
-| [neuroscience](domains/neuroscience/) | field | — | The brain: reference spaces, parcellations and maps, the head and its electrodes; spiking neural networks next | built; its module of spiking networks 1.3 |
-| genomics | field | — | Sequence alignment, k-mers, genome assembly on de Bruijn graphs, variant analysis | 1.5 |
-| evolution | field | genomics | Phylogeny, population genetics, selection; the systematics of plants, animals and fungi | 3.2 |
-| cell-biology | field | genomics, molecular-science | Genes and their expression, pathways, the cell | 3.3 |
-| ecology | field | geography, climate, evolution | Populations, communities, ecosystems; biodiversity and biogeography | 3.7 |
-| microbiology | field | genomics, cell-biology | Bacteria, archaea and viruses; infection | 4 |
-| physiology | field | cell-biology, neuroscience | Organs and their regulation; immunology, endocrinology, nutrition | 4 |
-| developmental-biology | field | cell-biology | How an embryo forms | 4 |
+| [neuroscience](domains/neuroscience/) | field | — | The brain: reference spaces, parcellations and maps, the head and its electrodes; networks of spiking neurons | built; its module of spiking networks 1.3 |
+| [genomics](domains/genomics/) | field | — | Genomes and their sequences: alignment as a sum over an edit graph in a semiring, indexes and sketches, k-mers and assembly, mapping and variants, HMMs and annotation, multiple alignment, expression; RNA structure by grammars and group grammars of nucleic acids ([ADR 0043](development/decisions/0043-the-genome-infrastructure.md), [ADR 0047](development/decisions/0047-group-grammars-and-advanced-genome-analysis.md)) | built |
+| [evolution](domains/evolution/) | field | genomics | Phylogeny, population genetics, selection, haplotypes; the systematics of plants, animals and fungi | built |
+| [cell-biology](domains/cell-biology/) | field | genomics, molecular-science | The cell as a system: gene regulation, signalling and metabolism as networks, membranes, the cell cycle, the states of cells | 3.3 |
+| [ecology](domains/ecology/) | field | geography, climate, evolution | Populations, communities, behaviour; biodiversity, the distributions of species and biogeography; ecosystems; fisheries | 3.7 |
+| [microbiology](domains/microbiology/) | field | genomics, evolution, cell-biology | Bacteria, archaea and viruses: growth, pangenomes, systematics, microbiomes, phages, infection within a host | 4 |
+| [physiology](domains/physiology/) | field | cell-biology, neuroscience | Organisms as regulated systems: excitable tissues, circulation, respiration, homeostasis, immunity, energetics; the physiology of plants | 4 |
+| [developmental-biology](domains/developmental-biology/) | field | cell-biology | How an organism forms: gradients and positional information, Turing patterns, segmentation clocks, fates, tissues as cell complexes, growth by rewriting | 4 |
 
 **Health.**
 
@@ -449,10 +452,13 @@ These disciplines are not domains here. Each is held by the foundation or domain
 | Mineralogy, petrology, stratigraphy, geochemistry, palaeontology | geology |
 | Spiking neural networks (1.3), connectomics, the brain's signals | neuroscience |
 | Structural biology, biochemistry, quantum chemistry of molecules | molecular-science |
+| Systems biology, synthetic biology, cell signalling, metabolic networks | cell-biology |
 | Pharmacology, until it graduates onto physiology | drug-discovery |
 | Botany, zoology and mycology as systematics; population genetics | evolution |
-| Biodiversity, biogeography, fisheries | ecology |
-| Immunology, endocrinology, nutrition | physiology |
+| Bacteriology, virology, the microbiome; the systematics of microbes | microbiology |
+| Behavioural ecology, biodiversity, biogeography, fisheries | ecology |
+| Immunology, endocrinology, nutrition, plant physiology | physiology |
+| Embryology, morphogenesis, regeneration | developmental-biology |
 | Medical imaging, histology | anatomy |
 | Public health | epidemiology |
 | Computational linguistics (1.4), phonetics, typology, historical linguistics | linguistics |
@@ -473,15 +479,17 @@ tier 3   chemistry → evolution → cell-biology → cryosphere → geology →
 tier 4   the rest of §4.4, each when a work reaches it
 ```
 
-The domains built and those of tiers 1 to 3 in the order, by height; a superscript is the tier, and a name without one is built:
+The domains built, those of tiers 1 to 3, and the other domains of life, in the order, by height; a superscript is the tier, and a name without one is built:
 
 ```
 height 5   ecology³
 height 4   climate
 height 3   tides² · navigation · air-sea² · geology³ · planetary-science
-height 2   astronomy · geophysics · geography · oceanography · meteorology · cryosphere³
-height 1   geodesy · drug-discovery¹ · chemistry³ · evolution³ · cell-biology³ · epidemiology³
-height 0   metrology · neuroscience · history · economics · robotics · urban-science · linguistics¹ · genomics¹ · molecular-science¹ · demography³
+height 2   astronomy · geophysics · geography · oceanography · meteorology · cryosphere³ ·
+           microbiology⁴ · physiology⁴ · developmental-biology⁴
+height 1   geodesy · evolution · drug-discovery¹ · chemistry³ · cell-biology³ · epidemiology³
+height 0   metrology · neuroscience · history · genomics · economics · robotics · urban-science ·
+           linguistics¹ · molecular-science¹ · demography³
 ```
 
 *Rationale.*
@@ -498,7 +506,7 @@ height 0   metrology · neuroscience · history · economics · robotics · urba
   - navigation joins the sky of the Celestial Atlas to the charts of the Earth Atlas. It was founded early, for the frames and satellites of Cosmopoiesis ([ADR 0049](development/decisions/0049-the-spacetime-of-the-earth-and-the-moon.md)); its celestial navigation, charts and routes remain in this tier.
 - **Tier 3** opens the next branches where the existing works already reach:
   - chemistry, for the chemistry of the ocean and the air, and for geology;
-  - evolution and cell biology, on genomics;
+  - evolution and cell biology, on genomics. Evolution was founded early, beside genomics ([ADR 0043](development/decisions/0043-the-genome-infrastructure.md)); cell biology is placed in the order, with molecular science beneath it and the rest of the domains of life ([ADR 0061](development/decisions/0061-the-domains-of-life.md));
   - the cryosphere, geology and planetary science, for sea ice, the rocks beneath the plates, and the bodies of the Celestial Atlas. Planetary science was founded early, at the user's request, for the Moon's magnetic field in Cosmopoiesis ([ADR 0052](development/decisions/0052-fields-known-in-part.md)); its surfaces, interiors and atmospheres remain in this tier;
   - ecology, over the Earth Atlas's vegetation and climate classes;
   - the quantitative social methods, and on them demography and epidemiology, over the Earth Atlas's population grids and its measures of exposure.
@@ -541,7 +549,9 @@ The three atlases run online on the project's server, the [Celestial Atlas](http
 ├── domains/         metrology · geodesy · astronomy · geophysics · geography · oceanography ·
 │                    meteorology · tides · navigation · air-sea · climate · neuroscience (submodule) ·
 │                    history · genomics · evolution · economics · planetary-science · robotics ·
-│                    urban-science · architecture (planned)
+│                    urban-science · architecture (planned) · the domains of life, planned:
+│                    molecular-science · cell-biology · microbiology · physiology ·
+│                    developmental-biology · ecology
 ├── data/            registry · acquisition · formats · products · terrain tiles · requests on demand
 ├── visualization/   scene model · renderers · styles; provisional drawing helpers
 ├── observation/     instruments · field work · sensors

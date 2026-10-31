@@ -69,11 +69,14 @@ Edges        data/            registry · acquisition · formats · products · 
              visualization/   scene model · renderers · styles   (used by works only)
              observation/     instruments · field work
                     │ call into
-Domains      height 4   climate
-(domains/)   height 3   tides · navigation · air-sea
-             height 2   astronomy · geophysics · geography · oceanography · meteorology
-             height 1   geodesy · evolution
-             height 0   metrology · neuroscience (a submodule) · history · genomics
+Domains      height 5   ecology
+(domains/)   height 4   climate
+             height 3   tides · navigation · air-sea · planetary-science
+             height 2   astronomy · geophysics · geography · oceanography · meteorology ·
+                        microbiology · physiology · developmental-biology
+             height 1   geodesy · evolution · cell-biology
+             height 0   metrology · neuroscience (a submodule) · history · genomics · economics ·
+                        robotics · urban-science · architecture · molecular-science
                     │ use
 Foundations  physis           units · symmetry · geometry · dynamics · quantum · discretisation ·
 (foundations/,                spacetime · field theory · gauge · quantum gravity · mechanics ·
@@ -232,7 +235,7 @@ The applications run in the browser, as ES modules without a build step. They im
 | Genomes and their sequences: genetic codes, the alignment of sequences and its fast kernels, indexes and sketches, k-mers and assembly, mapping and variants, HMMs, annotation, multiple alignment, expression, their simulation | `domains/genomics/` |
 | Phylogeny, population genetics and selection | `domains/evolution/` |
 | Words and their indexes, the alignment of words over semirings, Eulerian circuits | morphe (`formal`, `combinatorics`) |
-| A new science, such as chemistry or ecology | a new domain in `domains/`, placed in the order |
+| A new science, such as chemistry or linguistics | a new domain in `domains/`, placed in the order |
 | Downloading and registering DE440 or a tide-gauge record | `data/` |
 | Telescope or sensor control | `observation/` |
 | A 3D globe or planetarium renderer | `visualization/renderers/` |

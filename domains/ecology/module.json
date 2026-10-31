@@ -1,0 +1,15 @@
+{
+  "name": "ecology",
+  "kind": "field",
+  "status": "planned",
+  "depends": [
+    "geography",
+    "climate",
+    "evolution"
+  ],
+  "foundations": [
+    "calx",
+    "physis",
+    "tyche"
+  ]
+}

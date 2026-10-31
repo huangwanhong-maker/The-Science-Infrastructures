@@ -1,0 +1,13 @@
+{
+  "name": "developmental-biology",
+  "kind": "field",
+  "status": "planned",
+  "depends": [
+    "cell-biology"
+  ],
+  "foundations": [
+    "calx",
+    "morphe",
+    "physis"
+  ]
+}
