@@ -3,8 +3,9 @@
 // (streets), points (holdings) and bars (a quantity at a place), lit by the Sun at a direction the caller
 // gives (the real Sun of an instant: the astronomy domain's sunAltAz), with map controls, picking and hover.
 // For what moves: slabs (water standing in a street's channel to a level, which can vary along it), swarms
-// (walkers, placed afresh every frame), arrows lying on the ground (currents) and arcs over the city (two
-// places joined), each restyled without being rebuilt.
+// (walkers, placed afresh every frame), arrows lying on the ground (currents), arcs over the city (two
+// places joined) and tubes along paths in space (worldlines, with time drawn as height), each restyled
+// without being rebuilt.
 //
 // three.js and its MapControls are passed in (cityScene(THREE, { MapControls }, …)), as the globe's renderer
 // takes three.js, so that the arithmetic (geometry.js, style.js) stays checkable in Node and another backend
@@ -172,8 +173,11 @@ export function cityScene(THREE, { MapControls }, container, options = {}) {
     g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
     g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
     g.computeVertexNormals();
-    const m = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 1, metalness: 0, side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: -1 }));
+    const clear = (s.opacity ?? 1) < 1;
+    const m = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 1, metalness: 0, side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: -1,
+      transparent: clear, opacity: s.opacity ?? 1, depthWrite: !clear }));
     m.receiveShadow = true;
+    m.renderOrder = s.order ?? 0;
     scene.add(m);
     layers.set(id, { kind: 'flats', object: m, features, style: s, ranges, faceFeature: Int32Array.from(faceFeature) });
     return layers.get(id);
@@ -429,6 +433,37 @@ export function cityScene(THREE, { MapControls }, container, options = {}) {
     return layer;
   }
 
+  // Tubes along polylines in space: path(f) a list of [east, north, up] (m), of a radius, coloured; for
+  // worldlines and links between events drawn with time as height. restyle() recolours.
+  function addTubes(id, features, s) {
+    remove(id);
+    const pos = [], nor = [], ranges = [], faceFeature = [];
+    features.forEach((f, k) => {
+      const path = (s.path(f, k) || []).filter((p) => p.every(Number.isFinite));
+      if (path.length < 2) { ranges.push([pos.length / 3, 0]); return; }
+      const curve = new THREE.CurvePath();
+      for (let i = 1; i < path.length; i++) curve.add(new THREE.LineCurve3(toWorld(...path[i - 1]), toWorld(...path[i])));
+      const g = new THREE.TubeGeometry(curve, Math.max(1, path.length - 1) * (s.pieces ?? 1), Math.max(0.05, s.radius ? s.radius(f, k) : 0.5), s.sides ?? 6, false).toNonIndexed();
+      const P = g.getAttribute('position'), N = g.getAttribute('normal');
+      ranges.push([pos.length / 3, P.count]);
+      for (let i = 0; i < P.count; i++) pos.push(P.getX(i), P.getY(i), P.getZ(i)), nor.push(N.getX(i), N.getY(i), N.getZ(i));
+      for (let t = 0; t < P.count / 3; t++) faceFeature.push(k);
+      g.dispose();
+    });
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    g.setAttribute('normal', new THREE.Float32BufferAttribute(nor, 3));
+    g.setAttribute('color', new THREE.Float32BufferAttribute(new Float32Array(pos.length), 3));
+    const m = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.55, metalness: 0, transparent: (s.opacity ?? 1) < 1, opacity: s.opacity ?? 1 }));
+    m.castShadow = !!s.shadow;
+    m.renderOrder = s.order ?? 2;
+    scene.add(m);
+    const layer = { kind: 'arcs', object: m, features, style: s, ranges, faceFeature: Int32Array.from(faceFeature) };
+    layers.set(id, layer);
+    colourArcs(layer);
+    return layer;
+  }
+
   function colourArcs(l) {
     const C = l.object.geometry.getAttribute('color');
     l.features.forEach((f, k) => {
@@ -531,7 +566,7 @@ export function cityScene(THREE, { MapControls }, container, options = {}) {
 
   return {
     THREE, scene, camera, renderer, controls, layers,
-    toWorld, fit, setSun, setPalette, addSolids, addFlats, addRibbons, addPoints, addSlabs, addSwarm, setSwarm, addArrows, addArcs, restyle, setVisible, remove, flyTo,
+    toWorld, fit, setSun, setPalette, addSolids, addFlats, addRibbons, addPoints, addSlabs, addSwarm, setSwarm, addArrows, addArcs, addTubes, restyle, setVisible, remove, flyTo,
     extentOf: (points) => extent(points),
     onPick: (f) => pickers.push(f),
     onHover: (f) => hoverers.push(f),

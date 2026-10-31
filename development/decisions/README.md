@@ -72,6 +72,7 @@ Decisions that concern only one library are recorded in that library's own `deve
 | [0059](0059-robots-in-their-environments.md) | Robots in their environments: what a world presumes of a place, what a body feels there, and the fields at a point | Accepted, provisionally (the rabbit, the fish and the dog written) |
 | [0060](0060-streets-as-open-systems.md) | Streets as open systems: street oceanography made exact, the urban-science domain and the Urban Building Workbench | Accepted, provisionally |
 | [0061](0061-the-domains-of-life.md) | The domains of life: from the molecule to the ecosystem, placed in the order | Accepted, provisionally |
+| [0062](0062-landscapes-as-cellular-configurations.md) | Landscapes as cellular configurations: their events, their composition and their spacetime | Accepted, provisionally |
 
 ## 2. Template
 

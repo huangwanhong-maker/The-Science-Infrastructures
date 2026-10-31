@@ -1,0 +1,52 @@
+{
+  "title": "Landscape Dynamics",
+  "summary": "A district as cells — junctions, streets and blocks — and what happens in it as one process: walkers and the warmth of the blocks flowing between events; two stores opening and shutting; a rule coming into force, carried out as a lane that rewrites the cells, and the lane taking on a meaning as it is used. Drawn as the district's spacetime; solved exactly where it can be; a building's rooms and their heat beside it.",
+  "status": "draft",
+  "activity": "research",
+  "order": 2,
+  "layers": [
+    {
+      "id": "cells",
+      "group": "The district as cells",
+      "title": "junctions, streets and blocks",
+      "module": "layers/cells.js",
+      "areas": ["melbourne"],
+      "default": false,
+      "about": "The walking network of a district as a regular cell complex: its junctions, the segments of its streets and lanes, and the blocks they enclose, each a cell; blocks with a dead end inside left open, as holes. The two stores and where a lane between them would run."
+    },
+    {
+      "id": "landscape",
+      "group": "The district as cells",
+      "title": "the landscape running (a model)",
+      "module": "layers/landscape.js",
+      "areas": ["melbourne"],
+      "default": false,
+      "about": "A day of the district run as one process, following the clock: walkers at the junctions and their flow along the streets, the warmth of each block, the two stores open or shut, the lane appearing when it is built and the cells it rewrites, its recognition."
+    },
+    {
+      "id": "spacetime",
+      "group": "The district as cells",
+      "title": "the district's spacetime (a model)",
+      "module": "layers/spacetime.js",
+      "areas": ["melbourne"],
+      "default": false,
+      "about": "The same day with time rising above the district: each street a sheet coloured by the walkers it carries, each junction a worldline, the cells beginning and ending where the lane is built, the lane deepening once it is recognised; the events as beads joined to those that read them, and a plane at the clock's hour."
+    },
+    {
+      "id": "rooms",
+      "group": "Buildings",
+      "title": "a building's rooms and their warmth (a model)",
+      "module": "layers/rooms.js",
+      "default": false,
+      "about": "A building picked on the map as a box of rooms on its floors, each room a cell, coloured by its temperature at the clock's hour as the Sun and the air warm it; stairs, doors and merged rooms as they are opened."
+    }
+  ],
+  "tools": [
+    { "id": "events", "title": "The landscape and its events", "module": "tools/events.js", "about": "Two stores picked on the map; the lane between them built as three rewrites of the district and closed again; a day of the district run as one process, its record, what could happen at each hour and what did, the order of its events, and the balances it keeps." },
+    { "id": "exact", "title": "The landscape's events, exactly", "module": "tools/exact.js", "about": "The stores, the rule, the lane and its meaning composed from their parts and solved exactly: how often each joint state holds and whether it runs round; which coarser descriptions forget something exactly, which do not and for how long they stay close; how interventions interact on an outcome; what a record says." },
+    { "id": "building", "title": "A building's rooms", "module": "tools/building.js", "about": "A building picked on the map as a complex of rooms: its heat through the day under the Sun, how long it remembers a disturbance, and doors, stairs and merged rooms with the heat they keep and the rooms one can reach." },
+    { "id": "scales", "title": "Scales and memory", "module": "tools/scales.js", "about": "How fast the district evens out and along which division; the flows round its holes; what the streets remember of the shops along them; walkers counted one by one and as a flow." }
+  ],
+  "engine": "engine/main.cpp",
+  "source": "The urban-science domain's landscape module and its theory note, theory/landscape-dynamics.md"
+}

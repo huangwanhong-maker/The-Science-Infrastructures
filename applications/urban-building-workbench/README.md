@@ -15,6 +15,14 @@ The first plug-in, **Street Oceanography**, reads streets as open systems, and d
 
 It reads real records of Melbourne. Every result says whether it was measured from records, proved for any street, or comes from a model with declared parameters, and gives how it was obtained and its limits.
 
+The second plug-in, **Landscape Dynamics** ([ADR 0062](../../development/decisions/0062-landscapes-as-cellular-configurations.md)), takes a district of the Hoddle Grid as cells — junctions, streets and blocks — and runs it as one process in which structure, use and meaning change one another:
+- walkers each way along the streets and the warmth of the blocks, between events;
+- two stores of the district opening and shutting; a rule coming into force, carried out as a lane that rewrites the cells, and the lane taking on a meaning as it is used;
+- the day drawn as the district's spacetime, time rising above the map: the streets' traffic slice by slice, the stores' worldlines, the lane's sheet beginning in mid-air and deepening once recognised, the events joined by their causal order;
+- the same events solved exactly: what coarser descriptions forget, and how interventions interact;
+- a building picked on the map filled with rooms, its heat through the day under the Sun;
+- the district's own frequencies, its flows round the holes, and what the streets remember of the shops.
+
 ## 2. The Map
 
 | Part | What it draws | Source |
@@ -31,6 +39,7 @@ Drag to pan, right-drag to turn and tilt, and wheel to zoom. Picking a building,
 | Plug-in | Content | Status |
 |---|---|---|
 | [Street Oceanography](plugins/street-oceanography/README.md) | Six layers and eight analyses (§4) | draft |
+| [Landscape Dynamics](plugins/landscape-dynamics/README.md) | Four layers and four analyses: the district as cells, the landscape running, its spacetime, a building's rooms; its events, exactly; scales and memory | draft |
 | Human flow | Trajectories and origin–destination; what people carry at entry and departure; crowds beyond the kinematic wave | planned |
 | Architecture | Form, space and order; the frontage as an interface; plans and districts as cell complexes | planned |
 | Cultural analysis | Display and description; the record of manners (a survey at fixed positions, after Kon Wajirō) | planned |
@@ -98,14 +107,14 @@ python applications/urban-building-workbench/engine.py ask street-oceanography '
 
 `node applications/urban-building-workbench/tests/run-tests.mjs` checks:
 - the manifests, the areas, the recipe and every page module's syntax;
-- when the engine is built, its answers;
+- when the engines are built, their answers (Landscape Dynamics on a grid district with a hole: cells, rewrites, a day's run, the skeleton, the scales, a building);
 - when the records are built, a sensor's week, rhythm and clock, a street's hours and mixing, every street's tide and a day of the sea (the counts within 15% of the tide on an ordinary Wednesday, each way summing to the total), the current meters and their handedness, a street's crowd second by second, and a visitor's plume.
 
 The GIS's arithmetic (the frame against the WGS 84 meridian arc, the round trip, rings, ribbons) is checked in the visualization layer's suite. The mathematics is checked in the foundations and in the urban-science domain.
 
 ## 8. Dependencies
 
-- the urban-science domain and the foundations calx, morphe, physis and tyche;
+- the urban-science and architecture domains and the foundations calx, morphe, physis and tyche;
 - the astronomy domain (the Sun);
 - the visualization layer (`gis`, the styles);
 - three.js 0.170.0 from jsDelivr;

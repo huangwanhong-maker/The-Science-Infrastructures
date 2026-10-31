@@ -141,7 +141,7 @@ function showInfo(sel) {
   info.hidden = false;
   const actions = h('div', { class: 'actions' });
   for (const a of sel.actions || []) actions.append(h('button', { class: 'plain', onclick: a.run }, a.title));
-  info.replaceChildren(h('h3', {}, sel.title || ''), ...(sel.lines || []).map((l) => h('div', { class: 'muted' }, l)), sel.extra || null, sel.actions && sel.actions.length ? actions : null);
+  info.replaceChildren(...[h('h3', {}, sel.title || ''), ...(sel.lines || []).map((l) => h('div', { class: 'muted' }, l)), sel.extra, sel.actions && sel.actions.length ? actions : null].filter(Boolean));
 }
 
 // ---- the rail ---------------------------------------------------------------------------------------------------

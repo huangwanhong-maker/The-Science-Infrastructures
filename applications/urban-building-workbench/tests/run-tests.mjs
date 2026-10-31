@@ -8,6 +8,9 @@
 // hours and mixing (M = between + within); the tides (high water on a weekday, a day's prediction near its
 // counts), the current meters (each way summing to the total, the handedness test), a street's crowd second
 // by second (conserved, a red crossing passing nobody) and a visitor's plume (its masses summing to one).
+// When the engine of Landscape Dynamics is built, on a grid district with a hole: its cells, the lane's rewrites
+// (refinements, then the split) undone and planned again, a day's run (walkers kept, each way's hops), the event
+// skeleton, the scales (harmonic flows as many as holes, memory keeping every walker) and a building's events.
 // The mathematics itself is checked in the foundations and in the urban-science domain.
 // Run from the repository root:  node applications/urban-building-workbench/tests/run-tests.mjs
 
@@ -137,6 +140,56 @@ for (const p of plugins) {
         assert(`street (${g.name}): holdings, and M = between + within`, st.holdings.length > 0 && (!st.mixing || Math.abs(st.mixing.between + st.mixing.within - st.mixing.departure) < 1e-9));
       } else skip('OpenStreetMap\'s holdings are not built');
     }
+  }
+}
+
+// ---- the engine of Landscape Dynamics, when it is built ----------------------------------------------
+{
+  const status = spawnSync('python', [join(APP, 'engine.py'), 'status'], { cwd: ROOT, encoding: 'utf8' });
+  let state = null;
+  try { state = JSON.parse(status.stdout).find((s) => s.plugin === 'landscape-dynamics'); } catch { /* not built */ }
+  if (!state || !state.current) {
+    skip('the engine of Landscape Dynamics is not built from the present sources (python applications/urban-building-workbench/engine.py build landscape-dynamics)');
+  } else {
+    const ask = (request) => {
+      const r = spawnSync('python', [join(APP, 'engine.py'), 'ask', 'landscape-dynamics', JSON.stringify(request)],
+        { cwd: ROOT, encoding: 'utf8', maxBuffer: 1 << 28, env: { ...process.env, PYTHONIOENCODING: 'utf-8' } });
+      const answer = JSON.parse(r.stdout);
+      if (!answer.ok) throw new Error(answer.error);
+      return answer.result;
+    };
+    // A district of three by three blocks 100 m apart, a dead end in one of them (a hole), two stores facing the
+    // middle block from either side.
+    const junctions = [], segments = [], at = (i, j) => 4 * j + i;
+    for (let j = 0; j < 4; j++) for (let i = 0; i < 4; i++) junctions.push([100 * i, 100 * j]);
+    for (let j = 0; j < 4; j++) for (let i = 0; i < 3; i++) segments.push({ u: at(i, j), v: at(i + 1, j), line: [junctions[at(i, j)], junctions[at(i + 1, j)]], kind: 'street', name: `row ${j}` });
+    for (let i = 0; i < 4; i++) for (let j = 0; j < 3; j++) segments.push({ u: at(i, j), v: at(i, j + 1), line: [junctions[at(i, j)], junctions[at(i, j + 1)]], kind: 'street', name: `column ${i}` });
+    junctions.push([250, 250]);
+    segments.push({ u: at(2, 2), v: 16, line: [junctions[at(2, 2)], [250, 250]], kind: 'laneway', name: 'a dead end' });
+    const net = { junctions, segments, planarise: true, stores: [{ name: 'A', use: 'other-retail', at: [150, 104] }, { name: 'B', use: 'food-and-drink', at: [150, 196] }] };
+    const D = ask({ op: 'district', ...net });
+    assert('landscape: the district a regular complex of 17 junctions, 25 segments and 8 blocks, one hole (b = 1, 1, 0)',
+      D.topology.regular && D.topology.counts.join() === '17,25,8' && D.topology.betti.join() === '1,1,0', JSON.stringify(D.topology.counts));
+    const L = ask({ op: 'lane', ...net });
+    assert('landscape: the lane in three rewrites, two refinements then the split; closed, the same district, and planned again the same',
+      L.steps.length === 3 && L.steps[0].refinement && L.steps[1].refinement && !L.steps[2].refinement && L.undo.isomorphic && L.undo.again.length === L.lane.length);
+    const entries = Array.from({ length: 24 }, (_, hr) => 200 + 1400 * Math.exp(-0.5 * ((hr - 13) / 4) ** 2));
+    const R = ask({ op: 'run', ...net, params: { seed: 3 }, entries, altitude: Array(24).fill(0.5) });
+    const eachWay = R.frames.every((F) => Object.keys(F.flow).every((id) => Math.abs(F.forth[id] - F.back[id] - F.flow[id]) <= 0.02 + 1e-6 * (F.forth[id] + F.back[id])));
+    assert(`landscape: a day of ${R.events.length} events, walkers kept, every configuration regular, each way's hops differing by the net flow`,
+      Math.abs(R.balance.residual) < 1e-6 && R.strata.every((s) => s.regular) && R.frames.length === 96 && eachWay, String(R.balance.residual));
+    const S = ask({ op: 'skeleton' });
+    const count = S.views.find((v) => /how many/.test(v.name));
+    assert('landscape: the event skeleton, 16 states composed either way alike, driven; counting the open stores exact as a whole, not change by change',
+      S.states.length === 16 && S.coherent && !S.detailedBalance && S.entropyProduction > 0 && count.whole && !count.eventwise);
+    const shops = [{ at: [150, 104], stay: 0.3 }, { at: [157, 104], stay: 0.3 }, { at: [104, 150], stay: 0.8 }];
+    const C = ask({ op: 'scales', ...net, shops });
+    assert('landscape: as many flows round the holes as holes; walkers kept with the shops; with the stays forgotten, all on the streets',
+      C.harmonic.length === C.betti[1] && C.memory.kept === 0 && C.memory.onStreetMarkov.every((v) => Math.abs(v - 100) < 1e-6) && C.memory.inside > 0 && C.operators.deviation === 0);
+    const sun = { altitude: Array.from({ length: 24 }, (_, hr) => Math.max(-0.3, Math.sin((Math.PI * (hr - 6)) / 14))), azimuth: Array.from({ length: 24 }, (_, hr) => (Math.PI * (hr - 6)) / 12) };
+    const B = ask({ op: 'building', x: 0, y: 0, heading: 0, width: 20, depth: 12, storey: 3.5, nx: 4, ny: 2, floors: 3, ...sun, events: [{ hour: 9, kind: 'doors' }, { hour: 12, kind: 'merge' }, { hour: 16, kind: 'partition' }] });
+    assert('landscape: a building of 24 rooms a ball; doors, a merge and a parting each keep its heat and its complex regular',
+      B.counts[3] === 24 && B.betti.join() === '1,0,0,0' && B.events.length === 3 && B.events.every((e) => e.regular && Math.abs(e.heatChange) <= 1e-9 * Math.abs(B.hours[0].heat)));
   }
 }
 
