@@ -48,7 +48,7 @@ using science::Json;
 Json answer(const Json& r) {
   const std::string op = r["op"].text();
   if (op == "status") return so::op_status();
-  if (op == "sensors") return so::op_sensors();
+  if (op == "sensors") return so::op_sensors(r);
   if (op == "streets") return so::op_streets();
   if (op == "street") return so::op_street(r);
   if (op == "visits") return so::op_visits(r);
@@ -69,9 +69,9 @@ Json answer(const Json& r) {
   if (op == "streetday") return so::op_streetday(r);
   if (op == "district") return so::op_district(r);
   if (op == "persontime") return so::op_person_time(r);
-  if (op == "tides") return so::op_tides();
+  if (op == "tides") return so::op_tides(r);
   if (op == "sea") return so::op_sea(r);
-  if (op == "currents") return so::op_currents();
+  if (op == "currents") return so::op_currents(r);
   if (op == "streetwave") return so::op_streetwave(r);
   if (op == "plume") return so::op_plume(r);
   throw std::invalid_argument("no operation \"" + op + "\"");

@@ -139,6 +139,21 @@ for (const p of plugins) {
         const st = ask({ op: 'street', street: g.id });
         assert(`street (${g.name}): holdings, and M = between + within`, st.holdings.length > 0 && (!st.mixing || Math.abs(st.mixing.between + st.mixing.within - st.mixing.departure) < 1e-9));
       } else skip('OpenStreetMap\'s holdings are not built');
+      // New York: the Brooklyn Bridge's counter, an area of its own, with its own weather and holidays.
+      if (existsSync(join(ROOT, 'data/cache/products/street-areas.json')) && existsSync(join(ROOT, 'data/cache/products/street-sensors-new-york.json'))) {
+        const ny = ask({ op: 'tides', area: 'new-york' });
+        const bridge = ny[0];
+        assert(`New York: one tide, the Brooklyn Bridge's, one crest a day (form ${bridge && bridge.form.toFixed(2)}), weekday high water at ${bridge && bridge.weekday.highAt} h`,
+          ny.length === 1 && bridge.formClass === 'diurnal' && bridge.weekday.highAt > 13 && bridge.weekday.highAt < 18 && bridge.week.length === 168);
+        assert('the areas kept apart: Melbourne\'s tides hold no New York sensor, and New York\'s none of Melbourne\'s', tides.every((t) => t.id !== bridge.id) && tides.length > 50);
+        const cur = ask({ op: 'currents', area: 'new-york' });
+        assert('New York: the bridge a current meter each way, toward Manhattan and toward Brooklyn, the residual the mean of the net current',
+          cur.sensors.length === 1 && cur.sensors[0].towardNames.join() === 'toward Manhattan,toward Brooklyn' && Math.abs(cur.sensors[0].net.reduce((a, v) => a + v, 0) / 168 - cur.sensors[0].residual) < 0.06);
+        const july = ask({ op: 'sea', area: 'new-york', date: '2018-07-04' });
+        const s = july.sensors[0];
+        assert('New York: on 4 July 2018 its holiday and its weather, each way summing to the count', july.holiday === 'Independence Day' && july.weather && july.weather.tmax > 20
+          && s.observed.every((v, hr) => !Number.isFinite(v) || s.way1[hr] + s.way2[hr] === v) && s.observed.some(Number.isFinite), `${july.holiday}, ${JSON.stringify(july.weather)}`);
+      } else skip('New York\'s street records are not built (python data/products/street_records.py --only new-york)');
     }
   }
 }

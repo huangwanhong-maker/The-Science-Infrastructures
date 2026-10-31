@@ -1,5 +1,5 @@
 {
-  "about": "The cities the workbench opens: an origin for the local frame (overridden by the city model's own origin when it is built), the civil time zone, and the first view: its tilt and heading (degrees) and the box it frames [south, west, north, east] (WGS 84).",
+  "about": "The cities the workbench opens: an origin for the local frame (overridden by the city model's own origin when it is built), the civil time zone, the first view: its tilt and heading (degrees), the camera's range (times the box's size; 0.62 unless named) and the box it frames [south, west, north, east] (WGS 84), and the district Landscape Dynamics takes as cells (a box, WGS 84).",
   "areas": [
     {
       "id": "melbourne",
@@ -16,6 +16,38 @@
           -37.8085,
           144.9725
         ]
+      },
+      "district": {
+        "name": "The Hoddle Grid's middle: Elizabeth Street to Russell Street, Flinders Street to Lonsdale Street",
+        "south": -37.8173,
+        "west": 144.9617,
+        "north": -37.8117,
+        "east": 144.9697
+      }
+    },
+    {
+      "id": "new-york",
+      "name": "New York",
+      "lat": 40.70925,
+      "lon": -74.00625,
+      "timezone": "America/New_York",
+      "view": {
+        "tilt": 52,
+        "heading": 28,
+        "range": 1.15,
+        "box": [
+          40.7012,
+          -74.0165,
+          40.7135,
+          -73.9975
+        ]
+      },
+      "district": {
+        "name": "The Financial District: the old streets about Wall Street, Stone Street and Hanover Square",
+        "south": 40.703,
+        "west": -74.0128,
+        "north": 40.7082,
+        "east": -74.0055
       }
     }
   ]

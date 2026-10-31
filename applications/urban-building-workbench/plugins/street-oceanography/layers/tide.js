@@ -1,4 +1,4 @@
-// The tide on the streets. Each Melbourne sensor's block of street is drawn as a channel of water standing
+// The tide on the streets. Each sensor's block of street (Melbourne's sensors, New York's counter on the Brooklyn Bridge) is drawn as a channel of water standing
 // to the level of its pedestrians, one metre for every hundred people an hour, as a tide gauge reads a port.
 // The level comes from the engine's tide: the calendars' constituents fitted to the sensor's counts since
 // October 2024 (the domain's rhythm/tide.hpp), evaluated through the clock's civil day. It rises and falls
@@ -10,7 +10,7 @@
 //   - kind of tide: two crests a day or one, by the ratio of the diurnal to the semidiurnal species
 //     (Courtier's classes), the water standing at the daily range.
 
-import { sensorBlocks } from './blocks.js';
+import { SPAN, sensorBlocks } from './blocks.js';
 
 const PER = 0.01;   // metres of water per person an hour
 const MODES = [
@@ -79,7 +79,7 @@ export async function layer(ctx) {
     const s = seaDate && sea && sea.meta;
     status.textContent = s ? (s.observed
       ? `${s.date}: ${s.observed} streets recorded${s.holiday ? `; ${s.holiday}` : ''}${s.weather ? `; ${s.weather.rain} mm of rain, ${s.weather.tmin}–${s.weather.tmax} °C` : ''}. Water one metre deep for every hundred people an hour.`
-      : `${s.date} lies outside the record (October 2024 to October 2026): the tide alone. Water one metre deep for every hundred people an hour.`) : status.textContent;
+      : `${s.date} lies outside the record (${SPAN[ctx.area.id] || SPAN.melbourne}): the tide alone. Water one metre deep for every hundred people an hour.`) : status.textContent;
   }
 
   function draw() {
@@ -100,7 +100,7 @@ export async function layer(ctx) {
   async function loadDay(date) {
     if (seaDate === date) return;
     seaDate = date;
-    const d = await ask('sea', { date });
+    const d = await ask('sea', { date, area: ctx.area.id });
     if (seaDate !== date) return;
     sea = new Map(d.sensors.map((x) => [x.id, x]));
     sea.meta = d;
@@ -111,7 +111,7 @@ export async function layer(ctx) {
   // The tides first, then the day; the legend is shown at once.
   (async () => {
     try {
-      const tides = await ask('tides');
+      const tides = await ask('tides', { area: ctx.area.id });
       features = sensorBlocks(ctx, tides);
       for (const f of features) byId.set(f.id, f);
       maxHigh = Math.max(1, ...features.map((f) => f.weekday.high));

@@ -72,7 +72,7 @@ async function buildPanel() {
   const button = h('button', { class: 'primary' }, 'Build the engine and fetch the records');
   const steps = h('ul', {}, (state.setup && state.setup.steps || []).map((s) => h('li', {}, `${s.done ? '✓' : '·'} ${s.title}`)));
   body.append(h('h2', {}, 'The engine and the records'),
-    h('p', { class: 'muted' }, 'The analyses compute in C++ on the urban-science domain and the foundations; the map and the analyses read the data library\'s records: the city model (OpenStreetMap\'s buildings, streets and spaces), holdings and their declared hours, Melbourne\'s pedestrian counts, land use, weather and holidays. Compiling takes a minute or two (g++, natively or in WSL); fetching the records several minutes.'),
+    h('p', { class: 'muted' }, 'The analyses compute in C++ on the urban-science domain and the foundations; the map and the analyses read the data library\'s records: the city model (OpenStreetMap\'s buildings, streets and spaces; New York\'s buildings, trees and shore from Valdrada\'s compiled city), holdings and their declared hours, Melbourne\'s pedestrian counts and the Brooklyn Bridge\'s, land use, weather and holidays. Compiling takes a minute or two (g++, natively or in WSL); fetching the records several minutes.'),
     steps, h('p', {}, button), log);
   const poll = async () => {
     const s = await setup();
@@ -161,9 +161,11 @@ function rail() {
   formKeys.dataset.role = 'building-form';
   r.append(h('div', { class: 'faint form-label' }, 'buildings'), formKeys);
   for (const p of state.plugins.filter((x) => x.status !== 'planned')) {
-    const layers = (p.layers || []).filter((l) => !l.areas || l.areas.includes(state.area.id));
+    // A layer or a tool that names its areas is offered in them alone.
+    const layers = (p.layers || []).filter((l) => inArea(l));
+    const tools = (p.tools || []).filter((t) => inArea(t));
+    if (layers.length || tools.length) r.append(h('h4', {}, p.title));
     if (layers.length) {
-      r.append(h('h4', {}, p.title));
       let group = null;
       for (const l of layers) {
         if (l.group && l.group !== group) { group = l.group; r.append(h('h5', {}, group)); }
@@ -174,9 +176,9 @@ function rail() {
         r.append(h('label', { class: 'layer', title: l.about || '' }, box, l.title));
       }
     }
-    if ((p.tools || []).length) {
+    if (tools.length) {
       r.append(h('h4', {}, 'Analyses'));
-      for (const t of p.tools) r.append(h('button', { class: 'tool', 'data-key': `${p.name}/${t.id}`, title: t.about || '', onclick: () => openTool(p, t) }, t.title));
+      for (const t of tools) r.append(h('button', { class: 'tool', 'data-key': `${p.name}/${t.id}`, title: t.about || '', onclick: () => openTool(p, t) }, t.title));
     }
   }
   const planned = state.plugins.filter((x) => x.status === 'planned');
@@ -186,6 +188,8 @@ function rail() {
   }
   r.append(h('div', { class: 'about' }, 'Plug-ins live in plugins/<name>/: a manifest of their layers and analyses, and an engine in C++ on the foundations and the urban-science domain.'));
 }
+
+const inArea = (x) => !x.areas || x.areas.includes(state.area.id);
 
 function setBuildingForm(form) {
   state.buildingForm = form;
@@ -273,13 +277,24 @@ function clockBar() {
 
 // ---- an area -------------------------------------------------------------------------------------------------------
 
-async function cityModel() {
-  if (state.modelAll !== undefined) return state.modelAll;
-  try {
-    const r = await fetch('/data/products/city-model.json');
-    state.modelAll = r.ok ? await r.json() : null;
-  } catch { state.modelAll = null; }
-  return state.modelAll;
+// The city model: an index of its areas (city-model.json), each area in a file of its own, read when it is opened.
+async function cityModel(id) {
+  if (state.modelIndex === undefined) {
+    try {
+      const r = await fetch('/data/products/city-model.json');
+      state.modelIndex = r.ok ? await r.json() : null;
+    } catch { state.modelIndex = null; }
+    state.modelAreas = new Map();
+  }
+  const entry = state.modelIndex && (state.modelIndex.areas || []).find((a) => a.id === id);
+  if (!entry) return null;
+  if (!state.modelAreas.has(id)) {
+    try {
+      const r = await fetch(`/data/products/${entry.file}`);
+      state.modelAreas.set(id, r.ok ? await r.json() : null);
+    } catch { state.modelAreas.set(id, null); }
+  }
+  return state.modelAreas.get(id);
 }
 
 async function openArea(area) {
@@ -288,8 +303,7 @@ async function openArea(area) {
   if (state.gis) state.gis.dispose();
   document.getElementById('legend').replaceChildren();
   select(null);
-  const all = await cityModel();
-  const model = all && (all.areas || []).find((a) => a.id === area.id);
+  const model = await cityModel(area.id);
   state.model = model || null;
   const origin = model && model.origin ? model.origin : { lat: area.lat, lon: area.lon };
   state.area = { ...area, lat: origin.lat, lon: origin.lon };
@@ -347,7 +361,8 @@ async function openArea(area) {
       const on = state.layers.get(key)?.on ?? !!l.default;
       if (on) toggleLayer(p, l, true);
     }
-  if (state.tool) openTool(state.tool.plugin, state.tool.tool);
+  if (state.tool && inArea(state.tool.tool)) openTool(state.tool.plugin, state.tool.tool);
+  else if (state.tool) closePanel();
 }
 
 async function start() {

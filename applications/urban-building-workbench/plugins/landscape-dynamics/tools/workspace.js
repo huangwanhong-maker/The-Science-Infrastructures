@@ -181,13 +181,20 @@ export async function render(root, ctx) {
   body.replaceChildren(T.el);
   paint();
   // The buildings as glass so that the cells show through (the rail's own key, so that its state shows); the district
-  // framed in the part of the map the drawer leaves free.
+  // framed in the part of the map the drawer leaves free; among towers taller than a fifth of its width (Lower
+  // Manhattan's), from higher and more steeply, so that the cells on the ground are not behind them.
   const glass = [...document.querySelectorAll('[data-role="building-form"] button')].find((b) => b.textContent === 'glass');
   if (glass && !glass.classList.contains('on')) glass.click();
   {
     const B = state.box, cx = (B.x0 + B.x1) / 2, cy = (B.y0 + B.y1) / 2, size = Math.max(B.x1 - B.x0, B.y1 - B.y0);
+    let tallest = 0;
+    for (const b of (ctx.model && ctx.model.buildings) || []) {
+      const p = b.footprint && b.footprint[0];
+      if (p && p[0] >= B.x0 && p[0] <= B.x1 && p[1] >= B.y0 && p[1] <= B.y1) tallest = Math.max(tallest, b.height_m || 0);
+    }
+    const towers = tallest > 0.2 * size;
     const o = gis.camera.position.clone().sub(gis.controls.target), n = Math.hypot(o.x, o.z) || 1;
-    gis.flyTo([cx + (o.z / n) * 0.32 * size, cy + (o.x / n) * 0.32 * size], 1.5 * size);
+    gis.flyTo([cx + (o.z / n) * 0.32 * size, cy + (o.x / n) * 0.32 * size], towers ? Math.max(1.5 * size, 3 * tallest) : 1.5 * size, towers ? 30 : null);
   }
   const off = on((what) => {
     if (!alive) return;

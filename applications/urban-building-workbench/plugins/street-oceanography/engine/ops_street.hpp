@@ -64,13 +64,15 @@ inline Json op_status() {
   return out;
 }
 
-inline Json op_sensors() {
+inline Json op_sensors(const Json& r) {
+  const std::string area = area_of(r);
   Json list = Json::array();
   std::set<long long> with_terrain;
   try {
     for (const auto& [id, v] : terrain().by_sensor) if (!v.empty()) with_terrain.insert(id);
   } catch (...) {}
   for (const auto& s : sensors())
+    if (s.area == area)
     list.push(Json::object({{"id", static_cast<double>(s.id)}, {"code", s.code}, {"name", s.name}, {"lat", s.lat}, {"lon", s.lon},
                             {"locationType", s.location_type}, {"first", s.first}, {"last", s.last}, {"hours", static_cast<double>(s.hours)},
                             {"missing", static_cast<double>(s.missing)}, {"terrain", with_terrain.count(s.id) > 0}}));

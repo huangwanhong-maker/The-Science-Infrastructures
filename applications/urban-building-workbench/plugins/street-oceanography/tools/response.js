@@ -8,10 +8,10 @@ export async function render(root, ctx) {
   root.append(h('div', { class: 'view-head' }, h('h1', {}, 'Weather and holidays'),
     h('span', { class: 'lede' }, 'Every street receives the same rain and the same holidays; what it does with them is its own. Pick a sensor on the map, or choose one here.')));
   let sensors;
-  try { sensors = (await ctx.ask('sensors')).filter((s) => s.locationType === 'Outdoor').sort((a, b) => a.name.localeCompare(b.name)); }
+  try { sensors = (await ctx.ask('sensors', { area: ctx.area.id })).filter((s) => s.locationType === 'Outdoor').sort((a, b) => a.name.localeCompare(b.name)); }
   catch (e) { return failure(root, e); }
   const sel = h('select', {}, sensors.map((s) => h('option', { value: s.id }, `${s.name} (${s.id})`)));
-  const era = h('select', {}, h('option', { value: 'recent' }, 'Oct 2024 – Oct 2026'), h('option', { value: 'history' }, '2009 – 2022'));
+  const era = h('select', {}, ctx.area.id === 'new-york' ? h('option', { value: 'recent' }, 'Oct 2017 – Dec 2019') : [h('option', { value: 'recent' }, 'Oct 2024 – Oct 2026'), h('option', { value: 'history' }, '2009 – 2022')]);
   root.append(h('div', { class: 'keys' }, h('label', { class: 'pick' }, 'sensor ', sel), h('label', { class: 'pick' }, 'years ', era)));
   const out = h('div', {});
   const all = h('div', { class: 'section' });

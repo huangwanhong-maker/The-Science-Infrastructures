@@ -1,14 +1,19 @@
 // The data the engine reads: the data library's products under the directory it is given (--data), and
 // nothing else. Each is read once and kept.
 //
+//   street-areas.json               each area's products: its sensors, weather and holidays (Melbourne's alone when
+//                                   it is missing)
 //   street-sensors.json             Melbourne's pedestrian sensors and their records
-//   street-counts/<id>.json         a sensor's hourly counts in UTC, with Melbourne's offsets, and each direction's
-//   street-weather-melbourne.json   hourly temperature, precipitation and wind (Open-Meteo)
-//   street-holidays-victoria.json   Victoria's public holidays
+//   street-sensors-new-york.json    New York's: the Brooklyn Bridge's counter
+//   street-counts/<id>.json         a sensor's hourly counts in UTC, with its city's offsets, and each direction's
+//   street-weather-<area>.json      hourly temperature, precipitation and wind (Open-Meteo)
+//   street-holidays-<…>.json        the area's public holidays (Victoria's, New York's)
 //   street-terrain-melbourne.json   CLUE's establishments about each sensor, by census year, with their uses
 //   street-holdings.json            OpenStreetMap's holdings along named streets, with their declared hours
 //
-// A product that is missing is refused with the recipe step that makes it.
+// A sensor belongs to an area; the operations that list sensors take an area (Melbourne's when none is named), and
+// a sensor's weather and holidays are its area's. A product that is missing is refused with the recipe step that
+// makes it.
 
 #pragma once
 
@@ -54,26 +59,64 @@ inline double num(const Json& j, const char* key, double fallback = std::nan("")
 struct Sensor {
   long long id = 0;
   std::string code, name, location_type, series, first, last;
-  std::vector<std::string> directions;   // toward which d1 and d2 count (the locations dataset's names), or none
+  std::vector<std::string> directions;   // toward which d1 and d2 count (compass names), or none
+  std::vector<std::string> direction_names;   // their own names where the compass names are only the nearest
   double lat = 0, lon = 0;
   long long hours = 0, missing = 0;
+  std::string area = "melbourne";
 };
+
+// ---- areas --------------------------------------------------------------------------------------------------
+
+struct AreaFiles { std::string id, sensors, weather, holidays, timezone; };
+
+inline const std::vector<AreaFiles>& area_files() {
+  static std::vector<AreaFiles> list;
+  static bool loaded = false;
+  if (!loaded) {
+    try {
+      const Json j = read_json("street-areas.json");
+      for (const auto& a : j["areas"].as_array())
+        list.push_back({a["id"].text(), a["sensors"].text(), a["weather"].text(), a["holidays"].text(), a["timezone"].text()});
+    } catch (...) {
+    }
+    if (list.empty()) list.push_back({"melbourne", "street-sensors.json", "street-weather-melbourne.json", "street-holidays-victoria.json", "Australia/Melbourne"});
+    loaded = true;
+  }
+  return list;
+}
+
+inline const AreaFiles& area_files(const std::string& id) {
+  for (const auto& a : area_files())
+    if (a.id == id) return a;
+  throw std::invalid_argument("no area " + id);
+}
+
+// The area a request names (Melbourne's when it names none).
+inline std::string area_of(const Json& r) { return r["area"].text("melbourne"); }
 
 inline const std::vector<Sensor>& sensors() {
   static std::vector<Sensor> list;
   static bool loaded = false;
   if (!loaded) {
-    const Json j = read_json("street-sensors.json");
-    for (const auto& s : j["sensors"].as_array()) {
-      Sensor x;
-      x.id = static_cast<long long>(num(s, "id", 0));
-      x.code = s["code"].text(), x.name = s["name"].text(), x.location_type = s["location_type"].text();
-      x.series = s["series"].text(), x.first = s["first_utc"].text(), x.last = s["last_utc"].text();
-      x.lat = num(s, "lat", 0), x.lon = num(s, "lon", 0);
-      x.hours = static_cast<long long>(num(s, "hours", 0)), x.missing = static_cast<long long>(num(s, "missing", 0));
-      if (s["directions"].is_array())
-        for (const auto& d : s["directions"].as_array()) x.directions.push_back(d.text());
-      list.push_back(x);
+    for (const auto& a : area_files()) {
+      Json j;
+      if (a.id == "melbourne") j = read_json(a.sensors);   // the first area's products are required, the others' not
+      else try { j = read_json(a.sensors); } catch (...) { continue; }
+      for (const auto& s : j["sensors"].as_array()) {
+        Sensor x;
+        x.id = static_cast<long long>(num(s, "id", 0));
+        x.code = s["code"].text(), x.name = s["name"].text(), x.location_type = s["location_type"].text();
+        x.series = s["series"].text(), x.first = s["first_utc"].text(), x.last = s["last_utc"].text();
+        x.lat = num(s, "lat", 0), x.lon = num(s, "lon", 0);
+        x.hours = static_cast<long long>(num(s, "hours", 0)), x.missing = static_cast<long long>(num(s, "missing", 0));
+        if (s["directions"].is_array())
+          for (const auto& d : s["directions"].as_array()) x.directions.push_back(d.text());
+        if (s["direction_names"].is_array())
+          for (const auto& d : s["direction_names"].as_array()) x.direction_names.push_back(d.text());
+        x.area = s["area"].text(a.id);
+        list.push_back(x);
+      }
     }
     loaded = true;
   }
@@ -142,22 +185,23 @@ inline const Directions& directions(long long id) {
 
 struct Weather { double t0 = 0, step = 3600; std::vector<double> temperature, precipitation, wind; };
 
-inline const Weather& weather() {
-  static Weather w;
-  static bool loaded = false;
-  if (!loaded) {
-    const Json j = read_json("street-weather-melbourne.json");
-    w.t0 = urban::rhythm::parse_utc(j["t0_utc"].text());
-    w.step = num(j, "step_s", 3600);
-    auto read = [&](const char* key, std::vector<double>& out) {
-      for (const auto& v : j[key].as_array()) out.push_back(v.is_number() ? v.as_number() : std::nan(""));
-    };
-    read("temperature_c", w.temperature);
-    read("precipitation_mm", w.precipitation);
-    read("wind_m_s", w.wind);
-    loaded = true;
-  }
-  return w;
+inline const Weather& weather(const std::string& area = "melbourne") {
+  static std::map<std::string, Weather> cache;
+  static std::mutex lock;
+  std::lock_guard<std::mutex> g(lock);
+  auto it = cache.find(area);
+  if (it != cache.end()) return it->second;
+  Weather w;
+  const Json j = read_json(area_files(area).weather);
+  w.t0 = urban::rhythm::parse_utc(j["t0_utc"].text());
+  w.step = num(j, "step_s", 3600);
+  auto read = [&](const char* key, std::vector<double>& out) {
+    for (const auto& v : j[key].as_array()) out.push_back(v.is_number() ? v.as_number() : std::nan(""));
+  };
+  read("temperature_c", w.temperature);
+  read("precipitation_mm", w.precipitation);
+  read("wind_m_s", w.wind);
+  return cache.emplace(area, std::move(w)).first->second;
 }
 
 // A weather series on the record's hours (NaN outside the weather's span).
@@ -173,25 +217,26 @@ inline std::vector<double> aligned(const std::vector<double>& series, const Weat
 
 struct Holiday { long long day = 0; std::string date, name; };
 
-inline const std::vector<Holiday>& holidays() {
-  static std::vector<Holiday> list;
-  static bool loaded = false;
-  if (!loaded) {
-    const Json j = read_json("street-holidays-victoria.json");
-    for (const auto& h : j["holidays"].as_array()) {
-      Holiday x;
-      x.date = h["date"].text(), x.name = h["name"].text();
-      x.day = static_cast<long long>(std::floor(urban::rhythm::parse_utc(x.date) / 86400.0));
-      list.push_back(x);
-    }
-    loaded = true;
+inline const std::vector<Holiday>& holidays(const std::string& area = "melbourne") {
+  static std::map<std::string, std::vector<Holiday>> cache;
+  static std::mutex lock;
+  std::lock_guard<std::mutex> g(lock);
+  auto it = cache.find(area);
+  if (it != cache.end()) return it->second;
+  std::vector<Holiday> list;
+  const Json j = read_json(area_files(area).holidays);
+  for (const auto& h : j["holidays"].as_array()) {
+    Holiday x;
+    x.date = h["date"].text(), x.name = h["name"].text();
+    x.day = static_cast<long long>(std::floor(urban::rhythm::parse_utc(x.date) / 86400.0));
+    list.push_back(x);
   }
-  return list;
+  return cache.emplace(area, std::move(list)).first->second;
 }
 
-inline std::vector<long long> holiday_days() {
+inline std::vector<long long> holiday_days(const std::string& area = "melbourne") {
   std::vector<long long> d;
-  for (const auto& h : holidays()) d.push_back(h.day);
+  for (const auto& h : holidays(area)) d.push_back(h.day);
   std::sort(d.begin(), d.end());
   d.erase(std::unique(d.begin(), d.end()), d.end());
   return d;

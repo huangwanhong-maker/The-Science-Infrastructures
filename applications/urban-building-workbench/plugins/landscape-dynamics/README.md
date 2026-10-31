@@ -2,7 +2,7 @@
 
 *A district as cells, and what happens in it.* A plug-in of the [Urban Building Workbench](../../README.md). Status: **draft** (2026-10-31). [ADR 0062](../../../../development/decisions/0062-landscapes-as-cellular-configurations.md).
 
-A district of Melbourne's Hoddle Grid (Elizabeth to Russell Street, Flinders to Lonsdale Street) is taken as a cell complex: its junctions, the segments of its streets and lanes, the blocks they enclose, and its buildings, each a 3-cell sharing walls with its neighbours ([ADR 0063](../../../../development/decisions/0063-the-district-as-a-complex-to-work-on.md)). Its structure, its use and how it is read change one another in one process. The urban-science domain states the formalism exactly ([theory/landscape-dynamics.md](../../../../domains/urban-science/theory/landscape-dynamics.md)); this plug-in draws it on the map and beside it, in plain terms.
+A district is taken as a cell complex: in Melbourne the Hoddle Grid's middle (Elizabeth to Russell Street, Flinders to Lonsdale Street), in New York the Financial District's old streets about Wall Street, Stone Street and Hanover Square, irregular colonial blocks among towers (each area names its district in the workbench's `areas.json`, [ADR 0065](../../../../development/decisions/0065-new-york-in-the-workbench.md); opening another area forgets the district, its edits and its runs). Its cells are its junctions, the segments of its streets and lanes, the blocks they enclose, and its buildings, each a 3-cell sharing walls with its neighbours ([ADR 0063](../../../../development/decisions/0063-the-district-as-a-complex-to-work-on.md)). Its structure, its use and how it is read change one another in one process. The urban-science domain states the formalism exactly ([theory/landscape-dynamics.md](../../../../domains/urban-science/theory/landscape-dynamics.md)); this plug-in draws it on the map and beside it, in plain terms.
 
 ## 1. Layers and Tools
 
@@ -26,7 +26,7 @@ Every rate of the models is declared, not measured. They explore how structure, 
 
 - the walking network, the buildings and their levels: OpenStreetMap, through the data library's city model;
 - the holdings and their uses: Street Oceanography's holdings (OpenStreetMap), the two stores the nearest pair of holdings a passer-by walks into that a lane of 15 m or more could join, or two picked on the map;
-- the walkers entering the district each hour: half the City of Melbourne's counts at the sensors inside the box, on the clock's weekday;
+- the walkers entering the district each hour: half the counts at the area's sensors inside the box, on the clock's weekday (Melbourne's), else a declared day's shape (New York's district, where no counter stands);
 - the Sun: the astronomy domain, at the clock's date.
 
 ## 3. The Engine

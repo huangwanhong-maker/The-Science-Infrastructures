@@ -1,0 +1,205 @@
+{
+  "id": "valdrada-nyc",
+  "kind": "files",
+  "domain": "urban-science",
+  "title": "Valdrada's compiled city of New York: the near tiles of Lower Manhattan (buildings with their roof heights, streets with their widths, trees and the ground), at a pinned revision",
+  "provider": "Valdrada (Mehmet Kerem Turkcan), an open digital twin of New York City compiled from public records: the compiled city on Hugging Face (dataset mehmetkeremturkcan/valdrada, revision 4b3485a034be96acd34a6e76bd36f340d03a9110), its compiler at https://github.com/mkturkcan/valdrada (v0.6.2, commit 09fec97, client/tools/pipeline/compile.mjs)",
+  "credit": "Valdrada (M. K. Turkcan), from NYC Open Data; © OpenStreetMap contributors",
+  "licence": "The compiled city is a Derivative Database under the Open Database License 1.0 (it takes building colours, missing footprints and other parts from OpenStreetMap): attribution \"© OpenStreetMap contributors\" on anything drawn from it, and a database derived from it stays ODbL. The city's records beneath are used under the NYC and New York State open-data terms of use. Only the tiles are fetched: none of the dataset's models, pedestrians (whose MetaHuman components forbid building databases or training and testing AI) or renderers.",
+  "citation": "Turkcan, M. K. (2026), Valdrada: a real-time digital twin of New York City compiled from public records, v0.6.2, https://github.com/mkturkcan/valdrada; compiled city: https://huggingface.co/datasets/mehmetkeremturkcan/valdrada (revision 4b3485a)",
+  "format": "manifest.json: the tile size (512) and every near tile's file by its key tx_tz. Each tile (t_<tx>_<tz>.bin) is a CTL1 container: the magic 'CTL1' and a header length (u32, little-endian), a JSON header (format version v, the tile's tx, tz and origin [512 tx, 512 tz], street names, junction nodes, terrain resolution res and the sections' names, types, offsets and lengths), then the sections, aligned to 4 bytes: bldg (44-byte records: ring start and length in bldgXZ, landmark id, ground height baseY and height above it in m, floors, style, colour, roof, flags, floor and storefront heights, ...), bholes (courtyards), bldgXZ (Float32 x, z rings), roads (24-byte records: line start and length in roadVerts, class, one-way, width in m, lanes, parking lanes, level, speed, name index, centreline segment id), roadVerts (Float32 x, y, z), furn (20-byte street furniture, trees among them with species and trunk diameter), terrain (Float32 heights on (res+1)^2 nodes; land about +3.2 m, the harbour -3.5 m, bulkheads and cuts -9 m) and triangle soups of the ground. Coordinates are in Valdrada's frame, equirectangular about 40.7831 N, 73.9712 W (x east, z south, 111132 m a degree of latitude, 111320 cos 40.7831 deg a degree of longitude), x and z tile-local from the origin; data/products/valdrada_city.py reads them.",
+  "coverage": "Lower Manhattan from the Battery to Canal Street and from the Hudson to the Brooklyn Bridge's Manhattan tower: the 30 tiles tx -8..-4, tz 13..18 meeting 40.6995-40.7190 N, 74.0195-73.9930 W (about 30 MB). Heights: the roof height NYC's Building Footprints record (aerial survey, in feet), else a low default of 4-8 m; buildings the city's file lacks are OpenStreetMap's at their tagged height.",
+  "used_by": [
+    "data/products/street_records.py",
+    "data/products/valdrada_city.py",
+    "applications/urban-building-workbench"
+  ],
+  "files": [
+    {
+      "file": "manifest.json",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/manifest.json",
+      "sha256": "97a67f69d7789d0f4bbd9d6b6ea3e6a7cd9da6b28b2a23abf121084eec72e997",
+      "size": 195382
+    },
+    {
+      "file": "tiles/t_-8_13.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-8_13.bin",
+      "sha256": "3c38c430c4f1c13df641d8deca858b32964f9e840fe5f3563964144ab3aed2ba",
+      "size": 60664
+    },
+    {
+      "file": "tiles/t_-8_14.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-8_14.bin",
+      "sha256": "406ffbf54343b3a7e91104c3164418749c51628bb21485acf56be2e040be2f90",
+      "size": 1068508
+    },
+    {
+      "file": "tiles/t_-8_15.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-8_15.bin",
+      "sha256": "c5c806633357e815ad22ca429c233f60cbc84673b9e547abdc557a91c4a91ec3",
+      "size": 1146480
+    },
+    {
+      "file": "tiles/t_-8_16.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-8_16.bin",
+      "sha256": "4079ac6d3689b36d8ce23f6e17682561930377dadd000595154f61dba8759d00",
+      "size": 1493472
+    },
+    {
+      "file": "tiles/t_-8_17.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-8_17.bin",
+      "sha256": "b1770438666ea4c7644e53f5f7b77934e947dd317246f35196e41689c8180daa",
+      "size": 2949740
+    },
+    {
+      "file": "tiles/t_-8_18.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-8_18.bin",
+      "sha256": "7d3c68ed4ee4eb64394c4514ea722e0ad758e4a71d11dcf534d579798c0abfa8",
+      "size": 7884
+    },
+    {
+      "file": "tiles/t_-7_13.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-7_13.bin",
+      "sha256": "c49ca77264c6e2a889e961aac3d64234e6a177771a4728e73e8e867b524416ec",
+      "size": 780316
+    },
+    {
+      "file": "tiles/t_-7_14.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-7_14.bin",
+      "sha256": "d8fa7824e3cf4cf321e4438359eeeca947796b2071ad2f5a96dd4a7dd6e7c02f",
+      "size": 848204
+    },
+    {
+      "file": "tiles/t_-7_15.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-7_15.bin",
+      "sha256": "bc96f9c98998a30a4cdf6e19d3c3d7ff0946ec6f24ba9ecf42e1e9e424875aee",
+      "size": 752188
+    },
+    {
+      "file": "tiles/t_-7_16.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-7_16.bin",
+      "sha256": "c5166cb1c9323476e6de516dcdc6f8a0d655dbea1c90e2535a4891f16df9a0ec",
+      "size": 790236
+    },
+    {
+      "file": "tiles/t_-7_17.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-7_17.bin",
+      "sha256": "4cef28d2a79cd457ec6166f3af3dc1d25e0d439ee8bd403dd30c3dd9849c86f9",
+      "size": 989320
+    },
+    {
+      "file": "tiles/t_-7_18.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-7_18.bin",
+      "sha256": "6a087fc9a032f8c5e7699082a7250153a9b0f4a1d937c5b233c4c066b5809358",
+      "size": 27556
+    },
+    {
+      "file": "tiles/t_-6_13.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-6_13.bin",
+      "sha256": "97119a64d86c5744fcbc966cc8098a5adb916db96473bf4d74040ff672582d7f",
+      "size": 1108712
+    },
+    {
+      "file": "tiles/t_-6_14.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-6_14.bin",
+      "sha256": "1bd12a1e05f831604a7d6c6cad61305c22bbe58ebea49fecc042242b2701cffe",
+      "size": 923496
+    },
+    {
+      "file": "tiles/t_-6_15.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-6_15.bin",
+      "sha256": "8a5f8ee3988ca09d85e9b9426171971b8c55370c0732f9abfb99e096bc89dd1a",
+      "size": 1049312
+    },
+    {
+      "file": "tiles/t_-6_16.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-6_16.bin",
+      "sha256": "3a838f5b0d2ce6e49998b28d4386cfc83460aab6574c67fc298a53a1501bc80e",
+      "size": 1003244
+    },
+    {
+      "file": "tiles/t_-6_17.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-6_17.bin",
+      "sha256": "0b85f856cead954d6a87642ed8625ae6087137b66679cd41636424fe229afe16",
+      "size": 192008
+    },
+    {
+      "file": "tiles/t_-6_18.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-6_18.bin",
+      "sha256": "88bc17907c73380e8fdc5e917035d2aa746032ecf6ec85e9713f201e6aafb4a9",
+      "size": 9184
+    },
+    {
+      "file": "tiles/t_-5_13.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-5_13.bin",
+      "sha256": "f4d158294e85d7ceaef0b7df6e56d86007a4d80ed4d11b7dbb811030125223b7",
+      "size": 866376
+    },
+    {
+      "file": "tiles/t_-5_14.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-5_14.bin",
+      "sha256": "83435a41f99e282424b981839bf807665f6bde7b9b1520df1f9bef0ec4088106",
+      "size": 1046664
+    },
+    {
+      "file": "tiles/t_-5_15.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-5_15.bin",
+      "sha256": "f74bb62e96ea7f282b0d45371b1020d862387aa29be43e2a0864ea1ac629dc9d",
+      "size": 826952
+    },
+    {
+      "file": "tiles/t_-5_16.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-5_16.bin",
+      "sha256": "19d298818fbc8f735c5875cb64fdc4f1d5d03dcd39a4e23c3fbbf2dfc0ee307d",
+      "size": 479764
+    },
+    {
+      "file": "tiles/t_-5_17.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-5_17.bin",
+      "sha256": "96bf8ccbcbb45280e34cfd6f3e49b77858d86edc7316e1cc557dc90668cde832",
+      "size": 133964
+    },
+    {
+      "file": "tiles/t_-5_18.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-5_18.bin",
+      "sha256": "26348ee5702ec582c73967a9a5de154aa594e4a054ea9a4ffeba65f0a7a0251d",
+      "size": 1566664
+    },
+    {
+      "file": "tiles/t_-4_13.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-4_13.bin",
+      "sha256": "8a3176480accc29267173e909c27a26cffc31e753a23cdb28ac0c7df0f8e79fe",
+      "size": 1598012
+    },
+    {
+      "file": "tiles/t_-4_14.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-4_14.bin",
+      "sha256": "025def4769daae4752bdb01eb9780ea57204b33fb0064647379574cc7bfdd43c",
+      "size": 1351888
+    },
+    {
+      "file": "tiles/t_-4_15.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-4_15.bin",
+      "sha256": "1930998b61fd034d72d722f5b287600538069e7f79304977e5c30b357cc748fd",
+      "size": 1126812
+    },
+    {
+      "file": "tiles/t_-4_16.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-4_16.bin",
+      "sha256": "b7ee06b56677618f7b861d9e9b6205e538d1f28faa02740da2ab81748f57f278",
+      "size": 68288
+    },
+    {
+      "file": "tiles/t_-4_17.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-4_17.bin",
+      "sha256": "8d989a425f7381ff678983257a84fe6c65d73d4343e76b6404b9253dcac9e61b",
+      "size": 1239540
+    },
+    {
+      "file": "tiles/t_-4_18.bin",
+      "url": "https://huggingface.co/datasets/mehmetkeremturkcan/valdrada/resolve/4b3485a034be96acd34a6e76bd36f340d03a9110/Content/tiles/t_-4_18.bin",
+      "sha256": "2f36f40006f818ef47351b063c6dd20677c15ad697eedf9c3dee0609b77de9db",
+      "size": 1289344
+    }
+  ]
+}

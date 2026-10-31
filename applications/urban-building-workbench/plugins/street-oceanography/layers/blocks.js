@@ -4,6 +4,9 @@
 // way at the foot and, for each of its counts, the direction along the way it runs (`toward`, unit vectors)
 // and its compass name (`directions`).
 
+// The span of each area's live record: Melbourne's sensors since October 2024, New York's bridge counter in 2017-2019.
+export const SPAN = { melbourne: 'October 2024 to October 2026', 'new-york': 'October 2017 to December 2019' };
+
 const SIDES = ['North', 'South', 'East', 'West'];
 const COMPASS = { North: [0, 1], South: [0, -1], East: [1, 0], West: [-1, 0] };
 

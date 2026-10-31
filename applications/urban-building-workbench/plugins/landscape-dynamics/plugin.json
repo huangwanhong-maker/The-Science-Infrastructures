@@ -10,7 +10,7 @@
       "group": "The district as cells",
       "title": "the district as a complex",
       "module": "layers/cells.js",
-      "areas": ["melbourne"],
+      "areas": ["melbourne", "new-york"],
       "default": false,
       "about": "The walking network of a district as a regular cell complex, drawn as a complex: on the ground, or by dimension with each cell joined to its faces and the incidences' signs; each segment's orientation; the holes; a picked cell's closure and star; the state set on the cells and the edits made to them."
     },
@@ -19,7 +19,7 @@
       "group": "The district as cells",
       "title": "the landscape running (a model)",
       "module": "layers/landscape.js",
-      "areas": ["melbourne"],
+      "areas": ["melbourne", "new-york"],
       "default": false,
       "about": "A day of the district run as one process, following the clock: walkers at the junctions and their flow along the streets, the warmth of each block, the two stores open or shut, the lane appearing when it is built and the cells it rewrites, its recognition."
     },
@@ -28,7 +28,7 @@
       "group": "The district as cells",
       "title": "the district's spacetime (a model)",
       "module": "layers/spacetime.js",
-      "areas": ["melbourne"],
+      "areas": ["melbourne", "new-york"],
       "default": false,
       "about": "The same day with time rising above the district: each street a sheet coloured by the walkers it carries, each junction a worldline, the cells beginning and ending where the lane is built, the lane deepening once it is recognised; the events as beads joined to those that read them, and a plane at the clock's hour."
     },

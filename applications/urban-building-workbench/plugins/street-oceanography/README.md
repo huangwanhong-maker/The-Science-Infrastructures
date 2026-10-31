@@ -4,14 +4,16 @@
 
 The analyses come from the user's working papers on street oceanography. The urban-science domain states them exactly, with their proofs ([theory/street-oceanography.md](../../../../domains/urban-science/theory/street-oceanography.md)). This plug-in draws them on the workbench's 3D map and beside it, in plain terms.
 
+It reads each area's own records ([ADR 0065](../../../../development/decisions/0065-new-york-in-the-workbench.md)): in Melbourne the City's hundred sensors, Victoria's holidays and Melbourne's weather; in New York the one open record of walkers counted each way every hour in Manhattan, DOT's counter on the Brooklyn Bridge's promenade (October 2017 to December 2019), New York's holidays and weather. The engine's operations that list sensors take an area. In New York the tide, the currents, the sensors' weeks, the rhythm and the weather and holidays are offered; the parts that rest on Melbourne's census of land use, its holdings along named streets or its hundred sensors are Melbourne's alone. The bridge reads as a diurnal tide, one crest a day at about half past three, a promenade's rather than a commuter street's.
+
 ## 1. Layers and Tools
 
 | Layer | Records |
 |---|---|
-| `layers/tide.js`: the tide on the streets, its surge, high water and kind | City of Melbourne, hourly counts (2024–2026); Open-Meteo; Victoria's holidays |
-| `layers/currents.js`: walkers each way, the net current | City of Melbourne, hourly counts each way (2024–2026) |
+| `layers/tide.js`: the tide on the streets, its surge, high water and kind | City of Melbourne, hourly counts (2024–2026); Open-Meteo; Victoria's holidays. New York: NYC DOT's Brooklyn Bridge counter (2017–2019); Open-Meteo; New York's holidays |
+| `layers/currents.js`: walkers each way, the net current | City of Melbourne, hourly counts each way (2024–2026); New York: the Brooklyn Bridge, toward Manhattan and toward Brooklyn (2017–2019) |
 | `layers/waves.js`: waves on Swanston Street (a model) | the city model's blocks and crossings; the counts at the street's start |
-| `layers/sensors.js`: pedestrians at Melbourne's sensors, by the clock's hour | City of Melbourne, hourly counts (2024–2026) |
+| `layers/sensors.js`: pedestrians at the area's sensors, by the clock's hour | City of Melbourne, hourly counts (2024–2026); NYC DOT, the Brooklyn Bridge (2017–2019) |
 | `layers/holdings.js`: shops and services, open or closed at the clock's hour | OpenStreetMap, holdings and `opening_hours` |
 | `layers/establishments.js`: businesses by use | City of Melbourne, census of land use (CLUE) |
 

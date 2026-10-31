@@ -1,4 +1,4 @@
-// Currents: the walkers each way past Melbourne's sensors that count each way, at the clock's hour. Each
+// Currents: the walkers each way past the sensors that count each way (Melbourne's; New York's bridge counter), at the clock's hour. Each
 // sensor's block of street carries two lanes of walkers, those walking forward on the left as left-hand
 // traffic keeps (the walkers' handedness the engine tests). A lane holds as many walkers as walk there on
 // average, N = λ L / v (Little's identity: λ the count toward that way an hour, L the lane's 120 m, v Weidmann's
@@ -8,7 +8,7 @@
 // otherwise they are the mean at that hour of the week (the engine's current meters, the domain's
 // flow/currents.hpp).
 
-import { sensorBlocks } from './blocks.js';
+import { SPAN, sensorBlocks } from './blocks.js';
 
 const SPEED = 1.34;                       // m/s, a walker free (Weidmann 1993)
 const INWARD = [0.8, 0.5, 0.36], OUTWARD = [0.25, 0.45, 0.63];   // coral toward the centre, sea blue away: apart in every vision
@@ -83,11 +83,11 @@ export async function layer(ctx) {
     if (seaDate === date) return;
     seaDate = date;
     try {
-      const d = await ask('sea', { date });
+      const d = await ask('sea', { date, area: ctx.area.id });
       if (seaDate !== date) return;
       sea = new Map(d.sensors.map((x) => [x.id, x]));
       const any = d.sensors.some((x) => x.way1.some(Number.isFinite));
-      status.textContent = any ? `${date}: that day's counts each way` : `${date} lies outside the record: the mean at each hour of the week (October 2024 to October 2026)`;
+      status.textContent = any ? `${date}: that day's counts each way` : `${date} lies outside the record: the mean at each hour of the week (${SPAN[ctx.area.id] || SPAN.melbourne})`;
       arrows();
     } catch (e) {
       status.textContent = String(e.message || e);
@@ -96,7 +96,7 @@ export async function layer(ctx) {
 
   (async () => {
     try {
-      const c = await ask('currents');
+      const c = await ask('currents', { area: ctx.area.id });
       hand = c.handedness;
       features = sensorBlocks(ctx, c.sensors).filter((f) => f.toward.length === 2 && f.toward.every(Boolean));
       let wsum = 0;

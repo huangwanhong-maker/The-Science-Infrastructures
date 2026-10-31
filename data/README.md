@@ -75,7 +75,9 @@ python data/products/mechanism_catalog.py
 python data/products/crust_model.py
 python data/products/history_check.py domains/history/canons/europe-1785-1828.jsonl   # a canon's beings against Wikidata
 python data/acquisition/fetch.py melbourne-pedestrian-archive melbourne-pedestrian-counts melbourne-clue-establishments     open-meteo-hourly nager-holidays osm-streets osm-city                                # streets: counts, weather, holidays, uses, OpenStreetMap
-python data/products/street_records.py                           # the street records and the city model (--only sensors|counts|weather|holidays|terrain|holdings|city)
+python data/acquisition/fetch.py valdrada-nyc nyc-brooklyn-bridge-pedestrians                                                 # New York: Valdrada's tiles, the Brooklyn Bridge's counts
+python data/acquisition/fetch.py open-meteo-hourly --profile new-york; python data/acquisition/fetch.py nager-holidays --profile united-states
+python data/products/street_records.py                           # the street records and the city model (--only sensors|counts|weather|holidays|terrain|holdings|city|new-york)
 ```
 
 The cache, `data/cache/`, is not under version control.
@@ -149,7 +151,7 @@ Products are written to `data/cache/products/` and listed by kind in `index.json
 | `currencies` | `currency_record.py` | Currencies month by month: the ECB's average rate against the euro and the BIS's policy rate at the end of the month (the euro's, the ECB's deposit facility rate), null where missing; the record of the economics domain's spacetime of currencies | `.json` |
 | `places` | `place_names.py` | Place names for searching a globe: the Earth's populated places and countries at their label points (Natural Earth 1:50m), and the Moon's features the IAU has adopted, with their type, diameter and gazetteer link (USGS Astrogeology), in the frames of each body | `.json` (`places/earth.json`, `places/moon.json`) |
 | `geoid` | `geoid_grid.py` | The EGM96 geoid at 15′, taken out of GeographicLib's archive, for heights above mean sea level (the terrain tiles and geodesy's C++). Not listed in the index. | `.pgm` and `.json` |
-| `streets` | `street_records.py` | Streets for the Urban Building Workbench: Melbourne's pedestrian sensors (`street-sensors`) and each sensor's hourly counts over every UTC hour, null where unrecorded, with Melbourne's offsets from UTC (`street-counts/<id>.json`, not listed one by one); hourly weather at the CBD (`street-weather-melbourne`); Victoria's public holidays (`street-holidays-victoria`); the CLUE establishments within 200 m of each sensor, by census year, with a use (`street-terrain-melbourne`); the holdings of six streets, five in Melbourne and a residential street in Tokyo, projected onto each street's axis, with their uses and opening hours as weekly intervals (`street-holdings`); and a city model of Melbourne's centre, buildings with heights, roads with widths and open spaces in local east-north metres (`city-model`) | `.json` |
+| `streets` | `street_records.py` | Streets for the Urban Building Workbench: Melbourne's pedestrian sensors (`street-sensors`) and each sensor's hourly counts over every UTC hour, null where unrecorded, with Melbourne's offsets from UTC (`street-counts/<id>.json`, not listed one by one); hourly weather at the CBD (`street-weather-melbourne`); Victoria's public holidays (`street-holidays-victoria`); the CLUE establishments within 200 m of each sensor, by census year, with a use (`street-terrain-melbourne`); the holdings of six streets, five in Melbourne and a residential street in Tokyo, projected onto each street's axis, with their uses and opening hours as weekly intervals (`street-holdings`); a city model of its areas, an index (`city-model`) and a file an area (`city-model-<id>.json`): Melbourne's centre from OpenStreetMap, and Lower Manhattan, its buildings at their surveyed heights, its trees and its water from Valdrada's compiled city (`valdrada_city.py`) and its roads and open spaces from OpenStreetMap, in local east-north metres; and New York's records: the Brooklyn Bridge's counter (`street-sensors-new-york`), New York's weather and holidays, with an index of each area's records (`street-areas`) | `.json` |
 | `land-mask` | `land_mask.py` | Land and sea: Natural Earth's land at 1:50m rasterised at 20 pixels per degree and eroded by a pixel, the Caspian kept as land, for telling the sea from land below sea level. Not listed in the index. | `.png` and `.json` |
 
 ## 5. Datasets
@@ -225,7 +227,9 @@ Products are written to `data/cache/products/` and listed by kind in `index.json
 | `open-meteo-hourly` | http | Open-Meteo (CC BY 4.0), from ERA5 and the IFS | Hourly 2 m temperature, precipitation and 10 m wind at a place, from 2009 |
 | `nager-holidays` | http | Nager.Date (API for private and non-profit use) | Public holidays of a country and its states, by year |
 | `osm-streets` | http | OpenStreetMap contributors (ODbL), through Overpass | Six streets' ways, the premises along them with their opening_hours, and their buildings |
-| `osm-city` | http | OpenStreetMap contributors (ODbL), through Overpass | Buildings, roads and open spaces of Melbourne's centre, for a city model |
+| `osm-city` | http | OpenStreetMap contributors (ODbL), through Overpass | Buildings, roads and open spaces of Melbourne's centre, and the roads and open spaces of Lower Manhattan, for a city model |
+| `valdrada-nyc` | files | Valdrada (M. K. Turkcan), from NYC Open Data; ODbL 1.0, © OpenStreetMap contributors | The compiled city's tiles of Lower Manhattan at a pinned revision: buildings at their surveyed roof heights, trees, the ground |
+| `nyc-brooklyn-bridge-pedestrians` | http | NYC Department of Transportation, NYC Open Data | Pedestrians counted each way on the Brooklyn Bridge's promenade, every hour, October 2017 to December 2019 |
 
 ### 5.2 Planned
 

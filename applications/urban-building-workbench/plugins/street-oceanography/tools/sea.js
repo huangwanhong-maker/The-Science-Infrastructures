@@ -19,7 +19,7 @@ export async function render(root, ctx) {
   root.append(box);
   busy(box, 'reading every street\'s tide and current…');
   let tides, cur;
-  try { [tides, cur] = await Promise.all([ctx.ask('tides'), ctx.ask('currents')]); } catch (e) { return failure(box, e); }
+  try { [tides, cur] = await Promise.all([ctx.ask('tides', { area: ctx.area.id }), ctx.ask('currents', { area: ctx.area.id })]); } catch (e) { return failure(box, e); }
   box.replaceChildren();
 
   // ---- high water ----
@@ -98,7 +98,7 @@ export async function render(root, ctx) {
     const date = ctx.clock.date;
     busy(surgeBox, `the counts of ${date}…`);
     let d;
-    try { d = await ctx.ask('sea', { date }); } catch (e) { return failure(surgeBox, e); }
+    try { d = await ctx.ask('sea', { date, area: ctx.area.id }); } catch (e) { return failure(surgeBox, e); }
     const pred = Array(24).fill(0), obs = Array(24).fill(0), per = [];
     for (const s of d.sensors) {
       if (!s.observed.some(Number.isFinite)) continue;

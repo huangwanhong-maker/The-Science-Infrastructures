@@ -279,7 +279,9 @@ else:
 path = PRODUCTS / "city-model.json"
 if path.exists():
     cm = json.loads(path.read_text(encoding="utf-8"))
-    for a in cm["areas"]:
+    for entry in cm["areas"]:
+        a = json.loads((PRODUCTS / entry["file"]).read_text(encoding="utf-8"))
+        assert_(f"city-model {a['id']}: its file agrees with the index", a["id"] == entry["id"] and len(a["buildings"]) == entry["buildings"] and a.get("credit"))
         fp = [b for b in a["buildings"]]
         assert_(f"city-model {a['id']}: footprints counter-clockwise, holes clockwise, not closed",
                 all(sr.signed_area(b["footprint"]) > 0 and b["footprint"][0] != b["footprint"][-1] and all(sr.signed_area(h) < 0 for h in b["holes"]) for b in fp))
@@ -291,3 +293,24 @@ if path.exists():
         assert_(f"city-model {a['id']}: open spaces clipped to the area", inside == sum(len(s["ring"]) for s in a["spaces"]))
 else:
     skip("city-model: not built (python data/products/street_records.py --only city)")
+path = PRODUCTS / "street-sensors-new-york.json"
+if path.exists():
+    ny = json.loads(path.read_text(encoding="utf-8"))
+    b = ny["sensors"][0]
+    c = json.loads((PRODUCTS / b["series"]).read_text(encoding="utf-8"))
+    changes = [o[0] for o in c["offsets"][1:]]
+    assert_("street-sensors-new-york: New York's clock changes at the United States' instants (2017-2019)",
+            changes == ["2017-11-05T06:00:00Z", "2018-03-11T07:00:00Z", "2018-11-04T06:00:00Z", "2019-03-10T07:00:00Z", "2019-11-03T06:00:00Z"]
+            and [o[1] for o in c["offsets"]] == [-4, -5, -4, -5, -4, -5], json.dumps(c["offsets"]))
+    d = c["directions"]
+    pairs = [(n, a, z) for n, a, z in zip(c["counts"], d["d1"], d["d2"]) if n is not None and a is not None and z is not None]
+    assert_("street-sensors-new-york: each way sums to the count but in the record's two rows that do not",
+            sum(a + z != n for n, a, z in pairs) == ny["tally"]["sum_mismatch"] <= 2 and len(pairs) > 15000, f"{len(pairs)} hours")
+    assert_("street-sensors-new-york: the spring change's missing 02:00 dropped (twice), the autumn change's 01:00 read twice (2019)",
+            ny["tally"]["missing_hour_rows"] == 2 and ny["tally"]["repeated_hours"] == 1)
+    hol = json.loads((PRODUCTS / "street-holidays-new-york.json").read_text(encoding="utf-8"))
+    y18 = [h["name"] for h in hol["holidays"] if h["date"].startswith("2018")]
+    assert_("street-holidays-new-york: ten federal holidays in 2018, Independence Day on 4 July",
+            len(y18) == 10 and any(h["date"] == "2018-07-04" for h in hol["holidays"]), ", ".join(y18))
+else:
+    skip("street-sensors-new-york: not built (python data/products/street_records.py --only new-york)")

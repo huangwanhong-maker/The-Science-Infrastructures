@@ -1,0 +1,34 @@
+{
+  "id": "nyc-brooklyn-bridge-pedestrians",
+  "kind": "http",
+  "domain": "urban-science",
+  "title": "New York City DOT's automated pedestrian counts on the Brooklyn Bridge: every hour, each way, October 2017 to December 2019",
+  "provider": "New York City Department of Transportation, Brooklyn Bridge Automated Pedestrian Counts Demonstration Project (Historic), on NYC Open Data (Socrata, dataset 6fi9-q3ta)",
+  "credit": "Pedestrian counts: NYC Department of Transportation, NYC Open Data",
+  "licence": "NYC Open Data's Terms of Use; the dataset's licence field is empty (checked 2026-11-01), and New York City's Open Data Law (Local Law 11 of 2012) publishes its datasets without restrictions on their use.",
+  "citation": "New York City Department of Transportation (2020), Brooklyn Bridge Automated Pedestrian Counts Demonstration Project (Historic), NYC Open Data, https://data.cityofnewyork.us/d/6fi9-q3ta",
+  "format": "CSV with a header: hour_beginning (the civil hour at which the hour begins, New York's wall-clock time, ISO 8601 without an offset), location, pedestrians (the sum of both ways), towards_manhattan, towards_brooklyn, weather_summary, temperature (deg F), precipitation (in), lat, long (WGS 84), events (holidays and other events named by DOT). The clock is New York's: at the spring change the absent 02:00 is a row of zeros; at the autumn change of 2019-11-03 the hour 01:00 appears twice.",
+  "coverage": "One counter at the Manhattan approach of the Brooklyn Bridge's promenade (40.708164, -73.999509), 2017-10-01 00:00 to 2019-12-31 23:00, 16,057 hours, with August to December 2018 missing; the dataset is historic and no longer updated (its rows last changed 2020-03-05).",
+  "used_by": [
+    "data/products/street_records.py",
+    "applications/urban-building-workbench"
+  ],
+  "requests": [
+    {
+      "url": "https://data.cityofnewyork.us/resource/6fi9-q3ta.csv",
+      "query": {
+        "$limit": "50000",
+        "$order": "hour_beginning"
+      },
+      "file": "counts.csv"
+    }
+  ],
+  "parameters": {},
+  "profiles": {
+    "historic": {
+      "description": "The whole record, 2017-10 to 2019-12, about 1.6 MB",
+      "parameters": {}
+    }
+  },
+  "default_profile": "historic"
+}

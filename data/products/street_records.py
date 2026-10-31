@@ -46,15 +46,21 @@ hours, for the Urban Building Workbench's street oceanography.
    and each area of the city model (`equirectangular_error_m`, against the exact projection).
 
 Output, in data/cache/products/: street-sensors.json, street-counts/<id>.json, street-weather-melbourne.json,
-street-holidays-victoria.json, street-terrain-melbourne.json, street-holdings.json, city-model.json; listed in the index
-under the kind `streets`.
+street-holidays-victoria.json, street-terrain-melbourne.json, street-holdings.json, city-model.json (an index) with
+city-model-<area>.json (Melbourne's from OpenStreetMap; New York's from Valdrada's compiled city and OpenStreetMap,
+valdrada_city.py), and New York's records: street-sensors-new-york.json (the Brooklyn Bridge's counter, its counts in
+street-counts/9001.json), street-weather-new-york.json, street-holidays-new-york.json, and street-areas.json, which names
+each area's records; listed in the index under the kind `streets`.
 
 Usage::
 
     python data/acquisition/fetch.py melbourne-pedestrian-archive melbourne-pedestrian-counts \\
         melbourne-clue-establishments open-meteo-hourly nager-holidays osm-streets osm-city
     python data/products/street_records.py                      # every product whose inputs are fetched
-    python data/products/street_records.py --only counts        # sensors, counts, weather, holidays, terrain, holdings or city
+    python data/acquisition/fetch.py valdrada-nyc nyc-brooklyn-bridge-pedestrians
+    python data/acquisition/fetch.py open-meteo-hourly --profile new-york
+    python data/acquisition/fetch.py nager-holidays --profile united-states
+    python data/products/street_records.py --only counts        # sensors, counts, weather, holidays, terrain, holdings, city or new-york
 """
 
 from __future__ import annotations
@@ -413,8 +419,9 @@ def build_sensors_and_counts(write_counts: bool = True) -> dict:
 
 # ---- weather -------------------------------------------------------------------------------------------
 
-def build_weather() -> dict:
-    raw = json.loads((WEATHER / "hourly.json").read_text(encoding="utf-8"))
+def build_weather(folder: Path = WEATHER, name: str = "street-weather-melbourne", place: str = "Melbourne's CBD",
+                  requested: list[float] | None = None) -> dict:
+    raw = json.loads((folder / "hourly.json").read_text(encoding="utf-8"))
     h = raw["hourly"]
     times = [dt.datetime.fromisoformat(t).replace(tzinfo=UTC) for t in h["time"]]
     first = hour_of(times[0])
@@ -428,7 +435,7 @@ def build_weather() -> dict:
         if i >= 1:
             rain[i - 1] = None if b is None else round(b, 2)
     product = {
-        "product": "street-weather-melbourne",
+        "product": name,
         "built": dt.datetime.now(UTC).isoformat(timespec="seconds"),
         "t0_utc": iso(first), "step_s": 3600,
         "temperature_c": temp, "precipitation_mm": rain, "wind_m_s": wind,
@@ -436,16 +443,16 @@ def build_weather() -> dict:
                         "at that instant; precipitation_mm is the total over the hour that begins there (Open-Meteo's value "
                         "stamped an hour later), so that it lies on the same hour as a pedestrian count."),
         "grid": {"latitude": raw["latitude"], "longitude": raw["longitude"], "elevation_m": raw.get("elevation"),
-                 "requested": [-37.8136, 144.9631]},
-        "source": {"dataset": "open-meteo-hourly", "profile": "melbourne", "credit": "Weather data by Open-Meteo.com (CC BY 4.0), from Copernicus ERA5",
-                   "retrieved_at": retrieved(WEATHER)},
+                 "requested": requested or [-37.8136, 144.9631]},
+        "source": {"dataset": "open-meteo-hourly", "profile": folder.name, "credit": "Weather data by Open-Meteo.com (CC BY 4.0), from Copernicus ERA5",
+                   "retrieved_at": retrieved(folder)},
     }
-    write(OUT / "street-weather-melbourne.json", product)
-    register("streets", {"name": "street-weather-melbourne", "file": "street-weather-melbourne.json",
-                         "title": "Hourly weather at Melbourne's CBD (temperature, precipitation, wind)", "domain": "meteorology",
+    write(OUT / f"{name}.json", product)
+    register("streets", {"name": name, "file": f"{name}.json",
+                         "title": f"Hourly weather at {place} (temperature, precipitation, wind)", "domain": "meteorology",
                          "times": [iso(first), iso(first + n - 1)], "source": "Open-Meteo (ERA5)"})
     missing = sum(v is None for v in temp)
-    print(f"  street-weather-melbourne: {n} hours from {iso(first)}, {missing} without temperature")
+    print(f"  {name}: {n} hours from {iso(first)}, {missing} without temperature")
     return product
 
 
@@ -1047,6 +1054,11 @@ AREAS = [
     {"id": "melbourne", "name": "Melbourne: the Hoddle Grid and its neighbours, from Southbank to Carlton and from Kensington "
                                 "to East Melbourne, where the pedestrian sensors are", "bbox": [-37.8260, 144.9260, -37.7910, 144.9790],
      "file": "melbourne"},
+    # Lower Manhattan, from the Battery to Canal Street and from the Hudson to the Brooklyn Bridge's Manhattan tower,
+    # where the bridge's pedestrian counter stands: buildings, streets, trees and water from Valdrada's compiled city,
+    # open spaces from OpenStreetMap.
+    {"id": "new-york", "name": "New York: Lower Manhattan, from the Battery to Canal Street and from the Hudson to the Brooklyn Bridge",
+     "bbox": [40.6995, -74.0195, 40.7190, -73.9930], "file": "new-york", "source": "valdrada"},
 ]
 CITY = CACHE / "osm-city" / "areas"
 LEVEL_M = 3.2                   # a storey
@@ -1345,13 +1357,8 @@ class _Projector:
         return [[round(float(a), 2) + 0.0, round(float(b), 2) + 0.0] for a, b in zip(e, n)]      # no -0.0
 
 
-def city_area(spec: dict) -> tuple[dict, dict]:
-    """One area of the city model from its tiles' Overpass responses (each element kept once), and its tally."""
-    lat0 = (spec["bbox"][0] + spec["bbox"][2]) / 2
-    lon0 = (spec["bbox"][1] + spec["bbox"][3]) / 2
-    project = _Projector(lat0, lon0)
-    tally = {"buildings": {"height": 0, "levels": 0, "default": 0}, "parts": 0, "buildings_not_assembled": 0, "roads": 0,
-             "spaces": 0, "spaces_not_assembled": 0, "spaces_outside": 0, "ways_not_roads": 0}
+def osm_elements(spec: dict) -> tuple[dict, int]:
+    """The elements of an area's Overpass tiles (<file>-<k>.json), each kept once, and the number of tiles."""
     elements: dict[tuple, dict] = {}
     tiles = sorted(CITY.glob(f"{spec['file']}-*.json"), key=lambda q: int(q.stem.rsplit("-", 1)[1]))
     if not tiles:
@@ -1359,7 +1366,74 @@ def city_area(spec: dict) -> tuple[dict, dict]:
     for path in tiles:
         for e in read_overpass(path)["elements"]:
             elements.setdefault((e["type"], e["id"]), e)
-    tally["tiles"] = len(tiles)
+    return elements, len(tiles)
+
+
+def osm_roads(elements: dict, spec: dict, project, tally: dict, tunnels: bool = True) -> list[dict]:
+    """The ways tagged highway among an area's elements, with their widths, clipped to the area's box; without
+    tunnels (tunnel=yes) when tunnels is false."""
+    roads = []
+    for e in elements.values():
+        tags = e.get("tags", {})
+        if "highway" not in tags or "building" in tags or "building:part" in tags:
+            continue
+        line = _paths(e)
+        kind = tags.get("highway")
+        if e["type"] != "way" or len(line) < 2 or kind in NOT_ROADS or tags.get("area") == "yes":
+            tally["ways_not_roads"] = tally.get("ways_not_roads", 0) + 1
+            continue
+        if not tunnels and tags.get("tunnel") == "yes":
+            tally["tunnels"] = tally.get("tunnels", 0) + 1
+            continue
+        width, source = road_width(tags)
+        pieces = clip_line_to_box(line, spec["bbox"])
+        if not pieces:
+            tally["ways_not_roads"] = tally.get("ways_not_roads", 0) + 1
+            continue
+        for k, piece in enumerate(pieces):
+            r = {"id": f"way/{e['id']}" + (f"#{k + 1}" if len(pieces) > 1 else ""), "kind": kind}
+            if tags.get("name"):
+                r["name"] = tags["name"]
+            r.update({"width_m": round(width, 2), "width_source": source, "line": project(piece)})
+            if tags.get("bridge") == "yes":
+                r["bridge"] = True
+            roads.append(r)
+    return roads
+
+
+def osm_spaces(elements: dict, spec: dict, project, tally: dict) -> list[dict]:
+    """The open spaces among an area's elements (space_kind), their outer rings clipped to the area's box."""
+    spaces = []
+    for e in elements.values():
+        tags = e.get("tags", {})
+        kind = None if ("building" in tags or "building:part" in tags) else space_kind(tags)
+        polys = polygons(e) if kind else None
+        if kind is None:
+            continue
+        if polys is None:
+            tally["spaces_not_assembled"] = tally.get("spaces_not_assembled", 0) + 1
+            continue
+        for k, (outer, _) in enumerate(polys):
+            ring = clip_to_box(outer, spec["bbox"])
+            if len(ring) < 3:
+                tally["spaces_outside"] = tally.get("spaces_outside", 0) + 1
+                continue
+            s = {"id": f"{e['type']}/{e['id']}" + (f"#{k + 1}" if len(polys) > 1 else ""), "kind": kind}
+            if tags.get("name"):
+                s["name"] = tags["name"]
+            s["ring"] = oriented(project(ring), True)
+            spaces.append(s)
+    return spaces
+
+
+def city_area(spec: dict) -> tuple[dict, dict]:
+    """One area of the city model from its tiles' Overpass responses (each element kept once), and its tally."""
+    lat0 = (spec["bbox"][0] + spec["bbox"][2]) / 2
+    lon0 = (spec["bbox"][1] + spec["bbox"][3]) / 2
+    project = _Projector(lat0, lon0)
+    tally = {"buildings": {"height": 0, "levels": 0, "default": 0}, "parts": 0, "buildings_not_assembled": 0, "roads": 0,
+             "spaces": 0, "spaces_not_assembled": 0, "spaces_outside": 0, "ways_not_roads": 0}
+    elements, tally["tiles"] = osm_elements(spec)
     is_building = lambda tags: "building" in tags or "building:part" in tags  # noqa: E731
     in_relations = {m["ref"] for e in elements.values() if e["type"] == "relation" and "building" in e.get("tags", {})
                     for m in e.get("members", []) if m.get("type") == "way"}
@@ -1403,47 +1477,8 @@ def city_area(spec: dict) -> tuple[dict, dict]:
     for b in buildings:
         tally["buildings"][b["height_source"]] += 1
     tally["parts"] = len(parts)
-    roads = []
-    for e in elements.values():
-        tags = e.get("tags", {})
-        if "highway" not in tags or is_building(tags):
-            continue
-        line = _paths(e)
-        kind = tags.get("highway")
-        if e["type"] != "way" or len(line) < 2 or kind in NOT_ROADS or tags.get("area") == "yes":
-            tally["ways_not_roads"] += 1
-            continue
-        width, source = road_width(tags)
-        pieces = clip_line_to_box(line, spec["bbox"])
-        if not pieces:
-            tally["ways_not_roads"] += 1
-            continue
-        for k, piece in enumerate(pieces):
-            r = {"id": f"way/{e['id']}" + (f"#{k + 1}" if len(pieces) > 1 else ""), "kind": kind}
-            if tags.get("name"):
-                r["name"] = tags["name"]
-            r.update({"width_m": round(width, 2), "width_source": source, "line": project(piece)})
-            roads.append(r)
-    spaces = []
-    for e in elements.values():
-        tags = e.get("tags", {})
-        kind = None if is_building(tags) else space_kind(tags)
-        polys = polygons(e) if kind else None
-        if kind is None:
-            continue
-        if polys is None:
-            tally["spaces_not_assembled"] += 1
-            continue
-        for k, (outer, _) in enumerate(polys):
-            ring = clip_to_box(outer, spec["bbox"])
-            if len(ring) < 3:
-                tally["spaces_outside"] += 1
-                continue
-            s = {"id": f"{e['type']}/{e['id']}" + (f"#{k + 1}" if len(polys) > 1 else ""), "kind": kind}
-            if tags.get("name"):
-                s["name"] = tags["name"]
-            s["ring"] = oriented(project(ring), True)
-            spaces.append(s)
+    roads = osm_roads(elements, spec, project, tally)
+    spaces = osm_spaces(elements, spec, project, tally)
     tally["roads"], tally["spaces"] = len(roads), len(spaces)
     area = {"id": spec["id"], "name": spec["name"], "origin": {"lat": round(lat0, 7), "lon": round(lon0, 7)},
             "bbox": spec["bbox"], "frame": "local ENU metres from origin: x east, y north",
@@ -1455,19 +1490,7 @@ def city_area(spec: dict) -> tuple[dict, dict]:
     return area, tally
 
 
-def build_city() -> dict:
-    import time
-    started = time.monotonic()
-    areas, tallies = [], {}
-    for spec in AREAS:
-        area, tally = city_area(spec)
-        areas.append(area)
-        tallies[spec["id"]] = tally
-    product = {
-        "product": "city-model",
-        "built": dt.datetime.now(UTC).isoformat(timespec="seconds"),
-        "sources": [{"dataset": "osm-city", "profile": "areas", "credit": "© OpenStreetMap contributors, ODbL 1.0",
-                     "retrieved_at": retrieved(CITY)}],
+OSM_CONVENTIONS = {
         "heights": ("height_m: the height tag (units stripped; feet converted), else building:levels x 3.2 m plus roof:levels x 1.6 m, "
                     "else a default of the building's kind (height_source default): " + json.dumps(DEFAULT_HEIGHT) +
                     f", any other {DEFAULT_HEIGHT_OTHER} m. min_height_m: min_height, else building:min_level x 3.2 m, else 0. "
@@ -1482,19 +1505,200 @@ def build_city() -> dict:
                    "Outer rings only, clipped to the area's box (Sutherland-Hodgman in latitude and longitude); roads are clipped "
                    "to it too (Liang-Barsky), a way leaving and re-entering the box in pieces id#k; buildings are whole."),
         "rings": "footprints and rings counter-clockwise, holes clockwise, not closed; coordinates rounded to 0.01 m",
-        "tally": tallies,
-        "areas": areas,
+}
+
+
+def osm_area(spec: dict) -> tuple[dict, dict, dict]:
+    """An area from OpenStreetMap's tiles: the area, its tally, and its source and conventions."""
+    area, tally = city_area(spec)
+    source = {"dataset": "osm-city", "profile": "areas", "credit": "© OpenStreetMap contributors, ODbL 1.0", "retrieved_at": retrieved(CITY)}
+    return area, tally, {"sources": [source], "credit": "© OpenStreetMap contributors", "conventions": OSM_CONVENTIONS}
+
+
+def valdrada_area(spec: dict) -> tuple[dict, dict, dict]:
+    """An area from Valdrada's compiled city (New York), its open spaces from OpenStreetMap as Melbourne's are."""
+    import valdrada_city
+    return valdrada_city.area(spec, sys.modules[__name__])
+
+
+READERS = {"osm": osm_area, "valdrada": valdrada_area}
+
+
+def build_city() -> dict:
+    """The city model: each area in a file of its own (city-model-<id>.json), read from its source, and an index
+    (city-model.json) of the areas built. An area whose source is not fetched is left out, with the command that
+    fetches it."""
+    import time
+    started = time.monotonic()
+    entries = []
+    for spec in AREAS:
+        t0 = time.monotonic()
+        try:
+            area, tally, about = READERS[spec.get("source", "osm")](spec)
+        except FileNotFoundError as e:
+            print(f"  {spec['id']}: {e}", file=sys.stderr)
+            continue
+        area = {"product": "city-model", "built": dt.datetime.now(UTC).isoformat(timespec="seconds"), **area, **about, "tally": tally}
+        file = f"city-model-{spec['id']}.json"
+        write(OUT / file, area)
+        entries.append({"id": area["id"], "name": area["name"], "file": file, "origin": area["origin"], "bbox": area["bbox"], "credit": area["credit"],
+                        "buildings": len(area["buildings"]), "roads": len(area["roads"]), "spaces": len(area["spaces"])})
+        print(f"  {area['id']}: {len(area['buildings'])} buildings, {len(area['roads'])} roads, {len(area['spaces'])} spaces; "
+              f"{json.dumps(tally)}; equirectangular error {area['equirectangular_error_m']} m; {file} {(OUT / file).stat().st_size / 1e6:.1f} MB "
+              f"in {time.monotonic() - t0:.1f} s")
+    index = {"product": "city-model", "built": dt.datetime.now(UTC).isoformat(timespec="seconds"),
+             "about": "The areas of the city model, each in local ENU metres about its origin in a file of its own, with its sources, credit and conventions.",
+             "areas": entries}
+    write(OUT / "city-model.json", index)
+    register("streets", {"name": "city-model", "file": "city-model.json", "title": "Buildings, roads and open spaces of cities in local ENU metres, an index and a file an area",
+                         "domain": "urban-science", "areas": [a["id"] for a in entries], "source": "; ".join(sorted({a["credit"] for a in entries}))})
+    print(f"  city-model.json: {len(entries)} areas in {time.monotonic() - started:.1f} s")
+    return index
+
+
+# ---- New York's records ---------------------------------------------------------------------------------------
+
+# New York has no counting system like Melbourne's: the one open record of pedestrians counted each way every hour in
+# Manhattan is DOT's counter on the Brooklyn Bridge's promenade at its Manhattan approach, October 2017 to December
+# 2019 (nyc-brooklyn-bridge-pedestrians). It is a sensor of its own area, beside New York's weather and holidays, and
+# street-areas.json names each area's products for the engine.
+BRIDGE = CACHE / "nyc-brooklyn-bridge-pedestrians" / "historic"
+NY_WEATHER = CACHE / "open-meteo-hourly" / "new-york"
+NY_HOLIDAYS = CACHE / "nager-holidays" / "united-states"
+BRIDGE_ID = 9001
+# Along the bridge, toward Manhattan is a bearing of about 309 deg (north-west), toward Brooklyn about 129 deg: the
+# compass names nearest them, by which the workbench draws a sensor's two currents.
+BRIDGE_TOWARD = ["West", "East"]
+
+
+def new_york_offset(t: dt.datetime) -> int:
+    """New York's offset from UTC (hours) at a UTC instant, by the United States' rule since 2007: EDT (-4) from the
+    second Sunday of March at 02:00 EST to the first Sunday of November at 02:00 EDT, else EST (-5)."""
+    y = t.year
+    march = dt.date(y, 3, 1) + dt.timedelta(days=(6 - dt.date(y, 3, 1).weekday()) % 7 + 7)
+    november = dt.date(y, 11, 1) + dt.timedelta(days=(6 - dt.date(y, 11, 1).weekday()) % 7)
+    start = dt.datetime(y, 3, march.day, 7, tzinfo=UTC)          # 02:00 EST
+    end = dt.datetime(y, 11, november.day, 6, tzinfo=UTC)        # 02:00 EDT
+    return -4 if start <= t < end else -5
+
+
+def new_york_utc(local: dt.datetime, second: bool) -> dt.datetime | None:
+    """The UTC hour of a wall-clock hour in New York: the offset that agrees with itself; at the autumn change both
+    do (the first time the hour is read is EDT's, the second EST's); in the spring change's missing hour neither."""
+    fits = [local.replace(tzinfo=UTC) - dt.timedelta(hours=o) for o in (-4, -5)]
+    fits = [u for u, o in zip(fits, (-4, -5)) if new_york_offset(u) == o]
+    if not fits:
+        return None
+    return fits[-1] if second and len(fits) > 1 else fits[0]
+
+
+def build_new_york() -> dict:
+    rows = list(csv.DictReader(io.StringIO((BRIDGE / "counts.csv").read_text(encoding="utf-8"))))
+    seen: set[str] = set()
+    hours: dict[int, tuple] = {}
+    tally = {"rows": len(rows), "missing_hour_rows": 0, "repeated_hours": 0, "sum_mismatch": 0, "outage_days": 0}
+    lat = lon = None
+    for r in rows:
+        stamp = r["hour_beginning"][:13]
+        local = dt.datetime.fromisoformat(stamp + ":00")
+        second = stamp in seen
+        seen.add(stamp)
+        tally["repeated_hours"] += second
+        t = new_york_utc(local, second)
+        if t is None:
+            tally["missing_hour_rows"] += 1          # the spring change's 02:00, a row of zeros
+            continue
+        total, a, b = (int(float(r[k])) if r[k] not in ("", None) else None for k in ("pedestrians", "towards_manhattan", "towards_brooklyn"))
+        if total is not None and a is not None and b is not None and a + b != total:
+            tally["sum_mismatch"] += 1
+        hours[hour_of(t)] = (total, a, b, local.date())
+        lat, lon = float(r["lat"]), float(r["long"])
+    # A day the counter reads zero for twelve hours or more was a day it did not count: its hours are null.
+    by_day: dict[dt.date, list[int]] = {}
+    for h, (total, _, _, day) in hours.items():
+        by_day.setdefault(day, []).append(h)
+    for day, hs in by_day.items():
+        if sum(1 for h in hs if hours[h][0] == 0) >= 12:
+            tally["outage_days"] += 1
+            for h in hs:
+                hours[h] = (None, None, None, day)
+    first, last = min(hours), max(hours)
+    n = last - first + 1
+    counts, d1, d2 = [None] * n, [None] * n, [None] * n
+    for h, (total, a, b, _) in hours.items():
+        counts[h - first], d1[h - first], d2[h - first] = total, a, b
+    offsets, prev = [], None
+    for h in range(first, last + 1):
+        o = new_york_offset(dt.datetime.fromtimestamp(h * 3600, UTC))
+        if o != prev:
+            offsets.append([iso(h), o])
+            prev = o
+    gaps, k = [], 0
+    while k < n:
+        if counts[k] is None:
+            j = k
+            while j < n and counts[j] is None:
+                j += 1
+            if j - k >= 24:
+                gaps.append([iso(first + k), j - k])
+            k = j
+        else:
+            k += 1
+    (OUT / "street-counts").mkdir(parents=True, exist_ok=True)
+    series = f"street-counts/{BRIDGE_ID}.json"
+    write(OUT / series, {"id": BRIDGE_ID, "t0_utc": iso(first), "step_s": 3600, "counts": counts, "offsets": offsets,
+                         "directions": {"t0_utc": iso(first), "step_s": 3600, "d1": d1, "d2": d2}})
+    missing = sum(v is None for v in counts)
+    source = {"dataset": "nyc-brooklyn-bridge-pedestrians", "profile": "historic", "credit": "NYC Department of Transportation, NYC Open Data",
+              "licence": "NYC Open Data terms of use (no licence restrictions under the Open Data Law)", "retrieved_at": retrieved(BRIDGE)}
+    sensors = {
+        "product": "street-sensors-new-york", "built": dt.datetime.now(UTC).isoformat(timespec="seconds"),
+        "timezone": "America/New_York", "area": "new-york", "sources": [source],
+        "time": ("Each series is over every UTC hour from the sensor's first record to its last; a count is that of the hour "
+                 "beginning at t0_utc + i step_s. The record gives New York's wall-clock hour; offsets gives the offset of "
+                 "civil time from UTC (hours) from each listed instant on."),
+        "directions": ("d1 and d2 are the counts toward Manhattan and toward Brooklyn along the bridge (the record's towards_manhattan "
+                       "and towards_brooklyn); directions names the compass points nearest them (West, East: the bridge runs "
+                       "north-west to south-east here), direction_names their own names."),
+        "daylight_saving": ("The United States' rule since 2007: EDT (-4) from the second Sunday of March 02:00 EST to the first "
+                            "Sunday of November 02:00 EDT, else EST (-5). The record's row of zeros at the spring change's missing "
+                            "02:00 is dropped; where the autumn change's 01:00 appears twice (2019) the first is EDT's and the "
+                            "second EST's, where once (2017) it is EDT's and EST's is null."),
+        "outages": "A day on which the counter reads zero for twelve hours or more is taken as a day it did not count: its hours are null.",
+        "tally": tally,
+        "sensors": [{"id": BRIDGE_ID, "code": "BrooklynBridge", "name": "Brooklyn Bridge promenade, Manhattan approach", "lat": lat, "lon": lon,
+                     "installed": "2017-10-01", "status": "removed", "location_type": "Outdoor", "area": "new-york",
+                     "directions": BRIDGE_TOWARD, "direction_names": ["toward Manhattan", "toward Brooklyn"], "series": series,
+                     "first_utc": iso(first), "last_utc": iso(last), "hours": n, "missing": missing, "gaps": gaps, "datasets": ["nyc-dot"]}],
     }
-    path = OUT / "city-model.json"
-    write(path, product)
-    register("streets", {"name": "city-model", "file": "city-model.json", "title": "Buildings, roads and open spaces of Melbourne's centre in local ENU metres",
-                         "domain": "urban-science", "areas": [a["id"] for a in areas], "source": "OpenStreetMap (ODbL)"})
-    for a in areas:
-        t = tallies[a["id"]]
-        print(f"  {a['id']}: {len(a['buildings'])} buildings ({t['buildings']}, {t['parts']} parts), {t['roads']} roads, "
-              f"{t['spaces']} spaces; not assembled: {t['buildings_not_assembled']} buildings, {t['spaces_not_assembled']} spaces; equirectangular error {a['equirectangular_error_m']} m")
-    print(f"  city-model.json: {path.stat().st_size / 1e6:.1f} MB in {time.monotonic() - started:.1f} s")
-    return product
+    write(OUT / "street-sensors-new-york.json", sensors)
+    register("streets", {"name": "street-sensors-new-york", "file": "street-sensors-new-york.json",
+                         "title": "New York's pedestrian counter on the Brooklyn Bridge and its hourly counts each way", "domain": "urban-science",
+                         "times": [iso(first), iso(last)], "source": "NYC DOT (NYC Open Data)"})
+    print(f"  street-sensors-new-york: the Brooklyn Bridge, {n} hours from {iso(first)}, {missing} null; {json.dumps(tally)}")
+    build_weather(NY_WEATHER, "street-weather-new-york", "Lower Manhattan", [40.7082, -73.9995])
+    years = {int(p.stem): json.loads(p.read_text(encoding="utf-8")) for p in sorted(NY_HOLIDAYS.glob("[0-9][0-9][0-9][0-9].json"))}
+    holidays = [{"date": h["date"], "name": h["name"], "national": bool(h.get("global"))} for y in sorted(years) for h in years[y]
+                if (h.get("global") or "US-NY" in (h.get("counties") or [])) and "Public" in (h.get("types") or [])]
+    product = {"product": "street-holidays-new-york", "built": dt.datetime.now(UTC).isoformat(timespec="seconds"),
+               "holidays": holidays, "years": [min(years), max(years)],
+               "notes": ["New York's Election Day (a civil holiday for state offices) is not among Nager.Date's holidays; Lincoln's "
+                         "Birthday is, as an observance, and is left out with the other observances."],
+               "source": {"dataset": "nager-holidays", "profile": "united-states", "credit": "Nager.Date",
+                          "rule": "public holidays that are federal (global) or whose counties include US-NY",
+                          "licence": "Nager.Date API terms: private and non-profit use", "retrieved_at": retrieved(NY_HOLIDAYS)}}
+    write(OUT / "street-holidays-new-york.json", product)
+    register("streets", {"name": "street-holidays-new-york", "file": "street-holidays-new-york.json", "title": "Public holidays of New York",
+                         "domain": "urban-science", "years": product["years"], "holidays": len(holidays), "source": "Nager.Date"})
+    print(f"  street-holidays-new-york: {len(holidays)} holidays, {min(years)}-{max(years)}")
+    areas = {"product": "street-areas", "built": dt.datetime.now(UTC).isoformat(timespec="seconds"),
+             "about": "Each area's records of its streets, which the engine reads: its sensors, their weather and holidays, its time zone.",
+             "areas": [{"id": "melbourne", "sensors": "street-sensors.json", "weather": "street-weather-melbourne.json",
+                        "holidays": "street-holidays-victoria.json", "timezone": "Australia/Melbourne"},
+                       {"id": "new-york", "sensors": "street-sensors-new-york.json", "weather": "street-weather-new-york.json",
+                        "holidays": "street-holidays-new-york.json", "timezone": "America/New_York"}]}
+    write(OUT / "street-areas.json", areas)
+    return sensors
 
 
 # ---- the command ---------------------------------------------------------------------------------------------
@@ -1506,11 +1710,13 @@ NEEDS = {
     "holidays": [HOLIDAYS / "retrieval.json"],
     "terrain": [CLUE / "establishments.csv", LIVE / "sensors.csv"],
     "holdings": [OSM / "retrieval.json"],
-    "city": [CITY / "retrieval.json"],
+    "city": [],                 # each area is built when its source is fetched (build_city)
+    "new-york": [BRIDGE / "counts.csv", NY_WEATHER / "hourly.json", NY_HOLIDAYS / "retrieval.json"],
 }
 FETCH = {"sensors": "melbourne-pedestrian-archive melbourne-pedestrian-counts", "counts": "melbourne-pedestrian-archive melbourne-pedestrian-counts",
          "weather": "open-meteo-hourly", "holidays": "nager-holidays", "terrain": "melbourne-clue-establishments melbourne-pedestrian-counts",
-         "holdings": "osm-streets", "city": "osm-city"}
+         "holdings": "osm-streets", "city": "osm-city valdrada-nyc",
+         "new-york": "nyc-brooklyn-bridge-pedestrians; open-meteo-hourly --profile new-york; nager-holidays --profile united-states"}
 
 
 def main(argv: list[str]) -> int:
@@ -1550,6 +1756,8 @@ def main(argv: list[str]) -> int:
             build_holdings()
         elif what == "city":
             build_city()
+        elif what == "new-york":
+            build_new_york()
     return 0 if ok else 1
 
 

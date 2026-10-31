@@ -59,12 +59,14 @@ export function cityScene(THREE, { MapControls }, container, options = {}) {
   let bounds = { x0: -500, y0: -500, x1: 500, y1: 500 };
   let sunDir = { azimuth: (210 * Math.PI) / 180, altitude: (45 * Math.PI) / 180 };
 
-  function fit(b, { tilt = 52, heading = 0 } = {}) {
+  // The camera's distance is the box's size times `range` (the view's, else the scene's, else 0.62): a city of tall
+  // towers asks for a farther camera than one of low blocks.
+  function fit(b, { tilt = 52, heading = 0, range: far } = {}) {
     bounds = b;
     const cx = (b.x0 + b.x1) / 2, cy = (b.y0 + b.y1) / 2, size = Math.max(b.x1 - b.x0, b.y1 - b.y0, 200);
     ground.scale.set(size * 6, size * 6, 1);
     ground.position.set(cx, -0.05, -cy);
-    const range = size * (opts.range ?? 0.62), t = (tilt * Math.PI) / 180, h = (heading * Math.PI) / 180;
+    const range = size * (far ?? opts.range ?? 0.62), t = (tilt * Math.PI) / 180, h = (heading * Math.PI) / 180;
     controls.target.copy(toWorld(cx, cy, 0));
     camera.position.copy(toWorld(cx - range * Math.sin(t) * Math.sin(h), cy - range * Math.sin(t) * Math.cos(h), range * Math.cos(t)));
     camera.far = size * 20;
@@ -521,9 +523,15 @@ export function cityScene(THREE, { MapControls }, container, options = {}) {
   // ---- the camera ----------------------------------------------------------------------------------------------
 
   let flight = null;
-  function flyTo([x, y], range = null) {
+  // Fly to a point, keeping the camera's heading; at `range` metres if given, and at `tilt` degrees from the
+  // vertical if given (else the camera's own).
+  function flyTo([x, y], range = null, tilt = null) {
     const target = toWorld(x, y, 0);
     const offset = camera.position.clone().sub(controls.target);
+    if (tilt !== null) {
+      const t = (tilt * Math.PI) / 180, length = offset.length(), flat = Math.hypot(offset.x, offset.z) || 1;
+      offset.set((offset.x / flat) * Math.sin(t) * length, Math.cos(t) * length, (offset.z / flat) * Math.sin(t) * length);
+    }
     if (range) offset.setLength(range);
     flight = { t0: performance.now(), from: controls.target.clone(), to: target, camFrom: camera.position.clone(), camTo: target.clone().add(offset) };
   }

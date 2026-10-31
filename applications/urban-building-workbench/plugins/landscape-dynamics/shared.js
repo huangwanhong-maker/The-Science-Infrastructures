@@ -27,7 +27,7 @@
 import { instantOf } from '/src/clock.js';
 import { subsolarPoint, sunAltAz } from '/domains/astronomy/js/index.js';
 
-export const state = { box: null, network: null, district: null, stores: [], candidates: null, lane: null, run: null, building: null, active: new Set(),
+export const state = { area: null, box: null, network: null, district: null, stores: [], candidates: null, lane: null, run: null, building: null, active: new Set(),
   edits: [], initial: { walkers: {}, temperature: {}, buildings: {}, openA: false, openB: false, permit: false }, view: 'ground', picked: null,
   massing: null, heat: null, air: { mean: 18, swing: 5 },
   // The declared rates both analyses share (per hour): how much a store answers the other open (η) and the lane
@@ -39,10 +39,14 @@ export function emit(what) { for (const f of [...listeners]) try { f(what); } ca
 
 const WALK = new Set(['primary', 'secondary', 'tertiary', 'residential', 'unclassified', 'living_street', 'pedestrian', 'service', 'primary_link', 'secondary_link', 'tertiary_link']);
 
-// The Hoddle Grid's middle: Elizabeth Street to Russell Street, Flinders Street to Lonsdale Street.
-export const DEFAULT_BOX = { south: -37.8173, west: 144.9617, north: -37.8117, east: 144.9697 };
+// The district of an area: the box its entry in areas.json names (`district`), else the middle of its first view.
+export function districtOf(area) {
+  if (area.district) return area.district;
+  const [s, w, n, e] = area.view.box, cy = (s + n) / 2, cx = (w + e) / 2, dy = 0.0028, dx = dy / Math.cos((cy * Math.PI) / 180);
+  return { south: cy - dy, west: cx - dx, north: cy + dy, east: cx + dx };
+}
 
-export function boxOf(frame, b = DEFAULT_BOX) {
+export function boxOf(frame, b) {
   const [x0, y0] = frame.toLocal(b.south, b.west), [x1, y1] = frame.toLocal(b.north, b.east);
   return { x0: Math.min(x0, x1), y0: Math.min(y0, y1), x1: Math.max(x0, x1), y1: Math.max(y0, y1), geo: b };
 }
@@ -142,7 +146,7 @@ export function sunByHour(clock) {
 
 // Walkers entering the district each hour of the clock's weekday: half the counts at the sensors in the box.
 export async function entriesByHour(ctx, B) {
-  const list = await askOther('street-oceanography', 'profiles', { era: 'recent' });
+  const list = await askOther('street-oceanography', 'profiles', { era: 'recent', area: ctx.area.id });
   const wd = ctx.clock.weekday;
   if (list) {
     const inBox = list.filter((s) => inside(ctx.frame.toLocal(s.lat, s.lon).slice(0, 2), B));
@@ -211,12 +215,21 @@ export const visited = (c) => !/^(vacant|offices-and-professional|accommodation|
 // The district, built once: the network in the box, the holdings in it, the nearest pair of them a lane could
 // join (or, without holdings, two declared stores facing one block), and the engine's cells.
 let building = null;
+// Everything the plug-in holds belongs to one area: opening another forgets the district, its edits and state, the
+// runs and the buildings.
+export function forArea(ctx) {
+  if (state.area === ctx.area.id) return;
+  Object.assign(state, { area: ctx.area.id, box: null, network: null, district: null, stores: [], candidates: null, lane: null, run: null, building: null,
+    edits: [], initial: { walkers: {}, temperature: {}, buildings: {}, openA: false, openB: false, permit: false }, picked: null, massing: null, heat: null });
+  building = null, massingBuilding = null;
+}
 export function ensureDistrict(ctx) {
+  forArea(ctx);
   if (state.district) return Promise.resolve(state.district);
   if (building) return building;
   building = (async () => {
     if (!ctx.model) throw new Error('the city model is not built yet');
-    state.box = boxOf(ctx.frame);
+    state.box = boxOf(ctx.frame, districtOf(ctx.area));
     state.network = networkOf(ctx.model, state.box);
     state.candidates = await holdingsIn(ctx, state.box);
     // The two stores: of the holdings a passer-by walks into, the nearest pair a lane of 15 m or more could join
@@ -314,6 +327,7 @@ export function around(c, cell) {
 // The buildings in the box as the engine's massing, from the city model (once).
 let massingBuilding = null;
 export function ensureMassing(ctx) {
+  forArea(ctx);
   if (state.massing) return Promise.resolve(state.massing);
   if (massingBuilding) return massingBuilding;
   massingBuilding = (async () => {
@@ -398,6 +412,7 @@ export function specOf(b) {
 }
 
 export async function runBuilding(ctx, spec, events) {
+  forArea(ctx);
   const sun = sunByHour(ctx.clock);
   const result = await ctx.ask('building', { ...spec, altitude: sun.altitude, azimuth: sun.azimuth, events });
   state.building = { ...result, name: spec.name, id: spec.id, date: ctx.clock.date, requested: events };

@@ -23,9 +23,11 @@ namespace so {
 
 namespace ur = urban::rhythm;
 
-// The part of a record in an era: "recent" from 2024-10-01, "history" before 2023-01-01, "all".
+// The part of a record in an era: "recent" from 2024-10-01 (the whole of a record that ended before then, as New
+// York's bridge's did), "history" before 2023-01-01, "all".
 inline ur::Record era(const ur::Record& r, const std::string& which) {
-  const double from = which == "recent" ? ur::parse_utc("2024-10-01") : -1e18;
+  const double live = ur::parse_utc("2024-10-01");
+  const double from = which == "recent" && !(r.size() && r.time(r.size() - 1) < live) ? live : -1e18;
   const double to = which == "history" ? ur::parse_utc("2023-01-01") : 1e18;
   ur::Record out;
   out.id = r.id, out.step = r.step, out.offsets = r.offsets;
@@ -144,7 +146,7 @@ inline Json op_clock(const Json& r) {
   const long long id = static_cast<long long>(num(r, "sensor", 1));
   const auto& rec = record(id);
   std::vector<long long> skip;
-  try { skip = holiday_days(); } catch (...) {}
+  try { skip = holiday_days(sensor(id).area); } catch (...) {}
   const auto shifts = ur::clock_shifts(rec, static_cast<int>(num(r, "window", 21)), skip);
   Json list = Json::array();
   double wsum = 0, w = 0;
@@ -205,12 +207,12 @@ inline Json op_constructed() {
 
 // The mean count at each civil hour of the week over an era, for every outdoor sensor with at least four weeks.
 inline Json op_profiles(const Json& r) {
-  const std::string which = r["era"].text("recent");
+  const std::string which = r["era"].text("recent"), area = area_of(r);
   static std::map<std::string, Json> cache;
-  if (cache.count(which)) return cache.at(which);
+  if (cache.count(which + "/" + area)) return cache.at(which + "/" + area);
   Json list = Json::array();
   for (const auto& s : sensors()) {
-    if (s.location_type != "Outdoor") continue;
+    if (s.location_type != "Outdoor" || s.area != area) continue;
     try {
       const auto rec = era(record(s.id), which);
       std::vector<double> sum(168, 0), n(168, 0);
@@ -226,7 +228,7 @@ inline Json op_profiles(const Json& r) {
     } catch (...) {
     }
   }
-  cache[which] = list;
+  cache[which + "/" + area] = list;
   return list;
 }
 
@@ -239,7 +241,7 @@ struct ResponseSummary {
 
 inline ResponseSummary response_of(long long id, const std::string& which) {
   const auto rec = era(record(id), which);
-  const auto& w = weather();
+  const auto& w = weather(sensor(id).area);
   auto rain = aligned(w.precipitation, w, rec);
   auto temp = aligned(w.temperature, w, rec);
   // The temperature's departure from its mean for the civil month and hour over the record.
@@ -254,7 +256,7 @@ inline ResponseSummary response_of(long long id, const std::string& which) {
     if (std::isfinite(temp[i])) temp[i] -= sum[slot(i)] / cnt[slot(i)];
   std::vector<double> holiday(rec.size(), 0);
   std::vector<long long> hd;
-  try { hd = holiday_days(); } catch (...) {}
+  try { hd = holiday_days(sensor(id).area); } catch (...) {}
   for (std::size_t i = 0; i < rec.size(); i++)
     if (std::binary_search(hd.begin(), hd.end(), rec.civil_day(rec.time(i)))) holiday[i] = 1;
   ResponseSummary s;
@@ -307,7 +309,7 @@ inline const std::vector<SensorSummary>& summaries() {
   const Terrain* t = nullptr;
   try { t = &terrain(); } catch (...) {}
   for (const auto& s : sensors()) {
-    if (s.location_type != "Outdoor") continue;
+    if (s.location_type != "Outdoor" || s.area != "melbourne") continue;   // the plane of Melbourne's streets
     SensorSummary m;
     m.id = s.id, m.name = s.name;
     try {

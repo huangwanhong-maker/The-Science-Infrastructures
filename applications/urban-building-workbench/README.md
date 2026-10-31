@@ -1,10 +1,12 @@
 # Urban Building Workbench
 
-*A three-dimensional GIS of cities, with the analysis of streets and buildings on top, built of plug-ins.* Status: **draft** (2026-10-31). Activities: research, learning. [ADR 0060](../../development/decisions/0060-streets-as-open-systems.md).
+*A three-dimensional GIS of cities, with the analysis of streets and buildings on top, built of plug-ins.* Status: **draft** (2026-11-01). Activities: research, learning. [ADR 0060](../../development/decisions/0060-streets-as-open-systems.md), [ADR 0065](../../development/decisions/0065-new-york-in-the-workbench.md).
 
 ## 1. Purpose
 
-The workbench is a GIS first. A city stands in three dimensions — its buildings at their mapped heights, its streets at their widths, its parks, water and squares — in an exact local frame on WGS 84. A clock runs in the city's own time zone and lights the city by the real Sun of the instant. On that base, plug-ins put layers on the map and analyses beside it. The city is Melbourne's centre, where the records are.
+The workbench is a GIS first. A city stands in three dimensions — its buildings at their mapped heights, its streets at their widths, its parks, water and squares — in an exact local frame on WGS 84. A clock runs in the city's own time zone and lights the city by the real Sun of the instant. On that base, plug-ins put layers on the map and analyses beside it. Two cities open, each where its records are:
+- **Melbourne's centre,** from Southbank to Carlton, where the City's hundred pedestrian sensors count every hour;
+- **Lower Manhattan,** from the Battery to Canal Street and from the Hudson to the Brooklyn Bridge ([ADR 0065](../../development/decisions/0065-new-york-in-the-workbench.md)): its buildings at the roof heights the city's records give, its trees and its shore from Valdrada's compiled city of New York, its streets from OpenStreetMap, and the Brooklyn Bridge's promenade, where the city counted its walkers each way every hour from 2017 to 2019.
 
 The first plug-in, **Street Oceanography**, reads streets as open systems, and draws them on the map as a sea:
 - the tide of a street's walkers, rising and falling with the clock, and its surge on a date;
@@ -13,9 +15,9 @@ The first plug-in, **Street Oceanography**, reads streets as open systems, and d
 - how a street answers the weather and the calendar;
 - how its uses mix and work together, a store's visitors spreading toward another on the map.
 
-It reads real records of Melbourne. Every result says whether it was measured from records, proved for any street, or comes from a model with declared parameters, and gives how it was obtained and its limits.
+It reads real records of Melbourne, and of New York's bridge. Every result says whether it was measured from records, proved for any street, or comes from a model with declared parameters, and gives how it was obtained and its limits.
 
-The second plug-in, **Landscape Dynamics** ([ADR 0062](../../development/decisions/0062-landscapes-as-cellular-configurations.md), [ADR 0063](../../development/decisions/0063-the-district-as-a-complex-to-work-on.md)), takes a district of the Hoddle Grid as cells — junctions, streets, blocks, and its buildings as 3-cells sharing their walls — to be seen as a complex, set and rewritten by hand, and run as one process in which structure, use and meaning change one another:
+The second plug-in, **Landscape Dynamics** ([ADR 0062](../../development/decisions/0062-landscapes-as-cellular-configurations.md), [ADR 0063](../../development/decisions/0063-the-district-as-a-complex-to-work-on.md)), takes a district (the Hoddle Grid's middle; New York's Financial District) as cells — junctions, streets, blocks, and its buildings as 3-cells sharing their walls — to be seen as a complex, set and rewritten by hand, and run as one process in which structure, use and meaning change one another:
 - walkers each way along the streets and the warmth of the blocks, between events;
 - two stores of the district opening and shutting; a rule coming into force, carried out as a lane that rewrites the cells, and the lane taking on a meaning as it is used;
 - the day drawn as the district's spacetime, time rising above the map: the streets' traffic slice by slice, the stores' worldlines, the lane's sheet beginning in mid-air and deepening once recognised, the events joined by their causal order;
@@ -27,9 +29,10 @@ The second plug-in, **Landscape Dynamics** ([ADR 0062](../../development/decisio
 
 | Part | What it draws | Source |
 |---|---|---|
-| Buildings | Extruded footprints with their holes, at their mapped height (from `height`, else levels × 3.2 m); paler where no height is mapped and a default stands. They can stand as built, lowered to a fifth of their height, or of glass, so that the streets show between towers | OpenStreetMap (data library: `city-model.json`) |
+| Buildings | Extruded footprints with their holes, at their mapped height (from `height`, else levels × 3.2 m); paler where no height is mapped and a default stands. They can stand as built, lowered to a fifth of their height, or of glass, so that the streets show between towers | Melbourne: OpenStreetMap; New York: Valdrada's compiled city, the roof heights of NYC's Building Footprints (data library: `city-model.json`, a file an area) |
 | Streets and ways | Ribbons at their mapped or estimated widths; pedestrian ways tinted | OpenStreetMap |
-| Parks, water, squares | Flat areas | OpenStreetMap |
+| Parks, water, squares | Flat areas, with their holes (piers in the river) | OpenStreetMap; New York's water traced on Valdrada's ground |
+| Trees | A crown on its trunk, its breadth by the trunk's diameter (New York's) | Valdrada: NYC's street-tree census and NYC Parks' tree points |
 | The clock | A date and an hour in the city's time zone (daylight saving its own), playing through the day; the Sun's altitude and azimuth there, lighting the city and casting shadows | the browser's time-zone database; the astronomy domain's subsolar point |
 
 Drag to pan, right-drag to turn and tilt, and wheel to zoom. Picking a building, a way or a feature of a layer shows it, with actions that open the analyses about it.
@@ -44,7 +47,7 @@ Drag to pan, right-drag to turn and tilt, and wheel to zoom. Picking a building,
 | Architecture | Form, space and order; the frontage as an interface; plans and districts as cell complexes | planned |
 | Cultural analysis | Display and description; the record of manners (a survey at fixed positions, after Kon Wajirō) | planned |
 
-A plug-in is a directory `plugins/<name>/`, and nothing in the shell names one.
+A plug-in is a directory `plugins/<name>/`, and nothing in the shell names one. A layer or a tool may name the areas it serves (`areas`), and is offered there alone. In New York, Street Oceanography offers the tide, the currents and the sensors' weeks, its rhythm and its weather and holidays, all on the Brooklyn Bridge's counter; Landscape Dynamics is offered whole.
 - **The manifest.** `plugin.json` names the plug-in's layers and tools, or, if it is planned, what it will hold.
 - **A layer** (`layers/*.js`) is given the map, the frame, the clock and the engine. It draws on the map, follows the clock, and answers for what is picked.
 - **A tool** (`tools/*.js`) opens in the drawer beside the map. It can select, fly the map, and take what is picked.
@@ -85,7 +88,7 @@ python applications/urban-building-workbench/serve.py --open
 
 Open http://127.0.0.1:8970/. The data lamp runs the recipe (`recipe.json`):
 - it compiles the engine with g++ (natively, or in WSL);
-- it fetches the records: Melbourne's pedestrian counts (2009–2022 and the live two years), sensors and census of land use, Open-Meteo's hourly weather, Victoria's public holidays, and OpenStreetMap's holdings and city model;
+- it fetches the records: Melbourne's pedestrian counts (2009–2022 and the live two years), sensors and census of land use, Open-Meteo's hourly weather, Victoria's public holidays, and OpenStreetMap's holdings and city model; for New York, Valdrada's tiles of Lower Manhattan (about 26 MB, at a pinned revision), the Brooklyn Bridge's counts, New York's weather and holidays;
 - it builds the products.
 
 The records take several minutes; they go to `data/cache/`, and none is committed. The server binds 127.0.0.1 unless `--host` says otherwise. When it starts, it asks the engine for every street's tide and current meter (the requests a manifest names under `warm`), so that the map finds them ready.
@@ -95,6 +98,8 @@ The engine can be asked directly:
 ```
 python applications/urban-building-workbench/engine.py ask street-oceanography '{"op": "profiles"}'
 ```
+
+An operation that lists sensors takes an area, Melbourne's when none is named: `'{"op": "tides", "area": "new-york"}'`.
 
 ## 6. Design
 

@@ -2,13 +2,13 @@
   "id": "osm-city",
   "kind": "http",
   "domain": "urban-science",
-  "title": "OpenStreetMap for a city model: the buildings (with their parts and multipolygons), the roads and paths, and the open spaces of Melbourne's centre",
+  "title": "OpenStreetMap for a city model: the buildings (with their parts and multipolygons), the roads and paths, and the open spaces of Melbourne's centre; the roads, paths and open spaces of Lower Manhattan",
   "provider": "OpenStreetMap contributors, through the Overpass API (overpass-api.de, with overpass.kumi.systems and overpass.private.coffee as mirrors)",
   "credit": "© OpenStreetMap contributors",
   "licence": "Open Database License (ODbL) 1.0: attribution, and share-alike for databases derived from it (https://www.openstreetmap.org/copyright)",
   "citation": "OpenStreetMap contributors (2026), retrieved through the Overpass API, https://www.openstreetmap.org",
   "format": "Overpass JSON with geometry (out geom), a file a tile of an area (<area>-<k>.json; Melbourne in 3 x 3 tiles, so that each query stays small enough for a busy server): the ways tagged building or building:part and the multipolygon relations tagged building, every way tagged highway, and the open spaces (parks, water, squares and pedestrian areas, green land, railway land) as closed ways or multipolygon relations, each with its members' geometry whole. An element on a tile's edge is in both tiles; the product keeps it once.",
-  "coverage": "One box (south, west, north, east): melbourne -37.8260, 144.9260, -37.7910, 144.9790 (the Hoddle Grid, Southbank, Docklands' east, West and North Melbourne, Kensington, Carlton to Princes Street, East Melbourne: about 13,300 building ways and 17,600 highway ways when registered).",
+  "coverage": "One box (south, west, north, east): melbourne -37.8260, 144.9260, -37.7910, 144.9790 (the Hoddle Grid, Southbank, Docklands' east, West and North Melbourne, Kensington, Carlton to Princes Street, East Melbourne: about 13,300 building ways and 17,600 highway ways when registered). New York (its buildings, trees and water are Valdrada's; here every way tagged highway and the open spaces): new-york 40.6995, -74.0195, 40.7190, -73.9930 in 2 x 2 tiles: the parks, gardens and playgrounds, green land, railway land, squares and pedestrian areas; not natural=water, waterway or basins, which would bring the whole of the Hudson's and the harbour's polygons.",
   "used_by": [
     "data/products/street_records.py",
     "applications/urban-building-workbench"
@@ -274,6 +274,94 @@
           "out geom;"
         ]
       }
+    },
+    {
+      "url": "https://overpass-api.de/api/interpreter",
+      "file": "new-york-1.json",
+      "query": {
+        "data": [
+          "[out:json][timeout:600][maxsize:536870912];",
+          "(",
+          "  way[\"highway\"](40.6995,-74.0195,40.7092,-74.0062);",
+          "  way[\"leisure\"~\"^(park|garden|playground|common|nature_reserve|recreation_ground|dog_park|pitch)$\"](40.6995,-74.0195,40.7092,-74.0062);",
+          "  relation[\"leisure\"~\"^(park|garden|common|nature_reserve|recreation_ground|pitch)$\"](40.6995,-74.0195,40.7092,-74.0062);",
+          "  way[\"landuse\"~\"^(grass|recreation_ground|forest|meadow|village_green|railway|cemetery)$\"](40.6995,-74.0195,40.7092,-74.0062);",
+          "  relation[\"landuse\"~\"^(grass|recreation_ground|forest|meadow|village_green|railway|cemetery)$\"](40.6995,-74.0195,40.7092,-74.0062);",
+          "  way[\"place\"=\"square\"](40.6995,-74.0195,40.7092,-74.0062);",
+          "  relation[\"place\"=\"square\"](40.6995,-74.0195,40.7092,-74.0062);",
+          "  way[\"highway\"~\"^(pedestrian|footway)$\"][\"area\"=\"yes\"](40.6995,-74.0195,40.7092,-74.0062);",
+          "  relation[\"highway\"=\"pedestrian\"][\"type\"=\"multipolygon\"](40.6995,-74.0195,40.7092,-74.0062);",
+          "  way[\"area:highway\"~\"^(pedestrian|footway)$\"](40.6995,-74.0195,40.7092,-74.0062);",
+          ");",
+          "out geom;"
+        ]
+      }
+    },
+    {
+      "url": "https://overpass-api.de/api/interpreter",
+      "file": "new-york-2.json",
+      "query": {
+        "data": [
+          "[out:json][timeout:600][maxsize:536870912];",
+          "(",
+          "  way[\"highway\"](40.6995,-74.0062,40.7092,-73.9930);",
+          "  way[\"leisure\"~\"^(park|garden|playground|common|nature_reserve|recreation_ground|dog_park|pitch)$\"](40.6995,-74.0062,40.7092,-73.9930);",
+          "  relation[\"leisure\"~\"^(park|garden|common|nature_reserve|recreation_ground|pitch)$\"](40.6995,-74.0062,40.7092,-73.9930);",
+          "  way[\"landuse\"~\"^(grass|recreation_ground|forest|meadow|village_green|railway|cemetery)$\"](40.6995,-74.0062,40.7092,-73.9930);",
+          "  relation[\"landuse\"~\"^(grass|recreation_ground|forest|meadow|village_green|railway|cemetery)$\"](40.6995,-74.0062,40.7092,-73.9930);",
+          "  way[\"place\"=\"square\"](40.6995,-74.0062,40.7092,-73.9930);",
+          "  relation[\"place\"=\"square\"](40.6995,-74.0062,40.7092,-73.9930);",
+          "  way[\"highway\"~\"^(pedestrian|footway)$\"][\"area\"=\"yes\"](40.6995,-74.0062,40.7092,-73.9930);",
+          "  relation[\"highway\"=\"pedestrian\"][\"type\"=\"multipolygon\"](40.6995,-74.0062,40.7092,-73.9930);",
+          "  way[\"area:highway\"~\"^(pedestrian|footway)$\"](40.6995,-74.0062,40.7092,-73.9930);",
+          ");",
+          "out geom;"
+        ]
+      }
+    },
+    {
+      "url": "https://overpass-api.de/api/interpreter",
+      "file": "new-york-3.json",
+      "query": {
+        "data": [
+          "[out:json][timeout:600][maxsize:536870912];",
+          "(",
+          "  way[\"highway\"](40.7092,-74.0195,40.7190,-74.0062);",
+          "  way[\"leisure\"~\"^(park|garden|playground|common|nature_reserve|recreation_ground|dog_park|pitch)$\"](40.7092,-74.0195,40.7190,-74.0062);",
+          "  relation[\"leisure\"~\"^(park|garden|common|nature_reserve|recreation_ground|pitch)$\"](40.7092,-74.0195,40.7190,-74.0062);",
+          "  way[\"landuse\"~\"^(grass|recreation_ground|forest|meadow|village_green|railway|cemetery)$\"](40.7092,-74.0195,40.7190,-74.0062);",
+          "  relation[\"landuse\"~\"^(grass|recreation_ground|forest|meadow|village_green|railway|cemetery)$\"](40.7092,-74.0195,40.7190,-74.0062);",
+          "  way[\"place\"=\"square\"](40.7092,-74.0195,40.7190,-74.0062);",
+          "  relation[\"place\"=\"square\"](40.7092,-74.0195,40.7190,-74.0062);",
+          "  way[\"highway\"~\"^(pedestrian|footway)$\"][\"area\"=\"yes\"](40.7092,-74.0195,40.7190,-74.0062);",
+          "  relation[\"highway\"=\"pedestrian\"][\"type\"=\"multipolygon\"](40.7092,-74.0195,40.7190,-74.0062);",
+          "  way[\"area:highway\"~\"^(pedestrian|footway)$\"](40.7092,-74.0195,40.7190,-74.0062);",
+          ");",
+          "out geom;"
+        ]
+      }
+    },
+    {
+      "url": "https://overpass-api.de/api/interpreter",
+      "file": "new-york-4.json",
+      "query": {
+        "data": [
+          "[out:json][timeout:600][maxsize:536870912];",
+          "(",
+          "  way[\"highway\"](40.7092,-74.0062,40.7190,-73.9930);",
+          "  way[\"leisure\"~\"^(park|garden|playground|common|nature_reserve|recreation_ground|dog_park|pitch)$\"](40.7092,-74.0062,40.7190,-73.9930);",
+          "  relation[\"leisure\"~\"^(park|garden|common|nature_reserve|recreation_ground|pitch)$\"](40.7092,-74.0062,40.7190,-73.9930);",
+          "  way[\"landuse\"~\"^(grass|recreation_ground|forest|meadow|village_green|railway|cemetery)$\"](40.7092,-74.0062,40.7190,-73.9930);",
+          "  relation[\"landuse\"~\"^(grass|recreation_ground|forest|meadow|village_green|railway|cemetery)$\"](40.7092,-74.0062,40.7190,-73.9930);",
+          "  way[\"place\"=\"square\"](40.7092,-74.0062,40.7190,-73.9930);",
+          "  relation[\"place\"=\"square\"](40.7092,-74.0062,40.7190,-73.9930);",
+          "  way[\"highway\"~\"^(pedestrian|footway)$\"][\"area\"=\"yes\"](40.7092,-74.0062,40.7190,-73.9930);",
+          "  relation[\"highway\"=\"pedestrian\"][\"type\"=\"multipolygon\"](40.7092,-74.0062,40.7190,-73.9930);",
+          "  way[\"area:highway\"~\"^(pedestrian|footway)$\"](40.7092,-74.0062,40.7190,-73.9930);",
+          ");",
+          "out geom;"
+        ]
+      }
     }
   ],
   "mirrors": {
@@ -285,7 +373,7 @@
   "parameters": {},
   "profiles": {
     "areas": {
-      "description": "Melbourne's centre, nine queries (fetch again with --refresh to update)",
+      "description": "Melbourne's centre, nine queries; Lower Manhattan's roads and open spaces, four (fetch again with --refresh to update)",
       "parameters": {}
     }
   },

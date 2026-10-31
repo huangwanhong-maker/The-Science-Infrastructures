@@ -8,7 +8,7 @@
   "licence": "CC BY 4.0 (Open-Meteo's terms for its API data); the free API is for non-commercial use, within 10,000 calls a day. The reanalyses beneath: Copernicus licence (free, attribution).",
   "citation": "Zippenfenig, P. (2023), Open-Meteo.com Weather API, Zenodo, https://doi.org/10.5281/zenodo.7970649 ; Hersbach, H. et al. (2020), The ERA5 global reanalysis, Q. J. R. Meteorol. Soc. 146, 1999-2049; Muñoz Sabater, J. (2019), ERA5-Land hourly data from 1950 to present, Copernicus Climate Change Service (C3S) Climate Data Store",
   "format": "JSON: latitude, longitude and elevation of the model's grid point; hourly.time (ISO 8601, UTC with timezone=GMT), hourly.temperature_2m (deg C, at the instant), hourly.precipitation (mm, the sum over the preceding hour), hourly.wind_speed_10m (m/s with wind_speed_unit=ms, at the instant); null where a model has no value",
-  "coverage": "Any place, 1940 to about two to five days before the present (ERA5T); the default place is Melbourne's CBD, whose nearest grid point is -37.7856, 144.9398 (19 m), about 3.6 km north-west",
+  "coverage": "Any place, 1940 to about two to five days before the present (ERA5T); the default place is Melbourne's CBD, whose nearest grid point is -37.7856, 144.9398 (19 m), about 3.6 km north-west; Lower Manhattan (profile new-york), for the Brooklyn Bridge's counter, 2017-09 to 2020-01, whose nearest grid point is 40.7381, -74.0425 (3 m), about 4.4 km north-west across the Hudson",
   "used_by": [
     "data/products/street_records.py",
     "applications/urban-building-workbench"
@@ -29,6 +29,10 @@
     "melbourne": {
       "description": "Melbourne's CBD (-37.8136, 144.9631), every hour from 1 January 2009 to yesterday, about 4 MB",
       "parameters": {}
+    },
+    "new-york": {
+      "description": "Lower Manhattan at the Brooklyn Bridge's pedestrian counter (40.7082, -73.9995), every hour of the counter's record and the months about it, 1 September 2017 to 31 January 2020, about 0.7 MB",
+      "parameters": {"latitude": 40.7082, "longitude": -73.9995, "start": "2017-09-01T00:00:00Z", "end": "2020-01-31T00:00:00Z"}
     }
   },
   "default_profile": "melbourne"

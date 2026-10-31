@@ -5,7 +5,7 @@
 // meaning), two rooms merged into one and parted again (new cells), each with the heat it keeps and the rooms one
 // can reach from the street. The map shows the rooms at the clock's hour (the layer "a building's rooms").
 
-import { runBuilding, specOf, state } from '../shared.js';
+import { forArea, runBuilding, specOf, state } from '../shared.js';
 import { brief, figures, fold, hint, slider, swatches, tabs, toggle } from '../ui.js';
 
 const power = (w, fmt) => (w >= 1e6 ? `${fmt(w / 1e6, 3)} MW` : `${fmt(w / 1e3, 3)} kW`);
@@ -19,6 +19,7 @@ const KINDS = [
 const hh = (x) => `${String(x).padStart(2, '0')}:00`;
 
 export async function render(root, ctx) {
+  forArea(ctx);
   const { h, failure, fmt, css } = ctx.dom;
   const { lines, bars } = ctx.chart;
   root.append(h('div', { class: 'view-head' }, h('h1', {}, 'A building\'s rooms'),

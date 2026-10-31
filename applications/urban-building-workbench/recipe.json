@@ -1,6 +1,6 @@
 {
   "title": "The Urban Building Workbench's engine and records",
-  "about": "The plug-in Street Oceanography's C++ on the urban-science domain and the foundations, compiled with g++ 11 or later (natively or in WSL) into data/cache/engines/urban/; then the records: the City of Melbourne's pedestrian counts (the archive of 2009–2022, about 60 MB zipped, and the live two years), its sensors and its census of land use; Open-Meteo's hourly weather; Victoria's public holidays; OpenStreetMap's holdings with their opening hours along the named streets, and its buildings, ways and spaces for the 3D city model of Melbourne and Ginza; and the products built from them. Several minutes in all.",
+  "about": "The plug-in Street Oceanography's C++ on the urban-science domain and the foundations, compiled with g++ 11 or later (natively or in WSL) into data/cache/engines/urban/; then the records: the City of Melbourne's pedestrian counts (the archive of 2009–2022, about 60 MB zipped, and the live two years), its sensors and its census of land use; Open-Meteo's hourly weather; Victoria's public holidays; OpenStreetMap's holdings with their opening hours along the named streets, and its buildings, ways and spaces for the 3D city model of Melbourne, and New York's ways and spaces; Valdrada's compiled city of Lower Manhattan (its buildings at their surveyed heights, its trees and its shore); New York's pedestrian counter on the Brooklyn Bridge, its weather and holidays; and the products built from them. Several minutes in all.",
   "steps": [
     {
       "id": "engine",
@@ -46,13 +46,37 @@
     },
     {
       "id": "osm-city",
-      "title": "OpenStreetMap's buildings, ways and spaces of Melbourne and Ginza",
+      "title": "OpenStreetMap's buildings, ways and spaces of Melbourne, and the ways and spaces of Lower Manhattan",
       "run": ["data/acquisition/fetch.py", "osm-city"],
       "done": "data/cache/osm-city/**/retrieval.json"
     },
     {
+      "id": "valdrada-nyc",
+      "title": "Valdrada's compiled city of Lower Manhattan: buildings at their surveyed heights, trees and the shore (about 26 MB)",
+      "run": ["data/acquisition/fetch.py", "valdrada-nyc"],
+      "done": "data/cache/valdrada-nyc/retrieval.json"
+    },
+    {
+      "id": "nyc-brooklyn-bridge-pedestrians",
+      "title": "New York's pedestrians counted each way on the Brooklyn Bridge, every hour of 2017-2019 (NYC DOT)",
+      "run": ["data/acquisition/fetch.py", "nyc-brooklyn-bridge-pedestrians"],
+      "done": "data/cache/nyc-brooklyn-bridge-pedestrians/**/retrieval.json"
+    },
+    {
+      "id": "open-meteo-new-york",
+      "title": "Hourly weather in Lower Manhattan over the bridge's record (Open-Meteo)",
+      "run": ["data/acquisition/fetch.py", "open-meteo-hourly", "--profile", "new-york"],
+      "done": "data/cache/open-meteo-hourly/new-york/retrieval.json"
+    },
+    {
+      "id": "nager-holidays-united-states",
+      "title": "The United States' and New York's public holidays (Nager.Date)",
+      "run": ["data/acquisition/fetch.py", "nager-holidays", "--profile", "united-states"],
+      "done": "data/cache/nager-holidays/united-states/retrieval.json"
+    },
+    {
       "id": "products",
-      "title": "The products: sensors and counts, weather, holidays, land use, holdings, the city model",
+      "title": "The products: sensors and counts, weather, holidays, land use, holdings, the city model, New York's records",
       "run": ["data/products/street_records.py"],
       "done": "data/cache/products/city-model.json"
     }

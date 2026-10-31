@@ -1,11 +1,11 @@
 // The engine's operations of the street read as a sea, which the map draws:
 //
-//   tides                every outdoor sensor's tide: its readings (high and low water, range, form, the year's
+//   tides {area}         every outdoor sensor's tide: its readings (high and low water, range, form, the year's
 //                        swing) and its predicted mean week, from the calendars' constituents fitted to the counts
 //                        since October 2024 (the domain's rhythm/tide.hpp)
-//   sea {date}           a civil date: each sensor's predicted level through the day (quarter-hours), its observed
+//   sea {date, area}     a civil date: each sensor's predicted level through the day (quarter-hours), its observed
 //                        counts and its counts each way if the date is in the record, and the day's holiday and weather
-//   currents             every sensor that counts each way: its mean week each way, the net current, its
+//   currents {area}      every sensor that counts each way: its mean week each way, the net current, its
 //                        irreversibility, flood and ebb (the domain's flow/currents.hpp)
 //   streetwave {…}       the crowd on a street of its own blocks and signals, entering at its measured rate, in a
 //                        fine window about an hour: densities, flows, the walkers' speeds, the signals (the
@@ -37,8 +37,10 @@ namespace so {
 
 namespace ur = urban::rhythm;
 
-// The tides are fitted from the live record's start; a sensor needs eight weeks of it.
+// The tides are fitted from Melbourne's live record's start; a sensor needs eight weeks of it. A record that ended
+// before then (New York's bridge, 2017-2019) is fitted whole.
 inline double tide_from() { return ur::parse_utc("2024-10-01"); }
+inline double tide_from(const ur::Record& r) { return r.size() && r.time(r.size() - 1) < tide_from() ? r.t0 : tide_from(); }
 
 struct SensorTide {
   long long id = 0;
@@ -52,8 +54,9 @@ inline ur::Record recent_part(const ur::Record& r) {
   ur::Record out;
   out.id = r.id, out.step = r.step, out.offsets = r.offsets;
   std::size_t first = r.size();
+  const double from = tide_from(r);
   for (std::size_t i = 0; i < r.size(); i++)
-    if (r.time(i) >= tide_from()) { first = i; break; }
+    if (r.time(i) >= from) { first = i; break; }
   out.t0 = first < r.size() ? r.time(first) : r.t0;
   if (first < r.size()) out.y.assign(r.y.begin() + static_cast<std::ptrdiff_t>(first), r.y.end());
   return out;
@@ -87,7 +90,7 @@ inline const std::vector<SensorTide>& sensor_tides() {
       for (std::size_t i = next++; i < work.size(); i = next++) {
         try {
           out[i].id = work[i].first;
-          out[i].tide = ur::tide(work[i].second, tide_from(), 1e18);
+          out[i].tide = ur::tide(work[i].second, std::min(tide_from(), work[i].second.t0), 1e18);
           out[i].readings = ur::readings(out[i].tide);
           out[i].recent = std::move(work[i].second);
           ok[i] = 1;
@@ -107,15 +110,17 @@ inline Json day_json(const ur::TideDay& d) {
                        {"lowAt", std::round(d.low_at * 100) / 100}, {"mean", std::round(d.mean)}, {"range", std::round(d.range())}});
 }
 
-inline Json op_tides() {
+inline Json op_tides(const Json& r) {
+  const std::string area = area_of(r);
   Json list = Json::array();
   for (const auto& t : sensor_tides()) {
     const auto& s = sensor(t.id);
+    if (s.area != area) continue;
     const auto& R = t.readings;
     std::vector<double> week;
     for (int k = 0; k < 168; k++) week.push_back(ur::level(t.tide, k + 0.5, ur::of_the_week));
     list.push(Json::object({{"id", static_cast<double>(t.id)}, {"name", s.name}, {"lat", s.lat}, {"lon", s.lon}, {"directions", strings(s.directions)},
-                            {"from", ur::format_date(t.tide.first)}, {"to", ur::format_date(t.tide.last)}, {"hours", static_cast<double>(t.tide.observations)},
+                            {"directionNames", strings(s.direction_names)}, {"from", ur::format_date(t.tide.first)}, {"to", ur::format_date(t.tide.last)}, {"hours", static_cast<double>(t.tide.observations)},
                             {"constituents", static_cast<double>(t.tide.constituents.size())}, {"varianceExplained", R.variance_explained},
                             {"mean", R.mean}, {"weekday", day_json(R.weekday)}, {"weekend", day_json(R.weekend)},
                             {"diurnal", R.diurnal}, {"semidiurnal", R.semidiurnal}, {"form", std::isfinite(R.form) ? Json(R.form) : Json()},
@@ -133,10 +138,14 @@ inline long long civil_day_of(const std::string& date) {
 inline Json op_sea(const Json& r) {
   const std::string date = r["date"].text();
   const long long day = civil_day_of(date);
+  const std::string area = area_of(r);
   Json list = Json::array();
   std::size_t observed_sensors = 0;
+  const ur::Record* civil = nullptr;     // the area's civil days, from its first sensor's offsets
   for (const auto& t : sensor_tides()) {
+    if (sensor(t.id).area != area) continue;
     const auto& rec = t.recent;
+    if (!civil) civil = &t.recent;
     const auto curve = ur::day_curve(t.tide, day, 4);
     const auto obs = ur::observed_day(rec, day);
     std::vector<double> o(obs.begin(), obs.end()), w1(24, std::nan("")), w2(24, std::nan(""));
@@ -152,17 +161,18 @@ inline Json op_sea(const Json& r) {
     list.push(Json::object({{"id", static_cast<double>(t.id)}, {"level", numbers(curve, 1)}, {"observed", numbers(o, 0)},
                             {"way1", numbers(w1, 0)}, {"way2", numbers(w2, 0)}}));
   }
-  // The day's holiday and weather (Melbourne's civil day, from the first sensor's offsets).
+  // The day's holiday and weather (the area's civil day, from its first sensor's offsets).
   std::string holiday;
   try {
-    for (const auto& h : holidays())
+    for (const auto& h : holidays(area))
       if (h.date == date) holiday = h.name;
   } catch (...) {
   }
   Json weather_day = Json();
   try {
-    const auto& w = weather();
-    const auto& rec = record(sensors().front().id);
+    if (!civil) throw std::invalid_argument("no sensor in the area");
+    const auto& w = weather(area);
+    const auto& rec = *civil;
     double rain = 0, tmax = -1e9, tmin = 1e9;
     std::size_t n = 0;
     const double start = static_cast<double>(day) * 86400 - 12 * 3600;
@@ -196,17 +206,21 @@ inline bool side_of(const std::string& name, urban::flow::Compass& c) {
   return false;
 }
 
-inline Json op_currents() {
-  static Json cached;
-  static bool done = false;
-  if (done) return cached;
+inline Json op_currents(const Json& r) {
+  const std::string area = area_of(r);
+  static std::map<std::string, Json> cache;
+  static std::mutex cache_lock;
+  {
+    std::lock_guard<std::mutex> g(cache_lock);
+    if (cache.count(area)) return cache.at(area);
+  }
   Json list = Json::array();
   std::vector<urban::flow::Compass> sides;
   std::vector<std::array<urban::flow::Compass, 2>> towards;
   std::vector<double> residuals;
   Json footpaths = Json::array();
   for (const auto& s : sensors()) {
-    if (s.location_type != "Outdoor" || s.directions.size() != 2) continue;
+    if (s.area != area || s.location_type != "Outdoor" || s.directions.size() != 2) continue;
     try {
       const auto& d = directions(s.id);
       const auto m = urban::flow::current_meter(d.way[0], d.way[1]);
@@ -214,6 +228,7 @@ inline Json op_currents() {
       for (double w : m.weeks) weeks = std::min(weeks, static_cast<std::size_t>(w));
       if (weeks < 8) continue;
       list.push(Json::object({{"id", static_cast<double>(s.id)}, {"name", s.name}, {"lat", s.lat}, {"lon", s.lon}, {"toward", strings({d.toward[0], d.toward[1]})},
+                              {"towardNames", strings(s.direction_names)},
                               {"weeks", static_cast<double>(weeks)}, {"way1", numbers(m.way[0], 1)}, {"way2", numbers(m.way[1], 1)},
                               {"net", numbers(m.net, 1)}, {"irreversibility", numbers(m.irreversibility, 2)}, {"residual", m.residual}, {"transport", m.transport},
                               {"sigma", m.sigma}, {"floodAt", m.flood_at}, {"flood", m.flood}, {"ebbAt", m.ebb_at}, {"ebb", m.ebb}}));
@@ -226,10 +241,11 @@ inline Json op_currents() {
     }
   }
   const auto h = urban::flow::handedness(sides, towards, residuals);
-  cached = Json::object({{"sensors", list}, {"handedness", Json::object({{"footpaths", static_cast<double>(h.footpaths)}, {"left", static_cast<double>(h.left)},
-                                                                         {"pLeft", h.p_left}, {"pTwoSided", h.p_two_sided}, {"named", footpaths}})}});
-  done = true;
-  return cached;
+  Json out = Json::object({{"sensors", list}, {"handedness", Json::object({{"footpaths", static_cast<double>(h.footpaths)}, {"left", static_cast<double>(h.left)},
+                                                                           {"pLeft", h.p_left}, {"pTwoSided", h.p_two_sided}, {"named", footpaths}})}});
+  std::lock_guard<std::mutex> g(cache_lock);
+  cache[area] = out;
+  return out;
 }
 
 // ---- the crowd on a street, second by second -------------------------------------------------------------------

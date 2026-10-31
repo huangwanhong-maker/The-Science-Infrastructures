@@ -6,7 +6,7 @@ const PER_PERSON = 0.05;   // metres of column per person an hour
 export async function layer(ctx) {
   const { gis, frame, ask, dom, G } = ctx;
   const { h } = dom;
-  const list = await ask('profiles', { era: 'recent' });
+  const list = await ask('profiles', { era: 'recent', area: ctx.area.id });
   const id = ctx.layerId();
   const features = list.map((s) => ({ ...s, xy: frame.toLocal(s.lat, s.lon).slice(0, 2) }));
   const top = Math.max(1, ...features.flatMap((f) => f.profile.filter(Number.isFinite)));

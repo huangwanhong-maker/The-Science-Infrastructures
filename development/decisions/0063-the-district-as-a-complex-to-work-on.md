@@ -1,6 +1,6 @@
 # 0063. The District as a Complex to Work On: Its Cells, Buildings Among Them, the Freedom on Top and the Dynamics
 
-- **Status:** Accepted, provisionally. Amends [ADR 0062](0062-landscapes-as-cellular-configurations.md).
+- **Status:** Accepted, provisionally. Amends [ADR 0062](0062-landscapes-as-cellular-configurations.md). Amended by [ADR 0065](0065-new-york-in-the-workbench.md) (a district for each area).
 - **Date:** 2026-10-31
 - **Decided by:**
   - **The request.** After ADR 0062 was pushed, the user wrote: "I think the utilization of our model still wierd. We should can visualize the complex, and freedom on top of it.. And dynamics." And then: "I means even architecture can fully convert into complex, They are space..."

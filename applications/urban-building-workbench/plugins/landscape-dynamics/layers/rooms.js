@@ -3,9 +3,10 @@
 // at the clock's hour as the Sun on its facades and roof and the outside air warm it; stairs, doors and merged
 // rooms appear from the hour they are opened. The heat is the engine's (urban-science, landscape/building.hpp).
 
-import { on, state, unitRing } from '../shared.js';
+import { forArea, on, state, unitRing } from '../shared.js';
 
 export async function layer(ctx) {
+  forArea(ctx);
   const { dom, gis, G } = ctx;
   const { h, fmt } = dom;
   const ids = { rooms: ctx.layerId(':rooms'), openings: ctx.layerId(':openings') };
