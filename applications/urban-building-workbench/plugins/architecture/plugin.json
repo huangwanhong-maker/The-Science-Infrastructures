@@ -1,0 +1,22 @@
+{
+  "title": "Architecture",
+  "summary": "Buildings and the spaces between them: form, space and order; the frontage as the interface between a holding and the street.",
+  "status": "planned",
+  "order": 3,
+  "views": [],
+  "planned": [
+    {
+      "title": "Form, space and order",
+      "about": "Buildings as solids and voids, their massing, heights and setbacks, read from OpenStreetMap's buildings and the data library's terrain, with the rules that bound them (the Melbourne Planning Scheme's controls of height and setback in the central city)."
+    },
+    {
+      "title": "The frontage as an interface",
+      "about": "Openings, depths and thresholds along a street: the terrain's physical components measured at the holding, kept apart from its symbolic ones (Street Oceanography, Claim 9.1)."
+    },
+    {
+      "title": "Spaces as complexes",
+      "about": "Plans and districts as cell complexes (morphe's topology): rooms, courts and blocks as cells, their adjacency and the paths through them, with visibility and reach computed on them."
+    }
+  ],
+  "begins": "Begins when the architecture domain's first module is written."
+}

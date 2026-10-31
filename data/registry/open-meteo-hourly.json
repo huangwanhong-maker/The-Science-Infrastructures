@@ -1,0 +1,35 @@
+{
+  "id": "open-meteo-hourly",
+  "kind": "http",
+  "domain": "meteorology",
+  "title": "Hourly weather at a place from Open-Meteo's historical weather API: 2 m temperature, precipitation and 10 m wind speed, from reanalyses",
+  "provider": "Open-Meteo (open-meteo.com), Historical Weather API, from ECMWF's reanalyses (ERA5, ERA5-Land) and the IFS analyses of the Copernicus Climate Change Service, its 'best match' of models",
+  "credit": "Weather data by Open-Meteo.com (CC BY 4.0), from Copernicus ERA5",
+  "licence": "CC BY 4.0 (Open-Meteo's terms for its API data); the free API is for non-commercial use, within 10,000 calls a day. The reanalyses beneath: Copernicus licence (free, attribution).",
+  "citation": "Zippenfenig, P. (2023), Open-Meteo.com Weather API, Zenodo, https://doi.org/10.5281/zenodo.7970649 ; Hersbach, H. et al. (2020), The ERA5 global reanalysis, Q. J. R. Meteorol. Soc. 146, 1999-2049; Muñoz Sabater, J. (2019), ERA5-Land hourly data from 1950 to present, Copernicus Climate Change Service (C3S) Climate Data Store",
+  "format": "JSON: latitude, longitude and elevation of the model's grid point; hourly.time (ISO 8601, UTC with timezone=GMT), hourly.temperature_2m (deg C, at the instant), hourly.precipitation (mm, the sum over the preceding hour), hourly.wind_speed_10m (m/s with wind_speed_unit=ms, at the instant); null where a model has no value",
+  "coverage": "Any place, 1940 to about two to five days before the present (ERA5T); the default place is Melbourne's CBD, whose nearest grid point is -37.7856, 144.9398 (19 m), about 3.6 km north-west",
+  "used_by": [
+    "data/products/street_records.py",
+    "applications/urban-building-workbench"
+  ],
+  "requests": [
+    {
+      "url": "https://archive-api.open-meteo.com/v1/archive?latitude={latitude}&longitude={longitude}&start_date={start:%Y-%m-%d}&end_date={end:%Y-%m-%d}&hourly=temperature_2m,precipitation,wind_speed_10m&timezone=GMT&wind_speed_unit=ms&precipitation_unit=mm&temperature_unit=celsius",
+      "file": "hourly.json"
+    }
+  ],
+  "parameters": {
+    "latitude": {"type": "float", "default": -37.8136, "min": -90, "max": 90, "description": "Latitude of the place, degrees north (WGS 84)"},
+    "longitude": {"type": "float", "default": 144.9631, "min": -180, "max": 180, "description": "Longitude of the place, degrees east"},
+    "start": {"type": "time", "default": "2009-01-01T00:00:00Z", "description": "First day (UTC)"},
+    "end": {"type": "time", "default": "today-1d", "description": "Last day (UTC); the default, yesterday, is the latest complete day"}
+  },
+  "profiles": {
+    "melbourne": {
+      "description": "Melbourne's CBD (-37.8136, 144.9631), every hour from 1 January 2009 to yesterday, about 4 MB",
+      "parameters": {}
+    }
+  },
+  "default_profile": "melbourne"
+}

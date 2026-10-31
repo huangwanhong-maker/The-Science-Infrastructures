@@ -1,0 +1,293 @@
+{
+  "id": "osm-city",
+  "kind": "http",
+  "domain": "urban-science",
+  "title": "OpenStreetMap for a city model: the buildings (with their parts and multipolygons), the roads and paths, and the open spaces of Melbourne's centre",
+  "provider": "OpenStreetMap contributors, through the Overpass API (overpass-api.de, with overpass.kumi.systems and overpass.private.coffee as mirrors)",
+  "credit": "© OpenStreetMap contributors",
+  "licence": "Open Database License (ODbL) 1.0: attribution, and share-alike for databases derived from it (https://www.openstreetmap.org/copyright)",
+  "citation": "OpenStreetMap contributors (2026), retrieved through the Overpass API, https://www.openstreetmap.org",
+  "format": "Overpass JSON with geometry (out geom), a file a tile of an area (<area>-<k>.json; Melbourne in 3 x 3 tiles, so that each query stays small enough for a busy server): the ways tagged building or building:part and the multipolygon relations tagged building, every way tagged highway, and the open spaces (parks, water, squares and pedestrian areas, green land, railway land) as closed ways or multipolygon relations, each with its members' geometry whole. An element on a tile's edge is in both tiles; the product keeps it once.",
+  "coverage": "One box (south, west, north, east): melbourne -37.8260, 144.9260, -37.7910, 144.9790 (the Hoddle Grid, Southbank, Docklands' east, West and North Melbourne, Kensington, Carlton to Princes Street, East Melbourne: about 13,300 building ways and 17,600 highway ways when registered).",
+  "used_by": [
+    "data/products/street_records.py",
+    "applications/urban-building-workbench"
+  ],
+  "requests": [
+    {
+      "url": "https://overpass-api.de/api/interpreter",
+      "file": "melbourne-1.json",
+      "query": {
+        "data": [
+          "[out:json][timeout:600][maxsize:536870912];",
+          "(",
+          "  way[\"building\"](-37.8260,144.9260,-37.8143,144.9437);",
+          "  way[\"building:part\"](-37.8260,144.9260,-37.8143,144.9437);",
+          "  relation[\"building\"][\"type\"=\"multipolygon\"](-37.8260,144.9260,-37.8143,144.9437);",
+          "  way[\"highway\"](-37.8260,144.9260,-37.8143,144.9437);",
+          "  way[\"leisure\"~\"^(park|garden|playground|common|nature_reserve|recreation_ground|dog_park|pitch)$\"](-37.8260,144.9260,-37.8143,144.9437);",
+          "  relation[\"leisure\"~\"^(park|garden|common|nature_reserve|recreation_ground|pitch)$\"](-37.8260,144.9260,-37.8143,144.9437);",
+          "  way[\"natural\"~\"^(water|wood|scrub|grassland|heath|wetland)$\"](-37.8260,144.9260,-37.8143,144.9437);",
+          "  relation[\"natural\"~\"^(water|wood|scrub|grassland|heath|wetland)$\"](-37.8260,144.9260,-37.8143,144.9437);",
+          "  way[\"waterway\"~\"^(riverbank|dock)$\"](-37.8260,144.9260,-37.8143,144.9437);",
+          "  relation[\"waterway\"~\"^(riverbank|dock)$\"](-37.8260,144.9260,-37.8143,144.9437);",
+          "  way[\"landuse\"~\"^(grass|recreation_ground|forest|meadow|village_green|railway|cemetery|basin|reservoir)$\"](-37.8260,144.9260,-37.8143,144.9437);",
+          "  relation[\"landuse\"~\"^(grass|recreation_ground|forest|meadow|village_green|railway|cemetery|basin|reservoir)$\"](-37.8260,144.9260,-37.8143,144.9437);",
+          "  way[\"place\"=\"square\"](-37.8260,144.9260,-37.8143,144.9437);",
+          "  relation[\"place\"=\"square\"](-37.8260,144.9260,-37.8143,144.9437);",
+          "  way[\"highway\"~\"^(pedestrian|footway)$\"][\"area\"=\"yes\"](-37.8260,144.9260,-37.8143,144.9437);",
+          "  relation[\"highway\"=\"pedestrian\"][\"type\"=\"multipolygon\"](-37.8260,144.9260,-37.8143,144.9437);",
+          "  way[\"area:highway\"~\"^(pedestrian|footway)$\"](-37.8260,144.9260,-37.8143,144.9437);",
+          ");",
+          "out geom;"
+        ]
+      }
+    },
+    {
+      "url": "https://overpass-api.de/api/interpreter",
+      "file": "melbourne-2.json",
+      "query": {
+        "data": [
+          "[out:json][timeout:600][maxsize:536870912];",
+          "(",
+          "  way[\"building\"](-37.8260,144.9437,-37.8143,144.9613);",
+          "  way[\"building:part\"](-37.8260,144.9437,-37.8143,144.9613);",
+          "  relation[\"building\"][\"type\"=\"multipolygon\"](-37.8260,144.9437,-37.8143,144.9613);",
+          "  way[\"highway\"](-37.8260,144.9437,-37.8143,144.9613);",
+          "  way[\"leisure\"~\"^(park|garden|playground|common|nature_reserve|recreation_ground|dog_park|pitch)$\"](-37.8260,144.9437,-37.8143,144.9613);",
+          "  relation[\"leisure\"~\"^(park|garden|common|nature_reserve|recreation_ground|pitch)$\"](-37.8260,144.9437,-37.8143,144.9613);",
+          "  way[\"natural\"~\"^(water|wood|scrub|grassland|heath|wetland)$\"](-37.8260,144.9437,-37.8143,144.9613);",
+          "  relation[\"natural\"~\"^(water|wood|scrub|grassland|heath|wetland)$\"](-37.8260,144.9437,-37.8143,144.9613);",
+          "  way[\"waterway\"~\"^(riverbank|dock)$\"](-37.8260,144.9437,-37.8143,144.9613);",
+          "  relation[\"waterway\"~\"^(riverbank|dock)$\"](-37.8260,144.9437,-37.8143,144.9613);",
+          "  way[\"landuse\"~\"^(grass|recreation_ground|forest|meadow|village_green|railway|cemetery|basin|reservoir)$\"](-37.8260,144.9437,-37.8143,144.9613);",
+          "  relation[\"landuse\"~\"^(grass|recreation_ground|forest|meadow|village_green|railway|cemetery|basin|reservoir)$\"](-37.8260,144.9437,-37.8143,144.9613);",
+          "  way[\"place\"=\"square\"](-37.8260,144.9437,-37.8143,144.9613);",
+          "  relation[\"place\"=\"square\"](-37.8260,144.9437,-37.8143,144.9613);",
+          "  way[\"highway\"~\"^(pedestrian|footway)$\"][\"area\"=\"yes\"](-37.8260,144.9437,-37.8143,144.9613);",
+          "  relation[\"highway\"=\"pedestrian\"][\"type\"=\"multipolygon\"](-37.8260,144.9437,-37.8143,144.9613);",
+          "  way[\"area:highway\"~\"^(pedestrian|footway)$\"](-37.8260,144.9437,-37.8143,144.9613);",
+          ");",
+          "out geom;"
+        ]
+      }
+    },
+    {
+      "url": "https://overpass-api.de/api/interpreter",
+      "file": "melbourne-3.json",
+      "query": {
+        "data": [
+          "[out:json][timeout:600][maxsize:536870912];",
+          "(",
+          "  way[\"building\"](-37.8260,144.9613,-37.8143,144.9790);",
+          "  way[\"building:part\"](-37.8260,144.9613,-37.8143,144.9790);",
+          "  relation[\"building\"][\"type\"=\"multipolygon\"](-37.8260,144.9613,-37.8143,144.9790);",
+          "  way[\"highway\"](-37.8260,144.9613,-37.8143,144.9790);",
+          "  way[\"leisure\"~\"^(park|garden|playground|common|nature_reserve|recreation_ground|dog_park|pitch)$\"](-37.8260,144.9613,-37.8143,144.9790);",
+          "  relation[\"leisure\"~\"^(park|garden|common|nature_reserve|recreation_ground|pitch)$\"](-37.8260,144.9613,-37.8143,144.9790);",
+          "  way[\"natural\"~\"^(water|wood|scrub|grassland|heath|wetland)$\"](-37.8260,144.9613,-37.8143,144.9790);",
+          "  relation[\"natural\"~\"^(water|wood|scrub|grassland|heath|wetland)$\"](-37.8260,144.9613,-37.8143,144.9790);",
+          "  way[\"waterway\"~\"^(riverbank|dock)$\"](-37.8260,144.9613,-37.8143,144.9790);",
+          "  relation[\"waterway\"~\"^(riverbank|dock)$\"](-37.8260,144.9613,-37.8143,144.9790);",
+          "  way[\"landuse\"~\"^(grass|recreation_ground|forest|meadow|village_green|railway|cemetery|basin|reservoir)$\"](-37.8260,144.9613,-37.8143,144.9790);",
+          "  relation[\"landuse\"~\"^(grass|recreation_ground|forest|meadow|village_green|railway|cemetery|basin|reservoir)$\"](-37.8260,144.9613,-37.8143,144.9790);",
+          "  way[\"place\"=\"square\"](-37.8260,144.9613,-37.8143,144.9790);",
+          "  relation[\"place\"=\"square\"](-37.8260,144.9613,-37.8143,144.9790);",
+          "  way[\"highway\"~\"^(pedestrian|footway)$\"][\"area\"=\"yes\"](-37.8260,144.9613,-37.8143,144.9790);",
+          "  relation[\"highway\"=\"pedestrian\"][\"type\"=\"multipolygon\"](-37.8260,144.9613,-37.8143,144.9790);",
+          "  way[\"area:highway\"~\"^(pedestrian|footway)$\"](-37.8260,144.9613,-37.8143,144.9790);",
+          ");",
+          "out geom;"
+        ]
+      }
+    },
+    {
+      "url": "https://overpass-api.de/api/interpreter",
+      "file": "melbourne-4.json",
+      "query": {
+        "data": [
+          "[out:json][timeout:600][maxsize:536870912];",
+          "(",
+          "  way[\"building\"](-37.8143,144.9260,-37.8027,144.9437);",
+          "  way[\"building:part\"](-37.8143,144.9260,-37.8027,144.9437);",
+          "  relation[\"building\"][\"type\"=\"multipolygon\"](-37.8143,144.9260,-37.8027,144.9437);",
+          "  way[\"highway\"](-37.8143,144.9260,-37.8027,144.9437);",
+          "  way[\"leisure\"~\"^(park|garden|playground|common|nature_reserve|recreation_ground|dog_park|pitch)$\"](-37.8143,144.9260,-37.8027,144.9437);",
+          "  relation[\"leisure\"~\"^(park|garden|common|nature_reserve|recreation_ground|pitch)$\"](-37.8143,144.9260,-37.8027,144.9437);",
+          "  way[\"natural\"~\"^(water|wood|scrub|grassland|heath|wetland)$\"](-37.8143,144.9260,-37.8027,144.9437);",
+          "  relation[\"natural\"~\"^(water|wood|scrub|grassland|heath|wetland)$\"](-37.8143,144.9260,-37.8027,144.9437);",
+          "  way[\"waterway\"~\"^(riverbank|dock)$\"](-37.8143,144.9260,-37.8027,144.9437);",
+          "  relation[\"waterway\"~\"^(riverbank|dock)$\"](-37.8143,144.9260,-37.8027,144.9437);",
+          "  way[\"landuse\"~\"^(grass|recreation_ground|forest|meadow|village_green|railway|cemetery|basin|reservoir)$\"](-37.8143,144.9260,-37.8027,144.9437);",
+          "  relation[\"landuse\"~\"^(grass|recreation_ground|forest|meadow|village_green|railway|cemetery|basin|reservoir)$\"](-37.8143,144.9260,-37.8027,144.9437);",
+          "  way[\"place\"=\"square\"](-37.8143,144.9260,-37.8027,144.9437);",
+          "  relation[\"place\"=\"square\"](-37.8143,144.9260,-37.8027,144.9437);",
+          "  way[\"highway\"~\"^(pedestrian|footway)$\"][\"area\"=\"yes\"](-37.8143,144.9260,-37.8027,144.9437);",
+          "  relation[\"highway\"=\"pedestrian\"][\"type\"=\"multipolygon\"](-37.8143,144.9260,-37.8027,144.9437);",
+          "  way[\"area:highway\"~\"^(pedestrian|footway)$\"](-37.8143,144.9260,-37.8027,144.9437);",
+          ");",
+          "out geom;"
+        ]
+      }
+    },
+    {
+      "url": "https://overpass-api.de/api/interpreter",
+      "file": "melbourne-5.json",
+      "query": {
+        "data": [
+          "[out:json][timeout:600][maxsize:536870912];",
+          "(",
+          "  way[\"building\"](-37.8143,144.9437,-37.8027,144.9613);",
+          "  way[\"building:part\"](-37.8143,144.9437,-37.8027,144.9613);",
+          "  relation[\"building\"][\"type\"=\"multipolygon\"](-37.8143,144.9437,-37.8027,144.9613);",
+          "  way[\"highway\"](-37.8143,144.9437,-37.8027,144.9613);",
+          "  way[\"leisure\"~\"^(park|garden|playground|common|nature_reserve|recreation_ground|dog_park|pitch)$\"](-37.8143,144.9437,-37.8027,144.9613);",
+          "  relation[\"leisure\"~\"^(park|garden|common|nature_reserve|recreation_ground|pitch)$\"](-37.8143,144.9437,-37.8027,144.9613);",
+          "  way[\"natural\"~\"^(water|wood|scrub|grassland|heath|wetland)$\"](-37.8143,144.9437,-37.8027,144.9613);",
+          "  relation[\"natural\"~\"^(water|wood|scrub|grassland|heath|wetland)$\"](-37.8143,144.9437,-37.8027,144.9613);",
+          "  way[\"waterway\"~\"^(riverbank|dock)$\"](-37.8143,144.9437,-37.8027,144.9613);",
+          "  relation[\"waterway\"~\"^(riverbank|dock)$\"](-37.8143,144.9437,-37.8027,144.9613);",
+          "  way[\"landuse\"~\"^(grass|recreation_ground|forest|meadow|village_green|railway|cemetery|basin|reservoir)$\"](-37.8143,144.9437,-37.8027,144.9613);",
+          "  relation[\"landuse\"~\"^(grass|recreation_ground|forest|meadow|village_green|railway|cemetery|basin|reservoir)$\"](-37.8143,144.9437,-37.8027,144.9613);",
+          "  way[\"place\"=\"square\"](-37.8143,144.9437,-37.8027,144.9613);",
+          "  relation[\"place\"=\"square\"](-37.8143,144.9437,-37.8027,144.9613);",
+          "  way[\"highway\"~\"^(pedestrian|footway)$\"][\"area\"=\"yes\"](-37.8143,144.9437,-37.8027,144.9613);",
+          "  relation[\"highway\"=\"pedestrian\"][\"type\"=\"multipolygon\"](-37.8143,144.9437,-37.8027,144.9613);",
+          "  way[\"area:highway\"~\"^(pedestrian|footway)$\"](-37.8143,144.9437,-37.8027,144.9613);",
+          ");",
+          "out geom;"
+        ]
+      }
+    },
+    {
+      "url": "https://overpass-api.de/api/interpreter",
+      "file": "melbourne-6.json",
+      "query": {
+        "data": [
+          "[out:json][timeout:600][maxsize:536870912];",
+          "(",
+          "  way[\"building\"](-37.8143,144.9613,-37.8027,144.9790);",
+          "  way[\"building:part\"](-37.8143,144.9613,-37.8027,144.9790);",
+          "  relation[\"building\"][\"type\"=\"multipolygon\"](-37.8143,144.9613,-37.8027,144.9790);",
+          "  way[\"highway\"](-37.8143,144.9613,-37.8027,144.9790);",
+          "  way[\"leisure\"~\"^(park|garden|playground|common|nature_reserve|recreation_ground|dog_park|pitch)$\"](-37.8143,144.9613,-37.8027,144.9790);",
+          "  relation[\"leisure\"~\"^(park|garden|common|nature_reserve|recreation_ground|pitch)$\"](-37.8143,144.9613,-37.8027,144.9790);",
+          "  way[\"natural\"~\"^(water|wood|scrub|grassland|heath|wetland)$\"](-37.8143,144.9613,-37.8027,144.9790);",
+          "  relation[\"natural\"~\"^(water|wood|scrub|grassland|heath|wetland)$\"](-37.8143,144.9613,-37.8027,144.9790);",
+          "  way[\"waterway\"~\"^(riverbank|dock)$\"](-37.8143,144.9613,-37.8027,144.9790);",
+          "  relation[\"waterway\"~\"^(riverbank|dock)$\"](-37.8143,144.9613,-37.8027,144.9790);",
+          "  way[\"landuse\"~\"^(grass|recreation_ground|forest|meadow|village_green|railway|cemetery|basin|reservoir)$\"](-37.8143,144.9613,-37.8027,144.9790);",
+          "  relation[\"landuse\"~\"^(grass|recreation_ground|forest|meadow|village_green|railway|cemetery|basin|reservoir)$\"](-37.8143,144.9613,-37.8027,144.9790);",
+          "  way[\"place\"=\"square\"](-37.8143,144.9613,-37.8027,144.9790);",
+          "  relation[\"place\"=\"square\"](-37.8143,144.9613,-37.8027,144.9790);",
+          "  way[\"highway\"~\"^(pedestrian|footway)$\"][\"area\"=\"yes\"](-37.8143,144.9613,-37.8027,144.9790);",
+          "  relation[\"highway\"=\"pedestrian\"][\"type\"=\"multipolygon\"](-37.8143,144.9613,-37.8027,144.9790);",
+          "  way[\"area:highway\"~\"^(pedestrian|footway)$\"](-37.8143,144.9613,-37.8027,144.9790);",
+          ");",
+          "out geom;"
+        ]
+      }
+    },
+    {
+      "url": "https://overpass-api.de/api/interpreter",
+      "file": "melbourne-7.json",
+      "query": {
+        "data": [
+          "[out:json][timeout:600][maxsize:536870912];",
+          "(",
+          "  way[\"building\"](-37.8027,144.9260,-37.7910,144.9437);",
+          "  way[\"building:part\"](-37.8027,144.9260,-37.7910,144.9437);",
+          "  relation[\"building\"][\"type\"=\"multipolygon\"](-37.8027,144.9260,-37.7910,144.9437);",
+          "  way[\"highway\"](-37.8027,144.9260,-37.7910,144.9437);",
+          "  way[\"leisure\"~\"^(park|garden|playground|common|nature_reserve|recreation_ground|dog_park|pitch)$\"](-37.8027,144.9260,-37.7910,144.9437);",
+          "  relation[\"leisure\"~\"^(park|garden|common|nature_reserve|recreation_ground|pitch)$\"](-37.8027,144.9260,-37.7910,144.9437);",
+          "  way[\"natural\"~\"^(water|wood|scrub|grassland|heath|wetland)$\"](-37.8027,144.9260,-37.7910,144.9437);",
+          "  relation[\"natural\"~\"^(water|wood|scrub|grassland|heath|wetland)$\"](-37.8027,144.9260,-37.7910,144.9437);",
+          "  way[\"waterway\"~\"^(riverbank|dock)$\"](-37.8027,144.9260,-37.7910,144.9437);",
+          "  relation[\"waterway\"~\"^(riverbank|dock)$\"](-37.8027,144.9260,-37.7910,144.9437);",
+          "  way[\"landuse\"~\"^(grass|recreation_ground|forest|meadow|village_green|railway|cemetery|basin|reservoir)$\"](-37.8027,144.9260,-37.7910,144.9437);",
+          "  relation[\"landuse\"~\"^(grass|recreation_ground|forest|meadow|village_green|railway|cemetery|basin|reservoir)$\"](-37.8027,144.9260,-37.7910,144.9437);",
+          "  way[\"place\"=\"square\"](-37.8027,144.9260,-37.7910,144.9437);",
+          "  relation[\"place\"=\"square\"](-37.8027,144.9260,-37.7910,144.9437);",
+          "  way[\"highway\"~\"^(pedestrian|footway)$\"][\"area\"=\"yes\"](-37.8027,144.9260,-37.7910,144.9437);",
+          "  relation[\"highway\"=\"pedestrian\"][\"type\"=\"multipolygon\"](-37.8027,144.9260,-37.7910,144.9437);",
+          "  way[\"area:highway\"~\"^(pedestrian|footway)$\"](-37.8027,144.9260,-37.7910,144.9437);",
+          ");",
+          "out geom;"
+        ]
+      }
+    },
+    {
+      "url": "https://overpass-api.de/api/interpreter",
+      "file": "melbourne-8.json",
+      "query": {
+        "data": [
+          "[out:json][timeout:600][maxsize:536870912];",
+          "(",
+          "  way[\"building\"](-37.8027,144.9437,-37.7910,144.9613);",
+          "  way[\"building:part\"](-37.8027,144.9437,-37.7910,144.9613);",
+          "  relation[\"building\"][\"type\"=\"multipolygon\"](-37.8027,144.9437,-37.7910,144.9613);",
+          "  way[\"highway\"](-37.8027,144.9437,-37.7910,144.9613);",
+          "  way[\"leisure\"~\"^(park|garden|playground|common|nature_reserve|recreation_ground|dog_park|pitch)$\"](-37.8027,144.9437,-37.7910,144.9613);",
+          "  relation[\"leisure\"~\"^(park|garden|common|nature_reserve|recreation_ground|pitch)$\"](-37.8027,144.9437,-37.7910,144.9613);",
+          "  way[\"natural\"~\"^(water|wood|scrub|grassland|heath|wetland)$\"](-37.8027,144.9437,-37.7910,144.9613);",
+          "  relation[\"natural\"~\"^(water|wood|scrub|grassland|heath|wetland)$\"](-37.8027,144.9437,-37.7910,144.9613);",
+          "  way[\"waterway\"~\"^(riverbank|dock)$\"](-37.8027,144.9437,-37.7910,144.9613);",
+          "  relation[\"waterway\"~\"^(riverbank|dock)$\"](-37.8027,144.9437,-37.7910,144.9613);",
+          "  way[\"landuse\"~\"^(grass|recreation_ground|forest|meadow|village_green|railway|cemetery|basin|reservoir)$\"](-37.8027,144.9437,-37.7910,144.9613);",
+          "  relation[\"landuse\"~\"^(grass|recreation_ground|forest|meadow|village_green|railway|cemetery|basin|reservoir)$\"](-37.8027,144.9437,-37.7910,144.9613);",
+          "  way[\"place\"=\"square\"](-37.8027,144.9437,-37.7910,144.9613);",
+          "  relation[\"place\"=\"square\"](-37.8027,144.9437,-37.7910,144.9613);",
+          "  way[\"highway\"~\"^(pedestrian|footway)$\"][\"area\"=\"yes\"](-37.8027,144.9437,-37.7910,144.9613);",
+          "  relation[\"highway\"=\"pedestrian\"][\"type\"=\"multipolygon\"](-37.8027,144.9437,-37.7910,144.9613);",
+          "  way[\"area:highway\"~\"^(pedestrian|footway)$\"](-37.8027,144.9437,-37.7910,144.9613);",
+          ");",
+          "out geom;"
+        ]
+      }
+    },
+    {
+      "url": "https://overpass-api.de/api/interpreter",
+      "file": "melbourne-9.json",
+      "query": {
+        "data": [
+          "[out:json][timeout:600][maxsize:536870912];",
+          "(",
+          "  way[\"building\"](-37.8027,144.9613,-37.7910,144.9790);",
+          "  way[\"building:part\"](-37.8027,144.9613,-37.7910,144.9790);",
+          "  relation[\"building\"][\"type\"=\"multipolygon\"](-37.8027,144.9613,-37.7910,144.9790);",
+          "  way[\"highway\"](-37.8027,144.9613,-37.7910,144.9790);",
+          "  way[\"leisure\"~\"^(park|garden|playground|common|nature_reserve|recreation_ground|dog_park|pitch)$\"](-37.8027,144.9613,-37.7910,144.9790);",
+          "  relation[\"leisure\"~\"^(park|garden|common|nature_reserve|recreation_ground|pitch)$\"](-37.8027,144.9613,-37.7910,144.9790);",
+          "  way[\"natural\"~\"^(water|wood|scrub|grassland|heath|wetland)$\"](-37.8027,144.9613,-37.7910,144.9790);",
+          "  relation[\"natural\"~\"^(water|wood|scrub|grassland|heath|wetland)$\"](-37.8027,144.9613,-37.7910,144.9790);",
+          "  way[\"waterway\"~\"^(riverbank|dock)$\"](-37.8027,144.9613,-37.7910,144.9790);",
+          "  relation[\"waterway\"~\"^(riverbank|dock)$\"](-37.8027,144.9613,-37.7910,144.9790);",
+          "  way[\"landuse\"~\"^(grass|recreation_ground|forest|meadow|village_green|railway|cemetery|basin|reservoir)$\"](-37.8027,144.9613,-37.7910,144.9790);",
+          "  relation[\"landuse\"~\"^(grass|recreation_ground|forest|meadow|village_green|railway|cemetery|basin|reservoir)$\"](-37.8027,144.9613,-37.7910,144.9790);",
+          "  way[\"place\"=\"square\"](-37.8027,144.9613,-37.7910,144.9790);",
+          "  relation[\"place\"=\"square\"](-37.8027,144.9613,-37.7910,144.9790);",
+          "  way[\"highway\"~\"^(pedestrian|footway)$\"][\"area\"=\"yes\"](-37.8027,144.9613,-37.7910,144.9790);",
+          "  relation[\"highway\"=\"pedestrian\"][\"type\"=\"multipolygon\"](-37.8027,144.9613,-37.7910,144.9790);",
+          "  way[\"area:highway\"~\"^(pedestrian|footway)$\"](-37.8027,144.9613,-37.7910,144.9790);",
+          ");",
+          "out geom;"
+        ]
+      }
+    }
+  ],
+  "mirrors": {
+    "https://overpass-api.de/api/": [
+      "https://overpass.kumi.systems/api/",
+      "https://overpass.private.coffee/api/"
+    ]
+  },
+  "parameters": {},
+  "profiles": {
+    "areas": {
+      "description": "Melbourne's centre, nine queries (fetch again with --refresh to update)",
+      "parameters": {}
+    }
+  },
+  "default_profile": "areas"
+}

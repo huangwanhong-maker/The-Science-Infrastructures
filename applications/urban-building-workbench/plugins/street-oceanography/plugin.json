@@ -1,0 +1,75 @@
+{
+  "title": "Street Oceanography",
+  "summary": "Streets as open systems read as a sea: the tide of their walkers, its currents and surges, the waves of a crowd, how a street answers the weather and the calendar, how its uses mix and work together.",
+  "status": "draft",
+  "activity": "research",
+  "order": 1,
+  "warm": ["tides", "currents"],
+  "layers": [
+    {
+      "id": "tide",
+      "group": "The street as a sea",
+      "title": "the tide on the streets",
+      "module": "layers/tide.js",
+      "areas": ["melbourne"],
+      "default": true,
+      "about": "Each sensor's street as a channel of water standing to the level of its walkers (a metre for every hundred an hour): the tide the calendars predict at the clock's hour, the count observed on the date and its surge, the time of high water, the kind of tide."
+    },
+    {
+      "id": "currents",
+      "group": "The street as a sea",
+      "title": "currents: walkers each way",
+      "module": "layers/currents.js",
+      "areas": ["melbourne"],
+      "default": true,
+      "about": "The walkers each way past the sensors that count each way, as many as walk there on average at the clock's hour, moving in real time; their colour toward or away from the centre of the counts; the net current as an arrow."
+    },
+    {
+      "id": "waves",
+      "group": "Models",
+      "title": "waves on Swanston Street (a model)",
+      "module": "layers/waves.js",
+      "areas": ["melbourne"],
+      "default": false,
+      "about": "The crowd walking north from Flinders Street as a kinematic wave, second by second: its blocks and cross streets from the map, signals at the streets, walkers entering at the counted rate, queues spilling back from red crossings."
+    },
+    {
+      "id": "sensors",
+      "group": "Records",
+      "title": "pedestrians at the sensors, by hour",
+      "module": "layers/sensors.js",
+      "areas": ["melbourne"],
+      "default": false,
+      "about": "Columns at Melbourne's pedestrian sensors, their height the mean count at the clock's hour of the week (2024–2026)."
+    },
+    {
+      "id": "holdings",
+      "group": "Records",
+      "title": "shops and services, open or closed",
+      "module": "layers/holdings.js",
+      "default": true,
+      "about": "Holdings along the named streets, coloured by use; those open at the clock's hour stand tall."
+    },
+    {
+      "id": "establishments",
+      "group": "Records",
+      "title": "businesses by use (land-use census)",
+      "module": "layers/establishments.js",
+      "areas": ["melbourne"],
+      "default": false,
+      "about": "Every business about the sensors in the City of Melbourne's census of land use, coloured by use."
+    }
+  ],
+  "tools": [
+    { "id": "sea", "title": "Tides and currents of the city", "module": "tools/sea.js", "about": "Every street's tide and current together: when the city's high water comes, which streets have two crests a day, the commuters' flood and ebb, the arrow of time on the streets, which way walkers keep, and the surge on a date." },
+    { "id": "rhythm", "title": "Rhythm of a street", "module": "tools/rhythm.js", "about": "A sensor's counts read on the week, the month and the year: spectrum, harmonic constants, whose clock the street keeps." },
+    { "id": "response", "title": "Weather and holidays", "module": "tools/response.js", "about": "How much rain, heat and holidays change a street's counts, and every street side by side." },
+    { "id": "terrain", "title": "Mix of uses", "module": "tools/terrain.js", "about": "The uses along a street or about a sensor: how far they mix, at what scale, and over the years." },
+    { "id": "hours", "title": "Opening hours", "module": "tools/hours.js", "about": "Where and when a street is open, the rhythm of its hours, and which kinds of people its open shops draw." },
+    { "id": "reaction", "title": "Stores that work together", "module": "tools/reaction.js", "about": "Which uses keep company; two stores as a pathway in space and time, its visitors spreading along the street on the map; the spacing of clusters." },
+    { "id": "flow", "title": "Crowds and circulation", "module": "tools/flow.js", "about": "Swanston Street's crowd through the day as a kinematic wave, with its carriageway opened or not; movement round the blocks of a district." },
+    { "id": "plane", "title": "Kinds of streets", "module": "tools/plane.js", "about": "Melbourne's streets placed by how finely their uses change and how selectively they answer the calendar." }
+  ],
+  "engine": "engine/main.cpp",
+  "source": "Wanhong Huang, Street Oceanography (working paper, 2026), and its companion case study; the urban-science domain's theory/street-oceanography.md"
+}

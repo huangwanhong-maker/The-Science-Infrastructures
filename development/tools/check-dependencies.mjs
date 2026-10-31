@@ -28,7 +28,7 @@ const problems = [];
 const problem = (where, what) => problems.push(`${where}: ${what}`);
 
 // Foundations may use one another as their own repositories declare.
-const FOUNDATION_DEPENDS = { calx: [], morphe: [], physis: ['calx', 'morphe'] };
+const FOUNDATION_DEPENDS = { calx: [], morphe: [], physis: ['calx', 'morphe'], tyche: ['calx', 'morphe', 'physis'] };
 
 // ---- the units and their declarations ----------------------------------------------
 const units = new Map();       // key "domain:geodesy" -> { kind, name, dir, depends, foundations }

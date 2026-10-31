@@ -1,0 +1,30 @@
+{
+  "id": "melbourne-clue-establishments",
+  "kind": "http",
+  "domain": "urban-science",
+  "title": "City of Melbourne Census of Land Use and Employment (CLUE): business establishments with address and industry classification, every census year since 2002",
+  "provider": "City of Melbourne, Open Data Platform (Opendatasoft Explore API v2.1): dataset business-establishments-with-address-and-industry-classification",
+  "credit": "CLUE: City of Melbourne, CC BY 4.0",
+  "licence": "CC BY 4.0 (stated in the dataset's metadata)",
+  "citation": "City of Melbourne, Census of Land Use and Employment (CLUE), Business establishments with address and industry classification, https://data.melbourne.vic.gov.au/explore/dataset/business-establishments-with-address-and-industry-classification/ ; definitions: https://www.melbourne.vic.gov.au/clue",
+  "format": "CSV separated by semicolons, with a byte-order mark: census_year, block_id (the CLUE block), property_id, base_property_id, clue_small_area, trading_name, business_address, industry_anzsic4_code and industry_anzsic4_description (the Australian and New Zealand Standard Industrial Classification 2006, class of four digits), longitude, latitude (WGS 84; the property's point, shared by every establishment in it). One row an establishment and a census year.",
+  "coverage": "The municipality of the City of Melbourne, census years 2002 to 2024 (413,550 rows when registered, about 13,500 to 19,900 a year), every commercial property surveyed at least once every two years by field interview",
+  "used_by": [
+    "data/products/street_records.py",
+    "applications/urban-building-workbench"
+  ],
+  "requests": [
+    {
+      "url": "https://data.melbourne.vic.gov.au/api/explore/v2.1/catalog/datasets/business-establishments-with-address-and-industry-classification/exports/csv?select=census_year,block_id,property_id,clue_small_area,trading_name,business_address,industry_anzsic4_code,industry_anzsic4_description,longitude,latitude",
+      "file": "establishments.csv"
+    }
+  ],
+  "parameters": {},
+  "profiles": {
+    "all": {
+      "description": "Every establishment of every census year (about 65 MB; fetch again with --refresh after the City adds a year)",
+      "parameters": {}
+    }
+  },
+  "default_profile": "all"
+}

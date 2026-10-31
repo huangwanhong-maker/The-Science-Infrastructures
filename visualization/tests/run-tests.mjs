@@ -734,4 +734,47 @@ const { check, assert, done } = suite();
     Math.hypot(earth.view.lat - greenland.lat, earth.view.lon - greenland.lon) * 6.4e6, 1e-6);
 }
 
+// ---- the city-scale GIS (gis/) ----------------------------------------------------------------
+{
+  const { gis } = await import('../js/index.js');
+  // The local frame: the origin at (0, 0, 0); a step of 0.001° north is the WGS 84 meridian arc there,
+  // M(φ) = a(1 − e²)/(1 − e² sin²φ)^{3/2} · 0.001°; the round trip to geodetic coordinates.
+  const f = gis.localFrameAt(-37.8136, 144.9631);
+  const o = f.toLocal(-37.8136, 144.9631, 0);
+  check('gis: the frame\'s origin is (0, 0, 0)', Math.hypot(...o), 1e-6);
+  const phi = -37.8136 * Math.PI / 180, a = 6378137, e2 = 0.00669437999014;
+  const M = a * (1 - e2) / (1 - e2 * Math.sin(phi) ** 2) ** 1.5;
+  const n = f.toLocal(-37.8126, 144.9631, 0);
+  check('gis: 0.001° north is the meridian arc M(φ)·0.001° (to the chord\'s second order)', n[1] - M * 0.001 * Math.PI / 180, 0.01);
+  check('gis: and due north has no east component', n[0], 1e-6);
+  const back = f.toGeodetic(1234.5, -876.5, 20);
+  const again = f.toLocal(back.lat, back.lon, back.height);
+  check('gis: local → geodetic → local round trip', Math.hypot(again[0] - 1234.5, again[1] + 876.5, again[2] - 20), 1e-6, 'm');
+  // Rings: orientation, containment, centroid; ribbons' area is length × width on a straight line.
+  const sq = [[0, 0], [10, 0], [10, 10], [0, 10]];
+  check('gis: a counter-clockwise square has area +100', gis.ringArea(sq) - 100, 1e-12);
+  assert('gis: orientation reverses a clockwise ring and drops a closing point', gis.ringArea(gis.oriented([[0, 0], [0, 10], [10, 10], [10, 0], [0, 0]])) === 100);
+  assert('gis: containment inside and outside, and with a hole', gis.inRing([5, 5], sq) && !gis.inRing([15, 5], sq) && !gis.inPolygon([5, 5], sq, [[[4, 4], [6, 4], [6, 6], [4, 6]]]));
+  const c = gis.centroid([[0, 0], [4, 0], [4, 2], [0, 2]]);
+  check('gis: the centroid of a rectangle', Math.hypot(c[0] - 2, c[1] - 1), 1e-12);
+  const rib = gis.ribbon([[0, 0], [30, 0], [30, 40]], 6);
+  let area = 0;
+  for (let i = 0; i < rib.length; i += 6) area += Math.abs((rib[i + 2] - rib[i]) * (rib[i + 5] - rib[i + 1]) - (rib[i + 4] - rib[i]) * (rib[i + 3] - rib[i + 1])) / 2;
+  check('gis: a mitred ribbon of width 6 along 70 m of a right-angled line has area 6 × 70 (the corner\'s gain and loss cancel)', area - 420, 1e-9);
+  const pa = gis.pointAlong([[0, 0], [30, 0], [30, 40]], 50);
+  check('gis: the point 50 m along the line', Math.hypot(pa.x - 30, pa.y - 20), 1e-12);
+  check('gis: a polyline\'s length', gis.lineLength([[0, 0], [30, 0], [30, 40]]) - 70, 1e-12);
+  const near = gis.nearestOnLine([[0, 0], [30, 0], [30, 40]], [33, 25]);
+  check('gis: the nearest point of a line, 25 m along its second leg (55 m in), 3 m away', Math.hypot(near.s - 55, near.distance - 3), 1e-12);
+  assert('gis: and on the line\'s right (east of a leg running north)', near.side === -1 && near.dy === 1);
+  const sub = gis.subLine([[0, 0], [30, 0], [30, 40]], 20, 50);
+  check('gis: a part of a line between 20 and 50 m keeps its corner and its length', Math.abs(gis.lineLength(sub) - 30) + Math.hypot(sub[1][0] - 30, sub[1][1]), 1e-12);
+  const ed = gis.edges([[0, 0], [30, 0], [30, 40]], 6);
+  check('gis: a ribbon\'s edges are mitred at a right-angled corner (3√2 from it)', Math.hypot(ed.left[1][0] - 27, ed.left[1][1] - 3) + Math.hypot(ed.right[1][0] - 33, ed.right[1][1] + 3), 1e-12);
+  const rs = gis.resample([[0, 0], [30, 0], [30, 40]], 7);
+  check('gis: a line resampled at eight points, 10 m apart, ends kept', Math.hypot(rs[3][0] - 30, rs[3][1]) + Math.hypot(rs[7][0] - 30, rs[7][1] - 40), 1e-12);
+  const seq = gis.sequential(0, 10);
+  assert('gis: a magnitude coloured, a missing one left uncoloured', Array.isArray(seq(5)) && seq(NaN) === null);
+}
+
 done();

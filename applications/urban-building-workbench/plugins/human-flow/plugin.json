@@ -1,0 +1,22 @@
+{
+  "title": "Human flow",
+  "summary": "Where people go, and with what: trajectories, origins and destinations, and the composition a count discards.",
+  "status": "planned",
+  "order": 2,
+  "views": [],
+  "planned": [
+    {
+      "title": "Trajectories and origin–destination",
+      "about": "Flows between the places of a district from trajectory records and counts at many cordons, fitted as gravity models (nomos's Poisson regression with two sets of fixed effects) and drawn as circulation on the district's complex (physis's Hodge decomposition): the attraction a place exerts, apart from the circulation round its blocks."
+    },
+    {
+      "title": "Composition at entry and departure",
+      "about": "The instrument Street Oceanography §20 asks for and nobody has built: carried properties registered at entry and departure on the same units, with a comparison population. Its holding is stated with its design (§33, Requirement 33.3)."
+    },
+    {
+      "title": "Crowds beyond the kinematic wave",
+      "about": "Two-dimensional crowd models (Hughes's continuum, social-force agents) on the walkable surface, offered as representations under Withholding 2.1."
+    }
+  ],
+  "begins": "Begins from the Street Oceanography plug-in's counts, flows and circulation (its Flow view), which it will extend."
+}

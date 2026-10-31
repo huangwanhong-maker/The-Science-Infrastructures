@@ -67,6 +67,7 @@ import re
 import sys
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 import zipfile
 from pathlib import Path
@@ -452,6 +453,23 @@ def followed(folder: Path, rule: dict) -> list[dict]:
     return out
 
 
+def request_url(entry: dict, values: dict) -> str:
+    """A request's URL: its template filled, then its `query` (each parameter a text or a list of
+    lines, filled in the same way) percent-encoded into the query string, as a text in a query
+    language of its own must be (Overpass QL)."""
+    url = entry["url"].format(**values)
+    if entry.get("query"):
+        pairs = {k: ("\n".join(v) if isinstance(v, list) else str(v)).format(**values) for k, v in entry["query"].items()}
+        url += ("&" if "?" in url else "?") + urllib.parse.urlencode(pairs, quote_via=urllib.parse.quote)
+    return url
+
+
+def mirrored(manifest: dict, url: str) -> list[str]:
+    """The same request on the servers that hold the same data: `mirrors` maps the beginning of a
+    URL to the beginnings that may replace it, tried in order."""
+    return [alt + url[len(head):] for head, alts in manifest.get("mirrors", {}).items() if url.startswith(head) for alt in alts]
+
+
 def acquire_http(manifest: dict, profile: str | None, overrides: dict, refresh: bool) -> bool:
     values, tag = resolve(manifest, profile, overrides)
     folder = CACHE / manifest["id"] / tag
@@ -464,19 +482,42 @@ def acquire_http(manifest: dict, profile: str | None, overrides: dict, refresh: 
     for k, spec in manifest["parameters"].items():
         if spec.get("type") == "time" and spec.get("align_hours"):
             filled[k] = ncss.align(filled[k], int(spec["align_hours"]))
-    requests = [{"url": r["url"].format(**filled), "file": r["file"]} for r in manifest["requests"]]
+    requests = [{"url": request_url(r, filled), "file": r["file"]} for r in manifest["requests"]]
     resolved = {k: erddap.iso(v) for k, v in filled.items() if isinstance(v, dt.datetime)}
     if cached(folder, [r["url"] for r in requests], [r["file"] for r in requests]) and not refresh:
         print(f"  cached in {folder.relative_to(DATA.parent)}")
         return True
     folder.mkdir(parents=True, exist_ok=True)
     started = time.monotonic()
+    # A retrieval that stopped at a failed request kept a provenance of the requests it had made
+    # (resolved.incomplete): those files are kept, unless --refresh, and the rest are asked for.
+    earlier = {}
+    if (folder / "retrieval.json").exists() and not refresh:
+        earlier = {e["file"]: e for e in load(folder / "retrieval.json").get("requests", [])}
+    done = []
     for r in requests:
-        try:
-            download(r["url"], folder / r["file"], timeout=300, attempts=2)
-        except (urllib.error.URLError, OSError) as error:
-            print(f"  REQUEST FAILED: {r['url']}: {error}")
+        if earlier.get(r["file"], {}).get("url") == r["url"] and (folder / r["file"]).exists():
+            print(f"  {r['file']}: kept from the earlier retrieval")
+            r.update({k: v for k, v in earlier[r["file"]].items() if k == "served_by"})
+            done.append(r)
+            continue
+        # The request's own server first, then the servers that hold the same data (`mirrors`);
+        # the provenance keeps the request as asked, and which server served it.
+        for url in [r["url"]] + mirrored(manifest, r["url"]):
+            try:
+                download(url, folder / r["file"], timeout=300, attempts=2)
+                if url != r["url"]:
+                    r["served_by"] = url.split("?")[0]
+                break
+            except (urllib.error.URLError, OSError) as error:
+                print(f"  {url.split('?')[0]} could not serve {r['file']} ({error})")
+        else:
+            print(f"  REQUEST FAILED: {r['file']} ({r['url'][:120]}...)")
+            if done:
+                write_provenance(folder, manifest, tag, values, resolved | {"incomplete": True}, done, started)
+                print(f"  {len(done)} of {len(requests)} files kept; fetch again to complete the retrieval")
             return False
+        done.append(r)
     for rule in manifest.get("follow", []):
         for r in followed(folder, rule):
             try:
@@ -701,10 +742,12 @@ def describe(manifest: dict) -> None:
         total = sum(f.get("size") or 0 for f in manifest["files"])
         print(f"{'':39s}{len(manifest['files'])} file(s), {total / 1e6:.1f} MB")
         return
-    if manifest.get("mirrors"):
+    if isinstance(manifest.get("mirrors"), dict):         # http: the beginnings of URLs that may replace others
+        print(f"{'':39s}mirrors: " + "; ".join(", ".join(alts) for alts in manifest["mirrors"].values()))
+    elif manifest.get("mirrors"):
         print(f"{'':39s}mirrors: " + "; ".join(f"{m['dataset']} at {m['service']}" for m in manifest["mirrors"]))
     print(f"{'':39s}parameters:")
-    for name, spec in manifest["parameters"].items():
+    for name, spec in manifest.get("parameters", {}).items():
         bounds = f" {spec.get('min')}..{spec.get('max')}" if "min" in spec else ""
         print(f"{'':41s}{name} = {spec['default']} ({spec.get('type', 'str')}{bounds}) {spec['description']}")
     print(f"{'':39s}profiles:")

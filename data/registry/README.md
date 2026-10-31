@@ -12,10 +12,10 @@ Manifests are read by [`../acquisition/fetch.py`](../acquisition/fetch.py). It d
 
 | Kind | Meaning | Example |
 |---|---|---|
-| `files` | Fixed files, downloaded as they are, taken from a zip archive on the web, or decompressed when they arrive gzipped (`"gunzip": true`). Each file's SHA-256 is recorded in the manifest and verified on every retrieval. | `jpl-de440s`, `natural-earth-50m`, `solar-system-maps`, `koppen-geiger`, `pangu-weather`, `pb2002`, `crust1`, `ghsl-population`, `natural-earth-10m-admin1`, `templateflow-mni152`, `schaefer-2018`, `ebrains-julich-brain`, `allen-mouse-ccf`, `massp-2`, `harvard-oxford`, `mial-thalamic-nuclei`, `ebrains-deep-white-matter`, `physionet-eegmmidb`, `neurovault-ibc`, `noaa-wmm`, `moon-magnetic-t2015` |
+| `files` | Fixed files, downloaded as they are, taken from a zip archive on the web, or decompressed when they arrive gzipped (`"gunzip": true`). Each file's SHA-256 is recorded in the manifest and verified on every retrieval. | `jpl-de440s`, `natural-earth-50m`, `solar-system-maps`, `koppen-geiger`, `pangu-weather`, `pb2002`, `crust1`, `ghsl-population`, `natural-earth-10m-admin1`, `templateflow-mni152`, `schaefer-2018`, `ebrains-julich-brain`, `allen-mouse-ccf`, `massp-2`, `harvard-oxford`, `mial-thalamic-nuclei`, `ebrains-deep-white-matter`, `physionet-eegmmidb`, `neurovault-ibc`, `noaa-wmm`, `moon-magnetic-t2015`, `melbourne-pedestrian-archive` |
 | `tap` | A query to an astronomical archive through the IVOA Table Access Protocol | `gaia-dr3`, `ungc`, `tully-2mass-groups` |
 | `griddap` | A subset of a gridded dataset served by ERDDAP: which variables, which times, how fine a grid | `gfs`, `oisst`, `ww3`, `etopo-2022` |
-| `http` | One or more web requests built from URL templates, and optionally those the results link to | `worldbank-indicators`, `usgs-earthquakes`, `gibs-daily`, `gibs-static`, `gibs-relief`, `gfs-analysis-0p25`, `gdacs`, `ngl-midas`, `ngl-station`, `gcmt`, `metar`, `ndbc`, `ibtracs`, `oecd-bimts`, `ecb-exr`, `bis-policy-rates` |
+| `http` | One or more web requests built from URL templates, and optionally those the results link to | `worldbank-indicators`, `usgs-earthquakes`, `gibs-daily`, `gibs-static`, `gibs-relief`, `gfs-analysis-0p25`, `gdacs`, `ngl-midas`, `ngl-station`, `gcmt`, `metar`, `ndbc`, `ibtracs`, `oecd-bimts`, `ecb-exr`, `bis-policy-rates`, `melbourne-pedestrian-counts`, `melbourne-clue-establishments`, `open-meteo-hourly`, `nager-holidays`, `osm-streets`, `osm-city` |
 | `ncss` | Groups of variables of a forecast model's collection on a THREDDS server, by its NetCDF Subset Service: levels, times and grid spacing | `gfs-levels`, `aigfs`, `aigefs` |
 | `opendap` | One variable from each of several datasets on an OPeNDAP (DAP2) server, every n-th point of the grid, or the column beneath a place, saved as netCDF classic | `terraclimate-normals`, `hycom-column`, `ncep-r1-climatology` |
 | `ecmwf` | Fields of ECMWF's open forecasts, taken from the per-step GRIB2 files of the latest complete run by HTTP range requests, guided by each file's index | `ecmwf-ifs`, `ecmwf-aifs`, `ecmwf-ens` |
@@ -28,7 +28,7 @@ All kinds except `files` declare parameters and profiles, so that a user chooses
 |---|---|
 | `id` | Identifier; also the name of the cache folder |
 | `kind` | `files` (the default), `tap`, `griddap`, `http`, `ncss`, `opendap` or `ecmwf` |
-| `domain` | The field the data belong to: `astronomy`, `geography`, `oceanography`, `meteorology`, `geophysics`, `climate`, `neuroscience`, `economics`. Applications group data by it. |
+| `domain` | The field the data belong to: `astronomy`, `geography`, `oceanography`, `meteorology`, `geophysics`, `climate`, `neuroscience`, `economics`, `urban-science`. Applications group data by it. |
 | `title`, `provider` | What the dataset is and who produced it |
 | `credit` | A short attribution, shown on maps |
 | `model` | For forecast models: the model's short name (GFS, AIGFS), by which applications offer a choice of model |
@@ -110,6 +110,8 @@ The resolved instants are recorded in the provenance.
 The names come from fetched content. A file name that would leave the dataset's folder, and a URL that is not HTTPS, are refused. A linked request that fails is skipped and the retrieval continues.
 
 A dataset whose files keep one URL while their content changes, such as the latest METARs or the storms of the last week, may have no parameters (`"parameters": {}`) and a single profile. A retrieval is then the same request every time, and is repeated only with `--refresh`, as the recipes' steps for such datasets do.
+
+A request may carry `query`: parameters of its query string, each a text or a list of lines (joined by newlines), filled as the URL is and percent-encoded by the fetcher, for a text in a query language of its own, such as Overpass QL (`osm-streets`, `osm-city`). A manifest may carry `mirrors`: a map from the beginning of a URL to the beginnings that may replace it, tried in order when a request fails; the provenance keeps the request as asked and names the server that served it (`served_by`). A retrieval stopped by a failed request records the requests it made (`resolved.incomplete`); the next keeps their files and asks only for the rest.
 
 ## 8. Fields of `ncss` Datasets
 

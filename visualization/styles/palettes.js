@@ -12,6 +12,8 @@
 //   orchid         sequential   pale orchid to deep violet: Cosmopoiesis's orchid
 //   lavender-rust  diverging    lavender through a pale rose to rust
 //   orchid-gold    diverging    violet inward, gold outward, through a pale middle
+//   sea            sequential   sea foam to deep sea glass: a level of water, a crowd read as a sea
+//   sea-brick      diverging    sea glass below, brick rose above, through a pale stone: a level against its tide
 //   warm           cyclic       plum, Old Rose, gold, blush lilac, and round again
 //   categorical    categorical  ten warm hues, in the order the Complex Atlas has always drawn its indices
 //   categorical-apart            the same ten, ordered so that neighbours stay apart in every vision
@@ -31,6 +33,8 @@ export const MAPS = {
   orchid: { kind: 'sequential', stops: ['#ecdef7', '#b892dd', '#5e3a8b'], about: 'pale orchid to deep violet' },
   'lavender-rust': { kind: 'diverging', stops: ['#5d5aa0', '#a99ad0', '#f2e6ee', '#d38e8a', '#9c4a45'], about: 'lavender through a pale rose to rust' },
   'orchid-gold': { kind: 'diverging', stops: ['#5e3a8b', '#b892dd', '#f4ede4', '#e9aa40', '#965208'], about: 'violet below the middle, gold above it' },
+  sea: { kind: 'sequential', stops: ['#e4f0ea', '#9cc7bf', '#4f8a8b', '#22505a'], about: 'sea foam to deep sea glass' },
+  'sea-brick': { kind: 'diverging', stops: ['#2e6b70', '#8fbdb6', '#f1eae3', '#d69a8e', '#9a4a3f'], about: 'sea glass below the middle, brick rose above it' },
   warm: { kind: 'cyclic', stops: ['#6b4a86', '#c08081', '#e9b872', '#d9b8d6'], about: 'plum, Old Rose, gold, blush lilac, and round again' },
   categorical: {
     kind: 'categorical',

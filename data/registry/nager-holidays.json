@@ -1,0 +1,105 @@
+{
+  "id": "nager-holidays",
+  "kind": "http",
+  "domain": "urban-science",
+  "title": "Public holidays of a country and its states, year by year, from the Nager.Date API",
+  "provider": "Nager.Date (nager.at), the public holiday API v3, computed by its open-source library from each country's rules",
+  "credit": "Public holidays: Nager.Date",
+  "licence": "The Nager.Date library is MIT-licensed; the Web API's terms of service (2023-09-15) allow private and non-profit projects (commercial use needs a sponsorship) and forbid publishing the holidays as a holiday portal of one's own. The infrastructure is a non-profit project (ADR 0057).",
+  "citation": "Nager.Date, Public holidays API v3, https://date.nager.at (library: https://github.com/nager/Nager.Date)",
+  "format": "JSON, a file a year: a list of {date (YYYY-MM-DD), localName, name, countryCode, fixed, global (true for the whole country), counties (ISO 3166-2 codes of the states that keep it, or null), launchYear, types (Public, Bank, School, Optional, ...)}",
+  "coverage": "Australia (AU), 2009 to 2026; the states as ISO 3166-2 subdivisions (Victoria AU-VIC). The rules are the library's, applied to past years as well, so that a holiday introduced later can appear in earlier years: the product checks Victoria's against the State's own dates where they are known.",
+  "used_by": [
+    "data/products/street_records.py",
+    "applications/urban-building-workbench"
+  ],
+  "requests": [
+    {
+      "url": "https://date.nager.at/api/v3/PublicHolidays/2009/{country}",
+      "file": "2009.json"
+    },
+    {
+      "url": "https://date.nager.at/api/v3/PublicHolidays/2010/{country}",
+      "file": "2010.json"
+    },
+    {
+      "url": "https://date.nager.at/api/v3/PublicHolidays/2011/{country}",
+      "file": "2011.json"
+    },
+    {
+      "url": "https://date.nager.at/api/v3/PublicHolidays/2012/{country}",
+      "file": "2012.json"
+    },
+    {
+      "url": "https://date.nager.at/api/v3/PublicHolidays/2013/{country}",
+      "file": "2013.json"
+    },
+    {
+      "url": "https://date.nager.at/api/v3/PublicHolidays/2014/{country}",
+      "file": "2014.json"
+    },
+    {
+      "url": "https://date.nager.at/api/v3/PublicHolidays/2015/{country}",
+      "file": "2015.json"
+    },
+    {
+      "url": "https://date.nager.at/api/v3/PublicHolidays/2016/{country}",
+      "file": "2016.json"
+    },
+    {
+      "url": "https://date.nager.at/api/v3/PublicHolidays/2017/{country}",
+      "file": "2017.json"
+    },
+    {
+      "url": "https://date.nager.at/api/v3/PublicHolidays/2018/{country}",
+      "file": "2018.json"
+    },
+    {
+      "url": "https://date.nager.at/api/v3/PublicHolidays/2019/{country}",
+      "file": "2019.json"
+    },
+    {
+      "url": "https://date.nager.at/api/v3/PublicHolidays/2020/{country}",
+      "file": "2020.json"
+    },
+    {
+      "url": "https://date.nager.at/api/v3/PublicHolidays/2021/{country}",
+      "file": "2021.json"
+    },
+    {
+      "url": "https://date.nager.at/api/v3/PublicHolidays/2022/{country}",
+      "file": "2022.json"
+    },
+    {
+      "url": "https://date.nager.at/api/v3/PublicHolidays/2023/{country}",
+      "file": "2023.json"
+    },
+    {
+      "url": "https://date.nager.at/api/v3/PublicHolidays/2024/{country}",
+      "file": "2024.json"
+    },
+    {
+      "url": "https://date.nager.at/api/v3/PublicHolidays/2025/{country}",
+      "file": "2025.json"
+    },
+    {
+      "url": "https://date.nager.at/api/v3/PublicHolidays/2026/{country}",
+      "file": "2026.json"
+    }
+  ],
+  "parameters": {
+    "country": {
+      "type": "str",
+      "default": "AU",
+      "pattern": "[A-Z]{2}",
+      "description": "ISO 3166-1 alpha-2 code of the country"
+    }
+  },
+  "profiles": {
+    "australia": {
+      "description": "Australia's national and states' public holidays, 2009 to 2026",
+      "parameters": {}
+    }
+  },
+  "default_profile": "australia"
+}

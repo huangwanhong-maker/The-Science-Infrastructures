@@ -1,0 +1,170 @@
+{
+  "id": "osm-streets",
+  "kind": "http",
+  "domain": "urban-science",
+  "title": "OpenStreetMap along chosen streets: the streets' ways, the premises within about 55 m (shops, amenities, crafts, offices, tourism, leisure, healthcare) with their opening_hours, and the buildings within 45 m",
+  "provider": "OpenStreetMap contributors, through the Overpass API (overpass-api.de, with overpass.kumi.systems and overpass.private.coffee as mirrors)",
+  "credit": "© OpenStreetMap contributors",
+  "licence": "Open Database License (ODbL) 1.0: attribution, and share-alike for databases derived from it (https://www.openstreetmap.org/copyright)",
+  "citation": "OpenStreetMap contributors (2026), retrieved through the Overpass API, https://www.openstreetmap.org",
+  "format": "Overpass JSON, a file a street: first the street's ways with their geometry (out geom), then every node, way and relation within 55 m of them that carries shop, amenity, craft, office, tourism, leisure or healthcare (out center tags: a way's or relation's centre of its bounding box), then the buildings within 45 m (out center tags). A response with a 'remark' naming an error is incomplete and is refused by the product.",
+  "coverage": "Six streets: a residential street of Okusawa 6-chōme, Setagaya (way 48678505); Bourke Street Mall, Swanston Street in the Hoddle Grid, Lygon Street in Carlton, Errol Street in North Melbourne and Macaulay Road in Kensington (Melbourne). The bounding boxes hold the stretches the product keeps (data/products/street_records.py, STREETS).",
+  "used_by": [
+    "data/products/street_records.py",
+    "applications/urban-building-workbench"
+  ],
+  "requests": [
+    {
+      "url": "https://overpass-api.de/api/interpreter",
+      "file": "tokyo-residential.json",
+      "query": {
+        "data": [
+          "[out:json][timeout:180];",
+          "way(id:48678505)->.axis;",
+          ".axis out geom;",
+          "(",
+          "  nwr(around.axis:55)[\"shop\"];",
+          "  nwr(around.axis:55)[\"amenity\"];",
+          "  nwr(around.axis:55)[\"craft\"];",
+          "  nwr(around.axis:55)[\"office\"];",
+          "  nwr(around.axis:55)[\"tourism\"];",
+          "  nwr(around.axis:55)[\"leisure\"];",
+          "  nwr(around.axis:55)[\"healthcare\"];",
+          ");",
+          "out center tags;",
+          "way(around.axis:45)[\"building\"];",
+          "out center tags;"
+        ]
+      }
+    },
+    {
+      "url": "https://overpass-api.de/api/interpreter",
+      "file": "melbourne-bourke-mall.json",
+      "query": {
+        "data": [
+          "[out:json][timeout:180];",
+          "way[\"highway\"][\"name\"=\"Bourke Street Mall\"](-37.8150,144.9625,-37.8128,144.9665)->.axis;",
+          ".axis out geom;",
+          "(",
+          "  nwr(around.axis:55)[\"shop\"];",
+          "  nwr(around.axis:55)[\"amenity\"];",
+          "  nwr(around.axis:55)[\"craft\"];",
+          "  nwr(around.axis:55)[\"office\"];",
+          "  nwr(around.axis:55)[\"tourism\"];",
+          "  nwr(around.axis:55)[\"leisure\"];",
+          "  nwr(around.axis:55)[\"healthcare\"];",
+          ");",
+          "out center tags;",
+          "way(around.axis:45)[\"building\"];",
+          "out center tags;"
+        ]
+      }
+    },
+    {
+      "url": "https://overpass-api.de/api/interpreter",
+      "file": "melbourne-swanston.json",
+      "query": {
+        "data": [
+          "[out:json][timeout:180];",
+          "way[\"highway\"][\"name\"=\"Swanston Street\"](-37.8185,144.9620,-37.8085,144.9690)->.axis;",
+          ".axis out geom;",
+          "(",
+          "  nwr(around.axis:55)[\"shop\"];",
+          "  nwr(around.axis:55)[\"amenity\"];",
+          "  nwr(around.axis:55)[\"craft\"];",
+          "  nwr(around.axis:55)[\"office\"];",
+          "  nwr(around.axis:55)[\"tourism\"];",
+          "  nwr(around.axis:55)[\"leisure\"];",
+          "  nwr(around.axis:55)[\"healthcare\"];",
+          ");",
+          "out center tags;",
+          "way(around.axis:45)[\"building\"];",
+          "out center tags;"
+        ]
+      }
+    },
+    {
+      "url": "https://overpass-api.de/api/interpreter",
+      "file": "melbourne-lygon.json",
+      "query": {
+        "data": [
+          "[out:json][timeout:180];",
+          "way[\"highway\"][\"name\"=\"Lygon Street\"](-37.8080,144.9650,-37.7915,144.9695)->.axis;",
+          ".axis out geom;",
+          "(",
+          "  nwr(around.axis:55)[\"shop\"];",
+          "  nwr(around.axis:55)[\"amenity\"];",
+          "  nwr(around.axis:55)[\"craft\"];",
+          "  nwr(around.axis:55)[\"office\"];",
+          "  nwr(around.axis:55)[\"tourism\"];",
+          "  nwr(around.axis:55)[\"leisure\"];",
+          "  nwr(around.axis:55)[\"healthcare\"];",
+          ");",
+          "out center tags;",
+          "way(around.axis:45)[\"building\"];",
+          "out center tags;"
+        ]
+      }
+    },
+    {
+      "url": "https://overpass-api.de/api/interpreter",
+      "file": "melbourne-errol.json",
+      "query": {
+        "data": [
+          "[out:json][timeout:180];",
+          "way[\"highway\"][\"name\"=\"Errol Street\"](-37.8060,144.9488,-37.8000,144.9505)->.axis;",
+          ".axis out geom;",
+          "(",
+          "  nwr(around.axis:55)[\"shop\"];",
+          "  nwr(around.axis:55)[\"amenity\"];",
+          "  nwr(around.axis:55)[\"craft\"];",
+          "  nwr(around.axis:55)[\"office\"];",
+          "  nwr(around.axis:55)[\"tourism\"];",
+          "  nwr(around.axis:55)[\"leisure\"];",
+          "  nwr(around.axis:55)[\"healthcare\"];",
+          ");",
+          "out center tags;",
+          "way(around.axis:45)[\"building\"];",
+          "out center tags;"
+        ]
+      }
+    },
+    {
+      "url": "https://overpass-api.de/api/interpreter",
+      "file": "melbourne-macaulay.json",
+      "query": {
+        "data": [
+          "[out:json][timeout:180];",
+          "way[\"highway\"][\"name\"=\"Macaulay Road\"](-37.8010,144.9270,-37.7935,144.9445)->.axis;",
+          ".axis out geom;",
+          "(",
+          "  nwr(around.axis:55)[\"shop\"];",
+          "  nwr(around.axis:55)[\"amenity\"];",
+          "  nwr(around.axis:55)[\"craft\"];",
+          "  nwr(around.axis:55)[\"office\"];",
+          "  nwr(around.axis:55)[\"tourism\"];",
+          "  nwr(around.axis:55)[\"leisure\"];",
+          "  nwr(around.axis:55)[\"healthcare\"];",
+          ");",
+          "out center tags;",
+          "way(around.axis:45)[\"building\"];",
+          "out center tags;"
+        ]
+      }
+    }
+  ],
+  "mirrors": {
+    "https://overpass-api.de/api/": [
+      "https://overpass.kumi.systems/api/",
+      "https://overpass.private.coffee/api/"
+    ]
+  },
+  "parameters": {},
+  "profiles": {
+    "streets": {
+      "description": "The seven streets, a query each (Overpass answers each in 30 s to a few minutes; fetch again with --refresh to update)",
+      "parameters": {}
+    }
+  },
+  "default_profile": "streets"
+}

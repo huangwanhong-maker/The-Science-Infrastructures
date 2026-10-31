@@ -1,14 +1,14 @@
 # Gallery
 
-*Status: draft, 2026-10-28.*
+*Status: draft, 2026-10-31.*
 
-These are screenshots of the infrastructure's applications, the three atlases taken on 22 October 2026 from their local servers with the data of that day, the Spiking Simulator and the Complex Atlas on 23 October, the History Complex, the Genome Workbench and the Economy Atlas on 24 October, and Cosmopoiesis on 30 October.
+These are screenshots of the infrastructure's applications, the three atlases taken on 22 October 2026 from their local servers with the data of that day, the Spiking Simulator and the Complex Atlas on 23 October, the History Complex, the Genome Workbench and the Economy Atlas on 24 October, Cosmopoiesis on 30 October, and the Urban Building Workbench on 31 October.
 
 - All are web applications without a build step.
-- Their science is the provisional JavaScript of the domains they draw on, tested against published references and closed-form answers in 422 checks, and the C++ of the foundations and of the metrology, geodesy, astronomy, geophysics, meteorology, navigation, neuroscience, history, genomics, evolution and economics domains, checked the same way.
+- Their science is the provisional JavaScript of the domains they draw on, tested against published references and closed-form answers in 422 checks, and the C++ of the foundations and of the metrology, geodesy, astronomy, geophysics, meteorology, navigation, neuroscience, history, genomics, evolution, economics, robotics, planetary-science and urban-science domains, checked the same way.
 - Each caption says what is shown, where the data come from, and how the picture is made.
 
-Click an image to see it at full size. To run the applications yourself, see the READMEs of the [Earth Atlas](../applications/earth-atlas/README.md), the [Celestial Atlas](../applications/celestial-atlas/README.md), the [Brain Atlas](../applications/brain-atlas/README.md), the [Spiking Simulator](../applications/spiking-simulator/README.md), the [Complex Atlas](../applications/complex-atlas/README.md), the [History Complex](../applications/history-complex/README.md) and the [Genome Workbench](../applications/genome-workbench/README.md), the [Economy Atlas](../applications/economy-atlas/README.md) and [Cosmopoiesis](../applications/cosmopoiesis-lab/README.md).
+Click an image to see it at full size. To run the applications yourself, see the READMEs of the [Earth Atlas](../applications/earth-atlas/README.md), the [Celestial Atlas](../applications/celestial-atlas/README.md), the [Brain Atlas](../applications/brain-atlas/README.md), the [Spiking Simulator](../applications/spiking-simulator/README.md), the [Complex Atlas](../applications/complex-atlas/README.md), the [History Complex](../applications/history-complex/README.md) and the [Genome Workbench](../applications/genome-workbench/README.md), the [Economy Atlas](../applications/economy-atlas/README.md), [Cosmopoiesis](../applications/cosmopoiesis-lab/README.md) and the [Urban Building Workbench](../applications/urban-building-workbench/README.md).
 
 ## 1. The Earth Atlas
 
@@ -560,7 +560,26 @@ Three robots of the robotics domain, each a body with joints moved by three meth
 </tr>
 </table>
 
-## 10. Credits
+## 10. The Urban Building Workbench
+
+A three-dimensional GIS of Melbourne's centre, its streets read as a sea, after the user's *Street Oceanography* ([ADR 0060](../development/decisions/0060-streets-as-open-systems.md)). OpenStreetMap's 15,038 buildings stand lowered to a fifth of their height, so that the streets show between them, lit by the Sun of the clock's instant in Melbourne's time. The pedestrian counts are the City of Melbourne's, each way at 92 of its sensors since October 2024. The urban-science domain's C++ computes every number, in the workbench's engine.
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/urban-01-tide.jpg"><img src="../assets/gallery/urban-01-tide.jpg" alt="Melbourne's centre on a Thursday at 17:30, each sensor's street a channel of sea-glass water standing to its tide"></a><br><b>The tide on the streets</b>, Thursday 13 March 2025 at 17:30. Each sensor's block of street is a channel of water standing to the level of its walkers, one metre for every hundred an hour. The level is the street's tide: its counts fitted at the calendars' constituents (the week with its days, and the year) in civil time, here predicted for the hour; the deepest, at the station approaches, stand some 30 m. The legend says the day: 94 streets recorded, 16.4 mm of rain. As the clock runs the water rises and falls.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/urban-02-high-water.jpg"><img src="../assets/gallery/urban-02-high-water.jpg" alt="The time of high water on every street, by night: amber where the evening commute is highest, rose and plum where midday is"></a><br><b>When the water is high</b>, in the workbench's deep-sea night. The water stands at each street's weekday high water and is coloured by its hour on a cyclic map: amber where it comes at the evening commute, 16:30 to 18:30 (50 streets), rose and plum at midday, 11:30 to 14:30 (41 streets), as a port's establishment is the hour of its high water. By Courtier's form number, 72 of the 100 streets have a diurnal tide, one crest a day, 26 a mixed tide mainly diurnal, and 2 a mixed tide mainly semidiurnal.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/urban-03-currents.jpg"><img src="../assets/gallery/urban-03-currents.jpg" alt="Walkers each way in two lanes on a street at 08:30, coral toward the centre and sea blue away, with arrows of the net current"></a><br><b>Currents</b>, Wednesday 12 March 2025 at 08:30. A sensor that counts each way carries two lanes of walkers, those walking forward on the left. Each lane holds as many as walk there on average at that hour (N = λL/v, at 1.34 m/s), moving in real time. Coral walk toward the centre of the city's counts and sea blue away; the arrows are the net current, the morning flood running in. On 29 of 41 footpaths the residual current runs as left-hand traffic would (a sign test, p = 0.006).</td>
+<td width="50%" valign="top"><a href="../assets/gallery/urban-04-surge.jpg"><img src="../assets/gallery/urban-04-surge.jpg" alt="Christmas Day 2025 at 13:00: the water far below the dark tide marks floating at each street's prediction"></a><br><b>A surge</b>: Christmas Day 2025 at 13:00. The water stands at the count observed that hour, coloured by how far it lies from the tide (sea glass below, brick rose above), and a dark tide mark floats at the prediction. Most shops are shut and the centre is quiet: the water lies far below its marks. The calendars cannot predict a holiday, so it is the surge, as a storm surge is the sea's departure from its astronomical tide. 99 streets were recorded that day.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/urban-05-waves.jpg"><img src="../assets/gallery/urban-05-waves.jpg" alt="Swanston Street at 17:30 as a kinematic wave: walkers walking north queue before the crossings, the lamps at the crossings"></a><br><b>Waves on Swanston Street</b> (a model), 17:30. The crowd walking north from Flinders Street is a kinematic wave (Lighthill–Whitham–Richards by Godunov's scheme, physis), its blocks and nine crossings taken from the map, a signal at each of seven streets and none at the lanes. Walkers enter at the rate counted northward there, 1,681 an hour, 449 on the street. The engine keeps four minutes second by second; the page plays them, each walker moving at the model's speed, queuing before a red crossing and released at green.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/urban-06-tides-and-currents.jpg"><img src="../assets/gallery/urban-06-tides-and-currents.jpg" alt="The analysis of the city's tides and currents: the commuters' flood and ebb through the mean weekday, and the arrow of time on the streets"></a><br><b>The tides and currents of the city</b>, an analysis beside the map. The commuters' flood and ebb: the net current toward the centre summed over the counting lines through the mean weekday, and what the lines have taken in since 05:00, about 5,200 people by 17:00. Below it, the arrow of time on the streets: the walkers' entropy production, bounded below by the measured edges (Schnakenberg's edge terms, each non-negative), highest at 08:30 on weekdays when the commute runs one way.</td>
+</tr>
+</table>
+
+## 11. Credits
 
 The screenshots are the infrastructure's, under its MIT licence, except the three that show Pangu-Weather's forecasts (§1.3: earth-15, earth-16 and earth-17). Those are shared under CC BY-NC-SA 4.0, the licence of the model's parameters: for learning and research, not for commercial use. The data in all of them keep their own licences.
 
@@ -620,8 +639,12 @@ The screenshots are the infrastructure's, under its MIT licence, except the thre
 | The ground's classes | CRUST1.0 (Laske, Masters, Ma and Pasyanos 2013): where it has water, ice and sediments | Published model; cited |
 | The Moon's crustal field | T2015_449 (Wieczorek 2018, Zenodo 10.5281/zenodo.3873648), from the surface vector mapping of Tsunakawa et al. (2015) | CC BY 4.0 |
 | Space weather | NOAA SWPC: the real-time solar wind (DSCOVR, ACE), the planetary K index, GOES's X-rays and protons | Public domain; SWPC credited |
+| Pedestrian counts | City of Melbourne, Pedestrian Counting System (the archive of 2009–2022 and the live record since October 2024) | Counts: none stated, the City's open data CC BY 4.0; locations CC BY 4.0 |
+| Buildings, streets and spaces of a city | OpenStreetMap contributors, through Overpass | ODbL 1.0 |
+| Hourly weather | Open-Meteo, from ERA5 and the IFS | CC BY 4.0 |
+| Public holidays | Nager.Date | Free for private and non-profit use; cited |
 
-## 11. Making the Screenshots
+## 12. Making the Screenshots
 
 The screenshots were taken with headless Chrome at 1600 × 1000 pixels, driven over the DevTools protocol, and saved as JPEG.
 
@@ -635,6 +658,8 @@ http://127.0.0.1:8790/#p=globe&c=-32,36,3.25&s=wind.10m@gfs-forecast:speed&f=win
 - `c`: the longitude, latitude and distance of the view.
 - `s`, `f`, `l` and `m`: the surface, the flow, the lines, and the model compared.
 - `t`: the instant, in UTC.
+
+The Urban Building Workbench's pictures, at 1500 × 950 pixels, were taken from its local server in the same way, the clock's date and hour, the layers and the view set by a script in the page.
 
 The Spiking Simulator's pictures, at 1500 × 950 pixels, were taken in the same way, each from a link that opens an example, runs it and opens a view, for example `http://127.0.0.1:8830/#preset=brunel-si-fast&run=1&from=300&to=360`: `preset` names the example, `run=1` runs it, `tab` opens a view, `from` and `to` (in ms) the span of the activity shown, and `threads` the threads used. The runs are deterministic, so each picture comes back the same.
 

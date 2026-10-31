@@ -1,0 +1,60 @@
+{
+  "title": "The Urban Building Workbench's engine and records",
+  "about": "The plug-in Street Oceanography's C++ on the urban-science domain and the foundations, compiled with g++ 11 or later (natively or in WSL) into data/cache/engines/urban/; then the records: the City of Melbourne's pedestrian counts (the archive of 2009–2022, about 60 MB zipped, and the live two years), its sensors and its census of land use; Open-Meteo's hourly weather; Victoria's public holidays; OpenStreetMap's holdings with their opening hours along the named streets, and its buildings, ways and spaces for the 3D city model of Melbourne and Ginza; and the products built from them. Several minutes in all.",
+  "steps": [
+    {
+      "id": "engine",
+      "title": "The engine of Street Oceanography, compiled with g++",
+      "run": ["applications/urban-building-workbench/engine.py", "build"],
+      "done": "data/cache/engines/urban/street-oceanography/build.json"
+    },
+    {
+      "id": "melbourne-pedestrian-archive",
+      "title": "Melbourne's pedestrian counts, May 2009 – December 2022",
+      "run": ["data/acquisition/fetch.py", "melbourne-pedestrian-archive"],
+      "done": "data/cache/melbourne-pedestrian-archive/**/retrieval.json"
+    },
+    {
+      "id": "melbourne-pedestrian-counts",
+      "title": "Melbourne's pedestrian counts of the last two years, and its sensors",
+      "run": ["data/acquisition/fetch.py", "melbourne-pedestrian-counts"],
+      "done": "data/cache/melbourne-pedestrian-counts/**/retrieval.json"
+    },
+    {
+      "id": "melbourne-clue-establishments",
+      "title": "Melbourne's census of land use: businesses by year, use and place",
+      "run": ["data/acquisition/fetch.py", "melbourne-clue-establishments"],
+      "done": "data/cache/melbourne-clue-establishments/**/retrieval.json"
+    },
+    {
+      "id": "open-meteo-hourly",
+      "title": "Hourly weather at Melbourne's centre since 2009 (Open-Meteo)",
+      "run": ["data/acquisition/fetch.py", "open-meteo-hourly"],
+      "done": "data/cache/open-meteo-hourly/**/retrieval.json"
+    },
+    {
+      "id": "nager-holidays",
+      "title": "Victoria's public holidays (Nager.Date)",
+      "run": ["data/acquisition/fetch.py", "nager-holidays"],
+      "done": "data/cache/nager-holidays/**/retrieval.json"
+    },
+    {
+      "id": "osm-streets",
+      "title": "OpenStreetMap's holdings and opening hours along the named streets",
+      "run": ["data/acquisition/fetch.py", "osm-streets"],
+      "done": "data/cache/osm-streets/**/retrieval.json"
+    },
+    {
+      "id": "osm-city",
+      "title": "OpenStreetMap's buildings, ways and spaces of Melbourne and Ginza",
+      "run": ["data/acquisition/fetch.py", "osm-city"],
+      "done": "data/cache/osm-city/**/retrieval.json"
+    },
+    {
+      "id": "products",
+      "title": "The products: sensors and counts, weather, holidays, land use, holdings, the city model",
+      "run": ["data/products/street_records.py"],
+      "done": "data/cache/products/city-model.json"
+    }
+  ]
+}

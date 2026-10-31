@@ -15,7 +15,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
-const FOUNDATION_DEPENDS = { calx: [], morphe: [], physis: ['calx', 'morphe'] };
+const FOUNDATION_DEPENDS = { calx: [], morphe: [], physis: ['calx', 'morphe'], tyche: ['calx', 'morphe', 'physis'] };
 const module = (d) => JSON.parse(readFileSync(join(ROOT, 'domains', d, 'module.json'), 'utf8'));
 const all = readdirSync(join(ROOT, 'domains')).filter((d) => existsSync(join(ROOT, 'domains', d, 'module.json')));
 const asked = process.argv.slice(2).length ? process.argv.slice(2) : all;

@@ -1,0 +1,34 @@
+{
+  "id": "melbourne-pedestrian-counts",
+  "kind": "http",
+  "domain": "urban-science",
+  "title": "City of Melbourne Pedestrian Counting System: hourly counts of every sensor since 30 October 2024, and the sensors' locations",
+  "provider": "City of Melbourne, Open Data Platform (Opendatasoft Explore API v2.1): datasets pedestrian-counting-system-monthly-counts-per-hour and pedestrian-counting-system-sensor-locations",
+  "credit": "Pedestrian counts: City of Melbourne",
+  "licence": "Sensor locations: CC BY 4.0 (stated in the dataset's metadata). Hourly counts: the dataset's metadata states no licence (license null, checked 2026-10-30); its companion datasets (sensor locations, past-hour counts per minute) and the City of Melbourne's open data generally are CC BY 4.0, and the counts are used here on that understanding, attributed to the City of Melbourne, until the City confirms it.",
+  "citation": "City of Melbourne, Pedestrian Counting System (counts per hour), https://data.melbourne.vic.gov.au/explore/dataset/pedestrian-counting-system-monthly-counts-per-hour/; City of Melbourne, Pedestrian Counting System - Sensor Locations, https://data.melbourne.vic.gov.au/explore/dataset/pedestrian-counting-system-sensor-locations/",
+  "format": "CSV separated by semicolons, with a byte-order mark. counts.csv: location_id (the sensor), sensing_date (YYYY-MM-DD, Melbourne's civil date), hourday (the civil hour 0-23 at which the hour begins), direction_1 and direction_2 (counts in each direction), pedestriancount (their sum), sensor_name (the sensor's code), location (\"latitude, longitude\", WGS 84, which places the sensors that the locations dataset no longer lists). On the day daylight saving begins (the first Sunday of October) the hour 2 is absent; on the day it ends (the first Sunday of April) the hour 2 appears once, for a clock hour that occurs twice: its counts are those of about one hour, not of both (the ratio to the neighbouring hours is 1.10 and 1.26 in 2025 and 2026, against 0.92 on other Sundays; both hours would give about 1.8), and which of the two it is the dataset does not say. sensors.csv: location_id, sensor_description, sensor_name, installation_date, note, location_type (Outdoor, Indoor, ...), status (A active, I inactive, R removed), direction_1 and direction_2 (the directions counted), latitude, longitude (WGS 84).",
+  "coverage": "The live record: 30 October 2024 to the end of the last month the City has processed (2026-10-29 when registered), 102 sensors, about 1.6 million rows (about 100 MB). Earlier hours are the archive melbourne-pedestrian-archive, whose rows end on 31 October 2022 although its name says 14 December 2022; the City publishes no hours from 1 November 2022 to 29 October 2024. 134 sensor locations, all marked active: sensors removed earlier are not listed (two sensors of the live record, 28 and 78, are placed by their rows' location).",
+  "used_by": [
+    "data/products/street_records.py",
+    "applications/urban-building-workbench"
+  ],
+  "requests": [
+    {
+      "url": "https://data.melbourne.vic.gov.au/api/explore/v2.1/catalog/datasets/pedestrian-counting-system-monthly-counts-per-hour/exports/csv?select=location_id,sensing_date,hourday,direction_1,direction_2,pedestriancount,sensor_name,location",
+      "file": "counts.csv"
+    },
+    {
+      "url": "https://data.melbourne.vic.gov.au/api/explore/v2.1/catalog/datasets/pedestrian-counting-system-sensor-locations/exports/csv",
+      "file": "sensors.csv"
+    }
+  ],
+  "parameters": {},
+  "profiles": {
+    "current": {
+      "description": "Every sensor's hourly counts in the live record, and every sensor's location (fetch again with --refresh after the City's monthly update)",
+      "parameters": {}
+    }
+  },
+  "default_profile": "current"
+}

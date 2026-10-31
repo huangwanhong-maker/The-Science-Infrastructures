@@ -1,0 +1,22 @@
+{
+  "title": "Cultural analysis",
+  "summary": "The symbolic terrain: what a street displays and what is said of it, and how description shapes who comes next.",
+  "status": "planned",
+  "order": 4,
+  "views": [],
+  "planned": [
+    {
+      "title": "Display",
+      "about": "Shopfronts, signage, languages and register at each holding: the symbolic component of terrain (Street Oceanography §21), registered at the holding and kept apart from the physical and economic components."
+    },
+    {
+      "title": "Description and its circulation",
+      "about": "Guides, press and visitors' accounts, read as an output of the street and a determinant of its input: the most observable segment of the circuit §16 asks a claim of co-evolution to identify."
+    },
+    {
+      "title": "The record of manners",
+      "about": "A survey of passers-by at fixed positions, after Kon Wajirō's modernologio, as a baseline, and a protocol to repeat it on the same positions, with the conditions of its holding stated."
+    }
+  ],
+  "begins": "Begins when the urban-science domain gains its culture module; its first source would be the 1925 survey's published proportions."
+}

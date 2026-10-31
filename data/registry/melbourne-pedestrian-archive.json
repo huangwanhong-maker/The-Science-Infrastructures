@@ -1,0 +1,24 @@
+{
+  "id": "melbourne-pedestrian-archive",
+  "kind": "files",
+  "domain": "urban-science",
+  "title": "City of Melbourne Pedestrian Counting System: hourly counts of every sensor, May 2009 to October 2022 (the archive)",
+  "provider": "City of Melbourne, Open Data Platform: the attachment of the dataset pedestrian-counting-system-monthly-counts-per-hour",
+  "credit": "Pedestrian counts: City of Melbourne",
+  "licence": "The dataset's metadata states no licence (license null, checked 2026-10-30); the City of Melbourne's open data, including the sensors' locations, are CC BY 4.0, and the archive is used here on that understanding, attributed to the City of Melbourne, until the City confirms it.",
+  "citation": "City of Melbourne, Pedestrian Counting System (counts per hour), attachment Pedestrian_Counting_System_Monthly_counts_per_hour_may_2009_to_14_dec_2022.csv.zip (last modified 2024-08-15), https://data.melbourne.vic.gov.au/explore/dataset/pedestrian-counting-system-monthly-counts-per-hour/",
+  "format": "A zip archive of one CSV file of 423 MB (comma-separated, with a byte-order mark; and a __MACOSX resource file): ID, Date_Time (as 'November 01, 2019 05:00:00 PM', Melbourne's civil time), Year, Month (its name), Mdate, Day (its name), Time (the civil hour 0-23 at which the hour begins), Sensor_ID (the live record's location_id), Sensor_Name (the sensor's description), Hourly_Counts. One row a sensor and an hour, 4,562,230 rows. The hours are civil time throughout (the weekday profiles do not move at the changes of daylight saving). On the day daylight saving ends the hour 2 appears once, with the counts of about one hour (its ratio to the neighbouring hours is that of other Sundays), not of both. On the day it begins the hour 2 is absent in 2013-2017, present with counts in 2009-2012, and present as zero in 2018-2022: an hour the clock does not show. In September 2010 every hour of every sensor is stamped 00:00 (24 rows a day at hour 0), their order kept by the rows' IDs.",
+  "coverage": "1 May 2009 to 31 October 2022 (although the file's name says 14 December 2022), sensors 1-87, up to about 70 at a time; 42.7 MB zipped. Sensors removed before 2024 (such as 7 Birrarung Marr, 13 Flagstaff Station, 15 State Library) are here and in no locations dataset.",
+  "used_by": [
+    "data/products/street_records.py",
+    "applications/urban-building-workbench"
+  ],
+  "files": [
+    {
+      "url": "https://data.melbourne.vic.gov.au/api/explore/v2.1/catalog/datasets/pedestrian-counting-system-monthly-counts-per-hour/attachments/pedestrian_counting_system_monthly_counts_per_hour_may_2009_to_14_dec_2022_csv_zip",
+      "file": "pedestrian-counts-2009-2022.csv.zip",
+      "size": 42654028,
+      "sha256": "5fa1d8fd8a50b0b2eededb85149a541336c2cfe1ab53706a0dbb1e81a526bc8a"
+    }
+  ]
+}

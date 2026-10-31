@@ -1,0 +1,11 @@
+{
+  "name": "architecture",
+  "kind": "field",
+  "status": "planned",
+  "depends": [],
+  "foundations": [
+    "calx",
+    "morphe",
+    "physis"
+  ]
+}

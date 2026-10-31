@@ -1,0 +1,12 @@
+{
+  "name": "urban-science",
+  "kind": "field",
+  "status": "draft",
+  "depends": [],
+  "foundations": [
+    "calx",
+    "morphe",
+    "physis",
+    "tyche"
+  ]
+}

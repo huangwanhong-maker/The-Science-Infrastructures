@@ -74,6 +74,8 @@ python data/products/station_velocities.py
 python data/products/mechanism_catalog.py
 python data/products/crust_model.py
 python data/products/history_check.py domains/history/canons/europe-1785-1828.jsonl   # a canon's beings against Wikidata
+python data/acquisition/fetch.py melbourne-pedestrian-archive melbourne-pedestrian-counts melbourne-clue-establishments     open-meteo-hourly nager-holidays osm-streets osm-city                                # streets: counts, weather, holidays, uses, OpenStreetMap
+python data/products/street_records.py                           # the street records and the city model (--only sensors|counts|weather|holidays|terrain|holdings|city)
 ```
 
 The cache, `data/cache/`, is not under version control.
@@ -147,6 +149,7 @@ Products are written to `data/cache/products/` and listed by kind in `index.json
 | `currencies` | `currency_record.py` | Currencies month by month: the ECB's average rate against the euro and the BIS's policy rate at the end of the month (the euro's, the ECB's deposit facility rate), null where missing; the record of the economics domain's spacetime of currencies | `.json` |
 | `places` | `place_names.py` | Place names for searching a globe: the Earth's populated places and countries at their label points (Natural Earth 1:50m), and the Moon's features the IAU has adopted, with their type, diameter and gazetteer link (USGS Astrogeology), in the frames of each body | `.json` (`places/earth.json`, `places/moon.json`) |
 | `geoid` | `geoid_grid.py` | The EGM96 geoid at 15′, taken out of GeographicLib's archive, for heights above mean sea level (the terrain tiles and geodesy's C++). Not listed in the index. | `.pgm` and `.json` |
+| `streets` | `street_records.py` | Streets for the Urban Building Workbench: Melbourne's pedestrian sensors (`street-sensors`) and each sensor's hourly counts over every UTC hour, null where unrecorded, with Melbourne's offsets from UTC (`street-counts/<id>.json`, not listed one by one); hourly weather at the CBD (`street-weather-melbourne`); Victoria's public holidays (`street-holidays-victoria`); the CLUE establishments within 200 m of each sensor, by census year, with a use (`street-terrain-melbourne`); the holdings of six streets, five in Melbourne and a residential street in Tokyo, projected onto each street's axis, with their uses and opening hours as weekly intervals (`street-holdings`); and a city model of Melbourne's centre, buildings with heights, roads with widths and open spaces in local east-north metres (`city-model`) | `.json` |
 | `land-mask` | `land_mask.py` | Land and sea: Natural Earth's land at 1:50m rasterised at 20 pixels per degree and eroded by a pixel, the Caspian kept as land, for telling the sea from land below sea level. Not listed in the index. | `.png` and `.json` |
 
 ## 5. Datasets
@@ -216,6 +219,13 @@ Products are written to `data/cache/products/` and listed by kind in `index.json
 | `noaa-wmm` | files | NOAA NCEI and the British Geological Survey | The World Magnetic Model 2025: Gauss coefficients to degree 12 with their secular variation, NOAA's test values and the technical report |
 | `noaa-swpc` | http | NOAA Space Weather Prediction Center | Space weather in real time: the solar wind and interplanetary field at L1, the planetary K index, GOES's X-rays and energetic protons |
 | `moon-magnetic-t2015` | files | Tsunakawa et al. (2015), expanded by Wieczorek; Zenodo, CC BY 4.0 | The Moon's crustal magnetic field, T2015_449: an internal potential to degree 449 from Kaguya's and Lunar Prospector's magnetometers, in tesla on a sphere of 1737.4 km, decompressed on retrieval |
+| `melbourne-pedestrian-archive` | files | City of Melbourne (no licence stated; the City's open data CC BY 4.0) | Hourly pedestrian counts of every sensor, May 2009 to October 2022 |
+| `melbourne-pedestrian-counts` | http | City of Melbourne (counts: no licence stated; locations CC BY 4.0) | Hourly pedestrian counts since 30 October 2024, with directions, and the sensors' locations |
+| `melbourne-clue-establishments` | http | City of Melbourne, CLUE, CC BY 4.0 | Business establishments with address and ANZSIC class, every census year since 2002 |
+| `open-meteo-hourly` | http | Open-Meteo (CC BY 4.0), from ERA5 and the IFS | Hourly 2 m temperature, precipitation and 10 m wind at a place, from 2009 |
+| `nager-holidays` | http | Nager.Date (API for private and non-profit use) | Public holidays of a country and its states, by year |
+| `osm-streets` | http | OpenStreetMap contributors (ODbL), through Overpass | Six streets' ways, the premises along them with their opening_hours, and their buildings |
+| `osm-city` | http | OpenStreetMap contributors (ODbL), through Overpass | Buildings, roads and open spaces of Melbourne's centre, for a city model |
 
 ### 5.2 Planned
 

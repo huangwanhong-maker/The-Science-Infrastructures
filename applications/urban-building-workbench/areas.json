@@ -1,0 +1,22 @@
+{
+  "about": "The cities the workbench opens: an origin for the local frame (overridden by the city model's own origin when it is built), the civil time zone, and the first view: its tilt and heading (degrees) and the box it frames [south, west, north, east] (WGS 84).",
+  "areas": [
+    {
+      "id": "melbourne",
+      "name": "Melbourne",
+      "lat": -37.8105,
+      "lon": 144.9605,
+      "timezone": "Australia/Melbourne",
+      "view": {
+        "tilt": 42,
+        "heading": 20,
+        "box": [
+          -37.8205,
+          144.9535,
+          -37.8085,
+          144.9725
+        ]
+      }
+    }
+  ]
+}
