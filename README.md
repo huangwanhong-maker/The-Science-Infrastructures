@@ -83,6 +83,18 @@ An integrative infrastructure for learning, using and researching all domains of
 </p>
 <p align="center"><i>Cosmopoiesis: the Solar System as one world, from a crater's floor to the orbit of Pluto, on a console drawn as a precision instrument; its fields, the Earth's magnetic field, the Moon's crust and the Earth's interior, drawn in the world and read over a cube about any point; the ground saying where each of its heights comes from, the sea floor and the sea's temperature; the Earth beneath any place, to its centre, with the earthquakes of the sinking plates; any point written in one line and answered in every frame; and instruments, virtual and physical, each reading marked by whether it was observed, modelled or assimilated.</i></p>
 
+<p align="center">
+<a href="docs/gallery.md"><img src="assets/gallery/urban-01-tide.jpg" width="32%" alt="Melbourne's centre at 17:30, each sensor's street a channel of water standing to its tide, in the Urban Building Workbench"></a>
+<a href="docs/gallery.md"><img src="assets/gallery/urban-03-currents.jpg" width="32%" alt="Walkers each way on a street at 08:30, coral toward the centre and sea blue away, with the net current, in the Urban Building Workbench"></a>
+<a href="docs/gallery.md"><img src="assets/gallery/urban-05-waves.jpg" width="32%" alt="Swanston Street as a kinematic wave, walkers queuing before the crossings, in the Urban Building Workbench"></a>
+</p>
+<p align="center">
+<a href="docs/gallery.md"><img src="assets/gallery/urban-02-high-water.jpg" width="32%" alt="The hour of high water on every street, amber at the evening commute and rose at midday, by night, in the Urban Building Workbench"></a>
+<a href="docs/gallery.md"><img src="assets/gallery/urban-04-surge.jpg" width="32%" alt="Christmas Day 2025: the water far below the tide marks floating at each street's prediction, in the Urban Building Workbench"></a>
+<a href="docs/gallery.md"><img src="assets/gallery/urban-06-tides-and-currents.jpg" width="32%" alt="The commuters' flood and ebb, and the arrow of time on the streets, in the Urban Building Workbench"></a>
+</p>
+<p align="center"><i>The Urban Building Workbench: Melbourne in three dimensions, its streets read as a sea from the city's pedestrian counts: the tide each street's walkers rise and fall to, and its surge on a holiday; walkers each way at their true numbers; the waves of a crowd at the crossings of Swanston Street; and the city's tides and currents read together.</i></p>
+
 ## Quick Start
 
 **Online, with nothing to install.** The three atlases run on our online server; the Spiking Simulator, the Complex Atlas, the History Complex, the Genome Workbench and the Economy Atlas do not:
