@@ -49,20 +49,42 @@ struct MutationRates {
   std::size_t spacing = 2;
 };
 
+// Where a base of a haplotype (or of a rearranged chromosome) comes from on the reference: its
+// contig and position, whether it is read there on the reverse strand, and whether it was
+// inserted (novel, or the bases of a small insertion), in which case the position is that of
+// the reference base after it in the haplotype's direction.
+struct Locus {
+  std::uint32_t contig = 0;
+  std::size_t position = 0;
+  bool reverse = false;
+  bool inserted = false;
+};
+
 // Maps positions of a haplotype to the reference: blocks [hap, hap + length) aligned to
-// [ref, ref + length); inserted bases lie between blocks.
+// [ref, ref + length) of the reference contig `contig`, forward, or base for base reversed and
+// complemented when `reverse` (an inversion; a rearranged chromosome of simulate/structural.hpp);
+// inserted bases lie between blocks. A haplotype of mutate_diploid has forward blocks of its own
+// contig only.
 struct Liftover {
-  struct Block { std::size_t hap = 0, ref = 0, length = 0; };
+  struct Block {
+    std::size_t hap = 0, ref = 0, length = 0;
+    std::uint32_t contig = 0;
+    bool reverse = false;
+  };
   std::vector<Block> blocks;
   std::size_t hap_length = 0, ref_length = 0;
 
   // The reference position of a haplotype position; an inserted base maps to the reference
-  // base after the insertion.
-  std::size_t to_reference(std::size_t h) const {
+  // base after the insertion (for a reversed block, the base before it on the reference).
+  std::size_t to_reference(std::size_t h) const { return locate(h).position; }
+
+  // The locus of a haplotype position.
+  Locus locate(std::size_t h) const {
     auto it = std::upper_bound(blocks.begin(), blocks.end(), h, [](std::size_t x, const Block& b) { return x < b.hap; });
-    if (it == blocks.begin()) return 0;
+    if (it == blocks.begin()) return {blocks.empty() ? 0u : blocks.front().contig, 0, false, true};
     const Block& b = *std::prev(it);
-    return h < b.hap + b.length ? b.ref + (h - b.hap) : b.ref + b.length;
+    if (h < b.hap + b.length) return {b.contig, b.reverse ? b.ref + b.length - 1 - (h - b.hap) : b.ref + (h - b.hap), b.reverse, false};
+    return {b.contig, b.reverse ? (b.ref > 0 ? b.ref - 1 : 0) : b.ref + b.length, b.reverse, true};
   }
   static Liftover identity(std::size_t n) {
     Liftover l;

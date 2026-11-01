@@ -5,6 +5,11 @@ const SVG = 'http://www.w3.org/2000/svg';
 
 const PATHS = {
   // views
+  describe: '<path d="M3.5 18.5h17"/><path d="M5 15c0-4.5 2.8-7 7-7s7 2.5 7 7"/><path d="M8.6 15c0-2.3 1.3-3.6 3.4-3.6s3.4 1.3 3.4 3.6"/><circle cx="12" cy="5" r="1.2"/>',
+  structure: '<path d="M8.5 3.5c-1.6 3.2-1.6 5.6 2 8.5-3.6 2.9-3.6 5.3-2 8.5M15.5 3.5c1.6 3.2 1.6 5.6-2 8.5 3.6 2.9 3.6 5.3 2 8.5"/><path d="M7.6 7.5h3M13.4 16.5h3" stroke-width="2.4"/>',
+  tumour: '<circle cx="9" cy="9.5" r="4.2"/><circle cx="15.6" cy="13.2" r="4.4"/><circle cx="9.4" cy="17.4" r="2.6"/><circle cx="15.6" cy="13.2" r="1.3"/>',
+  regulation: '<path d="M3 18h18"/><path d="M7 18v-7.5h8.5"/><path d="m13.2 7.6 3 2.9-3 2.9"/><path d="M15 18v-2.4M18 18v-1.4"/>',
+  association: '<path d="M3.5 19.5h17"/><path d="M5.5 17.5v-2M7.5 17.5v-4M9.5 17.5v-1.5M11.5 17.5v-10M13.5 17.5v-3.5M15.5 17.5v-2M17.5 17.5v-5.5M19 17.5v-1"/>',
   genome: '<circle cx="12" cy="12" r="7.5"/><path d="M12 4.5a7.5 7.5 0 0 1 7.3 5.8"/><path d="M18.9 15a7.5 7.5 0 0 1-9.4 4" stroke-width="2.6"/><circle cx="12" cy="12" r="3"/>',
   align: '<path d="M4 7h4l2 3h4l2-3h4"/><path d="M4 17h5l1.5-2.5h3L15 17h5"/><path d="M8 7v10M16 7v10" stroke-dasharray="1.6 2"/>',
   index: '<path d="M5 4.5h10l4 4V19.5H5z"/><path d="M15 4.5v4h4"/><path d="M8.5 12h7M8.5 15h4"/><circle cx="16.5" cy="16.5" r="2.2"/><path d="m18.1 18.1 1.8 1.8"/>',

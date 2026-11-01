@@ -4,7 +4,9 @@
 # CMakeLists.txt and the target genomics::<module>, joining the build when it exists.
 #
 # The domain uses calx (lanes, task graphs, random streams, special functions, the report of
-# its checks) and morphe (words and their indexes, alignment over semirings, exact integers).
+# its checks), morphe (words and their indexes, alignment over semirings, exact integers,
+# grammars and their parsers), and from ADR 0064 physis and tyche (segmentation, penalised
+# regression, factorisation).
 # Inside The Science Infrastructures they are the sibling foundations, added here when no
 # larger project has added them.
 
@@ -39,6 +41,12 @@ endif()
 if(NOT TARGET morphe::check)
   add_subdirectory(${SCIENCE_FOUNDATIONS}/morphe ${CMAKE_CURRENT_BINARY_DIR}/morphe)
 endif()
+if(NOT TARGET physis::units)
+  add_subdirectory(${SCIENCE_FOUNDATIONS}/physis ${CMAKE_CURRENT_BINARY_DIR}/physis)
+endif()
+if(NOT TARGET tyche::time_series)
+  add_subdirectory(${SCIENCE_FOUNDATIONS}/tyche ${CMAKE_CURRENT_BINARY_DIR}/tyche)
+endif()
 if(GENOMICS_CHECKS)
   enable_testing()
 endif()
@@ -61,7 +69,7 @@ function(genomics_add_check name)
 endfunction()
 
 # The modules in their order (README §2).
-foreach(module sequence simulate kmers align index sketch mapping assembly variant hmm msa expression annotation grammar rna signal classify comparative)
+foreach(module sequence simulate kmers align index sketch mapping assembly variant hmm msa expression annotation grammar rna signal classify comparative nomenclature karyotype structural somatic codon regulation)
   if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${module}/CMakeLists.txt)
     add_subdirectory(${module})
   endif()

@@ -158,6 +158,9 @@ def genome_spec(value, toolchain: str) -> dict:
         return {"file": engine.path_for(toolchain, path)}
     if value in SIMULATED:
         return {"simulated": SIMULATED[value]["spec"]}
+    if value.startswith("data:") and "/" in value:
+        # a file of a dataset of the data library: data:<id>/<file>
+        return {"file": data_dir(value, toolchain)}
     if value.startswith("file:"):
         r = files.get(value)
         if r is None:
@@ -177,12 +180,52 @@ def file_param(value, toolchain: str):
     return value
 
 
+def data_path(value: str) -> Path:
+    """A dataset of the data library named data:<id>, or one of its files data:<id>/<file>: its path in
+    the cache, which must lie inside the dataset's directory and be fetched."""
+    name, _, rel = value[5:].partition("/")
+    if not name or not (ROOT / "data" / "registry" / f"{name}.json").exists():
+        raise ValueError(f"no dataset {name!r} in the data library's registry")
+    base = (ROOT / "data" / "cache" / name).resolve()
+    path = (base / rel).resolve() if rel else base
+    if path != base and base not in path.parents:
+        raise ValueError(f"{rel!r} lies outside the dataset {name}")
+    if not path.exists():
+        raise ValueError(f"{value[5:]} is not fetched yet: python data/acquisition/fetch.py {name}")
+    return path
+
+
+def data_dir(value: str, toolchain: str) -> str:
+    """A dataset or a file of one, named data:<id>[/<file>], as the engine reads it."""
+    return engine.path_for(toolchain, data_path(value))
+
+
+# The datasets some operations read, given to them when the page names none.
+OP_DATA = {"karyotype.": {"dir": "data:ncbi-ideogram"}}
+
+
 def translate(body: dict) -> dict:
-    """The request as the engine takes it: genomes named by id become specs; so do lists of them."""
+    """The request as the engine takes it: genomes named by id become specs; so do lists of them;
+    datasets named data:<id> become their directories in the cache."""
     toolchain = (engine.read_build() or {}).get("toolchain") or "native"
+    body = dict(body)
+    for prefix, defaults in OP_DATA.items():
+        if str(body.get("op", "")).startswith(prefix):
+            for k, v in defaults.items():
+                # only where fetched: an operation that needs it says so itself
+                if (ROOT / "data" / "cache" / v[5:]).exists():
+                    body.setdefault(k, v)
     out = dict(body)
-    if "genome" in body:
-        out["genome"] = genome_spec(body["genome"], toolchain)
+    for k, v in body.items():
+        if k not in ("genome", "genomes", "host") and isinstance(v, str) and v.startswith("data:"):
+            out[k] = data_dir(v, toolchain)
+            out["_local"] = True  # this computer's cache: the local workers read it
+        elif k not in ("genome", "host") and isinstance(v, dict) and isinstance(v.get("file"), str) and v["file"].startswith("data:"):
+            out[k] = {**v, "file": data_dir(v["file"], toolchain)}  # a file given as {file}, as some operations take it
+            out["_local"] = True
+    for k in ("genome", "host"):  # a phage's host is a genome too
+        if k in body:
+            out[k] = genome_spec(body[k], toolchain)
     if isinstance(body.get("genomes"), list):
         out["genomes"] = [{"id": g if isinstance(g, str) else None, **genome_spec(g, toolchain)} for g in body["genomes"]]
     # Files of the library named by id, in parameters named for them (reads_file, vcf_file, files ...).

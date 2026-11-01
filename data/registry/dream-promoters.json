@@ -1,0 +1,23 @@
+{
+  "id": "dream-promoters",
+  "domain": "genomics",
+  "title": "The Random Promoter DREAM Challenge 2022's test set: 71,103 promoter sequences of 110 bases (80 random or designed bases between fixed flanks) with their expression measured in yeast (Saccharomyces cerevisiae) by sorting and sequencing, estimated with MAUDE",
+  "provider": "de Boer lab (University of British Columbia) and the DREAM Challenges; Rafi et al., Nature Biotechnology (2025), data on Zenodo, record 10633252",
+  "credit": "Promoter expression: Random Promoter DREAM Challenge (Rafi et al. 2025)",
+  "files": [
+    {
+      "url": "https://zenodo.org/records/10633252/files/filtered_test_data_with_MAUDE_expression.txt?download=1",
+      "file": "filtered_test_data_with_MAUDE_expression.txt",
+      "size": 9184998,
+      "sha256": "fe5a96c98caabd95b82af24ad6ca1932e02ed30551a94cc4f6c3d37f718272c8"
+    }
+  ],
+  "format": "Text, one promoter per line: the sequence (110 bases: the flank TGCATTTTTTTCACATC, 80 variable bases, the flank GGTTACGGCTGTT) and its expression, tab-separated. The expression is MAUDE's estimate from sorting cells into bins by a fluorescent reporter, a log-scale value (from -1.40 to 1.66 in this file; mean 0.16, standard deviation 0.75). The test set mixes random sequences, native yeast promoters, designed sequences of high and low expression, single-nucleotide variants of them and motif perturbations (the challenge's subsets, which this file does not label), so that many sequences are near copies of others: a model's held-out evaluation must keep such families on one side of the split.",
+  "coverage": "71,103 sequences, the challenge's filtered test set (training data, 6.7 million sequences in train.txt of the same record, not fetched)",
+  "licence": "Creative Commons Attribution 4.0 International (CC BY 4.0), as the Zenodo record states.",
+  "citation": "Rafi, A. M., Nogina, D., Penzar, D., Lee, D., Lee, D., Kim, N., Kim, S., Kim, D., Shin, Y., Kwak, I.-Y., Meshcheryakov, G., Lando, A., Zinkevich, A., Kim, B.-C., Lee, J., Kang, T., Vaishnav, E. D., Yadollahpour, P., Random Promoter DREAM Challenge Consortium, Kim, S., Albrecht, J., Regev, A., Gong, W., Kulakovskiy, I. V., Meyer, P. and de Boer, C. G. (2025), A community effort to optimize sequence-based deep learning models of gene regulation, Nature Biotechnology 43, 1373-1383, doi:10.1038/s41587-024-02414-w; data: doi:10.5281/zenodo.10633252.",
+  "used_by": [
+    "domains/genomics (regulation: sequence-to-expression models learnt from data, and their checks)",
+    "applications/genome-workbench"
+  ]
+}

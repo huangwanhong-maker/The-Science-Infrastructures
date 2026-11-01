@@ -48,9 +48,11 @@ def units() -> list[Path]:
 
 
 def include_dirs() -> list[Path]:
-    """The include directories: the two domains' modules, morphe's and calx's, the API's C++, the engine's own."""
+    """The include directories: the two domains' modules, morphe's, calx's, physis's and tyche's, the API's C++,
+    the engine's own."""
     dirs: list[Path] = []
     for pattern in ("domains/genomics/*/include", "domains/evolution/*/include", "foundations/morphe/*/include",
+                    "foundations/physis/*/include", "foundations/tyche/*/include",
                     "foundations/calx/numerics/*/include", "foundations/calx/compute/*/include",
                     "foundations/calx/compute/backends/*/include"):
         dirs += sorted(p for p in ROOT.glob(pattern) if p.is_dir())

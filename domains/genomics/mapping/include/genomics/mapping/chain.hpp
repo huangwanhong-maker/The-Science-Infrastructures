@@ -244,7 +244,17 @@ inline std::int64_t overlap(std::int64_t a, std::int64_t b, std::int64_t c, std:
 // sets each primary's f₂ and mapping quality, and drops the fragments and the secondaries not
 // kept. The first chain
 // left is the best primary; the others follow in decreasing score.
-inline void select_chains(std::vector<Chain>& chains, const ChainOptions& o = {}) {
+// `read_length` > 0: the query intervals of chains on the two strands are compared in the read's
+// own coordinates (a reverse chain's [b, e) on the reverse complement is [L − e, L − b) of the read),
+// so that the two parts of a read across an inversion junction, one on each strand, are a primary
+// and a supplementary part rather than rivals (minimap2 compares them on the read; ADR 0064's
+// structural module needs them). With 0 the intervals are compared as they are, on the strand mapped.
+inline void select_chains(std::vector<Chain>& chains, const ChainOptions& o = {}, std::int64_t read_length = 0) {
+  const auto read_interval = [&](const Chain& c, std::int64_t& b, std::int64_t& e) {
+    b = c.query_begin;
+    e = c.query_end;
+    if (read_length > 0 && c.reverse) { b = read_length - c.query_end; e = read_length - c.query_begin; }
+  };
   std::vector<std::size_t> primaries, earlier;
   std::vector<char> fragment(chains.size(), 0);
   for (std::size_t c = 0; c < chains.size(); c++) {
@@ -265,7 +275,10 @@ inline void select_chains(std::vector<Chain>& chains, const ChainOptions& o = {}
     earlier.push_back(c);
     for (const std::size_t p : primaries) {
       Chain& y = chains[p];
-      const std::int64_t ov = overlap(x.query_begin, x.query_end, y.query_begin, y.query_end);
+      std::int64_t xb, xe, yb, ye;
+      read_interval(x, xb, xe);
+      read_interval(y, yb, ye);
+      const std::int64_t ov = overlap(xb, xe, yb, ye);
       const std::int64_t shorter = std::min(x.query_end - x.query_begin, y.query_end - y.query_begin);
       if (static_cast<double>(ov) >= o.mask_level * static_cast<double>(shorter)) {
         x.primary = false;

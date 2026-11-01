@@ -48,7 +48,7 @@ function(evolution_add_check name)
 endfunction()
 
 # The modules in their order (README §2).
-foreach(module phylogeny population haplotypes selection)
+foreach(module phylogeny population haplotypes selection association)
   if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${module}/CMakeLists.txt)
     add_subdirectory(${module})
   endif()

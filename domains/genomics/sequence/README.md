@@ -20,6 +20,7 @@
 | [`genbank.hpp`](include/genomics/sequence/genbank.hpp) | GenBank records: LOCUS, DEFINITION, lineage, features with their qualifiers, ORIGIN; locations by recursive descent (join, order, complement, partial ends, sites between bases, remote parts); extraction and `translate_cds` |
 | [`kmer.hpp`](include/genomics/sequence/kmer.hpp) | k-mers ≤ 32, their reverse complements and canonical forms; minimap2's hash64; ntHash for any k; (w, k)-minimizers; closed and open syncmers |
 | [`composition.hpp`](include/genomics/sequence/composition.hpp) | Base counts, GC in windows, GC skew and its cumulative sum (origin and terminus), CpG observed/expected, k-mer entropy, codon counts, RSCU, Wright's effective number of codons |
+| [`contexts.hpp`](include/genomics/sequence/contexts.hpp) | The classes of substitutions as mutational catalogues count them, orbits of the strand group: SBS-96 (pyrimidine-centred trinucleotides; index by type, then 5′ and 3′ base; names "A[C>A]A"; SigProfilerMatrixGenerator's lexicographic order) and DBS-78 (doublets, SigProfilerMatrixGenerator 1.4.0's representatives) (ADR 0064) |
 
 ## 3. Dependencies
 
@@ -41,6 +42,7 @@ None in the infrastructure; the checks use calx (`verification`, `random`).
 | GenBank | A circular genome written by the check, with genes across the origin, on the complement strand and from GTG, read whole and translated as its `/translation`; and, with the data cache, **every CDS of the fourteen RefSeq genomes of `ncbi-genomes` (4,522 proteins, the three selenoproteins of *E. coli* among them) translated exactly as RefSeq's own `/translation`** |
 | k-mers | Encoding, reverse complements and canonical forms for k = 1 to 32; every k-mer free of N visited once; hash64 a bijection for k ≤ 8; ntHash rolled against ntHash computed, k = 1 to 100, and its canonical value strand-symmetric |
 | minimizers, syncmers | Against their definitions by brute force (ties, palindromes, runs of N); mirrored on the reverse strand; densities 2/(w + 1), 2/(k − s + 1) and 1/(k − s + 1) on a random megabase |
+| contexts (`check_genomics_contexts`) | SBS-96: every one of the 192 directed trinucleotide substitutions in a class, the same on both strands, two per class; names, the lexicographic permutation; DBS-78: the 144 directed doublets in 78 classes, 12 of them fixed by the strand group and 66 pairs; the 78 names and the 96 in SigProfilerMatrixGenerator 1.4.0's matrix order (the fixture `somatic-classes.txt`) |
 
 ## 5. References
 

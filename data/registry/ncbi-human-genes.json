@@ -1,0 +1,71 @@
+{
+  "id": "ncbi-human-genes",
+  "domain": "genomics",
+  "title": "Three human genes as GenBank records from NCBI RefSeq: the regions of GRCh38 around HBB (chromosome 11, minus strand), CFTR (chromosome 7, plus strand) and BRCA1 (chromosome 17, minus strand), with every RefSeq transcript annotated on them, and the MANE Select mRNAs of the three genes",
+  "provider": "National Center for Biotechnology Information (NCBI), RefSeq, through the E-utilities (efetch)",
+  "credit": "Genes: NCBI RefSeq, GRCh38.p14",
+  "format": "GenBank flat files (NCBI, GenBank Release Notes §3.4), with the full sequence (rettype=gbwithparts). A region of a chromosome (seq_start, seq_stop) is a record whose bases and features are numbered from the region's first base: its base i is base i + offset of the chromosome (offset = seq_start - 1), and its VERSION names the chromosome's accession (NC_000011.10, NC_000007.14, NC_000017.11). The offsets are given with each file (offset).",
+  "coverage": "HBB: NC_000011.10 5,222,001-5,232,000 (10 kb, the gene 5,225,464-5,227,071 on the minus strand, transcript NM_000518.5); CFTR: NC_000007.14 117,479,001-117,670,000 (191 kb, the gene 117,480,025-117,668,665 on the plus strand, NM_000492.4 and two NR_ transcripts); BRCA1: NC_000017.11 43,043,001-43,172,000 (129 kb, the gene 43,044,295-43,170,327 on the minus strand with its RefSeq isoforms, NM_007294.4 among them, and NBR2 on the plus strand); the mRNAs NM_000518.5, NM_000492.4 and NM_007294.4.",
+  "licence": "NCBI places no restrictions on the use or distribution of the GenBank and RefSeq data (https://www.ncbi.nlm.nih.gov/home/about/policies/); submitters may hold rights in some records, so the files are fetched into the cache and not redistributed.",
+  "citation": "O'Leary, N. A. et al. (2016), Reference sequence (RefSeq) database at NCBI: current status, taxonomic expansion, and functional annotation, Nucleic Acids Research 44, D733-D745; Morales, J. et al. (2022), A joint NCBI and EMBL-EBI transcript set for clinical genomics and research (MANE), Nature 604, 310-315; Schneider, V. A. et al. (2017), Evaluation of GRCh38 and de novo haploid genome assemblies demonstrates the enduring quality of the reference assembly, Genome Research 27, 849-864.",
+  "used_by": [
+    "domains/genomics/nomenclature (HGVS descriptions projected through transcripts to proteins, checked against Mutalyzer and NCBI's Variation Services)",
+    "applications/genome-workbench"
+  ],
+  "files": [
+    {
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_000011.10&seq_start=5222001&seq_stop=5232000&rettype=gbwithparts&retmode=text",
+      "file": "NC_000011.10_5222001-5232000.gb",
+      "title": "Homo sapiens chromosome 11 (GRCh38.p14), 5,222,001-5,232,000: HBB",
+      "accession": "NC_000011.10",
+      "offset": 5222000,
+      "size": 64160,
+      "sha256": "ea502701b3d0f07d133ed336d6eb4cb4be3d1fcf47081f5e88f42c3550f9dc25"
+    },
+    {
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_000007.14&seq_start=117479001&seq_stop=117670000&rettype=gbwithparts&retmode=text",
+      "file": "NC_000007.14_117479001-117670000.gb",
+      "title": "Homo sapiens chromosome 7 (GRCh38.p14), 117,479,001-117,670,000: CFTR",
+      "accession": "NC_000007.14",
+      "offset": 117479000,
+      "size": 345589,
+      "sha256": "d2de950166d7b60a3040614bd718e1fd3efe949c66cf8eca4fe02927d4ccecda"
+    },
+    {
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_000017.11&seq_start=43043001&seq_stop=43172000&rettype=gbwithparts&retmode=text",
+      "file": "NC_000017.11_43043001-43172000.gb",
+      "title": "Homo sapiens chromosome 17 (GRCh38.p14), 43,043,001-43,172,000: BRCA1 and NBR2",
+      "accession": "NC_000017.11",
+      "offset": 43043000,
+      "size": 2838925,
+      "sha256": "f42bf1cce9d5bc20ef3231f90a3e9caa612f57f75a9b7e91d08b72e22628e1b1"
+    },
+    {
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NM_000518.5&rettype=gbwithparts&retmode=text",
+      "file": "NM_000518.5.gb",
+      "title": "Homo sapiens hemoglobin subunit beta (HBB), mRNA, MANE Select",
+      "accession": "NM_000518.5",
+      "offset": 0,
+      "size": 22705,
+      "sha256": "c114b998f526a13ce7029a484f7d2679de9bc9f50a533d6e86ce5e644ca6c5d9"
+    },
+    {
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NM_000492.4&rettype=gbwithparts&retmode=text",
+      "file": "NM_000492.4.gb",
+      "title": "Homo sapiens CF transmembrane conductance regulator (CFTR), mRNA, MANE Select",
+      "accession": "NM_000492.4",
+      "offset": 0,
+      "size": 37663,
+      "sha256": "77092e44bcbf9c23702a4e8174f37b550fe55b9926ea4c9c3981522cf5b3ad11"
+    },
+    {
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NM_007294.4&rettype=gbwithparts&retmode=text",
+      "file": "NM_007294.4.gb",
+      "title": "Homo sapiens BRCA1 DNA repair associated (BRCA1), transcript variant 1, mRNA, MANE Select",
+      "accession": "NM_007294.4",
+      "offset": 0,
+      "size": 42328,
+      "sha256": "511a93a2f163f0155883b818d94cd483b48acfa8873ce8521096c05cfc3345a0"
+    }
+  ]
+}

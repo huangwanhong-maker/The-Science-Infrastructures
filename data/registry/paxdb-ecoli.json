@@ -1,0 +1,23 @@
+{
+  "id": "paxdb-ecoli",
+  "domain": "genomics",
+  "title": "Protein abundances of Escherichia coli K-12 MG1655, PaxDb's integrated whole-organism dataset (version 6.0): the weighted average of its experiments, in parts per million of the proteome's molecules",
+  "provider": "PaxDb, the Protein Abundances Across Organisms database (Swiss Institute of Bioinformatics and University of Zurich)",
+  "credit": "Protein abundances: PaxDb 6.0",
+  "files": [
+    {
+      "url": "https://pax-db.org/downloads/6.0/datasets/511145/511145-WHOLE_ORGANISM-integrated.txt",
+      "file": "511145-WHOLE_ORGANISM-integrated.txt",
+      "size": 95046,
+      "sha256": "685c34689ff17bc17a7652f3bc2cf2f9b91844de10d8b14c4880d4f0cbd91bc0"
+    }
+  ],
+  "format": "Text. A header of lines '#key: value' (#name, #score 19.7, #coverage 99, #weights: the weight of each experiment in the average, #publication_year 2025), then tab-separated rows gene_name, string_external_id ('511145.' and the Blattner b-number, which RefSeq's NC_000913.3 gives as /locus_tag) and abundance in parts per million.",
+  "coverage": "The proteome of E. coli K-12 MG1655 (NCBI taxon 511145), whole organism, 99% of its proteins",
+  "licence": "Creative Commons Attribution 4.0 International (CC BY 4.0): 'Creative Commons Attribution 4.0 International (CC BY 4.0) applies to all content of PaxDb resource' (the Data Availability statements of Huang et al. 2023, Mol. Cell. Proteomics 22, 100640, and of Huang et al. 2026, Nucleic Acids Research 54, D427-D439). Credit PaxDb and its sources.",
+  "citation": "Huang, Q., Szklarczyk, D., Oehninger, J. and von Mering, C. (2026), PaxDb v6.0: reprocessed, LLM-selected, curated protein abundance data across organisms, Nucleic Acids Research 54, D427-D439, doi:10.1093/nar/gkaf1066; Wang, M., Herrmann, C. J., Simonovic, M., Szklarczyk, D. and von Mering, C. (2015), Version 4.0 of PaxDb: protein abundance data, integrated across model organisms, tissues, and cell-lines, Proteomics 15, 3163-3168.",
+  "used_by": [
+    "domains/genomics (codon: the agreement of codon usage indices with measured protein abundance, and its checks)",
+    "applications/genome-workbench"
+  ]
+}

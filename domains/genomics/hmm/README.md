@@ -16,6 +16,7 @@
 | Header | Content |
 |---|---|
 | [`model.hpp`](include/genomics/hmm/model.hpp) | `Model` (S states, K symbols, initial, transition, emission, optional end); `path_sum<Tropical \| LogSum>`; `viterbi`, `path_log_probability`; `forward`, `backward`, `log_likelihood` (scaled); `posterior`, `posterior_decode`; `baum_welch` with pseudocounts, partial re-estimation and a thread pool; `sample`, `sample_to_end` |
+| [`chain.hpp`](include/genomics/hmm/chain.hpp) | `Chain` (S states, T steps): log initial probabilities, emissions given step by step, transitions per step or one matrix; `viterbi`, `log_forward`, `log_backward`, `log_likelihood`, `posterior`, `path_log_probability` in the log semiring; `chain_of(model, x)` (a symbol model read step by step). The HMMs of observations that are not symbols, at uneven distances: bcftools roh's (genomics::structural) |
 | [`cpg.hpp`](include/genomics/hmm/cpg.hpp) | Durbin et al.'s + and − chains (p. 50), their log-odds table β, `log_odds` of a window and in windows, `estimate_chain`; the eight-state `cpg_model`; `cpg_islands` by Viterbi or posterior decoding, each island with its log-odds, GC and CpG o/e |
 | [`profile.hpp`](include/genomics/hmm/profile.hpp) | `Profile` (match, insert, delete states; nine transitions a node); `build_profile` from an alignment by the 50% rule with Laplace or background pseudocounts and optional weights; `profile_viterbi`, `profile_forward` (scaled), `profile_forward_log` (the reference) in global, glocal and local modes, in bits; `align_to_profile` with the A2M row and inserts; `profile_path_score` |
 
@@ -25,11 +26,12 @@
 
 ## 4. Checks
 
-`check_genomics_hmm_model`, `check_genomics_hmm_cpg`, `check_genomics_hmm_profile`:
+`check_genomics_hmm_model`, `check_genomics_hmm_chain`, `check_genomics_hmm_cpg`, `check_genomics_hmm_profile`:
 
 | Check | What it verifies |
 |---|---|
 | model | Viterbi, forward, backward and posteriors against the enumeration of every path of 3-state models (with and without an end, with structural zeros, with a missing symbol); scaling against the log semiring on 20 000 symbols; Baum–Welch: the likelihood (no pseudocounts) and the log posterior (pseudocounts) never decrease, the optimum at least as likely as the truth, parameters within 5 standard errors, zeros kept, one thread equal to four; the end probability recovered; sample frequencies |
+| chain | On a chain of 3 states and 7 steps with a transition matrix per step, Viterbi, the forward and backward likelihoods and the posteriors equal the enumeration of its 2187 paths (to 10⁻¹²); scaling a step's emissions leaves the posteriors and path and shifts the likelihood by its log; a symbol model's chain gives model.hpp's Viterbi path, likelihood and posteriors on 3000 symbols with a missing one |
 | cpg | The chains' rows; the log-odds equal to the book's table β (p. 51) to 0.006 bits; the eight-state model valid with the sojourns asked; a chain re-estimated from its samples; islands drawn from the model found in 600 kb (base-level Sn 0.987, Sp 0.988; 32 of 34 islands) by Viterbi and by posterior decoding |
 | profile | Durbin et al.'s globin alignment (Figure 5.3): eight match columns, emissions and transitions by Laplace's rule worked by hand; Viterbi and forward (scaled and log) against every path of a small profile in three modes; alignments rescoring to their scores; a simulated family: held-out members above shuffled sequences by more than 40 bits, 94% of residues aligned to their true match states; the scaled forward equal to the log one on 20 kb |
 

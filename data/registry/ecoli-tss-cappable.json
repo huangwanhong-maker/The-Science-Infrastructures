@@ -1,0 +1,29 @@
+{
+  "id": "ecoli-tss-cappable",
+  "domain": "genomics",
+  "title": "Transcription start sites of Escherichia coli K-12 MG1655 at single-base resolution by Cappable-seq (16,359 sites, grown in M9 minimal medium with glucose), with the genome sequence their coordinates refer to (U00096.2)",
+  "provider": "Ettwiller, Buswell, Yigit and Schildkraut (New England Biolabs), BMC Genomics 17, 199 (2016), Additional file 1; the genome from NCBI GenBank through the E-utilities (efetch)",
+  "credit": "Transcription start sites: Ettwiller et al. 2016 (Cappable-seq)",
+  "files": [
+    {
+      "url": "https://static-content.springer.com/esm/art%3A10.1186%2Fs12864-016-2539-z/MediaObjects/12864_2016_2539_MOESM1_ESM.gtf",
+      "file": "ettwiller-2016-tss.gtf",
+      "size": 2057154,
+      "sha256": "c17fdf501add8e8ea5727ced3b5fd266bcf1c75a44736215c87bd701d985f786"
+    },
+    {
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=U00096.2&rettype=fasta&retmode=text",
+      "file": "U00096.2.fasta",
+      "size": 4706027,
+      "sha256": "73c7f2fe4d16bfb9856172d53a77f2651ea0c597d3c71c1196e58bc7ec35c8fe"
+    }
+  ],
+  "format": "ettwiller-2016-tss.gtf: GTF-like, tab-separated, one site per line: the sequence (gi|48994873|gb|U00096.2|), the source CAPPABLE_SEQ, the type TSS, start = end = the site (1-based), the relative read score (RRS, the site's reads per million against the region's), the strand, '.', and an identifier. U00096.2.fasta: the genome the sites are placed on (4,639,675 bp), the version before NC_000913.3's corrections, so that the sites' windows are read without a liftover.",
+  "coverage": "The whole genome, both strands; sites with RRS of at least 1.5 (the paper's threshold)",
+  "licence": "The article and its additional files: Creative Commons Attribution 4.0 International (CC BY 4.0), (c) Ettwiller et al. 2016; the genome: NCBI places no restrictions on the use or distribution of GenBank data (https://www.ncbi.nlm.nih.gov/home/about/policies/).",
+  "citation": "Ettwiller, L., Buswell, J., Yigit, E. and Schildkraut, I. (2016), A novel enrichment strategy reveals unprecedented number of novel transcription start sites at single base resolution in a model prokaryote and the gut microbiome, BMC Genomics 17, 199, doi:10.1186/s12864-016-2539-z; Blattner, F. R. et al. (1997), The complete genome sequence of Escherichia coli K-12, Science 277, 1453-1462.",
+  "used_by": [
+    "domains/genomics (regulation: sigma-70 promoter models learnt from transcription start sites, and their checks)",
+    "applications/genome-workbench"
+  ]
+}

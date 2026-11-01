@@ -1,12 +1,13 @@
 # The Landscape of Genome Analysis: a Survey of Its Algorithms, and What the Domains Hold
 
-*Status: draft, 2026-10-24.*
+*Status: draft, 2026-10-24; revised 2026-11-01 for [ADR 0064](../../../development/decisions/0064-abnormal-genomes-their-description-and-expression.md).*
 
-This survey serves learning and planning. It maps the problems of genome analysis to the algorithms that solve them, classical and advanced, with their primary sources. It says what the genomics and evolution domains and the foundations under them already hold, what was added in response to the user's request of 24 October 2026 ([ADR 0047](../../../development/decisions/0047-group-grammars-and-advanced-genome-analysis.md)), and what is planned.
+This survey serves learning and planning. It maps the problems of genome analysis to the algorithms that solve them, classical and advanced, with their primary sources. It says what the genomics and evolution domains and the foundations under them already hold, what was added in response to the user's request of 24 October 2026 ([ADR 0047](../../../development/decisions/0047-group-grammars-and-advanced-genome-analysis.md)) and in response to their request of 1 November 2026 for abnormal genomes, their international description and the prediction of expression (ADR 0064, sections 10–12), and what is planned.
 
 **Status words.** Every entry has one of these:
 - **held**: implemented and checked;
-- **added**: implemented in this round;
+- **added**: implemented in the round of ADR 0047;
+- **added (0064)**: implemented in the round of ADR 0064;
 - **planned**: named here, not yet written.
 
 **Placement.** Follows the repository's reuse rule:
@@ -62,7 +63,7 @@ This survey serves learning and planning. It maps the problems of genome analysi
 | Read mapping | minimizer seeds, chaining, base-level extension, mapping qualities | Li 2018 | genomics `mapping` | held |
 | | mapping to graphs (sequence-to-graph alignment) | Jain et al. 2020 | — | planned |
 | Small variants | pileups, genotype likelihoods of a diploid, normalisation of indels | Li 2011; Tan, Abecasis and Kang 2015 | genomics `variant` | held |
-| Structural variants, copy number | split reads, discordant pairs, depth HMMs | — | — | planned |
+| Structural variants, copy number | discordant pairs and split reads clustered into breakpoints with LUMPY's probability intervals; SVTyper's genotypes; read depth corrected for GC and mappability, segmented by PELT; runs of homozygosity by bcftools roh's HMM | Rausch et al. 2012; Layer et al. 2014; Chiang et al. 2015; Benjamini and Speed 2012; Killick et al. 2012; Narasimhan et al. 2016 | genomics `structural`; tyche `time_series` for the segmentation | added (0064) |
 | Haplotypes | Li and Stephens's copying model: forward–backward in O(NK), imputation, phasing | Li and Stephens 2003 | evolution `haplotypes` | added |
 | Selection from haplotypes | EHH and iHS | Sabeti et al. 2002; Voight et al. 2006 | evolution `haplotypes` | added |
 
@@ -96,6 +97,9 @@ This survey serves learning and planning. It maps the problems of genome analysi
 | Islands, repeats, motifs | the CpG HMM; maximal repeats; PWMs, motif discovery by Gibbs sampling and EM | Durbin et al. 1998; Gusfield 1997; Lawrence et al. 1993; Bailey and Elkan 1994; Stormo 2000 | genomics `hmm`, `annotation` | held |
 | Profile HMMs | — | Krogh et al. 1994; Eddy 1998 | genomics `hmm` | held |
 | Expression | pseudoalignment by equivalence classes and EM; differential expression | Bray et al. 2016; Li and Dewey 2011 | genomics `expression` | held |
+| Expression from codons | CAI, tAI and stAI, ENC (Wright; Sun et al.), Fop, MILC, Karlin's E(g) and PHX genes, dos Reis's S value; held against measured protein abundance (PaxDb) | Sharp and Li 1987; dos Reis et al. 2004; Sabi and Tuller 2014; Wright 1990; Sun, Yang and Xia 2013; Karlin and Mrázek 2000 | genomics `codon` | added (0064) |
+| Expression from regulatory sequence | σ70's two boxes and spacer learnt by EM from measured start sites; thermodynamic occupancy (Bintu et al.); k-mer and gapped k-mer elastic nets; a convolutional network whose filters are read back as motifs, on the DREAM Challenge's promoters | Shea and Ackers 1985; Bintu et al. 2005; Ghandi et al. 2014; Alipanahi et al. 2015; Rafi et al. 2025 | genomics `regulation`; tyche `regression` and `learning` | added (0064) |
+| | sequence-to-function models of whole loci (Enformer, Borzoi, AlphaGenome) | Avsec et al. 2021, 2025; Linder et al. 2025 | — | planned (their scale is beyond the machine) |
 | Taxonomic classification | k-mers to the lowest common ancestor (Kraken) | Wood and Salzberg 2014 | genomics `classify` | added |
 
 ## 8. Evolution
@@ -107,6 +111,7 @@ This survey serves learning and planning. It maps the problems of genome analysi
 | Populations | the coalescent with recombination; Wright–Fisher; PCA and admixture | Kingman 1982; Hudson 1983; Patterson, Price and Reich 2006 | evolution `population` | held |
 | | inference of ancestral recombination graphs | — | — | planned |
 | Selection | dN/dS; McDonald–Kreitman | Nei and Gojobori 1986; McDonald and Kreitman 1991 | evolution `selection` | held |
+| Association | scans with principal components and genomic control; clumping; cis-eQTLs with FastQTL's beta approximation and q-values; fine-mapping by ABF and SuSiE; colocalisation; expression predicted from genotypes and its association (PrediXcan, S-PrediXcan); heritability by Haseman–Elston and REML; polygenic scores | Devlin and Roeder 1999; Ongen et al. 2016; Storey and Tibshirani 2003; Wakefield 2009; Wang et al. 2020; Giambartolomei et al. 2014; Gamazon et al. 2015; Barbeira et al. 2018; Yang et al. 2011; Vilhjálmsson et al. 2015 | evolution `association`; tyche `regression`, `testing` | added (0064) |
 | | haplotype scans, iHS | Voight et al. 2006 | evolution `haplotypes` | added |
 
 ## 9. Learning from Sequences
@@ -118,3 +123,35 @@ The draft's §8 proposes neural encoders that respect the group, built from the 
 - **The models.** These would run in the repository's Python environment (CLAUDE.md §7).
 
 **Status.** Planned.
+
+## 10. The Description of Variants and Chromosomes
+
+| Problem | Algorithms | Sources | Where | Status |
+|---|---|---|---|---|
+| A notation as a language | grammars written in BNF over bytes, parsed by Earley's parser, with exact diagnostics from its chart | Earley 1970; Aycock and Horspool 2002 | morphe `formal` (decision 0009) | added (0064) |
+| Sequence variants | HGVS 21.1 parsed by its grammar and written back; the three normal forms of an indel (VCF's left, HGVS's 3′, SPDI's hull, VOCA); projection through transcripts; protein consequences; Sequence Ontology terms in VEP's order | den Dunnen et al. 2016; Hart et al. 2024; Tan et al. 2015; Holmes et al. 2020; McLaren et al. 2016 | genomics `nomenclature` | added (0064) |
+| Structural records | VCF 4.3's symbolic alleles and breakend notation as adjacencies; HGVS of rearrangements | the VCF specification §5 | genomics `nomenclature` | added (0064) |
+| Chromosomes | ISCN 2020/2024 parsed; karyotypes interpreted as derivative chromosomes of oriented band segments, copy number per band, the loss–gain–fusion model; the detailed system; `arr` and `seq` written from results | ISCN 2020, 2024; Ordulu et al. 2014; Abrams et al. 2015, 2019 | genomics `karyotype` | added (0064) |
+| Decomposition of a delins into variants | the description extractor | Vis et al. 2015 | — | planned |
+
+## 11. The Somatic Genome
+
+| Problem | Algorithms | Sources | Where | Status |
+|---|---|---|---|---|
+| Somatic mutations | MuTect's tumour and normal log odds, its filters and power | Cibulskis et al. 2013 | genomics `somatic` | added (0064) |
+| Purity, ploidy, allele-specific copy number | ASPCF on log R and B-allele fraction; ASCAT's fit over ρ and ψ | Van Loo et al. 2010 | genomics `somatic`; tyche `time_series` | added (0064) |
+| Clonality | cancer cell fractions with multiplicity; binomial mixtures by EM and BIC; clone trees by the sum rule | McGranahan et al. 2015; Dentro et al. 2017 | genomics `somatic`; tyche `multivariate` | added (0064) |
+| Mutational signatures | SBS-96 and DBS-78 catalogues; NMF with SigProfiler's stability; refitting by NNLS; bootstrap | Alexandrov et al. 2013, 2020; Islam et al. 2022 | genomics `somatic`; tyche `multivariate`, `regression` | added (0064) |
+| Microsatellite instability | MSIsensor's χ² of repeat lengths, tumour against normal | Niu et al. 2014 | genomics `somatic` | added (0064) |
+| | haplotype realignment (Mutect2, Strelka2), subclonal copy number (Battenberg), PyClone-VI | Benjamin et al. 2019; Kim et al. 2018; Gillis and Roth 2020 | — | planned |
+
+## 12. Foundations Added for These
+
+- **morphe** `formal`: BNF grammars and Earley's diagnostics (decision 0009).
+- **tyche**:
+  - change points: optimal partitioning, PELT, binary, wild binary and circular binary segmentation;
+  - penalised regression: ridge, lasso, elastic net, cross-validation;
+  - NNLS; NMF and its stability; binomial mixtures (decision 0006);
+  - SuSiE, variance components and multiple testing (decision 0007);
+  - networks and their training, and ranks (decision 0008).
+- **calx**: the Hungarian method of assignment, and multinomial variates (decision 0014).

@@ -13,6 +13,7 @@
 export const RAIL_GROUPS = [
   ['explore', 'Explore'],
   ['analyse', 'Analyse'],
+  ['abnormal', 'Abnormal genomes'],
   ['make', 'Instruments'],
   ['system', 'System'],
 ];

@@ -1,6 +1,6 @@
 {
   "title": "The Genome Workbench's engine and genomes",
-  "about": "The genomics and evolution domains' C++ with morphe and calx, compiled once with g++ 11 or later (natively or in WSL, -O3 -march=native) into data/cache/engines/genome/, about two minutes; and fourteen reference genomes from NCBI RefSeq (12 MB): two phages, SARS-CoV-2, Escherichia coli K-12 and ten primate mitochondria.",
+  "about": "The genomics and evolution domains' C++ with morphe and calx, compiled once with g++ 11 or later (natively or in WSL, -O3 -march=native) into data/cache/engines/genome/, about two minutes; and fourteen reference genomes from NCBI RefSeq (12 MB): two phages, SARS-CoV-2, Escherichia coli K-12 and ten primate mitochondria; and for the abnormal genomes and expression of ADR 0064, the human ideogram, a few human genes and chromosomes 21 and 22 of GRCh38, and Escherichia coli's measured abundances and start sites, yeast promoters and their motifs.",
   "steps": [
     {
       "id": "engine",
@@ -19,6 +19,69 @@
         "ncbi-genomes"
       ],
       "done": "data/cache/ncbi-genomes/retrieval.json"
+    },
+    {
+      "id": "ncbi-ideogram",
+      "title": "The human ideogram of GRCh38 and GRCh37 at 400, 550 and 850 bands, from NCBI's Genome Decoration Page and UCSC",
+      "run": [
+        "data/acquisition/fetch.py",
+        "ncbi-ideogram"
+      ],
+      "done": "data/cache/ncbi-ideogram/retrieval.json"
+    },
+    {
+      "id": "ncbi-human-genes",
+      "title": "Human RefSeq transcripts and gene regions (HBB, CFTR, BRCA1) for describing variants by HGVS",
+      "run": [
+        "data/acquisition/fetch.py",
+        "ncbi-human-genes"
+      ],
+      "done": "data/cache/ncbi-human-genes/retrieval.json"
+    },
+    {
+      "id": "ncbi-grch38-chromosomes",
+      "title": "Human chromosomes 21 and 22 of GRCh38 (99 MB), the references of simulated rearrangements",
+      "run": [
+        "data/acquisition/fetch.py",
+        "ncbi-grch38-chromosomes"
+      ],
+      "done": "data/cache/ncbi-grch38-chromosomes/retrieval.json"
+    },
+    {
+      "id": "paxdb-ecoli",
+      "title": "Escherichia coli's measured protein abundances (PaxDb 6.0, CC BY 4.0)",
+      "run": [
+        "data/acquisition/fetch.py",
+        "paxdb-ecoli"
+      ],
+      "done": "data/cache/paxdb-ecoli/retrieval.json"
+    },
+    {
+      "id": "ecoli-tss-cappable",
+      "title": "Escherichia coli's transcription start sites by Cappable-seq (Ettwiller et al. 2016, CC BY 4.0)",
+      "run": [
+        "data/acquisition/fetch.py",
+        "ecoli-tss-cappable"
+      ],
+      "done": "data/cache/ecoli-tss-cappable/retrieval.json"
+    },
+    {
+      "id": "dream-promoters",
+      "title": "Yeast promoters with measured expression, from the DREAM Challenge (Rafi et al., CC BY 4.0)",
+      "run": [
+        "data/acquisition/fetch.py",
+        "dream-promoters"
+      ],
+      "done": "data/cache/dream-promoters/retrieval.json"
+    },
+    {
+      "id": "jaspar-fungi",
+      "title": "JASPAR 2024's fungal motifs (CC BY 4.0)",
+      "run": [
+        "data/acquisition/fetch.py",
+        "jaspar-fungi"
+      ],
+      "done": "data/cache/jaspar-fungi/retrieval.json"
     }
   ]
 }

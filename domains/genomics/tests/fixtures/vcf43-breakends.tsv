@@ -1,0 +1,51 @@
+# The breakend tables of VCF 4.3 §5.4, from samtools/hts-specs 510c107ba89aa13113818c9e4fa3071283cb7f7b VCFv4.3.tex (https://raw.githubusercontent.com/samtools/hts-specs/510c107ba89aa13113818c9e4fa3071283cb7f7b/VCFv4.3.tex), retrieved 2026-11-01 by make_vcf_sv_fixtures.py
+# columns: subsection, CHROM, POS, ID, REF, ALT, QUAL, FILTER, INFO
+Breakends	2	321681	bnd_W	G	G]17:198982]	6	PASS	SVTYPE=BND
+Breakends	2	321682	bnd_V	T	]13:123456]T	6	PASS	SVTYPE=BND
+Breakends	13	123456	bnd_U	C	C[2:321682[	6	PASS	SVTYPE=BND
+Breakends	13	123457	bnd_X	A	[17:198983[A	6	PASS	SVTYPE=BND
+Breakends	17	198982	bnd_Y	A	A]2:321681]	6	PASS	SVTYPE=BND
+Breakends	17	198983	bnd_Z	C	[13:123457[C	6	PASS	SVTYPE=BND
+Inserted Sequence	2	321682	bnd_V	T	]13:123456]AGTNNNNNCAT	6	PASS	SVTYPE=BND;MATEID=bnd_U
+Inserted Sequence	13	123456	bnd_U	C	CAGTNNNNNCA[2:321682[	6	PASS	SVTYPE=BND;MATEID=bnd_V
+Large Insertions	13	123456	bnd_U	C	C[<ctg1>:1[	6	PASS	SVTYPE=BND
+Large Insertions	13	123457	bnd_V	A	]<ctg1>:329]A	6	PASS	SVTYPE=BND
+Large Insertions	13	321682	INS0	T	C<ctg1>	6	PASS	SVTYPE=INS
+Large Insertions	13	123456	bnd_U	C	C[<ctg1>:7[	6	PASS	SVTYPE=BND
+Large Insertions	13	123457	bnd_V	A	]<ctg1>:214]A	6	PASS	SVTYPE=BND
+Large Insertions	13	123456	bnd_U	C	C[<ctg1>:229[	6	PASS	SVTYPE=BND
+Large Insertions	13	123457	bnd_V	A	]<ctg1>:45]A	6	PASS	SVTYPE=BND
+Large Insertions	<ctg1>	1	bnd_X	A	]<ctg1>:329]A	6	PASS	SVTYPE=BND
+Large Insertions	<ctg1>	329	bnd_Y	T	T[<ctg1>:1[	6	PASS	SVTYPE=BND
+Multiple mates	2	321682	bnd_V	T	]13:123456]T	6	PASS	SVTYPE=BND;MATEID=bnd_U
+Multiple mates	13	123456	bnd_U	C	C[2:321682[,C[17:198983[	6	PASS	SVTYPE=BND;MATEID=bnd_V,bnd_Z
+Multiple mates	17	198983	bnd_Z	A	]13:123456]A	6	PASS	SVTYPE=BND;MATEID=bnd_U
+Explicit partners	2	321681	bnd_W	G	G[13:123460[	6	PASS	PARID=bnd_V;MATEID=bnd_X
+Explicit partners	2	321682	bnd_V	T	]13:123456]T	6	PASS	PARID=bnd_W;MATEID=bnd_U
+Explicit partners	13	123456	bnd_U	C	C[2:321682[	6	PASS	PARID=bnd_X;MATEID=bnd_V
+Explicit partners	13	123460	bnd_X	A	]2:321681]A	6	PASS	PARID=bnd_U;MATEID=bnd_W
+Telomeres	1	0	bnd_X	N	.[13:123457[	6	PASS	SVTYPE=BND;MATEID=bnd_V
+Telomeres	1	1	bnd_Y	T	]13:123456]T	6	PASS	SVTYPE=BND;MATEID=bnd_U
+Telomeres	13	123456	bnd_U	C	C[1:1[	6	PASS	SVTYPE=BND;MATEID=bnd_Y
+Telomeres	13	123457	bnd_V	A	]1:0]A	6	PASS	SVTYPE=BND;MATEID=bnd_X
+Event modifiers	2	321681	bnd_W	G	G[13:123457[	6	PASS	SVTYPE=BND;MATEID=bnd_X;EVENT=RR0
+Event modifiers	2	321682	bnd_V	T	]13:123456]T	6	PASS	SVTYPE=BND;MATEID=bnd_U;EVENT=RR0
+Event modifiers	13	123456	bnd_U	C	C[2:321682[	6	PASS	SVTYPE=BND;MATEID=bnd_V;EVENT=RR0
+Event modifiers	13	123457	bnd_X	A	]2:321681]A	6	PASS	SVTYPE=BND;MATEID=bnd_W;EVENT=RR0
+Inversions	2	321681	INV0	G	<INV>	6	PASS	SVTYPE=INV;END=421681
+Inversions	2	321681	bnd_W	G	G]2:421681]	6	PASS	SVTYPE=BND;MATEID=bnd_U;EVENT=INV0
+Inversions	2	321682	bnd_V	T	[2:421682[T	6	PASS	SVTYPE=BND;MATEID=bnd_X;EVENT=INV0
+Inversions	2	421681	bnd_U	A	A]2:321681]	6	PASS	SVTYPE=BND;MATEID=bnd_W;EVENT=INV0
+Inversions	2	421682	bnd_X	C	[2:321682[C	6	PASS	SVTYPE=BND;MATEID=bnd_V;EVENT=INV0
+Uncertainty around breakend location	2	321681	bnd_V	T	T]13:123462]	6	PASS	SVTYPE=BND;MATEID=bnd_U;CIPOS=0,6
+Uncertainty around breakend location	13	123456	bnd_U	A	A]2:321687]	6	PASS	SVTYPE=BND;MATEID=bnd_V;CIPOS=0,6
+Single breakends	2	321681	bnd_W	G	G.	6	PASS	SVTYPE=BND
+Single breakends	2	321682	bnd_V	T	]13:123456]T	6	PASS	SVTYPE=BND;MATEID=bnd_U
+Single breakends	13	123456	bnd_U	C	C[2:321682[	6	PASS	SVTYPE=BND;MATEID=bnd_V
+Single breakends	13	123457	bnd_X	A	.A	6	PASS	SVTYPE=BND
+Single breakends	3	12665	bnd_X	A	.A	6	PASS	SVTYPE=BND;CIPOS=-50,50
+Single breakends	3	12665	.	A	<DUP>	14	PASS	SVTYPE=DUP;END=13686;CIPOS=-50,50;CIEND=-50,50
+Single breakends	3	13686	bnd_Y	T	T.	6	PASS	SVTYPE=BND;CIPOS=-50,50
+Single breakends	3	12665	bnd_X	A	.TGCA	6	PASS	SVTYPE=BND;CIPOS=-50,50
+Single breakends	3	12665	.	A	<DUP>	14	PASS	SVTYPE=DUP;END=13686;CIPOS=-50,50;CIEND=-50,50
+Single breakends	3	13686	bnd_Y	T	TCC.	6	PASS	SVTYPE=BND;CIPOS=-50,50

@@ -1,0 +1,23 @@
+{
+  "id": "jaspar-fungi",
+  "domain": "genomics",
+  "title": "JASPAR 2024's CORE collection of fungal transcription factor binding profiles, non-redundant: 178 position frequency matrices in MEME's format",
+  "provider": "JASPAR, the open-access database of transcription factor binding profiles (University of Oslo, ELIXIR Norway, and partners)",
+  "credit": "Binding profiles: JASPAR 2024",
+  "files": [
+    {
+      "url": "https://jaspar.elixir.no/download/data/2024/CORE/JASPAR2024_CORE_fungi_non-redundant_pfms_meme.txt",
+      "file": "JASPAR2024_CORE_fungi_non-redundant_pfms_meme.txt",
+      "size": 79182,
+      "sha256": "1534a1a6546bf048f8e6e8aa2ee3460f76995335ef92e0ac89b7248d4cdd6847"
+    }
+  ],
+  "format": "MEME motif format version 4: the alphabet ACGT, a uniform background, then for each profile a line 'MOTIF <matrix id> <name>' (MA0363.3 REB1), a line 'letter-probability matrix: alength= 4 w= <width> nsites= <sites> E= 0' and w rows of the four probabilities of A, C, G and T, and the profile's URL.",
+  "coverage": "178 profiles of fungal transcription factors (non-redundant: one version per factor), JASPAR 2024 release",
+  "licence": "Creative Commons Attribution 4.0 International (CC BY 4.0), as JASPAR states for its data.",
+  "citation": "Rauluseviciute, I., Riudavets-Puig, R., Blanc-Mathieu, R. et al. (2024), JASPAR 2024: 20th anniversary of the open-access database of transcription factor binding profiles, Nucleic Acids Research 52, D174-D182, doi:10.1093/nar/gkad1059.",
+  "used_by": [
+    "domains/genomics (regulation: the filters of networks learnt from promoter activity matched to known motifs)",
+    "applications/genome-workbench"
+  ]
+}

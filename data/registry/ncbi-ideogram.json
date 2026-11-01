@@ -1,0 +1,91 @@
+{
+  "id": "ncbi-ideogram",
+  "domain": "genomics",
+  "title": "The human ideogram on GRCh38 and GRCh37: the cytogenetic bands of chromosomes 1-22, X and Y at the ISCN band levels of 400, 550 and 850 bands per haploid set, with their Giemsa stains and their coordinates on each assembly; and UCSC's cytoBand tables of hg38 and hg19",
+  "provider": "National Center for Biotechnology Information (NCBI), Genome Decoration Page (ideogram files of the primary assembly units GCF_000001305.16, GRCh38, and GCF_000001305.13, GRCh37); University of California, Santa Cruz, Genome Browser (cytoBand of hg38 and hg19)",
+  "credit": "Bands: NCBI Genome Decoration Page; UCSC Genome Browser",
+  "files": [
+    {
+      "url": "https://ftp.ncbi.nlm.nih.gov/pub/gdp/ideogram_9606_GCF_000001305.16_400_V1",
+      "file": "ideogram_9606_GCF_000001305.16_400_V1.tsv",
+      "title": "GRCh38 ideogram at the 400-band level (393 bands)",
+      "level": 400,
+      "size": 16907,
+      "sha256": "1623464589c0798a41067d9ff0e33259f803f38bc040bcb0e913f2edb6035e21",
+      "assembly": "GRCh38"
+    },
+    {
+      "url": "https://ftp.ncbi.nlm.nih.gov/pub/gdp/ideogram_9606_GCF_000001305.16_550_V1",
+      "file": "ideogram_9606_GCF_000001305.16_550_V1.tsv",
+      "title": "GRCh38 ideogram at the 550-band level (553 bands)",
+      "level": 550,
+      "size": 24272,
+      "sha256": "25dc4ab73bb5a9ce5e196034b04544f828dfdaaab22b136b6428154314be9a4e",
+      "assembly": "GRCh38"
+    },
+    {
+      "url": "https://ftp.ncbi.nlm.nih.gov/pub/gdp/ideogram_9606_GCF_000001305.16_850_V1",
+      "file": "ideogram_9606_GCF_000001305.16_850_V1.tsv",
+      "title": "GRCh38 ideogram at the 850-band level (862 bands)",
+      "level": 850,
+      "size": 38429,
+      "sha256": "d7cf09b49f687c1403b67465820493bb82c7b449499e6a74a91e4c56412a2246",
+      "assembly": "GRCh38"
+    },
+    {
+      "url": "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/database/cytoBand.txt.gz",
+      "file": "ucsc-hg38-cytoBand.txt",
+      "gunzip": true,
+      "title": "UCSC's cytoBand table of hg38 (862 bands of chromosomes 1-22, X and Y, and chrM), for comparison with NCBI's 850-band level",
+      "size": 54567,
+      "sha256": "ce1b6033a5243e7c5022660b952d2ec33243e307e909afcaeec1894641a5208f",
+      "assembly": "GRCh38",
+      "level": 850
+    },
+    {
+      "url": "https://ftp.ncbi.nlm.nih.gov/pub/gdp/ideogram_9606_GCF_000001305.13_400_V1",
+      "file": "ideogram_9606_GCF_000001305.13_400_V1.tsv",
+      "title": "GRCh37 ideogram at the 400-band level (393 bands)",
+      "assembly": "GRCh37",
+      "level": 400,
+      "size": 16945,
+      "sha256": "a708931be17f6d15da6b47110ee09f374592831894025e34db76bf1171c08eed"
+    },
+    {
+      "url": "https://ftp.ncbi.nlm.nih.gov/pub/gdp/ideogram_9606_GCF_000001305.13_550_V1",
+      "file": "ideogram_9606_GCF_000001305.13_550_V1.tsv",
+      "title": "GRCh37 ideogram at the 550-band level (553 bands)",
+      "assembly": "GRCh37",
+      "level": 550,
+      "size": 24276,
+      "sha256": "c9aa5fac1967e100154df291c87c1c6d63e621529ce99fedeb8702f16dfb8b90"
+    },
+    {
+      "url": "https://ftp.ncbi.nlm.nih.gov/pub/gdp/ideogram_9606_GCF_000001305.13_850_V1",
+      "file": "ideogram_9606_GCF_000001305.13_850_V1.tsv",
+      "title": "GRCh37 ideogram at the 850-band level (862 bands; its gpos bands carry no density, which UCSC's hg19 table gives)",
+      "assembly": "GRCh37",
+      "level": 850,
+      "size": 37632,
+      "sha256": "28842e16f266e257a4a600f32d5a497a319ba37bdaf22196106a97cf2a66ac64"
+    },
+    {
+      "url": "https://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/cytoBand.txt.gz",
+      "file": "ucsc-hg19-cytoBand.txt",
+      "gunzip": true,
+      "title": "UCSC's cytoBand table of hg19 (862 bands of chromosomes 1-22, X and Y, with the densities of their stains), the 850-band level of GRCh37",
+      "assembly": "GRCh37",
+      "level": 850,
+      "size": 30754,
+      "sha256": "c296fe7d73eafae12569ef7b57c2876c2181f70a79e476c00fb4611ababb2439"
+    }
+  ],
+  "format": "NCBI: tab-separated, a header line beginning with '#', then one band a line: chromosome, arm (p or q), band (as 36.33), ISCN start and stop (the ideogram's own length units), base-pair start and stop (1-based, closed), stain (gneg, gpos, acen, gvar, stalk) and density (25, 50, 75, 100 for gpos). UCSC: tab-separated chrom, chromStart, chromEnd (0-based, half-open), name, gieStain (gneg, gpos25-gpos100, acen, gvar, stalk). On 2026-11-01 UCSC's table and NCBI's 850 level held the same 862 bands with the same coordinates and stains. NCBI's files are not consistent in their base-pair starts: some give the first base of a band (1-based), others the previous band's stop (0-based), and the GRCh37 file of the 850-band level carries no densities; the reader takes each start from its neighbour (genomics/karyotype/bands.hpp), and the GRCh37 850 level is read from UCSC's hg19 table, whose coordinates are the same.",
+  "coverage": "Homo sapiens, GRCh38 (GCF_000001305.16, the primary assembly unit; its 850-band file is identical to that of GCF_000001305.14) and GRCh37 (GCF_000001305.13); chromosomes 1-22, X and Y, each covered by its bands from its first base to its last without gaps. The 300-band level is not published by NCBI.",
+  "licence": "NCBI places no restrictions on the use or distribution of its data (https://www.ncbi.nlm.nih.gov/home/about/policies/). UCSC Genome Browser tables derived from public data are freely available (https://genome.ucsc.edu/conditions.html). The files are fetched into the cache and not redistributed.",
+  "citation": "NCBI Genome Decoration Page (https://www.ncbi.nlm.nih.gov/genome/tools/gdp); Sayers, E. W. et al. (2022), Database resources of the National Center for Biotechnology Information, Nucleic Acids Research 50, D20-D26. Bands follow ISCN 2024: An International System for Human Cytogenomic Nomenclature (Hastings, R. J., Moore, S. and Chia, N., eds.), Karger, Basel. Nassar, L. R. et al. (2023), The UCSC Genome Browser database: 2023 update, Nucleic Acids Research 51, D1188-D1195.",
+  "used_by": [
+    "domains/genomics (karyotype: the bands as a tree, breakpoints, copy number by band, arr descriptions)",
+    "applications/genome-workbench"
+  ]
+}

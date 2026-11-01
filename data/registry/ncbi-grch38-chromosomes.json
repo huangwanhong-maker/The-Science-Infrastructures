@@ -1,0 +1,33 @@
+{
+  "id": "ncbi-grch38-chromosomes",
+  "domain": "genomics",
+  "title": "Two whole human chromosomes of the reference assembly GRCh38.p14, chromosomes 21 and 22, as FASTA from NCBI RefSeq",
+  "provider": "National Center for Biotechnology Information (NCBI), RefSeq, through the E-utilities (efetch)",
+  "credit": "Chromosomes: NCBI RefSeq, GRCh38.p14 (Genome Reference Consortium)",
+  "format": "FASTA (one record each, 70 bases a line), the chromosome's bases from its first, numbered as the accession numbers them (the coordinates of HGVS g. descriptions on NC_000021.9 and NC_000022.11, and of ISCN's bands). The short arms, the centromeres and the gaps of the assembly are runs of N (chromosome 22 begins with about 10.5 Mb of them), which the domains treat as unknown bases.",
+  "coverage": "NC_000021.9 (chromosome 21, 46,709,983 bp) and NC_000022.11 (chromosome 22, 50,818,468 bp), the primary assembly's chromosomes, without alternate loci or patches",
+  "licence": "NCBI places no restrictions on the use or distribution of the GenBank and RefSeq data (https://www.ncbi.nlm.nih.gov/home/about/policies/); the Genome Reference Consortium's assemblies are public. The files are fetched into the cache and not redistributed.",
+  "citation": "Schneider, V. A. et al. (2017), Evaluation of GRCh38 and de novo haploid genome assemblies demonstrates the enduring quality of the reference assembly, Genome Research 27, 849-864; O'Leary, N. A. et al. (2016), Reference sequence (RefSeq) database at NCBI: current status, taxonomic expansion, and functional annotation, Nucleic Acids Research 44, D733-D745.",
+  "used_by": [
+    "domains/genomics/structural (structural variants, copy number and aneuploidy simulated on real human chromosomes and called back, described in HGVS and ISCN)",
+    "applications/genome-workbench"
+  ],
+  "files": [
+    {
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_000021.9&rettype=fasta&retmode=text",
+      "file": "NC_000021.9.fa",
+      "title": "Homo sapiens chromosome 21, GRCh38.p14 Primary Assembly (46,709,983 bp)",
+      "accession": "NC_000021.9",
+      "size": 47377339,
+      "sha256": "29a2f24271adf995c26c4d576de4e96eea4db544541254c885c139e9ebcc0770"
+    },
+    {
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_000022.11&rettype=fasta&retmode=text",
+      "file": "NC_000022.11.fa",
+      "title": "Homo sapiens chromosome 22, GRCh38.p14 Primary Assembly (50,818,468 bp)",
+      "accession": "NC_000022.11",
+      "size": 51544518,
+      "sha256": "1dfb5139168d45db857ea244176abf6b4f95b3a5cfb7ff14edf0cd7be9fbc204"
+    }
+  ]
+}

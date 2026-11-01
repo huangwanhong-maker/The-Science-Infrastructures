@@ -217,7 +217,7 @@ class Mapper {
     if (read.size() < shortest) return out;
     std::vector<Chain> chains = chain(seeds(read), options_.chain);
     if (chains.empty()) return out;
-    select_chains(chains, options_.chain);
+    select_chains(chains, options_.chain, static_cast<std::int64_t>(read.size()));
     Codes rc;
     for (const auto& c : chains)
       if (c.reverse) { rc = sequence::reverse_complement(read); break; }

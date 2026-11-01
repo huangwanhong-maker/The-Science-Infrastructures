@@ -100,6 +100,37 @@ inline bool place(calx::random::Stream& r, const std::vector<Codes>& contigs, st
   return false;
 }
 
+// A short read of at most `model.length` bases sequenced from the template t (5′ to 3′ on the
+// strand read) by the model's errors, appended to `bases` and `quality`; returns the bases of t
+// used. Shared by short_reads and the mates of simulate/pairs.hpp, with one order of draws.
+inline std::size_t sequence_short(calx::random::Stream& r, const Codes& t, const ShortReadModel& model, Codes& bases, std::string& quality, std::size_t& errors) {
+  const std::size_t L = model.length;
+  std::size_t j = 0;  // the next base of the template
+  while (bases.size() < L && j < t.size()) {
+    const double x = L > 1 ? static_cast<double>(bases.size()) / static_cast<double>(L - 1) : 0;
+    const double perr = model.error_first + (model.error_last - model.error_first) * x;
+    const double u = r.uniform();
+    int q = sequence::phred_from_probability(perr) + static_cast<int>(std::lround(r.normal(0, 1.5)));
+    q = std::clamp(q, 2, 41);
+    if (u < model.indel / 2) {  // an inserted base
+      bases.push_back(static_cast<Code>(r.below(4)));
+      quality += sequence::phred_char(q);
+      errors++;
+      continue;
+    }
+    if (u < model.indel) {  // a deleted base
+      j++;
+      errors++;
+      continue;
+    }
+    Code b = t[j++];
+    if (r.uniform() < perr) { b = substitute(r, b); errors++; }
+    bases.push_back(b);
+    quality += sequence::phred_char(q);
+  }
+  return j;
+}
+
 }  // namespace detail
 
 // Reads first, first + 1, ..., first + count − 1 of a short-read sample.
@@ -122,31 +153,8 @@ inline std::vector<Read> short_reads(const Source& source, std::size_t count, co
     // The template, read 5' to 3' on the strand sequenced.
     Codes t(src.begin() + static_cast<std::ptrdiff_t>(start), src.begin() + static_cast<std::ptrdiff_t>(start + fragment));
     if (read.reverse) t = sequence::reverse_complement(t);
-    std::size_t j = 0;  // the next base of the template
-    while (read.bases.size() < L && j < t.size()) {
-      const double x = L > 1 ? static_cast<double>(read.bases.size()) / static_cast<double>(L - 1) : 0;
-      const double perr = model.error_first + (model.error_last - model.error_first) * x;
-      const double u = r.uniform();
-      int q = sequence::phred_from_probability(perr) + static_cast<int>(std::lround(r.normal(0, 1.5)));
-      q = std::clamp(q, 2, 41);
-      if (u < model.indel / 2) {  // an inserted base
-        read.bases.push_back(static_cast<Code>(r.below(4)));
-        read.quality += sequence::phred_char(q);
-        read.errors++;
-        continue;
-      }
-      if (u < model.indel) {  // a deleted base
-        j++;
-        read.errors++;
-        continue;
-      }
-      Code b = t[j++];
-      if (r.uniform() < perr) { b = substitute(r, b); read.errors++; }
-      read.bases.push_back(b);
-      read.quality += sequence::phred_char(q);
-    }
     // The bases of the template it used, back on the forward strand of the haplotype, then the reference.
-    const std::size_t used = j;
+    const std::size_t used = detail::sequence_short(r, t, model, read.bases, read.quality, read.errors);
     const std::size_t hb = read.reverse ? start + fragment - used : start, he = read.reverse ? start + fragment : start + used;
     const Liftover& map = source.maps[static_cast<std::size_t>(read.haplotype)][read.contig];
     read.begin = map.to_reference(hb);

@@ -1,0 +1,77 @@
+# structural: Structural Variants, Copy Number and Loss of Heterozygosity
+
+*Status: draft (2026-11-01).* The detection of genomes that depart from their reference by more than a few bases, from paired short reads: deletions, tandem and dispersed duplications, inversions, novel insertions, translocations, large gains and losses of copies, whole-contig aneuploidy, copy-neutral loss of heterozygosity and runs of homozygosity; each call genotyped, held to the depth, compared with a simulated truth, and said in VCF, HGVS and ISCN (ADR 0064). Serves use (the Genome Workbench's structural view, `structural.sample`) and learning (the theory note [structural-variants.md](../theory/structural-variants.md)).
+
+## 1. Concepts
+
+- **A rearranged genome is a set of adjacencies of oriented breakends.** A breakend is a side of a base; a junction joins two of them. Each kind of variant is a pattern of junctions: one for a deletion (+, −), a tandem duplication (−, +) or a novel insertion; two for an inversion, a reciprocal translocation or a dispersed copy, told apart by how their four breakends pair into sides that are cuts or segments (theory §1.4). The copies of the segments between breakends balance the junctions at their ends, which ties depth to junctions (theory Proposition 1.4).
+- **Three signals, one junction.** A junction is seen by discordant pairs (by orientation or distance), by split reads (the mapper's supplementary parts), by gaps inside one alignment and by soft clips; a change of copies by the depth. Each piece of evidence is two intervals of positions with a probability on each (LUMPY's breakpoint), and the pieces of one junction are combined by the product.
+- **Microhomology makes a breakpoint an interval.** The placements of a junction that leave the derivative unchanged form an interval; every junction is written at one canonical end of it, so that calls and truth compare exactly.
+- **Depth and alleles together.** Read depth in bins, corrected for the GC of fragments and for mappability, is segmented by tyche's PELT into a step function of integer copy numbers; the B-allele fractions of the domain's caller and bcftools roh's HMM find runs of homozygosity; read together, a copy-neutral loss of heterozygosity (two copies, no heterozygous sites) is told from a hemizygous deletion (one copy), and a trisomy shows its minor allele at 1/3.
+- **Deterministic in parallel.** The mates are mapped into their own slots, the depth is computed in chunks added in order, the small variants by the caller's windows; the rest is serial in a fixed order. One thread and eight give the same calls.
+
+## 2. Content
+
+| Header | Content |
+|---|---|
+| [`breakend.hpp`](include/genomics/structural/breakend.hpp) | `Breakend{contig, position, plus}`, `Adjacency{a, b, inserted}`; `Signature` (deletion, duplication, inversion's (+,+) and (−,−), translocation) and `signature`; `reversed`, `ordered`; `shifted`, `homology` → `Homology{left, right}` (the interval of equivalent placements), `canonical`; `junction_sequence` |
+| [`pairs.hpp`](include/genomics/structural/pairs.hpp) | `MateMappings`, `map_pairs(pool, mapper, pairs)`; `unclipped_begin`, `unclipped_end`, `placement_probability` (SVTyper's prob_mapq); `LibraryOptions`, `estimate_library` → `Library{median, mad, min_normal, max_normal, min_cutoff, max_cutoff, read_length, pairs, survival}` (DELLY's median ± 5 and 9 MAD, the empirical survival function); `PairClass`, `classify_pairs` → `PairRecord{pair, type, length, normal, mate}` and `PairCounts` |
+| [`evidence.hpp`](include/genomics/structural/evidence.hpp) | `Interval{begin, log_p}`, `Evidence{source, junction, a, b, read, weight}` (pair, split, gap), `Clip{at, bases, read, mapq}`; `gather_evidence(contigs, mates, pairs, library, bases, evidence, clips, options)`: LUMPY's pair probabilities with the other mate's length and its back distance, split reads with microhomology and novel bases, CIGAR gaps ≥ 50, clips ≥ 25 |
+| [`cluster.hpp`](include/genomics/structural/cluster.hpp) | `ClusterOptions`, `Breakpoint{junction, a, b, ci_a, ci_b, pairs, splits, gaps, weight, precise, homology, evidence}`; `cluster(contigs, evidence, options)`: merging by variety and intersecting intervals, the trimmed product repeated inside a component, the 95% interval, the splits' exact junction, imprecise leftovers absorbed by precise breakpoints |
+| [`genotype.hpp`](include/genomics/structural/genotype.hpp) | `SvGenotype{reference, alternate, log10_likelihood, genotype, gq, qual}`, `genotype_of(ref, alt, p_het, p_hom, error)` (SVTyper's bayes_gt, real-valued supports); `ReadIndex(mates, pairs, library, contigs)` with `reads_across`, `pairs_across` (p_conc across deletions and insertions), `depth`; `reference_support` |
+| [`call.hpp`](include/genomics/structural/call.hpp) | `SvKind` (DEL, DUP:TANDEM, INV, INS, TRA, DUP:DISPERSED, BND, CNV:LOSS, CNV:GAIN), `SvCall{kind, contig, begin, end, partner, partner_position, inverted, sequence, resolved, length, precise, ci_begin, ci_end, junctions, breakpoints, pairs, splits, clips, anchored, copies, genotype, qual, filters}`; `interpret(...)`: single junctions by signature, pairs of junctions as inversions, translocations and dispersed copies, insertions from two-sided clip piles with their consensus, copy numbers, genotypes, LowQual and DepthConflict filters; `copies_over`; `copy_number_calls` |
+| [`depth.hpp`](include/genomics/structural/depth.hpp) | `DepthOptions`, `DepthBin{contig, begin, end, count, exposure, gc, ambiguous, n, mappable}`, `Depth{bins, first, rate, positions, fragments, fragment, scale, dispersion}`; `read_depth(pool, contigs, mates, pairs, library, options)`: fragments by start, Benjamini and Speed's rates by fragment GC, mappability from the data, the median ratio set to 1 |
+| [`copy_number.hpp`](include/genomics/structural/copy_number.hpp) | `CopyNumberOptions`, `CopySegmentCall{contig, begin, end, first_bin, last_bin, bins, count, exposure, copies, quality}`; `segment_copy_number(depth, options)` (tyche's PELT with the Poisson cost and exposures, BIC; integer copy number by maximum likelihood; equal neighbours merged); `find_aneuploidy` → `Aneuploidy{contig, copies, fraction}`; `copies_at` |
+| [`allelic.hpp`](include/genomics/structural/allelic.hpp) | `AlleleSite` and `allele_sites(calls)`; `RohOptions`, `runs_of_homozygosity(sites, options)` → `Run` (bcftools roh's two-state HMM on hmm/chain.hpp, Viterbi, posterior quality); `AllelicState` (heterozygous, copy-neutral LOH, hemizygous deletion, homozygous deletion, LOH with gain, allelic imbalance), `minor_copies`, `allelic_segments(sites, runs, segments)` |
+| [`detect.hpp`](include/genomics/structural/detect.hpp) | `DetectOptions`, `Timings`, `Detection`; `detect(pool, contigs, mates, pairs, options)`: every step in order |
+| [`evaluate.hpp`](include/genomics/structural/evaluate.hpp) | `TruthEvent`, `truth_events(simulated)`, `junctions_of`; `MatchOptions` (Truvari's refdist 500, pctsize 0.7, pctovl 0, sizemin 50), `match_score`, `compare_sv(contigs, calls, truth)` → `SvComparison{matches, false_positives, false_negatives, overall, by_kind, by_size, breakpoint_errors}` with `Tally{precision, recall, f1, genotype_concordance}`; GIAB's size strata; `copy_concordance`, `base_overlap` |
+| [`vcf.hpp`](include/genomics/structural/vcf.hpp) | `sv_header`, `sv_records(contigs, names, calls)`: VCF 4.2 symbolic alleles (`<DEL>`, `<DUP:TANDEM>`, `<INV>`, `<INS>`, `<CNV>`) with SVTYPE, END, SVLEN, CIPOS, CIEND, IMPRECISE, HOMLEN, and breakend pairs (§5.4) with MATEID and EVENT |
+| [`describe.hpp`](include/genomics/structural/describe.hpp) | `Placement{accession, chromosome, offset}`; `hgvs_of(contigs, placements, call)` (through genomics::nomenclature for precise changes: the 3′ rule, del, dup, ins, delins; inv, copies of ranges, uncertain positions); `describe_sample(...)` → `SampleDescription{calls, arr, seq}`: each call's HGVS, ISCN and VCF lines, the sample's ISCN arr (copy numbers, hmz) and seq (junctions and derivatives) through genomics::karyotype |
+
+## 3. Dependencies
+
+- **Domain:** `genomics::mapping` (the mapper and its supplementary parts), `genomics::variant` (the caller of SNVs for B-allele fractions, VCF records), `genomics::hmm` (`chain.hpp`), `genomics::align` (CIGARs), `genomics::sequence`, `genomics::nomenclature` (HGVS) and `genomics::karyotype` (ISCN and the ideogram's bands); `genomics::simulate` for the checks (`structural.hpp`, `pairs.hpp`).
+- **Foundations:** tyche (`time_series/changepoint.hpp`: PELT with the Poisson cost and exposures), calx (`scheduler`; `verification` for the checks).
+- **Data:** Escherichia coli K-12 (`ncbi-genomes`), GRCh38 chromosomes 21 and 22 (`ncbi-grch38-chromosomes`, registered for this module) and the GRCh38 ideogram (`ncbi-ideogram`), from the data library's cache; the checks that need them are skipped without them.
+
+## 4. Checks
+
+`node domains/genomics/tests/run-tests.mjs`, or one program at a time (`check_genomics_structural_<topic>`). The samples are simulated and labelled so; the references of `ecoli` and `human` are real.
+
+| Check | What it verifies |
+|---|---|
+| `breakend` | The VCF 4.2 specification's six breakend records of every orientation (§5.4, Figure 1) and its record of inserted bases (Figure 2) written exactly; the microhomology of 600 deletions and tandem duplications and 300 translocation junctions with planted repeats equal to the brute-force count of their equivalent placements less one; one canonical form for every placement, the leftmost; the signatures |
+| `genotype` | SVTyper's own bayes_gt (26 supports, `tests/fixtures/structural-svtyper.tsv`): log₁₀ likelihoods to 10⁻⁹, genotypes, GQ and SQ exactly; a duplication of k extra copies at k/(k + 2) heterozygous and k/(k + 1) homozygous (k = 1 … 4); real-valued supports |
+| `copy_number` | Poisson counts with uneven exposures and steps 2, 1, 2, 3, 2, 0, 2, 4, 2 over 3000 bins: every bin's integer copy number the truth's, nine segments with every change at its bin, each segment's copy number the brute-force maximum over 0 … 8; the dispersion within 4 sd of χ²; a trisomic contig found and nothing else; bcftools roh's model entering a run of homozygous sites exactly from 39 sites (the closed form of the theory note, Proposition 5.1), and a run ending at its first and last site |
+| `detect` | A simulated 2 Mb genome with repeats, 36 junction variants of every kind, a large loss and gain, a copy-neutral LOH and small variants, at 30× with a GC bias: see §5; the library (median 450, MAD-derived sd 45.5); the dispersion of depth at two copies 1.06 per bin (Poisson: 1); the same calls, segments and exposures on one and eight threads |
+| `ecoli` | The same kinds on E. coli K-12 MG1655 (4.64 Mb, its rRNA operons and IS elements): see §5 |
+| `human` | GRCh38 22q12 and 21q21 (6.8 Mb, with runs of N): a balanced t(21;22) called as one event at both breakpoints; a 1.2 Mb heterozygous deletion at copy number 1; a 500 kb copy-neutral LOH told from the deletion's hemizygous run; a trisomy of the chromosome-21 region found as aneuploidy with its minor allele at 1/3; the calls in HGVS (NC_000021.9:g.30300002_30305001del), ISCN arr (arr[GRCh38] …22q12.2(30,500,001_31,700,000)x1, …22q12.3(32,400,682_32,901,192)x2 hmz) and ISCN seq (the translocation alone t(21;22)(q…;q…); the sample's junctions together (21,22)cx) |
+
+## 5. Accuracy and Performance
+
+Measured 2026-11-01 on the development machine (i7-11370H, WSL, Release, `-march=native`, eight threads), 30× of 2 × 150-base pairs from fragments of 450 ± 45, Truvari's matching (PASS calls, ≥ 50 bases):
+
+| Sample | Truth | Precision | Recall | Genotypes | Precise breakpoints exact | Copy number (bins) | cnLOH (bases) |
+|---|---|---|---|---|---|---|---|
+| simulated 2 Mb, two contigs with repeats | 36 junction variants of six kinds, a loss, a gain, a cnLOH | 1.000 | 1.000 | 0.917 | 36 of 36 | 0.992 | recall 0.989, precision 0.990 |
+| E. coli K-12, 4.64 Mb (simulated diploid) | 38 junction variants, a loss, a gain, a cnLOH | 1.000 | 0.974 (one 104-base insertion in an rRNA operon missed) | 0.865 | 36 of 36 | 0.981 | recall 0.985, precision 1.000 |
+| GRCh38 22q12 + 21q21, 6.8 Mb (simulated individual) | t(21;22), a 1.2 Mb deletion, a 500 kb cnLOH, a deletion, a duplication, an inversion | 1.000 | 1.000 | 1.000 | 4 of 5 (one within 20 bases) | 0.999 | the cnLOH called copy-neutral, the deletion hemizygous |
+| GRCh38, trisomy of the 21q21 region | aneuploidy | — | — | — | — | 0.999 | aneuploidy of 3 copies (0.999 of the bins), minor allele 1 of 3 |
+
+The checks' limits lie a margin below these figures (their comments give the measurements). Genotypes are the weakest part: small heterozygous and homozygous deletions differ by their reference support only, and duplications of two copies are ambiguous (§7). The dispersion of the depth at two copies is 1.06 per bin on the simulated genome (Poisson: 1), 2.4 on E. coli and 1.5–1.6 on the human regions, whose GC varies more than the model of one fragment length captures.
+
+Time on eight threads: mapping the 800 000 mates of the 2 Mb genome takes 2.9 s and the detection 1.3 s, two thirds of it the small-variant caller (the structural steps themselves 0.4 s); E. coli's 1.9 million mates 7.4 s and 3.2 s; the human regions' 2.5 million 12.7 s and 4.6 s. Simulating the pairs (one thread in the checks) takes longer than mapping them.
+
+## 6. References
+
+See the theory note's list; the methods: Rausch et al. 2012 (DELLY), Layer et al. 2014 (LUMPY), Chiang et al. 2015 (SVTyper), Abyzov et al. 2011 (CNVnator), Benjamini and Speed 2012 and Yoon et al. 2009 (GC), Killick et al. 2012 (PELT) and Olshen et al. 2004 (CBS), Narasimhan et al. 2016 (BCFtools/RoH), English et al. 2022 (Truvari), Zook et al. 2020 (GIAB), Pedersen and Quinlan 2019 (duphold), Chen et al. 2016 (Manta), Cameron et al. 2017 and 2021 (GRIDSS), Smolka et al. 2024 (Sniffles2); The Variant Call Format Specification v4.2.
+
+## 7. Open Questions
+
+1. **Assembly of breakend regions** (Manta, GRIDSS). Insertions longer than about twice a read's clipped part are not resolved (their length is then a lower bound), and complex junctions with templated insertions are not reconstructed; the domain's de Bruijn assembler could assemble the clipped reads and one-end-anchored mates of each region.
+2. **Single breakends** (GRIDSS): a junction whose other side maps nowhere is only kept as an insertion's pile.
+3. **Long reads** (Sniffles2): gaps of ≥ 50 bases inside alignments are evidence already, but long-read clustering by position and length, and genotypes from long-read coverage, are not written.
+4. **Ploidy.** The depth's baseline is the median bin; a genome mostly gained or lost, or triploid, needs a ploidy estimate (the somatic module's purity and ploidy).
+5. **Duplication genotypes.** k extra copies on one haplotype and k/2 on each give the same depth and the same fractions; without phasing the genotype of a duplication of two or more copies is ambiguous, and the heterozygous one is reported.
+6. **Repeats.** Junctions in repeats longer than the fragments (rRNA operons, segmental duplications) give split reads between copies, called as large inversions or not at all; a mappability track of the reference (rather than from the data) would mask them.
+7. **HGVS of translocations** ("::" between references) is not written; their VCF breakends and ISCN seq describe them.

@@ -179,8 +179,9 @@ inline std::array<double, 64> rscu(const std::array<std::size_t, 64>& n, const G
   return out;
 }
 
-// Wright's effective number of codons.
-inline double effective_number_of_codons(const std::array<std::size_t, 64>& n, const GeneticCode& code) {
+// Wright's effective number of codons; with cap = false, not capped at 61 (as dos Reis, Savva and
+// Wernisch 2004 use it, whose CodonW was modified to lift the cap).
+inline double effective_number_of_codons(const std::array<std::size_t, 64>& n, const GeneticCode& code, bool cap = true) {
   // Amino acids (stops excluded) by their degeneracy.
   std::map<char, std::vector<int>> codons;
   for (int i = 0; i < 64; i++)
@@ -211,7 +212,7 @@ inline double effective_number_of_codons(const std::array<std::size_t, 64>& n, c
     else mean = 1.0 / static_cast<double>(d);  // no evidence: as if unbiased
     nc += count / std::max(mean, 1e-12);
   }
-  return std::min(nc, 61.0);
+  return cap ? std::min(nc, 61.0) : nc;
 }
 
 }  // namespace genomics::sequence
