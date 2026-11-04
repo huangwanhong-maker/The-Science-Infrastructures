@@ -54,6 +54,7 @@ INDICATORS = [
     ("co2-per-capita", "co2_per_capita", "CO2 emissions, t per person"),
     ("ghg-per-capita", "ghg_per_capita", "greenhouse gases, t CO2e per person"),
     ("gini", "gini", "Gini index (World Bank estimate)"),
+    ("gdp-growth", "gdp_growth", "GDP growth, annual %, constant prices"),
 ]
 
 

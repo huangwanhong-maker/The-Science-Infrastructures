@@ -43,3 +43,4 @@ export const tables = () => call('/api/tables');
 export const names = () => call('/api/names');   // the data library's naming policy (ADR 0069)
 export const table = (id, rows) => call(`/api/tables/${encodeURIComponent(id)}${rows ? `?rows=${rows}` : ''}`);
 export const tool = (body) => call('/api/tool', body);
+export const decide = (kind, params = {}) => call('/api/decide', { kind, params });

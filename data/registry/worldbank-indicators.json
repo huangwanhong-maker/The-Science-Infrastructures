@@ -102,6 +102,14 @@
       "parameters": {
         "indicator": "SI.POV.GINI"
       }
+    },
+    "gdp-growth": {
+      "description": "GDP growth, annual %, at constant prices (NY.GDP.MKTP.KD.ZG), 1961-2024: the series from which the Economy Atlas reads each economy's regime (ADR 0074)",
+      "parameters": {
+        "indicator": "NY.GDP.MKTP.KD.ZG",
+        "first_year": 1961,
+        "last_year": 2024
+      }
     }
   },
   "default_profile": "population",

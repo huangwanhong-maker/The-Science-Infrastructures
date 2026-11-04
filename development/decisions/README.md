@@ -85,6 +85,7 @@ Decisions that concern only one library are recorded in that library's own `deve
 | [0070](0070-structures-reconstructed-from-images.md) | Structures reconstructed from images: eikon (a foundation for images), the medical-imaging domain, vascular trees, physiology founded, and the Body Atlas renamed Fabrica; vessels first | Accepted, provisionally; amends 0035, 0061 and 0066; amended by 0072 |
 | [0071](0071-agents-and-decisions-for-urban-planning.md) | Agents and decisions for urban planning: POMDPs in tyche, agent-based models in nomos, the maintenance of surfaces | Accepted, provisionally |
 | [0072](0072-a-womans-body.md) | A woman's body, from the Human Reference Atlas: a second body for the anatomy domain and Fabrica, and pictures without sensitive parts | Accepted, provisionally; amends 0066 and 0070 |
+| [0074](0074-perception-and-decision-in-the-economy-atlas.md) | Perception and decision in the Economy Atlas: the regimes of the business cycle read from growth by hidden Markov models (tyche), decisions on that belief by POMDPs, a fund, a budget and two policymakers, and agents that herd (nomos) | Accepted, provisionally |
 
 ## 2. Template
 

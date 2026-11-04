@@ -105,7 +105,20 @@ add_library(economics::trade ALIAS economics_trade)
 target_include_directories(economics_trade INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/trade/include)
 target_link_libraries(economics_trade INTERFACE nomos::measurement nomos::econometrics tyche::regression physis::computational_geometry calx::linalg)
 
+# regimes: the business cycle perceived from growth, a hidden Markov model fitted to many economies (ADR 0074).
+add_library(economics_regimes INTERFACE)
+add_library(economics::regimes ALIAS economics_regimes)
+target_include_directories(economics_regimes INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/regimes/include)
+target_link_libraries(economics_regimes INTERFACE tyche::processes)
+
+# policy: decisions on the perceived regime, a policymaker's POMDP, a fund under a budget, a budget on support.
+add_library(economics_policy INTERFACE)
+add_library(economics::policy ALIAS economics_policy)
+target_include_directories(economics_policy INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/policy/include)
+target_link_libraries(economics_policy INTERFACE economics::regimes tyche::decision tyche::processes)
+
 if(ECONOMICS_CHECKS)
+  calx_add_check(check_economics_policy SOURCES policy/tests/check_policy.cpp LIBRARIES economics::policy economics::regimes calx::random)
   calx_add_check(check_economics_growth SOURCES growth/tests/check_growth.cpp LIBRARIES economics::growth economics::macro)
   calx_add_check(check_economics_places SOURCES places/tests/check_places.cpp LIBRARIES economics::places economics::circulation calx::random)
   calx_add_check(check_economics_transfer SOURCES transfer/tests/check_transfer.cpp LIBRARIES economics::transfer calx::random)

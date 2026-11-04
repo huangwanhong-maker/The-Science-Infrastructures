@@ -12,6 +12,7 @@
 //   {"op": "production", "table": {...}}               a table's Leontief model and its circular flow
 //   {"op": "circuits", "network": {...}}               a transfer network's deficits, prices and circulation
 //   {"op": "tool", "tool": id, "columns", "roles", "params"}  a tool of the toolbox (tools.hpp)
+//   {"op": "decide", "kind": k, "growth": path, "economies": path, "params"}  perception and decision (decide.hpp)
 
 #include <economics/circulation/flows.hpp>
 #include <economics/places/map.hpp>
@@ -21,6 +22,7 @@
 #include <physis/discretisation/hodge.hpp>
 #include <science/json.hpp>
 
+#include "decide.hpp"
 #include "tools.hpp"
 
 #include <algorithm>
@@ -436,6 +438,7 @@ int main() {
     else if (op == "production") answer = production(request);
     else if (op == "circuits") answer = circuits(request);
     else if (op == "tool") answer = tools::run(request);
+    else if (op == "decide") answer = decide::run(request);
     else throw std::invalid_argument("no operation \"" + op + "\"");
     std::cout << answer.dump() << "\n";
     return 0;

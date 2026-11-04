@@ -10,8 +10,9 @@ import { showSpacetime } from './spacetime.js';
 import { showProduction } from './production.js';
 import { showCircuits } from './circuits.js';
 import { showToolbox } from './toolbox.js';
+import { showDecisions } from './decisions.js';
 
-const VIEWS = { map: showMap, spacetime: showSpacetime, production: showProduction, circuits: showCircuits, toolbox: showToolbox };
+const VIEWS = { map: showMap, spacetime: showSpacetime, production: showProduction, circuits: showCircuits, toolbox: showToolbox, decisions: showDecisions };
 const state = { view: null, data: null };
 
 // The address: the view, then what it shows, so that a picture can be linked and taken again:

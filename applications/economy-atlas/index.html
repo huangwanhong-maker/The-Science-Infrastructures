@@ -38,6 +38,7 @@
       <button data-view="production" role="tab">Production</button>
       <button data-view="circuits" role="tab">Circuits</button>
       <button data-view="toolbox" role="tab">Toolbox</button>
+      <button data-view="decisions" role="tab">Decisions</button>
     </nav>
     <div class="top-right">
       <span class="status" id="status" role="status"></span>
@@ -108,6 +109,12 @@
       <div class="tb-layout">
         <aside class="tb-rail" id="tb-rail" aria-label="The tools"></aside>
         <div class="tb-main" id="tb-main"></div>
+      </div>
+    </section>
+    <section class="view" data-view="decisions" hidden>
+      <div class="tb-layout">
+        <aside class="tb-rail" id="dc-rail" aria-label="Perception and decision"></aside>
+        <div class="tb-main" id="dc-main"></div>
       </div>
     </section>
   </main>

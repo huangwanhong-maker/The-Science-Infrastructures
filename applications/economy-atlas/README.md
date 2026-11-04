@@ -1,12 +1,13 @@
 # The Economy Atlas
 
-*Status: draft.* An application of the economics domain ([ADR 0044](../../development/decisions/0044-value-in-space-and-time.md), [ADR 0046](../../development/decisions/0046-the-economy-atlas-data-and-plugins.md), [ADR 0056](../../development/decisions/0056-nomos-and-a-toolbox-of-quantitative-economics.md), [ADR 0068](../../development/decisions/0068-the-economy-atlas-as-a-scholarly-instrument.md)). It draws value carried between places and through time:
+*Status: draft.* An application of the economics domain ([ADR 0044](../../development/decisions/0044-value-in-space-and-time.md), [ADR 0046](../../development/decisions/0046-the-economy-atlas-data-and-plugins.md), [ADR 0056](../../development/decisions/0056-nomos-and-a-toolbox-of-quantitative-economics.md), [ADR 0068](../../development/decisions/0068-the-economy-atlas-as-a-scholarly-instrument.md), [ADR 0074](../../development/decisions/0074-perception-and-decision-in-the-economy-atlas.md)). It draws value carried between places and through time:
 
 - the world's trade on a map, or flows of one's own between any places, split into exchange, drive and circulation;
 - currencies held and exchanged as a spacetime complex, whose curvature is the departure from a price system;
 - production as a circular flow;
 - the loop deficits of transfer networks;
-- a toolbox of quantitative economics, on tables of the economies, the currencies, or one's own.
+- a toolbox of quantitative economics, on tables of the economies, the currencies, or one's own;
+- perception and decision: the regime of every economy read from its growth, and the decisions taken on that belief.
 
 Everything shown is computed by the domain's C++ on the foundations. Plug-ins in Python and C++ analyse the flows the map shows and draw their results on it. Serves research, learning and use.
 
@@ -24,6 +25,7 @@ Everything shown is computed by the domain's C++ on the foundations. Plug-ins in
   - The dock and the inspector fold away (‹ controls, inspector ›), and the map takes the room. Its instruments name the projection, the longitude and latitude under the pointer and the zoom; each legend ends with its source, year, unit and projection.
   - The year's places and net flows are saved as CSV, and the map as a figure composed for publication: a title and a line of what is drawn, the map as shown with its arcs solid and headed, the legend, and a line of source, projection, date and link; as SVG with Source Serif 4 written into it, or as PNG at 3600 pixels wide.
 - **The toolbox.** Quantitative economics on tables (§2.4): the library's (economies by year with their trade and the World Bank's indicators; currencies by month), one's own, or one pasted. Each tool is a form built from its declaration, run by the engine on the foundations' methods, and answered in figures, tables, charts and, for values by economy, a layer of the map.
+- **Decisions** (§2.5). The regime of every economy, read from the World Bank's growth of real GDP since 1961, and decisions taken on that belief: by one policymaker, online, by a fund and under a budget, by two policymakers, and by markets of agents.
 - **Spacetime.** Currencies held month by month at their policy rates and exchanged with a base at the month's rate, as the spacetime complex of the theory note, §5. The library's record holds twenty currencies against the euro: the ECB's rates, the BIS's policy rates, and for the euro the ECB's deposit facility rate. A record of one's own uses its own base.
   - A sheet shows every lens's curvature, the base's excess return over a currency in a month, the departure from uncovered interest parity.
   - Lines show its sum in time.
@@ -129,6 +131,23 @@ A tool's form is built from its declaration ([`src/tools.js`](src/tools.js)): a 
 
 `#toolbox&tool=gravity` opens a tool by its id.
 
+### 2.5 The Decisions View
+
+Perception and decision on the economies' growth ([ADR 0074](../../development/decisions/0074-perception-and-decision-in-the-economy-atlas.md)), in eight sections, each computed by the engine on tyche, nomos and the domain's `regimes` and `policy`:
+
+| Section | What it shows |
+|---|---|
+| Perception | An economy's growth with its filtered and smoothed chance of contraction; the three regimes fitted to every economy at once, each in its own deviations, and how they follow one another; the world's contractions year by year; a year's chances as a layer of the map |
+| Decision | A policymaker's POMDP (wait, support, restrain) solved by HSVI: the policy over the simplex of beliefs with an economy's beliefs year by year over it, the action on each year's belief, HSVI's interval closing, the value along an edge against the bounds from the states; the assumptions, editable |
+| Search | POMCP's action values at one belief against the number of simulations, beside HSVI's intervals |
+| A fund | Support among every economy with a record in a year under a budget: the Lagrangian bound against its multiplier, the economies chosen (ties, among equally sure beliefs, to the deepest falls), the choice as a layer of the map |
+| A budget | A budget on support itself: the plans for each price of support, the two the budget mixes, and the mixture on the dual bound |
+| Two policymakers | A Dec-POMDP of two neighbouring economies, each seeing only its own growth: the best joint policy's trees, JESP's equilibrium, the value of acting alone |
+| Herding | Kirman's market and its law over a long run against the exact one |
+| Sorting | Schelling's lattice tick by tick, with its threshold |
+
+What support and restraint do, and what a year is worth, are assumptions, stated on the page and carried into every answer. The growth is the data library's `worldbank-indicators` profile `gdp-growth`, fetched by the recipe's tables step. `#decisions&section=fund&economy=GBR` opens a section, and chooses the economy.
+
 ## 3. The Protocol
 
 The engine is `engine/economy.cpp`, header-only C++20 on:
@@ -152,6 +171,7 @@ The server runs it once per request: one JSON request on its standard input, one
 | `{"op": "spacetime", "record": "<currency-spacetime.json>", "first": "YYYY-MM", "last": "YYYY-MM", "currencies"?: [...]}` | the lenses, statistics and price system of the currencies with complete records over the span, the record's base first (§3.3) |
 | `{"op": "production", "table": {"sectors", "z", "final_demand", "value_added"}, "value_added_coefficients"?, "final_demand"?}` | the Leontief model and the deliveries' circulation (§3.4) |
 | `{"op": "circuits", "network": {"positions", "legs": [{"from", "to", "ratio", "flow", "kind"}], "faces"?}}` | the network's cycles, prices and circulation (§3.5) |
+| `{"op": "decide", "kind", "params"?, "growth", "economies"}` | perception and decision: `kind` is `regimes`, `policy`, `online`, `fund`, `budget`, `coordination`, `herding` or `sorting`, as `engine/decide.hpp` describes; the server adds the growth's and the economies' paths |
 | `{"op": "tool", "tool", "columns"?: {name: [...]}, "roles": {role: column(s)}, "params", "flows"?, "sizes"?}` | a tool's answer: `{"title", "blocks": [{"kind": "figures" \| "table" \| "lines" \| "bars" \| "scatter" \| "matrix" \| "map" \| "note", …}]}`, as `engine/tools.hpp` describes |
 
 ### 3.2 The Answer to `map`
@@ -230,6 +250,7 @@ Answers for a year or a span are kept in `data/cache/economy-atlas/answers/`, ke
 | `serve.py`, `engine.py`, `recipe.json` | The server, the engine's builder, the recipe |
 | `engine/economy.cpp` | The engine |
 | `engine/tools.hpp`, `engine/tools/` | The toolbox's engine: reading a request, writing an answer, and a header for each group of tools |
+| `engine/decide.hpp`, `src/decisions.js` | The Decisions view's engine and page |
 | `datasets.py` | One's own data, read into the library's schemas and kept |
 | `tables.py` | The toolbox's tables, made from the library's products and the World Bank's indicators |
 | `src/toolbox.js`, `src/tools.js`, `src/charts.js` | The toolbox's view, its catalogue of tools, and its charts |

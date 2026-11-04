@@ -60,7 +60,8 @@ function axes(host, X, Y, xt, yt, W, H, m, xlabel, ylabel, xfmt = fmt) {
 }
 
 // `compact` draws it for a narrow panel: fewer pixels, so that its text stays readable there.
-export function lineChart({ title, x, series, xlabel = '', ylabel = '', compact = false }) {
+// `marks` are values of x drawn as dashed verticals with their labels: a multiplier found, a year chosen.
+export function lineChart({ title, x, series, xlabel = '', ylabel = '', compact = false, marks = [] }) {
   const W = compact ? 360 : 640, H = compact ? 200 : 300, m = { l: compact ? 50 : 58, r: compact ? 64 : 110, t: 22, b: compact ? 34 : 40 };
   const { box, host } = frame(title, W, H);
   const colours = LINE_COLOURS();
@@ -77,6 +78,12 @@ export function lineChart({ title, x, series, xlabel = '', ylabel = '', compact 
   const years = x0 >= 1000 && x1 <= 3000;
   axes(host, X, Y, ticks(x0, x1, 6).filter((t) => t >= x0 && t <= x1), yt, W, H, m, xlabel, ylabel,
     integer || years ? (v) => String(+v.toFixed(2)) : fmt);
+  for (const mk of marks) {
+    if (!(mk.x >= x0 && mk.x <= x1)) continue;
+    put(host, svg('line', { x1: X(mk.x), x2: X(mk.x), y1: m.t, y2: H - m.b, stroke: 'currentColor', 'stroke-opacity': 0.55, 'stroke-dasharray': '4 3' }),
+      svg('text', { x: X(mk.x) + 5, y: m.t + 10, class: 'tick', text: mk.label }));
+  }
+  const labels = [];
   series.forEach((s, k) => {
     const c = colours[k % colours.length];
     if (s.lower && s.upper) {
@@ -97,12 +104,17 @@ export function lineChart({ title, x, series, xlabel = '', ylabel = '', compact 
     if (series.length > 1 && series.length <= 4) {
       const last = [...s.y.keys()].reverse().find((i) => Number.isFinite(s.y[i]));
       const edge = x[last] >= x1;
-      if (last !== undefined) {
-        put(host, svg('text', { x: X(x[last]) + (edge ? 6 : -4), y: Y(s.y[last]) + (edge ? 4 : -10), 'text-anchor': edge ? 'start' : 'end',
-          class: 'series-label', fill: 'currentColor', text: s.name }));
-      }
+      if (last !== undefined) labels.push({ x: X(x[last]) + (edge ? 6 : -4), y: Y(s.y[last]) + (edge ? 4 : -10), edge, text: s.name });
     }
   });
+  // Labels at the right edge kept a line apart, in the order of their series' ends.
+  const right = labels.filter((l) => l.edge).sort((a, b) => a.y - b.y);
+  right.forEach((l, i) => { if (i && l.y < right[i - 1].y + 13) l.y = right[i - 1].y + 13; });
+  const over = right.length ? right.at(-1).y - (H - m.b + 4) : 0;
+  if (over > 0) right.forEach((l) => { l.y -= over; });
+  for (const l of labels) {
+    put(host, svg('text', { x: l.x, y: l.y, 'text-anchor': l.edge ? 'start' : 'end', class: 'series-label', fill: 'currentColor', text: l.text }));
+  }
   if (series.length > 4) {
     put(box, el('div', { class: 'chart-legend' }, series.map((s, k) => el('span', {}, el('i', { style: { background: colours[k % colours.length] } }), s.name))));
   }

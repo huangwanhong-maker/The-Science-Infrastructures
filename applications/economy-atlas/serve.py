@@ -26,6 +26,7 @@ CSV or JSON) and plug-ins (Python scripts and C++ programs in ``plugins/``, run 
     GET    /api/names                    the data library's naming policy (naming.json, ADR 0069): the names the map draws
     GET    /api/tables/<id>[?rows=n]     a table's columns, or its first n rows
     POST   /api/tool                     {"tool", "table"?, "roles": {role: column(s)}, "params"}: a tool of the toolbox
+    POST   /api/decide                   {"kind", "params"?}: perception and decision (the Decisions view; ADR 0074)
     GET    /api/plugins                  the plug-ins in plugins/, with their descriptions once known
     GET    /api/plugins/describe?file=   one plug-in's description (a C++ one is compiled first)
     POST   /api/plugins/run              {"file", "params", "dataset"?, "year"?}: starts a job; returns {"job"}
@@ -97,11 +98,12 @@ import tables  # noqa: E402
 RECIPE = None
 WRITES = {"allowed": True, "token": None}
 LIMITS = {"bytes": 1024 * 1024, "upload": 48 * 1024 * 1024,
-          "seconds": {"map": 120.0, "timeline": 600.0, "spacetime": 120.0, "production": 30.0, "circuits": 30.0, "plugin": 600.0, "tool": 300.0}}
+          "seconds": {"map": 120.0, "timeline": 600.0, "spacetime": 120.0, "production": 30.0, "circuits": 30.0, "plugin": 600.0, "tool": 300.0, "decide": 300.0}}
 RUNNING: set = set()
+DECIDED: dict = {}
 SLOTS = threading.BoundedSemaphore(3)
 OPS = {"/api/map": "map", "/api/timeline": "timeline", "/api/spacetime": "spacetime", "/api/production": "production",
-       "/api/circuits": "circuits", "/api/tool": "tool"}
+       "/api/circuits": "circuits", "/api/tool": "tool", "/api/decide": "decide"}
 DATASETS = datasets.Datasets()
 PLUGINS = APP / "plugins"
 PLUGIN_WORK = ROOT / "data" / "cache" / "economy-atlas" / "plugins"
@@ -189,6 +191,16 @@ def compute(op: str, body: dict) -> tuple[str | dict, int]:
             if not isinstance(body.get("network"), dict):
                 return {"message": "a circuits request needs a network"}, 400
             request["network"] = body["network"]
+        elif op == "decide":
+            if not isinstance(body.get("kind"), str):
+                return {"message": "name the decision"}, 400
+            growth = ROOT / "data" / "cache" / "worldbank-indicators" / "gdp-growth"
+            if not (growth / "values.json").exists():
+                return {"message": "the growth of real GDP is not fetched: run python data/acquisition/fetch.py worldbank-indicators --profile gdp-growth"}, 409
+            request["kind"] = body["kind"]
+            request["params"] = body.get("params") if isinstance(body.get("params"), dict) else {}
+            request["growth"] = engine.path_for(toolchain, growth / "values.json")
+            request["economies"] = engine.path_for(toolchain, growth / "economies.json")
         elif op == "tool":
             if not isinstance(body.get("tool"), str):
                 return {"message": "name the tool"}, 400
@@ -442,7 +454,15 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         body = self.read_body(LIMITS["upload"] if op == "tool" else None)
         if body is None:
             return
-        out, code = compute(op, body)
+        # Perception and decision take seconds to a minute and depend only on the request and the growth fetched:
+        # each answer is kept for the server's life, keyed by its request.
+        key = json.dumps(body, sort_keys=True) if op == "decide" else None
+        if key is not None and key in DECIDED:
+            out, code = DECIDED[key]
+        else:
+            out, code = compute(op, body)
+            if key is not None and code == 200:
+                DECIDED[key] = (out, code)
         if isinstance(out, dict):
             return self.reply_json(out, code)
         self.reply_text(out, code)
