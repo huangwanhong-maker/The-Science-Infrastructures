@@ -20,18 +20,23 @@
 //   street, a third across it; the party wall, three frontages and the street's two cross-sections, each primitive
 //   joining the right two couplings, the shared wall's normal from the first building toward the second.
 
+#include <array>
 #include <cmath>
+#include <map>
 #include <set>
 #include <string>
 #include <vector>
 
+#include <calx/random/stream.hpp>
 #include <calx/verification/check.hpp>
 #include <urban/events/complex.hpp>
+#include <urban/events/memory.hpp>
 #include <urban/events/network.hpp>
 #include <urban/events/record.hpp>
 
 using calx::verification::Suite;
 namespace ue = urban::events;
+namespace sm = physis::statistical_mechanics;
 
 namespace {
 
@@ -202,6 +207,73 @@ int main() {
     const auto X = ue::construct(R);
     const auto T = ue::topology(X.K.cw);
     s.require("the district's record with no event: its event complex connected and valid", T.b0 == 1 && valid(X.K.cw), text(T));
+  }
+  // What a city remembers of its uses.
+  {
+    const std::map<std::string, double> counts = {{"Retail - Shop", 30}, {"Retail - Showroom", 10}, {"Office", 40}, {"Unoccupied - Unused", 20}};
+    const auto U = ue::prefix_classification(counts);
+    s.require("CLUE's uses by their own prefixes: three families (Office, Retail, Unoccupied) over four uses, the law their frequencies",
+              U.uses.size() == 4 && U.C.levels() == 2 && std::fabs(U.C.law[U.of("Office")] - 0.4) < 1e-12
+                && U.C.block[1][U.of("Retail - Shop")] == U.C.block[1][U.of("Retail - Showroom")] && U.C.block[1][U.of("Office")] != U.C.block[1][U.of("Retail - Shop")]);
+    const auto A = ue::anzsic_classification({{"4511", "H", "45", "451"}, {"4512", "H", "45", "451"}, {"4520", "H", "45", "452"}, {"6932", "M", "69", "693"}, {"0000", "", "00", "000"}},
+                                             {{"4511", 5}, {"4512", 3}, {"4520", 2}, {"6932", 6}, {"0000", 4}});
+    s.require("ANZSIC: division, subdivision, group, class, vacant space a division of its own",
+              A.C.levels() == 4 && A.C.block[1][A.of("0000")] != A.C.block[1][A.of("4511")] && A.C.block[3][A.of("4511")] == A.C.block[3][A.of("4512")]
+                && A.C.block[3][A.of("4520")] != A.C.block[3][A.of("4511")] && A.C.block[2][A.of("4520")] == A.C.block[2][A.of("4511")]);
+    // A panel simulated from known rates: 400 units over 22 censuses.
+    const std::vector<double> truth = {0.04, 0.5};
+    const sm::NestedChain X(U.C, truth);
+    calx::random::Stream rng(20261104, 21, 0, 0);
+    const auto draw = [&](const std::vector<double>& w) { double u = rng.uniform(), t = 0; for (std::size_t i = 0; i < w.size(); i++) if ((t += w[i]) >= u) return i; return w.size() - 1; };
+    std::vector<ue::Observation> O;
+    for (int k = 0; k < 400; k++) {
+      std::size_t x = draw(U.C.law);
+      for (int y = 2002; y <= 2023; y++) {
+        O.push_back({"unit " + std::to_string(k), U.uses[x], y});
+        std::vector<double> w(U.uses.size());
+        for (std::size_t z = 0; z < w.size(); z++) w[z] = X.kernel(x, z, 1.0);
+        x = draw(w);
+      }
+    }
+    const auto T = ue::transitions_of(U, O);
+    double n = 0;
+    for (const auto& t : T) n += t.count;
+    const auto M = ue::remember(U, T, 400);
+    s.require("a simulated panel: 400 units, 21 transitions each, aggregated by pair", std::fabs(n - 400 * 21) < 1e-9);
+    s.require("... its rates recovered within three standard errors, the family kept longer than the use",
+              std::fabs(M.fit.lambda[0] - truth[0]) < 3 * M.fit.lambda_error[0] && std::fabs(M.fit.lambda[1] - truth[1]) < 3 * M.fit.lambda_error[1] && M.half_life[0] > M.half_life[1],
+              std::to_string(M.fit.lambda[0]) + " " + std::to_string(M.fit.lambda[1]));
+    s.require("... and the flat chain rejected (the levels are remembered apart)", M.ratio > 20 && M.degrees == 1, std::to_string(M.ratio));
+    // The chains on the complex: the hinge's two buildings observed at four censuses, one refurbished between them.
+    auto R = hinge();
+    const std::vector<std::pair<int, std::array<const char*, 2>>> census = {{2004, {"Office", "Retail - Shop"}}, {2008, {"Office", "Retail - Showroom"}}, {2012, {"Unoccupied - Unused", "Retail - Showroom"}}, {2020, {"Office", "Office"}}};
+    for (const auto& [y, uses] : census)
+      for (std::size_t c = 0; c < 2; c++) R.events.push_back({"census " + std::to_string(y) + std::to_string(c), "observation", "census", ue::year_span(y), {c}});
+    R.events.push_back({"refurbished", "alteration", "refurbished", ue::year_span(2010), {0}});
+    const auto XC = ue::construct(R);
+    std::map<std::size_t, std::map<std::size_t, std::size_t>> seen;
+    for (std::size_t e = 0; e < R.events.size(); e++) {
+      if (R.events[e].type != "observation") continue;
+      const std::size_t c = R.events[e].couplings[0];
+      const int y = std::stoi(R.events[e].id.substr(7, 4));
+      for (const auto& [yy, uses] : census)
+        if (yy == y) seen[c][XC.vertex_of[e]] = U.of(uses[c]);
+    }
+    const auto chains = ue::chains_on_complex(XC, X, seen);
+    const double z = sm::contract(chains).log_z;
+    double closed = 0;
+    for (std::size_t c = 0; c < 2; c++) {
+      closed += std::log(U.C.law[U.of(census[0].second[c])]);
+      for (std::size_t k = 0; k + 1 < census.size(); k++)
+        closed += std::log(X.kernel(U.of(census[k].second[c]), U.of(census[k + 1].second[c]), (ue::mjd(census[k + 1].first) - ue::mjd(census[k].first)) / 365.2425));
+    }
+    s.require("the buildings' uses as chains on the event complex: Z by the contraction equals the product of their transitions (the refurbishment a refinement)",
+              std::fabs(z - closed) < 1e-10, std::to_string(z) + " vs " + std::to_string(closed));
+    // The rates of the record's kinds of events.
+    const auto rates = ue::event_rates(R, XC);
+    const auto ref = std::find_if(rates.begin(), rates.end(), [](const ue::EventRate& r) { return r.kind == "refurbished"; });
+    s.require("one refurbishment over two buildings' 23 years: 1/46 a building-year", ref != rates.end() && std::fabs(ref->rate - 1.0 / 46) < 1e-3 && ref->of == "building",
+              ref == rates.end() ? "none" : std::to_string(ref->rate));
   }
   return s.done();
 }

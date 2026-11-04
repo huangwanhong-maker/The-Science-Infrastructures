@@ -32,6 +32,7 @@
 #include <architecture/space/massing.hpp>
 #include <science/json.hpp>
 #include <urban/events/complex.hpp>
+#include <urban/events/memory.hpp>
 #include <urban/events/network.hpp>
 #include <urban/events/record.hpp>
 #include <urban/landscape/district.hpp>
@@ -40,6 +41,7 @@ namespace es {
 
 using science::Json;
 namespace ue = urban::events;
+namespace sm = physis::statistical_mechanics;
 namespace ul = urban::landscape;
 namespace as = architecture::space;
 
@@ -158,6 +160,11 @@ struct Built {
   std::map<std::string, std::size_t> kinds;    // type/kind ↦ events kept
   std::size_t massing_skipped = 0;
   Json sources = Json::array();
+  // The panels of uses (stage E4): each base property's use at each census; each coupling's use by its property seen
+  // at most censuses; each premises' class where one establishment holds it; the ANZSIC codes.
+  std::vector<ue::Observation> building_panel, premises_panel;
+  std::map<std::size_t, std::map<int, std::string>> use_at;
+  std::vector<ue::AnzsicCode> anzsic;
 };
 
 inline std::shared_ptr<Built>& last() {
@@ -327,6 +334,41 @@ inline std::shared_ptr<Built> build(const Json& r) {
       R.events.push_back(e);
     }
   }
+  // The panels of uses.
+  {
+    const Table C(P["censuses"]);
+    std::map<std::string, std::map<int, std::string>> by_property;
+    for (std::size_t i = 0; i < C.size(); i++) {
+      const std::string prop = C.at(i, "property").text();
+      if (!of_property.count(prop)) continue;
+      const auto& yv = C.at(i, "year");
+      const std::string use = C.at(i, "predominant_use").text();
+      if (!yv.is_number() || use.empty()) continue;
+      by_property[prop].emplace(static_cast<int>(yv.as_number()), use);  // a property's first row of a census
+    }
+    std::map<std::size_t, std::pair<std::size_t, std::string>> best;
+    for (const auto& [prop, ys] : by_property) {
+      for (const auto& [y, u] : ys) B->building_panel.push_back({prop, u, y});
+      auto& b = best[of_property.at(prop)];
+      if (ys.size() > b.first) b = {ys.size(), prop};
+    }
+    for (const auto& [c, b] : best) B->use_at[c] = by_property.at(b.second);
+    const Table Es(P["establishments"]);
+    std::map<std::pair<std::string, int>, std::vector<std::string>> held;
+    for (std::size_t i = 0; i < Es.size(); i++) {
+      if (!of_property.count(Es.at(i, "property").text())) continue;
+      const auto& pid = Es.at(i, "property_id");
+      const auto& yv = Es.at(i, "year");
+      if (!yv.is_number()) continue;
+      const std::string premises = pid.is_number() ? std::to_string(static_cast<long long>(pid.as_number())) : pid.text();
+      held[{premises, static_cast<int>(yv.as_number())}].push_back(Es.at(i, "anzsic4").text());
+    }
+    for (const auto& [k, codes] : held)
+      if (codes.size() == 1 && !codes[0].empty()) B->premises_panel.push_back({"premises " + k.first, codes[0], k.second});
+    if (P["anzsic"].is_object())
+      for (const auto& [code, info] : P["anzsic"].as_object())
+        B->anzsic.push_back({code, info["division"].text(), info["subdivision"].text(), info["group"].text()});
+  }
   // What the record cannot hold is left out, with its reason.
   for (int pass = 0; pass < 4; pass++) {
     const auto bad = ue::problems(R);
@@ -429,6 +471,96 @@ inline Json op_record(const Json& r) {
                                 {"massingSkipped", static_cast<double>(B->massing_skipped)}})},
       {"topology", Json::object({{"K", topology_json(TK)}, {"refined", topology_json(TR)}, {"triangles", static_cast<double>(X.refined.triangles.size())}})},
       {"kinds", kinds}, {"dropped", dropped}, {"sources", B->sources}});
+}
+
+// ---- what the city remembers (stage E4) -------------------------------------------------------------------------
+
+inline Json numbers(const std::vector<double>& v, int digits = 6) {
+  Json a = Json::array();
+  for (double x : v) a.push(round(x, digits));
+  return a;
+}
+
+inline Json memory_json(const ue::UseClassification& U, const ue::UseMemory& M) {
+  Json uses = Json::array();
+  std::vector<std::size_t> order(U.uses.size());
+  for (std::size_t i = 0; i < order.size(); i++) order[i] = i;
+  std::sort(order.begin(), order.end(), [&](std::size_t a, std::size_t b) { return U.C.law[a] > U.C.law[b]; });
+  for (std::size_t k = 0; k < std::min<std::size_t>(order.size(), 12); k++)
+    uses.push(Json::object({{"use", U.uses[order[k]]}, {"share", round(U.C.law[order[k]], 4)}, {"family", U.block_names[1][order[k]]}}));
+  Json levels = Json::array();
+  for (const auto& l : M.levels) levels.push(l);
+  Json bound = Json::array();
+  for (bool b : M.fit.at_bound) bound.push(b);
+  return Json::object({{"levels", levels}, {"lambda", numbers(M.fit.lambda)}, {"lambdaError", numbers(M.fit.lambda_error)}, {"mu", numbers(M.fit.mu)},
+                       {"muError", numbers(M.fit.mu_error)}, {"halfLife", numbers(M.half_life, 3)}, {"halfLifeError", numbers(M.half_life_error, 3)},
+                       {"agree", numbers(M.agree, 0)}, {"transitions", M.transitions}, {"units", static_cast<double>(M.units)}, {"uses", static_cast<double>(M.uses)},
+                       {"logL", round(M.fit.log_likelihood, 3)}, {"flatLogL", round(M.flat_log_likelihood, 3)}, {"ratio", round(M.ratio, 3)},
+                       {"degrees", static_cast<double>(M.degrees)}, {"converged", M.fit.converged}, {"atBound", bound}, {"gradient", numbers(M.fit.gradient, 9)}, {"iterations", static_cast<double>(M.fit.iterations)}, {"top", uses}});
+}
+
+// What the district remembers of its uses: the buildings' uses (CLUE's space uses, families by CLUE's own prefixes) and
+// the premises' classes (ANZSIC, where one establishment holds a premises), fitted level by level; each building's
+// spans between censuses with their expected unseen changes and their modes' weights; the buildings' uses as chains on
+// the event complex, their probability by the contraction against the product of their transitions; the rates of the
+// record's kinds of events.
+inline Json op_memory(const Json& r) {
+  const auto B = record_of(r);
+  const auto& R = B->record;
+  const auto& X = B->complex;
+  const auto units = [](const std::vector<ue::Observation>& O) { std::set<std::string> u; for (const auto& o : O) u.insert(o.unit); return u.size(); };
+  const auto Ub = ue::prefix_classification(ue::use_counts(B->building_panel));
+  const auto Mb = ue::remember(Ub, ue::transitions_of(Ub, B->building_panel), units(B->building_panel));
+  const sm::NestedChain Xb(Ub.C, Mb.fit.lambda);
+  Json premises;
+  try {
+    const auto Up = ue::anzsic_classification(B->anzsic, ue::use_counts(B->premises_panel));
+    const auto Mp = ue::remember(Up, ue::transitions_of(Up, B->premises_panel), units(B->premises_panel));
+    premises = memory_json(Up, Mp);
+  } catch (const std::exception& e) {
+    premises = Json::object({{"refused", e.what()}});
+  }
+  // Each building's spans between its censuses.
+  Json spans = Json::array();
+  for (const auto& [c, ys] : B->use_at) {
+    std::vector<ue::Observation> O;
+    for (const auto& [y, u] : ys) O.push_back({"", u, y});
+    Json list = Json::array();
+    for (const auto& sp : ue::spans(Ub, Xb, O))
+      list.push(Json::object({{"from", static_cast<double>(sp.from)}, {"to", static_cast<double>(sp.to)}, {"first", sp.first}, {"last", sp.last},
+                              {"expected", round(sp.expected_changes, 4)}, {"weights", numbers(sp.weights, 4)}}));
+    spans.push(Json::object({{"coupling", static_cast<double>(c)}, {"spans", list}}));
+  }
+  // The buildings' uses as chains on the event complex.
+  std::map<std::size_t, std::map<std::size_t, std::size_t>> seen;
+  for (std::size_t v = 1; v + 1 < X.time.size(); v++) {
+    const auto& e = R.events[static_cast<std::size_t>(X.event_of[v])];
+    if (e.type != "observation" || e.couplings.empty()) continue;
+    const std::size_t c = e.couplings[0];
+    const auto it = B->use_at.find(c);
+    if (it == B->use_at.end()) continue;
+    const auto u = it->second.find(std::stoi(date_of(e.when.from).substr(0, 4)));
+    if (u == it->second.end() || !Ub.index.count(u->second)) continue;
+    seen[c][v] = Ub.of(u->second);
+  }
+  const auto chains = ue::chains_on_complex(X, Xb, seen);
+  const auto Z = sm::contract(chains);
+  double closed = 0;
+  for (const auto& [c, m] : seen) {
+    auto prev = m.begin();
+    closed += std::log(Ub.C.law[prev->second]);
+    for (auto it = std::next(m.begin()); it != m.end(); prev = it, ++it)
+      closed += std::log(Xb.kernel(prev->second, it->second, (X.time[it->first] - X.time[prev->first]) / 365.2425));
+  }
+  Json rates = Json::array();
+  for (const auto& e : ue::event_rates(R, X))
+    rates.push(Json::object({{"type", e.type}, {"kind", e.kind}, {"of", e.of}, {"events", e.events}, {"exposure", round(e.exposure, 1)},
+                             {"rate", round(e.rate, 6)}, {"error", round(e.error, 6)}}));
+  return Json::object({{"buildings", memory_json(Ub, Mb)}, {"premises", premises}, {"spans", spans},
+                       {"onComplex", Json::object({{"logZ", round(Z.log_z, 6)}, {"product", round(closed, 6)}, {"cells", static_cast<double>(chains.cells.size())},
+                                                   {"pieces", static_cast<double>(chains.pieces.size())}, {"largest", static_cast<double>(Z.largest)},
+                                                   {"buildings", static_cast<double>(seen.size())}})},
+                       {"rates", rates}});
 }
 
 // The spin network of the moment at t (an MJD), of the record the request names, or of the one last built.

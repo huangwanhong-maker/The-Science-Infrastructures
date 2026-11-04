@@ -759,7 +759,20 @@ The discussion asks that the 2-complex earn its place against simpler structures
 
 ## 8. What Is Implemented, and What Is Not
 
-*As built on 2026-11-04:* E0 (the rename), E1 (Melbourne's record), E2 (the module `events`, 26 checks) and the drawing of E5 (the layer and the analysis of the record, without the amplitudes). E3 and E4 are next.
+*As built on 2026-11-04:*
+- **E0–E2 and the drawing of E5.** The rename, Melbourne's record, the module `events`, and the layer and the analysis of the record, without the amplitudes.
+- **E3** (physis decision 0020):
+  - chains on a classified set, whose modes generalise Proposition 3.2 from $S_m\wr S_n$ to any uneven tree with any law ($S_q$ is the tree of one level);
+  - the exact contraction of a record along the order of time, Theorems 4.2 and 4.5 and Proposition 4.6 among its checks.
+
+  $\mathbb Z_N$ and the truncation of large factors are not yet built.
+- **E4** (the module's `memory`, 33 checks in all):
+  - the memories fitted level by level to the censuses of 2002–2024, for the buildings' uses and the premises' ANZSIC classes;
+  - the unseen changes between censuses, by endpoint conditioning;
+  - the buildings' chains contracted on $K$, equal to the product of their transitions;
+  - the rates of the record's kinds of events, with Poisson's errors.
+
+  The rates are recovered from a simulated panel, not yet from records simulated on the real complex. The martingale checks of §6.2 are not yet built.
 
 | Formalism | Implemented | Stage |
 |---|---|---|

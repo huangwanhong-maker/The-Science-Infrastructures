@@ -13,6 +13,10 @@
 //                                                    the topology of K and K̂, what was left out and why
 //   cut     {t[, …the record's request]}             the spin network of the moment at t (MJD): of the record the request
 //                                                    names (built again only if it differs), else of the one last built
+//   memory  {[…the record's request]}               what the district remembers of its uses: the buildings' uses and the
+//                                                    premises' classes fitted level by level, each building's spans
+//                                                    between censuses, the uses as chains on the complex, the rates of
+//                                                    the record's kinds of events
 //   status  {}                                       the engine answers
 
 #include <cstring>
@@ -29,6 +33,7 @@ Json answer(const Json& r) {
   const std::string op = r["op"].text();
   if (op == "record") return es::op_record(r);
   if (op == "cut") return es::op_cut(r);
+  if (op == "memory") return es::op_memory(r);
   if (op == "status") return Json::object({{"ok", true}});
   throw std::invalid_argument("no operation \"" + op + "\"");
 }

@@ -10,7 +10,10 @@
 //   The moment: a plane at the clock's date, carrying the network of what stood then, nodes and links.
 // The city beneath can be seen through: lower its opacity in the rail.
 
-import { cellColour, css, ensureRecord, eventColour, EVENT_TYPES, kindOfCell, on, setView, state, z, yearOf } from '../shared.js';
+import { cellColour, css, ensureMemory, ensureRecord, eventColour, EVENT_TYPES, kindOfCell, on, setView, state, z, yearOf } from '../shared.js';
+import { colourMap } from '/visualization/styles/index.js';
+
+const SEA = colourMap('sea');
 
 export async function layer(ctx) {
   const { dom, gis } = ctx;
@@ -22,13 +25,16 @@ export async function layer(ctx) {
   };
   const status = h('div', { class: 'ld-quiet' }, 'building the record…');
   const nowLine = h('div', { class: 'ld-line' });
+  const unseenKey = h('div', { class: 'ld-quiet', hidden: true }, h('div', {}, 'the buildings\' unseen changes of use between censuses (a model):'),
+    h('div', { style: `height:8px;border-radius:2px;margin:3px 0;background:linear-gradient(to right, ${[0, 0.25, 0.5, 0.75, 1].map((u) => `${css(SEA.colour(0.12 + 0.88 * u))} ${100 * u}%`).join(', ')})` }),
+    h('div', { style: 'display:flex;justify-content:space-between' }, h('span', {}, 'none'), h('span', {}, 'one or more')));
   const sw = (color, label, kind) => h('span', {}, h('i', { class: `ld-sw ${kind}`, style: `background:${color}` }), label);
   const legend = h('div', { class: 'card' }, h('b', {}, 'The district\'s events in spacetime'),
     h('div', { class: 'ld-quiet' }, 'volumes rise as worldlines, the interfaces between them as sheets, events as beads'),
     h('div', { class: 'ld-swatches' }, ...['building', 'street', 'junction'].map((t) => sw(css(cellColour(t, night)), t, 'line')),
       ...['party-wall', 'frontage'].map((t) => sw(css(cellColour(t, night)), t.replace('-', ' '), 'block'))),
     h('div', { class: 'ld-swatches' }, ...EVENT_TYPES.slice(0, 4).map((e) => sw(e.hue, e.name, 'dot'))),
-    nowLine, status);
+    unseenKey, nowLine, status);
   let t = null;  // the clock's MJD
 
   const drawn = () => state.view;
@@ -43,15 +49,31 @@ export async function layer(ctx) {
     if (V.mode === 'events')
       for (const e of R.events) for (const c of e.attend) bends[c].push([e.from, e.at]);
     const lines = C.map((c, i) => ({ c, i })).filter(({ c }) => shown(c.type));
-    gis.addTubes(ids.lines, lines, {
-      path: ({ c, i }) => {
-        const [x, y] = c.at, pts = [[x, y, z(c.life[0])]];
+    // Coloured by the unseen changes of use (a model): each building's worldline in pieces between its censuses, each
+    // piece by the changes the fitted chain expects there that no census saw; elsewhere, and in K, by kind.
+    const unseen = V.colour === 'unseen' && V.mode === 'refined' && state.memory;
+    const spansOf = new Map(unseen ? state.memory.spans.map((s) => [s.coupling, s.spans]) : []);
+    const yearStart = (y) => Date.UTC(y, 0, 1) / 86400000 + 40587;
+    const pieces = [];
+    for (const { c, i } of lines) {
+      const sp = spansOf.get(i);
+      if (!sp || !sp.length) { pieces.push({ c, i, whole: true }); continue; }
+      const t0 = Math.max(c.life[0], yearStart(sp[0].from)), t1 = Math.min(c.life[1], yearStart(sp[sp.length - 1].to));
+      if (t0 > c.life[0]) pieces.push({ c, i, from: c.life[0], to: t0 });
+      for (const s of sp) pieces.push({ c, i, from: Math.max(c.life[0], yearStart(s.from)), to: Math.min(c.life[1], yearStart(s.to)), span: s });
+      if (t1 < c.life[1]) pieces.push({ c, i, from: t1, to: c.life[1] });
+    }
+    gis.addTubes(ids.lines, pieces, {
+      path: ({ c, i, whole, from, to }) => {
+        const [x, y] = c.at;
+        if (!whole) return [[x, y, z(from)], [x, y, z(to)]];
+        const pts = [[x, y, z(c.life[0])]];
         for (const [when, at] of bends[i].sort((a, b) => a[0] - b[0])) pts.push([at[0], at[1], z(when)]);
         pts.push([x, y, z(c.life[1])]);
         return pts;
       },
-      radius: ({ c }) => (c.type === 'building' ? 1.2 : c.type === 'junction' ? 0.35 : 0.5),
-      color: ({ c }) => cellColour(c.type, night), sides: 6, opacity: 0.9,
+      radius: ({ c, span }) => (c.type === 'building' ? (span ? 1.6 : 1.2) : c.type === 'junction' ? 0.35 : 0.5),
+      color: ({ c, span }) => (span ? SEA.colour(0.12 + 0.88 * Math.min(1, span.expected)) : cellColour(c.type, night)), sides: 6, opacity: 0.9,
     });
     // The censuses along the buildings' worldlines, each a small disc: the local ticks that observe them.
     const ticks = [];
@@ -132,7 +154,8 @@ export async function layer(ctx) {
       `${R.events.length} events and ${R.censuses.reduce((a, c) => a + c.buildings, 0)} census ticks; K has ${K.vertices} vertices, ${K.edges} edges, ${K.faces} faces`;
   };
   const off = on((what) => {
-    if (what === 'view') build();
+    if (what === 'view' || what === 'memory') build();
+    unseenKey.hidden = !(state.view.colour === 'unseen' && state.memory);
     if (what === 'error') status.textContent = state.error;
   });
   try {
@@ -168,6 +191,14 @@ export async function layer(ctx) {
             Object.keys(meets).length ? `meets ${Object.entries(meets).map(([k, n]) => `${n} ${k.replace('-', ' ')}${n === 1 ? '' : 's'}`).join(', ')}` : 'meets no interface: it cuts its worldlines alone',
           ],
         };
+      }
+      if (hit.layer === ids.lines && hit.feature.span) {
+        const { c, span } = hit.feature;
+        const levels = state.memory.buildings.levels.slice(1);
+        return { kind: 'coupling', title: `${c.type}${c.name ? ` ${c.name}` : ''}, ${span.from}–${span.to}`,
+          lines: [span.first === span.last ? `its use seen as ${span.first} at both censuses` : `its use seen as ${span.first}, then ${span.last}`,
+            `${span.expected.toFixed(2)} changes of use expected between them that no census saw (the fitted chain)`,
+            `carried by the modes: ${span.weights.map((w, m) => `${m === 0 ? 'the law' : levels[m - 1]} ${(100 * w).toFixed(0)}%`).join(', ')}`] };
       }
       if (hit.layer === ids.lines) {
         const c = hit.feature.c;

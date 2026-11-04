@@ -9,8 +9,8 @@
 import { districtOf, boxOf, networkOf, footprintsIn } from '/src/district.js';
 
 export const state = {
-  area: null, box: null, record: null, request: null, error: null, cut: null,
-  view: { scale: 10, mode: 'refined', lift: 'ground', show: { building: true, street: true, junction: false, 'party-wall': true, frontage: false, 'cross-section': false }, censuses: true },
+  area: null, box: null, record: null, request: null, error: null, cut: null, memory: null,
+  view: { scale: 10, mode: 'refined', lift: 'ground', show: { building: true, street: true, junction: false, 'party-wall': true, frontage: false, 'cross-section': false }, censuses: true, colour: 'kind' },
 };
 const listeners = new Set();
 export function on(f) { listeners.add(f); return () => listeners.delete(f); }
@@ -34,9 +34,9 @@ export function z(mjd) {
   return base + (state.view.scale * (mjd - R.window.from)) / 365.2425;
 }
 
-let building = null;
+let building = null, remembering = null;
 export function ensureRecord(ctx) {
-  if (state.area !== ctx.area.id) Object.assign(state, { area: ctx.area.id, box: null, record: null, error: null, cut: null }), building = null;
+  if (state.area !== ctx.area.id) Object.assign(state, { area: ctx.area.id, box: null, record: null, error: null, cut: null, memory: null }), building = null, remembering = null;
   if (state.record) return Promise.resolve(state.record);
   if (building) return building;
   building = (async () => {
@@ -51,6 +51,21 @@ export function ensureRecord(ctx) {
   })();
   building.catch((e) => { building = null; state.error = String(e.message || e); emit('error'); });
   return building;
+}
+
+// What the district remembers of its uses (the engine's memory): the buildings' uses and the premises' classes fitted
+// level by level, each building's spans between censuses, the uses as chains on the complex, the rates of its events.
+export function ensureMemory(ctx) {
+  if (state.memory) return Promise.resolve(state.memory);
+  if (remembering) return remembering;
+  remembering = (async () => {
+    await ensureRecord(ctx);
+    state.memory = await ctx.ask('memory', state.request);
+    emit('memory');
+    return state.memory;
+  })();
+  remembering.catch((e) => { remembering = null; state.error = String(e.message || e); emit('error'); });
+  return remembering;
 }
 
 // The network of the moment at an instant, from the engine (the couplings and interfaces whose lives cross it).

@@ -34,11 +34,13 @@ Births end nothing in this record: the buildings are those standing now (OpenStr
 
 Two ways to see one complex: refined (K̂, each event split into its volumes, joined by rungs), or as events (K, each event one vertex, the worldlines bending into it). Pick a bead, a worldline or a sheet for what it is.
 
-**The record and its complex.** Four tabs:
+**The record and its complex.** Six tabs:
 - **The record:** what the record holds and what it left out, with its reasons and its sources.
 - **The complex:** the cells and homology of K and K̂.
 - **The moment:** the network at the clock's date.
-- **The drawing:** how it is drawn, which cells, and the city's opacity.
+- **What it remembers:** the buildings' uses and the premises' trades, fitted as chains on their classifications: each level's rate, its memory and how long it is half kept, against one level alone; and the buildings' chains on the event complex, the record's probability by the contraction against the product of their transitions.
+- **Rates:** each kind of event per year of exposure.
+- **The drawing:** how it is drawn, which cells, the city's opacity, and the buildings' worldlines coloured by their unseen changes of use.
 
 ## 4. The Engine
 
@@ -48,11 +50,16 @@ C++ on urban-science's `events` (the record, its complexes, the cut), its `lands
 
 The workbench's checks give the engine a district of three buildings and a street, with a record of their own, and hold every count to its value by hand.
 
-## 5. What Comes Next
+## 5. What the District Remembers
 
-The amplitudes (the design, §4), in the order of the design's stages:
-- **E3:** the event-coupled Markov model's contraction (physis);
-- **E4:** the memories of each level of the classification of uses, fitted to CLUE's censuses; the selection rule at splits; the posterior of unrecorded changes;
-- then the foams drawn on the complex.
+The design's stages E3 and E4: physis's chains on a classified set and its contraction of a record (decision 0020), fitted to the censuses of 2002–2024.
+- **The buildings' uses.** 404 properties, 8,455 transitions between censuses, 22 of CLUE's space uses in their families. A building half keeps its family (Retail, Unoccupied, Parking, …) for 7.3 ± 0.3 years and, within it, its exact use for 2.9 ± 0.3 years. One level alone is rejected, at twice the log-likelihood ratio 128 on one degree of freedom.
+- **The premises' trades.** 213 premises that one establishment holds, 3,154 transitions, 68 ANZSIC classes. A premises that changes trade mostly draws a new one from the whole district's mix, at 0.093 ± 0.006 a year, so its division, subdivision and group are half kept for 7.4 ± 0.5 years. Within its group it changes class at a further 0.020 ± 0.007 a year, so its exact class is half kept for 6.1 ± 0.5 years. The division and the subdivision have no rate of their own, at the bound: a premises that changes hands keeps its group or loses everything. One level alone is rejected, at twice the log-likelihood ratio 17.9 on three degrees of freedom (p = 5 × 10⁻⁴).
+- **On the complex.** The buildings' chains on the worldlines of K, contracted through every event they attend (8,272 cells), give log Z = −4191.535138, equal to the product of their transitions.
 
-After them: New York's Financial District, with its closures and Open Streets as regimes of the interfaces.
+## 6. What Comes Next
+
+- the selection rule at splits of properties (only six in the record);
+- the posterior of unrecorded events drawn as vertices;
+- New York's Financial District, with its closures and Open Streets as regimes of the interfaces;
+- the gauge models of relational states.
