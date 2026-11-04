@@ -1,0 +1,14 @@
+{
+  "name": "medical-imaging",
+  "kind": "field",
+  "status": "draft",
+  "depends": [
+    "anatomy"
+  ],
+  "foundations": [
+    "calx",
+    "morphe",
+    "physis",
+    "eikon"
+  ]
+}

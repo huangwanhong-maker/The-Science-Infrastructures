@@ -3,6 +3,7 @@
   "kind": "field",
   "status": "planned",
   "depends": [
+    "anatomy",
     "cell-biology",
     "neuroscience"
   ],

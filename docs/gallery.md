@@ -586,6 +586,8 @@ A three-dimensional GIS of Melbourne's centre, its streets read as a sea, after 
 
 ## 11. The Body Atlas
 
+*The Body Atlas is now Fabrica ([ADR 0070](../development/decisions/0070-structures-reconstructed-from-images.md)); these are its Body, Sections and Tours modes. Its reconstructions are in §12.*
+
 The whole body of BodyParts3D's adult man, 2,234 parts named by the Foundational Model of Anatomy, through the anatomy domain ([ADR 0066](../development/decisions/0066-the-anatomy-domain-and-the-body-atlas.md)). Every measure on a card is the domain's: the topology of the part's mesh by morphe, the solid it bounds by physis. Every cut is the domain's section of the meshes, drawn in the conventions of imaging. Silver white by day, silver on graphite by night, at the user's choice; rose gold marks what is chosen.
 
 <table>
@@ -607,7 +609,22 @@ The whole body of BodyParts3D's adult man, 2,234 parts named by the Foundational
 </tr>
 </table>
 
-## 12. Credits
+## 12. Fabrica: Vessels Reconstructed from Images
+
+The Body Atlas, renamed Fabrica, reconstructs the body's structures from images, vessels first ([ADR 0070](../development/decisions/0070-structures-reconstructed-from-images.md)). The work is the medical-imaging domain's, on the new image foundation eikon. A vessel is detected by its shape across scales, delineated at its local half-maximum, thinned to its centrelines and radii, and bounded by a closed surface. Several images of one body are registered by mutual information and fused, and arteries are told from veins by what each modality shows. Every result is held to a reference: the truth of a simulated body, or the experts' labels of a real CT.
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/fabrica-01-integrated.jpg"><img src="../assets/gallery/fabrica-01-integrated.jpg" alt="Arteries in red and veins in blue reconstructed from a simulated contrast CT and TOF-MRA, a slice of the CT beside them, the agreement on the card"></a><br><b>Two images, one set of vessels</b>: A simulated body imaged twice by the domain's forward models. A portal-venous contrast CT shows arteries and veins alike; a TOF-MRA, the patient moved by 6° between scans, shows the arteries only, the veins saturated. Registered within 0.25 mm and fused, the vessels are told apart: arteries in red at Dice 0.87, veins in blue at 0.94, against the truth drawn as rose glass. The slice shows the CT with each class tinted.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/fabrica-02-hepatic-ct.jpg"><img src="../assets/gallery/fabrica-02-hepatic-ct.jpg" alt="The hepatic and portal veins reconstructed from a real portal-venous CT, the experts' labels as rose glass, a slice of the CT beside"></a><br><b>A liver's veins from a real CT</b>: Case 324 of the Medical Segmentation Decathlon's hepatic vessels, a portal-venous CT at 0.64 × 0.64 × 1.5 mm. The vessels found are silver; the experts' labels are rose glass. Within the territory they annotated, the classical chain reaches Dice 0.52 and clDice 0.49. The slice is drawn as in imaging, the liver on the image's left, the vessels found and those labelled tinted.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/fabrica-03-centrelines.jpg"><img src="../assets/gallery/fabrica-03-centrelines.jpg" alt="The centrelines of a real liver's vessels, coloured by radius from silver to rose gold"></a><br><b>Centrelines by radius</b>: Case 172's vessels thinned to their centrelines, coloured from silver (thin) to rose gold (wide): 550 branches and 3.9 m of vessel. The card gives the tree's junctions, ends, components and loops. The 225 loops are where adjacent vessels merge in the image, which a vascular tree should not have, and so Murray's exponent comes out at 1.09, far from the 3 it would take; correcting such topology is the next work.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/fabrica-04-night.jpg"><img src="../assets/gallery/fabrica-04-night.jpg" alt="By night, the vessels of a real liver reconstructed as a surface, a slice of the CT beside them"></a><br><b>By night</b>: The same liver's vessels as a closed surface, smoothed without shrinking, silver on graphite. Beside them a lower slice through the liver and a tumour, which was left out of the search.</td>
+</tr>
+</table>
+
+## 13. Credits
 
 The screenshots are the infrastructure's, under its MIT licence, except the three that show Pangu-Weather's forecasts (§1.3: earth-15, earth-16 and earth-17). Those are shared under CC BY-NC-SA 4.0, the licence of the model's parameters: for learning and research, not for commercial use. The data in all of them keep their own licences.
 
@@ -672,8 +689,9 @@ The screenshots are the infrastructure's, under its MIT licence, except the thre
 | Hourly weather | Open-Meteo, from ERA5 and the IFS | CC BY 4.0 |
 | Public holidays | Nager.Date | Free for private and non-profit use; cited |
 | The human body | BodyParts3D 4.0 (Mitsuhashi et al. 2009), © The Database Center for Life Science; names from the Foundational Model of Anatomy | CC BY 4.0 |
+| Abdominal CT and its vessels' labels | The Medical Segmentation Decathlon, Task 08 (Antonelli et al. 2022; Memorial Sloan Kettering Cancer Center), cases 172 and 324 | CC BY-SA 4.0 |
 
-## 13. Making the Screenshots
+## 14. Making the Screenshots
 
 The screenshots were taken with headless Chrome at 1600 × 1000 pixels, driven over the DevTools protocol, and saved as JPEG.
 

@@ -1,6 +1,6 @@
 # physiology
 
-*Status: planned. Field, height 2, on cell biology and neuroscience.* Organisms as regulated systems: excitable tissues and muscle, the heart and the circulation, breath and the exchange of gases, the feedback that holds the body's variables in range, immunity, the energetics of the whole body, and the physiology of plants. Immunology, endocrinology, nutrition and plant physiology are its modules. Placed in the order with the other domains of life at the user's request (2026-10-31, [ADR 0061](../../development/decisions/0061-the-domains-of-life.md)); its work is in tier 4 of the [README's order](../../README.md#46-the-order-of-implementation).
+*Status: planned. Field, height 2, on anatomy, cell biology and neuroscience.* Organisms as regulated systems: excitable tissues and muscle, the heart and the circulation, breath and the exchange of gases, the feedback that holds the body's variables in range, immunity, the energetics of the whole body, and the physiology of plants. Immunology, endocrinology, nutrition and plant physiology are its modules. Placed in the order with the other domains of life at the user's request (2026-10-31, [ADR 0061](../../development/decisions/0061-the-domains-of-life.md)); its work is in tier 4 of the [README's order](../../README.md#46-the-order-of-implementation).
 
 ## 1. Purpose
 
@@ -15,7 +15,7 @@
 | Module | Scope | Status |
 |---|---|---|
 | `excitable` | Cardiac and smooth-muscle cells: Noble's model and its successors, pacemaking, the monodomain equation on tissue, conduction and its block; muscle contraction by Huxley's cross-bridges | planned |
-| `circulation` | The heart as a pump (time-varying elastance), Windkessel models of the arteries, vascular networks as conductances, Murray's law, the delivery of oxygen | planned |
+| `circulation` | The heart as a pump (time-varying elastance), Windkessel models of the arteries, vascular networks as conductances, Murray's law, the delivery of oxygen; first, flow and transport in veins reconstructed from images, on physis's `fluids` (the next stage of [ADR 0070](../../development/decisions/0070-structures-reconstructed-from-images.md); the order of its work in the survey's §8, `research/literature/reports/Vessel reconstruction and blood flow.md`) | planned, next |
 | `respiration` | Ventilation and gas exchange: the alveolar gas equation, oxygen–haemoglobin binding (Hill, Adair), diffusion across the membrane | planned |
 | `regulation` | Homeostasis as control: glucose and insulin (Bergman's minimal model), endocrine axes with their delays, thermoregulation, the baroreflex | planned |
 | `immunity` | The immune response as dynamics: clonal expansion and contraction, affinity maturation; the host's side of an infection, whose pathogen is microbiology's | planned |
@@ -27,6 +27,7 @@
 | Source | What physiology uses from it |
 |---|---|
 | cell-biology | Membranes and their potentials, signalling, metabolism |
+| anatomy | The vessels and organs on which the body's flows run: vascular trees with their centrelines and radii (ADR 0070) |
 | neuroscience | The nervous control of organs, and the models of excitable cells it shares, through its public interface |
 | physis | `dynamics` (hybrid systems; delays, planned), `chemistry` (reaction–diffusion), `discretisation` (flows with conductances on graphs), `continuum` (diffusion; later the flow of fluids) |
 | calx | Integrators (the θ-method for stiff systems), linear algebra, optimisation |

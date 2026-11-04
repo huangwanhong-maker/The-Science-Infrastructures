@@ -47,7 +47,7 @@ Decisions that concern only one library are recorded in that library's own `deve
 | [0032](0032-the-anatomy-of-the-brain-atlas.md) | The anatomy of the Brain Atlas: surfaces, a tree of structures and what is known of each | Accepted; amends 0028; amended by 0034 |
 | [0033](0033-cpp-plugin-classes-completed.md) | The C++ plug-in classes completed | Accepted, provisionally; amends 0029 |
 | [0034](0034-biosignals-on-the-brain.md) | Biosignals on the brain: EEG, MEG and fMRI carried onto the template | Accepted; amends 0028 and 0032 |
-| [0035](0035-the-mathematical-foundations.md) | The mathematical foundations: a map, an order, and the first C++ | Accepted, provisionally |
+| [0035](0035-the-mathematical-foundations.md) | The mathematical foundations: a map, an order, and the first C++ | Accepted, provisionally; amended by 0070 |
 | [0036](0036-spiking-networks.md) | Networks of spiking neurons, and the C++ among the checks | Accepted; amends 0028 |
 | [0037](0037-release-notes.md) | Release notes at each commit | Accepted |
 | [0038](0038-the-spiking-simulator.md) | The Spiking Simulator | Accepted |
@@ -73,15 +73,16 @@ Decisions that concern only one library are recorded in that library's own `deve
 | [0058](0058-a-body-with-joints.md) | A body with joints: a rabbit on the Moon, and three methods of one motion | Accepted, provisionally |
 | [0059](0059-robots-in-their-environments.md) | Robots in their environments: what a world presumes of a place, what a body feels there, and the fields at a point | Accepted, provisionally (the rabbit, the fish and the dog written) |
 | [0060](0060-streets-as-open-systems.md) | Streets as open systems: street oceanography made exact, the urban-science domain and the Urban Building Workbench | Accepted, provisionally; amended by 0065, 0067 |
-| [0061](0061-the-domains-of-life.md) | The domains of life: from the molecule to the ecosystem, placed in the order | Accepted, provisionally |
+| [0061](0061-the-domains-of-life.md) | The domains of life: from the molecule to the ecosystem, placed in the order | Accepted, provisionally; amended by 0070 |
 | [0062](0062-landscapes-as-cellular-configurations.md) | Landscapes as cellular configurations: their events, their composition and their spacetime | Accepted, provisionally; amended by 0063 |
 | [0063](0063-the-district-as-a-complex-to-work-on.md) | The district as a complex to work on: its cells, buildings among them, the freedom on top and the dynamics | Accepted, provisionally; amended by 0065 |
 | [0064](0064-abnormal-genomes-their-description-and-expression.md) | Abnormal genomes: their description in the international notations (HGVS, ISCN), their detection, and expression read from sequence | Accepted, provisionally |
 | [0065](0065-new-york-in-the-workbench.md) | New York in the Urban Building Workbench: Lower Manhattan from Valdrada's compiled city, and the Brooklyn Bridge's counts | Accepted, provisionally |
-| [0066](0066-the-anatomy-domain-and-the-body-atlas.md) | The anatomy domain and the Body Atlas: the whole body by its parts, measured, and cut in the planes of imaging | Accepted, provisionally |
+| [0066](0066-the-anatomy-domain-and-the-body-atlas.md) | The anatomy domain and the Body Atlas: the whole body by its parts, measured, and cut in the planes of imaging | Accepted, provisionally; amended by 0070 |
 | [0067](0067-event-spacetime.md) | Event Spacetime: a city's events as a 2-complex, urban science as the bridge over architecture, and the Urban Science Workbench | Accepted, provisionally |
 | [0068](0068-the-economy-atlas-as-a-scholarly-instrument.md) | The Economy Atlas as a scholarly instrument: porcelain and gold, and figures for publication | Accepted, provisionally; amends 0046 and 0056; amended by 0069 |
 | [0069](0069-names-of-places-and-a-2d-gis.md) | The names of places, areas in dispute, and a 2D GIS: a naming policy for every product and map, and maps of the sphere in the visualization layer | Accepted, provisionally; amends 0014, 0044, 0046 and 0068 |
+| [0070](0070-structures-reconstructed-from-images.md) | Structures reconstructed from images: eikon (a foundation for images), the medical-imaging domain, vascular trees, physiology founded, and the Body Atlas renamed Fabrica; vessels first | Accepted, provisionally; amends 0035, 0061 and 0066 |
 
 ## 2. Template
 

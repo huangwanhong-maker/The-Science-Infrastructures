@@ -22,8 +22,7 @@ The first body is BodyParts3D's adult man, 2,234 meshes named by FMA ([data regi
 | `measures` | A part's topology (morphe), its area, its solid (physis: volume, centre, inertia, principal axes), its extents. A compound's measures composed from its elements'. The parts that touch | draft |
 | `sections` | The body cut by a cardinal plane in the display's coordinates, each part's pieces with their areas. The vertebral level of a transverse plane, read from the body's own vertebrae | draft |
 | `knowledge` | What is known of the parts: Latin names (TA2), function, blood supply, venous drainage, nerves and clinical notes, with references; a seed of fifty entries (`knowledge/structures.json`), inherited along is-a | seed |
-| `imaging` | Volumes of CT and MRI in their patient frames, segmentation, surfaces reconstructed from them; vessels reconstructed from images, the user's next work | planned |
-| `vessels` | The vascular trees as graphs: centrelines, calibres along them, branchings, the network the meshes' contacts imply | planned |
+| `vessels` | Vascular trees: segments between junctions and ends with their centrelines and radii, rooted (generations, Strahler orders), measured (length, tortuosity, radius away from the junctions, bifurcation angles), Murray's exponent fitted, named by an atlas ([ADR 0070](../../development/decisions/0070-structures-reconstructed-from-images.md)); filled from images by the medical-imaging domain | draft |
 | `histology` | Tissues and their cells (README §4.5) | planned |
 
 ## 3. Dependencies

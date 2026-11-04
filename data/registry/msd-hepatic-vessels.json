@@ -1,0 +1,82 @@
+{
+  "id": "msd-hepatic-vessels",
+  "domain": "medical-imaging",
+  "title": "The Medical Segmentation Decathlon's hepatic vessels (Task 08): portal-venous contrast CT of the liver with the hepatic vessels and tumours labelled, four training cases with 1.5 mm slices",
+  "provider": "The Medical Segmentation Decathlon (Simpson, Antonelli et al.), Task 08, from Memorial Sloan Kettering Cancer Center; distributed as one tar archive on Amazon S3 for MONAI, of which only the members named here are read, by range requests",
+  "credit": "CT and labels: the Medical Segmentation Decathlon, Task 08 (Memorial Sloan Kettering Cancer Center), CC BY-SA 4.0",
+  "files": [
+    {
+      "url": "https://msd-for-monai.s3-us-west-2.amazonaws.com/Task08_HepaticVessel.tar",
+      "archive": "tar",
+      "member": "Task08_HepaticVessel/imagesTr/hepaticvessel_238.nii.gz",
+      "file": "hepaticvessel_238-image.nii.gz",
+      "sha256": "fe3d64cf90dadc8d311ec1c3e68f1d81479b0f10635c780b5c13f86ac0fa2834",
+      "size": 29036933
+    },
+    {
+      "url": "https://msd-for-monai.s3-us-west-2.amazonaws.com/Task08_HepaticVessel.tar",
+      "archive": "tar",
+      "member": "Task08_HepaticVessel/labelsTr/hepaticvessel_238.nii.gz",
+      "file": "hepaticvessel_238-label.nii.gz",
+      "sha256": "c780f5f54a88835d1cbcb84f0ed9c96337fd9406f4d29ee9f8224f7c5db964ea",
+      "size": 40031
+    },
+    {
+      "url": "https://msd-for-monai.s3-us-west-2.amazonaws.com/Task08_HepaticVessel.tar",
+      "archive": "tar",
+      "member": "Task08_HepaticVessel/imagesTr/hepaticvessel_166.nii.gz",
+      "file": "hepaticvessel_166-image.nii.gz",
+      "sha256": "9ac788d84a68dd22395d35f8723ad97b5a8daa6f3440590ca5170229ef73ed16",
+      "size": 33860940
+    },
+    {
+      "url": "https://msd-for-monai.s3-us-west-2.amazonaws.com/Task08_HepaticVessel.tar",
+      "archive": "tar",
+      "member": "Task08_HepaticVessel/labelsTr/hepaticvessel_166.nii.gz",
+      "file": "hepaticvessel_166-label.nii.gz",
+      "sha256": "315efa6a57baed60f629fdcf607f6aa49022a35f5f09a8535bf8106bfea7a422",
+      "size": 37696
+    },
+    {
+      "url": "https://msd-for-monai.s3-us-west-2.amazonaws.com/Task08_HepaticVessel.tar",
+      "archive": "tar",
+      "member": "Task08_HepaticVessel/imagesTr/hepaticvessel_324.nii.gz",
+      "file": "hepaticvessel_324-image.nii.gz",
+      "sha256": "3fe5ddf5857ca431094453c2865822678446300e9848053f631fc1bd82584742",
+      "size": 33981559
+    },
+    {
+      "url": "https://msd-for-monai.s3-us-west-2.amazonaws.com/Task08_HepaticVessel.tar",
+      "archive": "tar",
+      "member": "Task08_HepaticVessel/labelsTr/hepaticvessel_324.nii.gz",
+      "file": "hepaticvessel_324-label.nii.gz",
+      "sha256": "1e4a5e168ad1dc5830ab2b22574b5859f440fc7cc4eeeed372dc095c31b79713",
+      "size": 40204
+    },
+    {
+      "url": "https://msd-for-monai.s3-us-west-2.amazonaws.com/Task08_HepaticVessel.tar",
+      "archive": "tar",
+      "member": "Task08_HepaticVessel/imagesTr/hepaticvessel_172.nii.gz",
+      "file": "hepaticvessel_172-image.nii.gz",
+      "sha256": "cb93a4c2020b992469c6d8190200f6326f3824c5ca0fb1f9641edc11657dfdc5",
+      "size": 34124337
+    },
+    {
+      "url": "https://msd-for-monai.s3-us-west-2.amazonaws.com/Task08_HepaticVessel.tar",
+      "archive": "tar",
+      "member": "Task08_HepaticVessel/labelsTr/hepaticvessel_172.nii.gz",
+      "file": "hepaticvessel_172-label.nii.gz",
+      "sha256": "12e4316d54bc79a56c5dff04dbfb711f718f91aaf0d49f8eaa107437c7c6478d",
+      "size": 53619
+    }
+  ],
+  "format": "NIfTI-1, gzipped: each image a CT volume in Hounsfield units (int16 with scl_slope and scl_inter), each label a volume of the same grid (0 background, 1 hepatic vessel, 2 tumour). The frame is NIfTI's RAS, as the sform and qform give it. The training images' slice spacings range from 0.8 to 8 mm (read from each member's header by a range request); the four cases are the smallest of those with 1.5 mm slices (29–34 MB each), since vessels of 1–6 mm are not resolved between slices 7.5 mm apart, as the smallest files were. The archive's 1,502 members and their offsets are indexed once (data/acquisition/remotetar.py) and kept beside the cache, so that about 130 MB are read rather than 9.35 GB.",
+  "coverage": "Abdominal CT in the portal-venous phase of patients with primary or metastatic liver tumours; slice spacing 1.5–5 mm, in-plane spacing about 0.6–1.0 mm. The vessels labelled are those within and about the liver; the labels were drawn by experts and are known to be incomplete in the smallest branches. No liver mask is given.",
+  "licence": "CC BY-SA 4.0 (the Decathlon's terms, medicaldecathlon.com). The data are fetched into data/cache and never committed.",
+  "citation": "Antonelli, M., Reinke, A., Bakas, S., et al. (2022), The Medical Segmentation Decathlon, Nature Communications 13, 4128, doi:10.1038/s41467-022-30695-9. Simpson, A. L., Antonelli, M., Bakas, S., et al. (2019), A large annotated medical image dataset for the development and evaluation of segmentation algorithms, arXiv:1902.09063.",
+  "used_by": [
+    "data/products/msd_vessels.py",
+    "domains/medical-imaging",
+    "applications/fabrica"
+  ]
+}

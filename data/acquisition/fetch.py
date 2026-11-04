@@ -7,7 +7,9 @@ A dataset is described by a manifest in ``data/registry/`` (schema:
     Fixed files, downloaded as they are, such as the DE440 kernel. Their
     checksums are recorded in the manifest and verified on every retrieval.
     A file may be a member of a zip archive on the web, read by range
-    requests without downloading the archive, or a gzipped file kept
+    requests without downloading the archive, or of a tar archive
+    (``"archive": "tar"``), found by walking its headers by range requests
+    once and keeping the walk as an index, or a gzipped file kept
     decompressed (``"gunzip": true``; its checksum is the decompressed file's).
 ``tap``
     A query to an astronomical archive through the Table Access Protocol, such
@@ -82,6 +84,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import erddap  # noqa: E402
 import ncss  # noqa: E402
 import ecmwf_open  # noqa: E402
+import remotetar  # noqa: E402
 import remotezip  # noqa: E402
 import tap  # noqa: E402
 
@@ -164,6 +167,20 @@ def extract_member(url: str, member: str, dest: Path, archives: dict) -> None:
     print(f"  {dest.name}: {len(data) / 1e6:.2f} MB from {member}")
 
 
+def extract_tar_member(url: str, member: str, dest: Path, archives: dict, index_dir: Path) -> None:
+    """Writes one member of a remote tar archive to dest, walking its headers once (kept in index_dir)."""
+    if url not in archives:
+        import hashlib
+        key = hashlib.sha256(url.encode()).hexdigest()[:16]
+        archives[url] = remotetar.RemoteTar(url, index_dir / f".tar-index-{key}.json")
+    data = archives[url].read(member, report=print)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    part = dest.with_name(dest.name + ".part")
+    part.write_bytes(data)
+    part.replace(dest)
+    print(f"  {dest.name}: {len(data) / 1e6:.2f} MB from {member}")
+
+
 def acquire_files(path: Path, manifest: dict, record: bool) -> bool:
     ident = manifest["id"]
     ok, changed, retrieved = True, False, []
@@ -173,6 +190,8 @@ def acquire_files(path: Path, manifest: dict, record: bool) -> bool:
         expected = entry.get("sha256")
         if dest.exists() and (expected is None or sha256_of(dest) == expected):
             print(f"  {entry['file']}: cached")
+        elif "member" in entry and entry.get("archive") == "tar":
+            extract_tar_member(entry["url"], entry["member"], dest, archives, CACHE / ident)
         elif "member" in entry:
             extract_member(entry["url"], entry["member"], dest, archives)
         elif entry.get("gunzip"):

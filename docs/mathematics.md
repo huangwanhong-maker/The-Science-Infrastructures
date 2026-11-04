@@ -23,6 +23,7 @@ The sciences share their mathematics, so it is written once, below the domains, 
         │
         ▼
    tyche                            chance: probability · statistics · learning
+   eikon (beside tyche)             images: grids · scale space · features · segmentation · skeletons · registration
         │
         ▼
    physis                           the continuum: units · geometry · analysis · dynamics · physical law
@@ -40,6 +41,7 @@ Each level may use every level beneath it, and none above.
 | physis | `physis` | Units, geometry, analysis, dynamics, control, discretisation, and physical law | calx, morphe | designed; units, dynamics, quantum, symmetry, geometry (in part), spacetime, field theory, gauge, quantum gravity written |
 | tyche (inference) | `tyche` | Probability, stochastic processes, statistics, inference, learning | calx, morphe, physis | designed here (§6); probability, description, regression and time series written (ADR 0048), and since then spatial statistics, spectra, change points, testing and learning |
 | nomos (social methods) | `nomos` | Measurement, surveys, econometrics, games, social choice, agent-based models | tyche, morphe, calx | measurement, index numbers, games, matching, choice and econometrics written (ADR 0056, §7) |
+| eikon (images) | `eikon` | Images and what is recovered from them: grids, scale space, features, segmentation, distances, skeletons, surfaces, registration, fusion | calx, morphe, physis | grid, phantoms, filters, features, segmentation, distance, skeleton, surfaces, registration, fusion written (ADR 0070, §7a) |
 
 *Remark.* inference depends on physis because data assimilation and the uncertainty of models need dynamical systems; physis never depends on inference. A stochastic differential equation is therefore a system of physis (`dynamics`), integrated by calx (`integrators`), whose statistics are inference's (`processes`).
 
@@ -135,6 +137,10 @@ Order: `probability` stands alone; `information` and `processes` use it; `descri
 ## 7. The Methods of the Social Sciences (nomos)
 
 Measurement (psychometrics, item response theory, indices), surveys, econometrics (panels, instruments, discrete choice), game theory and mechanism design, social choice and voting, social networks, and agent-based models. They rest on inference (estimation, causal inference, design), morphe (games and choice as combinatorial and order structures, networks as graphs) and calx (optimisation, simulation). They form a library of their own, nomos, on tyche ([ADR 0056](../development/decisions/0056-nomos-and-a-toolbox-of-quantitative-economics.md)): tyche estimates and tests in general, nomos holds the measures and designs of the social sciences. Its first modules are `measurement`, `indices`, `games`, `matching`, `choice` and `econometrics`; `psychometrics`, `surveys`, `networks`, `mechanisms` and `agents` are planned.
+
+## 7a. Images (eikon)
+
+Image processing and analysis (MSC 68U10; 94A08 in part): images on oriented grids, Gaussian scale space and the features it reveals (tubes, blobs, sheets), segmentation, distance transforms and fronts (fast marching), digital topology and thinning, level-set surfaces, registration by mutual information and by points, the fusion of segmentations, and measures of agreement that see topology. It stands on calx (linear algebra, the closed-form 3 × 3 eigenproblem, optimisation), morphe (the multigraph of a skeleton, Betti numbers) and physis (triangle surfaces and the solids they bound). It is a library of its own because image analysis is a body of methods with its own literature, used by every science with images, and names no object in nature; the medical-imaging domain was its first user ([ADR 0070](../development/decisions/0070-structures-reconstructed-from-images.md); eikon's decisions 0002 and 0003).
 
 ## 8. Coverage: the Mathematics Subject Classification
 

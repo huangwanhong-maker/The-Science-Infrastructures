@@ -7,7 +7,9 @@
 #   body       BodyParts3D's adult man read from the data library's product: the atlas and the meshes;
 #   measures   a part's topology (morphe), its area, solid, principal axes and extents (physis), compounds,
 #              and the parts that touch;
-#   sections   the body cut by a cardinal plane in the display's coordinates; vertebral levels.
+#   sections   the body cut by a cardinal plane in the display's coordinates; vertebral levels;
+#   vessels    vascular trees: segments, centrelines and radii, rooted and ordered, measured, Murray's
+#              exponent fitted, named by an atlas (ADR 0070).
 #
 # The domain stands on the foundations alone (module.json): calx (verification), morphe (topology) and
 # physis (computational_geometry, mechanics). The checks that read the body need the data library's product
@@ -69,3 +71,4 @@ anatomy_module(parts)
 anatomy_module(body LIBRARIES anatomy::parts physis::computational_geometry)
 anatomy_module(measures LIBRARIES anatomy::body morphe::topology physis::computational_geometry physis::mechanics)
 anatomy_module(sections LIBRARIES anatomy::frames anatomy::measures physis::computational_geometry)
+anatomy_module(vessels LIBRARIES calx::optimisation calx::random)

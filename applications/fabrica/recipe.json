@@ -1,0 +1,32 @@
+{
+  "title": "Fabrica's data and engine",
+  "about": "BodyParts3D's body (about 145 MB), the anatomy product built from it (about a minute) and the engine compiled on the anatomy domain with g++ 11 or later, natively or in WSL (about a minute). Run with data/acquisition/recipe.py.",
+  "steps": [
+    {
+      "id": "bodyparts3d",
+      "title": "BodyParts3D 4.0: the meshes of the body and FMA's trees",
+      "run": [
+        "data/acquisition/fetch.py",
+        "bodyparts3d"
+      ],
+      "done": "data/cache/bodyparts3d/retrieval.json"
+    },
+    {
+      "id": "body",
+      "title": "The body as a product: meshes quantised and packed, the tables for the domain",
+      "run": [
+        "data/products/body_anatomy.py"
+      ],
+      "done": "data/cache/products/body-bp3d.json"
+    },
+    {
+      "id": "engine",
+      "title": "The engine on the anatomy domain, compiled with g++",
+      "run": [
+        "applications/fabrica/engine.py",
+        "build"
+      ],
+      "done": "data/cache/engines/fabrica/build.json"
+    }
+  ]
+}

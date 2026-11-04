@@ -19,3 +19,6 @@
 [submodule "nomos"]
 	path = foundations/nomos
 	url = https://github.com/huangwanhong-maker/nomos.git
+[submodule "eikon"]
+	path = foundations/eikon
+	url = https://github.com/huangwanhong-maker/eikon.git
