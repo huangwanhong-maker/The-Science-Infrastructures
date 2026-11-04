@@ -3,7 +3,8 @@
   "kind": "edge",
   "status": "draft",
   "depends": [
-    "geodesy"
+    "geodesy",
+    "geography"
   ],
   "foundations": [
     "calx",

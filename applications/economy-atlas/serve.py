@@ -23,6 +23,7 @@ CSV or JSON) and plug-ins (Python scripts and C++ programs in ``plugins/``, run 
     POST   /api/datasets                 {"kind": "flows"|"currencies", "title", "files": [{name, text}], "base"?}
     DELETE /api/datasets/<id>            forget one
     GET    /api/tables                   the toolbox's tables: the library's and one's own (tables.py, ADR 0048)
+    GET    /api/names                    the data library's naming policy (naming.json, ADR 0069): the names the map draws
     GET    /api/tables/<id>[?rows=n]     a table's columns, or its first n rows
     POST   /api/tool                     {"tool", "table"?, "roles": {role: column(s)}, "params"}: a tool of the toolbox
     GET    /api/plugins                  the plug-ins in plugins/, with their descriptions once known
@@ -381,6 +382,12 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             return self.datasets_request("GET", url)
         if url.path == "/api/tables":
             return self.reply_json({"tables": tables.listing()}, 200)
+        if url.path == "/api/names":
+            # The naming policy, for the map: which places it names, and how (by code).
+            from naming import POLICY
+            return self.reply_json({"names": {c: e.get("name") for c, e in POLICY.names.items()},
+                                    "unlabelled": sorted(c for c in POLICY.names if not POLICY.labelled(c)),
+                                    "seas": sorted(n for n in POLICY.seas if not POLICY.sea_labelled(n))}, 200)
         if url.path.startswith("/api/tables/"):
             try:
                 t = tables.table(urllib.parse.unquote(url.path[len("/api/tables/"):]))

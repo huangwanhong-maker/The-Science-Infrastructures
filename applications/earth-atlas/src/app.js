@@ -628,7 +628,8 @@ function bind() {
 function placeName(lon, lat) {
   const i = base.countryAt(lon, lat);
   const lang = state.lang;
-  const pick = (names) => names[lang] || names.en || names.default;
+  // A territory the naming policy gives no name (ADR 0069) is shown without one.
+  const pick = (names) => names[lang] || names.en || names.default || '';
   if (i >= 0) return { kind: 'country', index: i, country: geography.meta.layers.countries[i], name: pick(geography.meta.layers.countries[i].names) };
   const sea = base.seaAt(lon, lat);
   if (sea) return { kind: 'sea', name: pick(sea.names), sea };

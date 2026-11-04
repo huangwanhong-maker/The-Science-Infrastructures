@@ -569,7 +569,7 @@ The three atlases run online on the project's server, the [Celestial Atlas](http
 │                    molecular-science · cell-biology · microbiology · physiology ·
 │                    developmental-biology · ecology
 ├── data/            registry · acquisition · formats · products · terrain tiles · requests on demand
-├── visualization/   scene model · renderers · styles; provisional drawing helpers
+├── visualization/   scene model · renderers · styles; provisional drawing helpers: globes, a GIS of cities, maps of the sphere (ADR 0069)
 ├── observation/     instruments · field work · sensors
 ├── api/             the service and its clients in Python, C and C++, JavaScript; the classes of
 │                    plug-ins, over fields and over networks of places

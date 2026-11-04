@@ -4,7 +4,8 @@ The flows are the OECD's Balanced International Merchandise Trade Statistics (BI
 all goods, in millions of US dollars; balanced, and by default adjusted for re-exports). The
 places are Natural Earth's label points of the economies (a point inside each country where its
 name is drawn, which serves a map of flows better than a centroid that may fall in the sea).
-Economies are keyed by ISO 3166-1 alpha-3. Flows to or from codes with no Natural Earth country
+Economies are keyed by ISO 3166-1 alpha-3 and named after the data library's policy
+(naming.json, ADR 0069): Natural Earth's long names, but where a name is in dispute or out of date. Flows to or from codes with no Natural Earth country
 (the OECD's aggregates, such as W, the world, and former economies) are left out and listed.
 
 Output, in data/cache/products/: trade-flows.json
@@ -23,6 +24,7 @@ from pathlib import Path
 
 DATA = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from naming import POLICY  # noqa: E402
 from product_index import OUT, register  # noqa: E402
 
 DATASET = "oecd-bimts"
@@ -53,7 +55,7 @@ def places(geojson: dict) -> dict[str, dict]:
         own = p.get("ISO_A3") == code
         if code in out and (primary[code] or not own):
             continue
-        out[code] = {"iso3": code, "name": p.get("NAME_LONG") or p.get("NAME"), "continent": p.get("CONTINENT"),
+        out[code] = {"iso3": code, "name": POLICY.name(code, p.get("NAME_LONG") or p.get("NAME"), p.get("ADM0_A3")) or code, "continent": p.get("CONTINENT"),
                      "latitude": round(float(p["LABEL_Y"]), 4), "longitude": round(float(p["LABEL_X"]), 4)}
         primary[code] = own
     return out

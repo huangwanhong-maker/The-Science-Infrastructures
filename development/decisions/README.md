@@ -26,7 +26,7 @@ Decisions that concern only one library are recorded in that library's own `deve
 | [0011](0011-first-application-celestial-atlas.md) | First application: Celestial Atlas, with provisional computation in JavaScript | Accepted |
 | [0012](0012-selectable-parameterised-datasets.md) | Selectable, parameterised datasets | Accepted |
 | [0013](0013-galaxies-and-their-relations.md) | Galaxies and their relations in the Celestial Atlas | Accepted |
-| [0014](0014-earth-atlas-separated-data-and-typed-layers.md) | The Earth Atlas: separated data and typed layers | Accepted, provisionally; amended by 0015 |
+| [0014](0014-earth-atlas-separated-data-and-typed-layers.md) | The Earth Atlas: separated data and typed layers | Accepted, provisionally; amended by 0015 and 0069 |
 | [0015](0015-earth-atlas-models-imagery-detail.md) | Forecast models, a laboratory model, imagery and detail in the Earth Atlas | Accepted, provisionally; amended by 0018 |
 | [0016](0016-maps-of-bodies-and-iau-rotation.md) | Maps of the bodies, IAU rotation, and imagery shared across applications | Accepted, provisionally; amended by 0020 |
 | [0017](0017-climate-classes-and-normals.md) | Climate classes, climate normals, and two new ways of acquiring data | Accepted, provisionally |
@@ -56,9 +56,9 @@ Decisions that concern only one library are recorded in that library's own `deve
 | [0041](0041-the-history-domain.md) | The history domain and the History Complex | Accepted; amended by 0042 |
 | [0042](0042-the-history-as-a-field-theory.md) | The history as a field theory, on the foundations | Accepted, provisionally; amends 0041 |
 | [0043](0043-the-genome-infrastructure.md) | The genome infrastructure: the genomics and evolution domains and the Genome Atlas | Accepted; amended by 0045 and 0047 |
-| [0044](0044-value-in-space-and-time.md) | Value in space and time: the economics domain and the Economy Atlas | Accepted, provisionally; amended by 0046 and 0056 |
+| [0044](0044-value-in-space-and-time.md) | Value in space and time: the economics domain and the Economy Atlas | Accepted, provisionally; amended by 0046, 0056 and 0069 |
 | [0045](0045-the-genome-workbench.md) | The Genome Workbench: the Genome Atlas renamed, its Toolbox, the user's files and a shell built from registries | Accepted, provisionally; amends 0043 |
-| [0046](0046-the-economy-atlas-data-and-plugins.md) | The Economy Atlas: one's own data, plug-ins over networks of places, and a ledger in gold | Accepted, provisionally; amends 0044; amended by 0056 |
+| [0046](0046-the-economy-atlas-data-and-plugins.md) | The Economy Atlas: one's own data, plug-ins over networks of places, and a ledger in gold | Accepted, provisionally; amends 0044; amended by 0056, 0068 and 0069 |
 | [0047](0047-group-grammars-and-advanced-genome-analysis.md) | Group grammars for genomes (the user's GE-CSG draft made exact), and a survey of advanced genome analysis | Accepted, provisionally; amends 0043 |
 | [0048](0048-the-inference-foundation-tyche.md) | The inference foundation, tyche | Accepted |
 | [0049](0049-the-spacetime-of-the-earth-and-the-moon.md) | The spacetime of the Earth and the Moon: the domains' C++ of time, frames and figures, the navigation bridge, and the globe | Accepted, provisionally |
@@ -80,7 +80,8 @@ Decisions that concern only one library are recorded in that library's own `deve
 | [0065](0065-new-york-in-the-workbench.md) | New York in the Urban Building Workbench: Lower Manhattan from Valdrada's compiled city, and the Brooklyn Bridge's counts | Accepted, provisionally |
 | [0066](0066-the-anatomy-domain-and-the-body-atlas.md) | The anatomy domain and the Body Atlas: the whole body by its parts, measured, and cut in the planes of imaging | Accepted, provisionally |
 | [0067](0067-event-spacetime.md) | Event Spacetime: a city's events as a 2-complex, urban science as the bridge over architecture, and the Urban Science Workbench | Accepted, provisionally |
-| [0068](0068-the-economy-atlas-as-a-scholarly-instrument.md) | The Economy Atlas as a scholarly instrument: porcelain and gold, and figures for publication | Accepted, provisionally; amends 0046 and 0056 |
+| [0068](0068-the-economy-atlas-as-a-scholarly-instrument.md) | The Economy Atlas as a scholarly instrument: porcelain and gold, and figures for publication | Accepted, provisionally; amends 0046 and 0056; amended by 0069 |
+| [0069](0069-names-of-places-and-a-2d-gis.md) | The names of places, areas in dispute, and a 2D GIS: a naming policy for every product and map, and maps of the sphere in the visualization layer | Accepted, provisionally; amends 0014, 0044, 0046 and 0068 |
 
 ## 2. Template
 

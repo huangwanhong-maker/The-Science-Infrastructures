@@ -21,6 +21,7 @@ import * as scene from '../scene/index.js';
 import * as renderers from '../renderers/index.js';
 import { fieldMarks } from '../renderers/three/index.js';
 import { sequentialColour as complexSequential, categoricalColour as complexCategorical } from '../js/index.js';
+import { map } from '../js/index.js';
 
 const { check, assert, done } = suite();
 
@@ -775,6 +776,44 @@ const { check, assert, done } = suite();
   check('gis: a line resampled at eight points, 10 m apart, ends kept', Math.hypot(rs[3][0] - 30, rs[3][1]) + Math.hypot(rs[7][0] - 30, rs[7][1] - 40), 1e-12);
   const seq = gis.sequential(0, 10);
   assert('gis: a magnitude coloured, a missing one left uncoloured', Array.isArray(seq(5)) && seq(NaN) === null);
+}
+
+// ---- the 2D GIS (ADR 0069): projection, paths, arcs, the view, names after a naming policy ------------------
+{
+  const P = map.planar('equal-earth', 300);
+  let worst = 0;
+  for (const [lon, lat] of [[0, 0], [120.5, 23.7], [-73.9, 40.7], [151.2, -33.9], [-179, 80], [179, -60]]) {
+    const [x, y] = P.project(lon, lat);
+    const ll = P.unproject(x, y);
+    worst = Math.max(worst, Math.abs(ll[0] - lon), Math.abs(ll[1] - lat));
+  }
+  check('map: Equal Earth to the drawing and back, in degrees', worst, 1e-9);
+  assert('map: north is up and east is right in the drawing', P.project(0, 10)[1] < 0 && P.project(10, 0)[0] > 0);
+  assert('map: beyond the map there is no place', P.unproject(P.W * 1.2, 0) === null);
+  const pacific = P.greatCircle({ latitude: 35, longitude: 170 }, { latitude: 37, longitude: -122 });
+  assert('map: an arc across the antimeridian is split at the edge of the map', (pacific.match(/M/g) || []).length === 2, pacific.slice(0, 60));
+  const europe = P.greatCircle({ latitude: 48.9, longitude: 2.35 }, { latitude: 52.5, longitude: 13.4 });
+  assert('map: an arc within Europe is one path', (europe.match(/M/g) || []).length === 1);
+  assert('map: two places at one point have no arc', P.greatCircle({ latitude: 1, longitude: 1 }, { latitude: 1, longitude: 1 }) === '');
+  const sq = P.feature({ type: 'Polygon', coordinates: [[[0, 0], [10, 0], [10, 10], [0, 10], [0, 0]]] });
+  assert('map: a polygon is a closed ring, a multipolygon its rings', (sq.match(/M/g) || []).length === 1 && sq.endsWith('Z')
+    && (P.feature({ type: 'MultiPolygon', coordinates: [[[[0, 0], [1, 0], [1, 1], [0, 0]]], [[[5, 5], [6, 5], [6, 6], [5, 5]]]] }).match(/M/g) || []).length === 2);
+  assert('map: the outline closes', P.outline().endsWith('Z'));
+  const v = map.zoomAt(map.identity, 4, 100, 50);
+  const [ax, ay] = map.toPlane(v, 100, 50);
+  const [bx, by] = map.toPlane(map.identity, 100, 50);
+  check('map: zooming keeps the point under the pointer', Math.abs(ax - bx) + Math.abs(ay - by), 1e-12);
+  assert('map: zooming back to 1 is the whole map', JSON.stringify(map.zoomAt(v, 0.25, 3, 3)) === JSON.stringify({ k: 1, x: 0, y: 0 }));
+  const f = map.fit([[100, 100], [140, 120]], P.W, P.H);
+  const [cx, cy] = map.toPlane(f, 0, 0);
+  check('map: fitting centres the points framed', Math.abs(cx - 120) + Math.abs(cy - 110), 1e-9);
+  const policy = map.namingPolicy({ names: { TWN: 'Chinese Taipei', CYN: null }, unlabelled: ['TWN'], seas: ['Sea of Japan'] });
+  assert('map: the naming policy renames, keeps disputed territories and seas unlabelled, and leaves the rest',
+    policy.name('TWN', 'Taiwan') === 'Chinese Taipei' && !policy.labelled('TWN') && !policy.labelled('CYN') && policy.labelled('FRA')
+    && policy.name('FRA', 'France') === 'France' && !policy.seaLabelled('Sea of Japan') && policy.seaLabelled('Baltic Sea'));
+  const placed = map.placeLabels([{ id: 'A', text: 'Alpha', x: 0, y: 0 }, { id: 'B', text: 'Beta', x: 2, y: 0 }, { id: 'TWN', text: 'Chinese Taipei', x: 100, y: 0 },
+    { id: 'C', text: 'Gamma', x: 200, y: 0 }], { px: 1, policy });
+  assert('map: names placed by priority, none on another, none the policy keeps off the map', placed.map((q) => q.id).join() === 'A,C', placed.map((q) => q.id).join());
 }
 
 done();

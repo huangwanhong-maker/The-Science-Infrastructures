@@ -38,6 +38,7 @@
   /* the data (read by palette.js) */
   --sends: #4A86C5; --draws: #E0607E; --neutral: #F1F0EA; --ramp-gold: #DDB65A; --magnitude: #A8701A;
   --driven: #5B63B0; --local: #E0607E; --global: #C39A2E; --reciprocal: #EFE0B4;
+  --map-disputed-ground: #E7E8E2; --map-disputed-hatch: #B4B3AA;   /* areas in dispute: no country's colour */
   /* type and geometry */
   --serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
   --mono: ui-monospace, 'Cascadia Mono', Consolas, monospace;
@@ -57,6 +58,7 @@
   --sea: #1A1E22; --land: #2A2F34; --coast: #15181B; --graticule: rgba(233, 231, 225, 0.06);
   --sends: #5E92D4; --draws: #CF5F7A; --neutral: #2A2E33; --ramp-gold: #D6BB72; --magnitude: #F8E7B5;
   --driven: #7178C6; --local: #CF5F7A; --global: #AE8D36; --reciprocal: #5C5236;
+  --map-disputed-ground: #2A2F34; --map-disputed-hatch: #4C5359;
   --lift: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 18px rgba(0, 0, 0, 0.3);
   color-scheme: dark;
 }
@@ -231,6 +233,9 @@ main { position: relative; min-height: 0; overflow: hidden; }
 .legend .ends { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--ink-2); font-variant-numeric: lining-nums tabular-nums; }
 .legend .key { display: flex; align-items: center; gap: 8px; margin-top: 4px; line-height: 1.3; }
 .legend .key svg { flex: none; }
+.legend .key .hatch { flex: none; width: 28px; height: 10px; border: 1px solid var(--hair-2);
+  background: repeating-linear-gradient(45deg, var(--map-disputed-hatch) 0 1.2px, var(--map-disputed-ground) 1.2px 4px); }
+.map .area-disputed { stroke: var(--coast); stroke-width: 0.45; vector-effect: non-scaling-stroke; }
 .legend .source { margin-top: 8px; padding-top: 6px; border-top: 1px solid var(--hair); font-size: 11px; color: var(--ink-faint); }
 .tip { position: fixed; z-index: 20; pointer-events: none; min-width: 170px; max-width: 290px; padding: 8px 10px 9px; background: var(--card); border: 1px solid var(--border); border-top: 2px solid var(--accent); border-radius: var(--r); box-shadow: var(--lift); font-size: 12.5px; color: var(--ink-2); opacity: 0; transition: opacity .1s; }
 .tip.on { opacity: 1; }

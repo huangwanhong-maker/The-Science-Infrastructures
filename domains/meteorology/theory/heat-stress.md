@@ -60,7 +60,7 @@ The National Weather Service computes the heat index $HI$ (°F) from $T$ (°F) a
 
 ## 4. Thresholds
 
-- **Wet-bulb temperature.** A sustained $T_w$ of 35 °C is the theoretical bound of human heat loss: skin at 35 °C can no longer shed metabolic heat (Sherwood and Huber 2010). Measurements in young, healthy people find their limits lower, near 31 °C in humid heat (Vecellio et al. 2022). Wet-bulb temperatures above 31 °C are rare, and above 35 °C have been recorded only for an hour or two at a few stations by the Persian Gulf and in South Asia (Raymond et al. 2020).
+- **Wet-bulb temperature.** A sustained $T_w$ of 35 °C is the theoretical bound of human heat loss: skin at 35 °C can no longer shed metabolic heat (Sherwood and Huber 2010). Measurements in young, healthy people find their limits lower, near 31 °C in humid heat (Vecellio et al. 2022). Wet-bulb temperatures above 31 °C are rare, and above 35 °C have been recorded only for an hour or two at a few stations on the coasts of the Gulf between Arabia and Iran, and in South Asia (Raymond et al. 2020).
 - **Heat index.** The NWS names four classes: caution, 80–90 °F (27–32 °C); extreme caution, 90–103 °F (32–39 °C); danger, 103–124 °F (39–51 °C); extreme danger, above 124 °F (51 °C).
 
 ## 5. The Excess over the Normal

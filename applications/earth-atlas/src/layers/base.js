@@ -161,19 +161,24 @@ export class BaseLayer {
       }
     }
     const upper = /^(en|fr|de|es|pt|it|nl|pl|sv|ru|uk|el|tr|id|vi|hu)$/.test(lang);
+    // The data library's naming policy (ADR 0069): no name drawn for a territory or a sea whose name or
+    // status is in dispute, and a city within such a territory drawn as a place, not as a capital.
+    const unlabelled = new Set(L.countries.filter((c) => c.labelled === false).map((c) => c.id));
     for (const c of [...L.countries].sort((a, b) => a.min_label - b.min_label || a.label_rank - b.label_rank)) {
+      if (c.labelled === false || !name(c.names)) continue;
       const sovereign = c.type === 'Sovereign country' || c.type === 'Country';
       if (c.min_label > zoom + (sovereign ? 0.7 : -0.6)) continue;
       items.push({ key: `c${c.id}`, text: name(c.names), lon: c.label[0], lat: c.label[1], className: 'country', font: '600 11px "Source Serif 4", serif', upper, tracking: 1.3, size: 12 });
     }
     for (const m of L.marine) {
-      if (m.class === 'ocean' || m.min_label > zoom + 0.6) continue;
+      if (m.class === 'ocean' || m.labelled === false || m.min_label > zoom + 0.6) continue;
       items.push({ key: `m${m.names.default}`, text: name(m.names), lon: m.label[0], lat: m.label[1], className: 'sea', font: 'italic 11.5px "Source Serif 4", serif', size: 12 });
     }
     const rankLimit = zoom < 2.8 ? -1 : zoom < 3.4 ? 0 : zoom < 4 ? 1 : zoom < 4.6 ? 2 : zoom < 5.4 ? 4 : 10;
     for (const p of L.places) {
-      if (p.rank > rankLimit && !(p.capital && zoom >= 3.6)) continue;
-      items.push({ key: `p${p.names.default}${p.lon}`, text: name(p.names), lon: p.lon, lat: p.lat, className: p.capital ? 'place capital' : 'place', font: '12px "Source Serif 4", serif', anchor: 'right', size: 13 });
+      const capital = p.capital && !unlabelled.has(p.country);
+      if (p.rank > rankLimit && !(capital && zoom >= 3.6)) continue;
+      items.push({ key: `p${p.names.default}${p.lon}`, text: name(p.names), lon: p.lon, lat: p.lat, className: capital ? 'place capital' : 'place', font: '12px "Source Serif 4", serif', anchor: 'right', size: 13 });
     }
     return items;
   }

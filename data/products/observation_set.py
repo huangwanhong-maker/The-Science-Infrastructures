@@ -127,7 +127,7 @@ def relative_humidity(temperature: float | None, dew_point: float | None) -> flo
 
 LIMITS = {
     "air_temperature": (180.0, 335.0),            # -89.2 C, Vostok, 1983; 56.7 C, Death Valley, 1913
-    "dew_point_temperature": (170.0, 315.0),      # the highest reported are near 35 C, by the Persian Gulf
+    "dew_point_temperature": (170.0, 315.0),      # the highest reported are near 35 C, on the coasts of the Gulf
     "relative_humidity": (0.0, 102.0),            # little supersaturation; beyond, the dew point exceeds the temperature
     "air_pressure": (30000.0, 110000.0),          # about 330 hPa on the summit of Everest
     "air_pressure_at_sea_level": (85000.0, 110000.0),   # 870 hPa, Typhoon Tip, 1979; about 1085 hPa, Mongolia, 2001

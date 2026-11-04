@@ -36,6 +36,7 @@ MOON = CACHE / "usgs-moon-nomenclature" / "MOON_nomenclature_center_pts.zip"
 FIELDS = ["name", "lon", "lat", "kind", "detail", "size_km", "link"]
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from naming import AREAS, POLICY  # noqa: E402  (place names after naming.json, ADR 0069)
 
 
 def sha256(path: Path) -> str:
@@ -68,14 +69,23 @@ def earth() -> dict:
     places = json.loads((NE / "ne_50m_populated_places.geojson").read_text(encoding="utf-8"))["features"]
     for f in places:
         p = f["properties"]
-        rows.append([p["NAME"], round(float(p["LONGITUDE"]), 5), round(float(p["LATITUDE"]), 5), p["FEATURECLA"],
-                     p.get("ADM0NAME") or "", None, None, int(p.get("POP_MAX") or 0), int(p.get("SCALERANK") or 10)])
+        lon, lat = float(p["LONGITUDE"]), float(p["LATITUDE"])
+        # (Tested at the feature's point, as the geography does: the attributes' point of a city on a
+        # coast may fall in the sea at this scale, Sevastopol's.)
+        at = f["geometry"]["coordinates"][:2]
+        kind, keeps = POLICY.place(p["NAME"], p["FEATURECLA"], (p.get("ADM0_A3"), p.get("SOV_A3")), at[0], at[1], AREAS)
+        country = (POLICY.name(p.get("ADM0_A3"), p.get("ADM0NAME") or "", p.get("SOV_A3")) or "") if keeps else ""
+        rows.append([p["NAME"], round(lon, 5), round(lat, 5), kind,
+                     country, None, None, int(p.get("POP_MAX") or 0), int(p.get("SCALERANK") or 10)])
     countries = json.loads((NE / "ne_50m_admin_0_countries.geojson").read_text(encoding="utf-8"))["features"]
     for f in countries:
         p = f["properties"]
-        if p.get("LABEL_X") is None:
+        name = POLICY.name(POLICY.code(p), p.get("NAME_LONG") or p["NAME"], p.get("ADM0_A3"))
+        # A territory the policy does not label is not a country of the gazetteer (a globe draws its
+        # countries' names); its places are found by their own names.
+        if p.get("LABEL_X") is None or name is None or not POLICY.labelled(POLICY.code(p), p.get("ADM0_A3")):
             continue
-        rows.append([p.get("NAME_LONG") or p["NAME"], round(float(p["LABEL_X"]), 5), round(float(p["LABEL_Y"]), 5), "Country",
+        rows.append([name, round(float(p["LABEL_X"]), 5), round(float(p["LABEL_Y"]), 5), "Country",
                      p.get("CONTINENT") or "", None, None, int(p.get("POP_EST") or 0) * 10, -1])
     # Countries, then capitals and the most populous places.
     rows.sort(key=lambda r: (r[8], -r[7]))

@@ -3,7 +3,7 @@
   "about": "The datasets the atlas draws and the products built from them, in the order of applications/earth-atlas/README.md §2. Run with data/acquisition/recipe.py, or from the page's Data panel. The AI forecast (Pangu-Weather) needs the model environment and is run apart.",
   "steps": [
     {"id": "natural-earth-50m", "title": "Natural Earth 1:50 million: coasts, countries, rivers and places",
-     "run": ["data/acquisition/fetch.py", "natural-earth-50m"], "done": "data/cache/natural-earth-50m/**/retrieval.json"},
+     "run": ["data/acquisition/fetch.py", "natural-earth-50m"], "done": "data/cache/natural-earth-50m/ne_50m_admin_0_breakaway_disputed_areas.geojson"},
     {"id": "geography", "title": "The map, built from Natural Earth",
      "run": ["data/products/geography.py"], "done": "data/cache/products/geography-ne50m.json"},
     {"id": "ghsl-population", "title": "GHS-POP: where the people of the Earth live, 2025 (JRC, 356 MB)",

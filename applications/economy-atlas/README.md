@@ -18,6 +18,7 @@ Everything shown is computed by the domain's C++ on the foundations. Plug-ins in
   - Places are coloured by α; by the flows' other measures (net inflow, exports, imports, the share circulating); by any of the World Bank's indicators in the toolbox's table of economies (GDP per capita, population, life expectancy, CO₂ per person, the Gini index and others), in the map's year or the latest of the five before it, on a log scale where they span decades; or by the values a plug-in or a tool returned.
   - *Local circulation* turns round the triangles of neighbours, drawn as rose eddies. *Global circulation* runs round the loops of distant partners no triangle fills.
   - Arcs are the largest net flows, their driven or circulating parts, or a plug-in's arcs. Each wears the colour of its largest part: indigo driven, rose round the triangles, gold round the holes.
+  - Places are named by the data library's naming policy ([ADR 0069](../../development/decisions/0069-names-of-places-and-a-2d-gis.md)): Chinese Taipei; Hong Kong, China; West Bank and Gaza; Türkiye. The map draws no name for a territory in dispute. Natural Earth's areas in dispute are drawn over the countries, hatched, in no country's colour and unnamed.
   - The map zooms (the wheel, the buttons) and pans (dragging), and fits a regional dataset. Places without a country of their own are circles. The pointer brings a card for a place or an arc. A place is found by its name or code, or clicked: its card gives its flows, attraction and largest net flows, each with the share of it driven and circulating, and its trade over the years beside the indicator the map is coloured by.
   - A strip of years beneath the map gives every year's shares of the net flows' energy; a click, or ← and →, chooses the year, and **play** goes through them, each year's decomposition fetched while the one before is shown.
   - The dock and the inspector fold away (‹ controls, inspector ›), and the map takes the room. Its instruments name the projection, the longitude and latitude under the pointer and the zoom; each legend ends with its source, year, unit and projection.
@@ -210,6 +211,7 @@ Fewer than four places make no map's faces: their flows are decomposed on their 
 | `POST /api/production` `{"table", …}` | the engine's `production` |
 | `POST /api/circuits` `{"network"}` | the engine's `circuits` |
 | `POST /api/cancel` | stops the computations in progress |
+| `GET /api/names` | the naming policy: `{names: {code: name}, unlabelled: [code], seas: [name]}` |
 | `GET /api/datasets`, `POST /api/datasets` `{"kind", "title", "files": [{name, text}], "base"?}`, `DELETE /api/datasets/<id>` | the datasets |
 | `GET /api/plugins`, `GET /api/plugins/describe?file=` | the plug-ins and their descriptions |
 | `POST /api/plugins/run` `{"file", "params", "dataset"?, "year"?}` | starts a run; `{"job"}` |
@@ -233,7 +235,7 @@ Answers for a year or a span are kept in `data/cache/economy-atlas/answers/`, ke
 | `src/toolbox.js`, `src/tools.js`, `src/charts.js` | The toolbox's view, its catalogue of tools, and its charts |
 | `plugins/` | The plug-ins, with their README and three examples |
 | `examples/` | Invented data to try the formats |
-| `src/map.js` | The map: places, arcs, eddies and the plug-ins' layers on Equal Earth; zoom, the card under the pointer, the strip of years; its instruments, the address it keeps, and its figures |
+| `src/map.js` | The map, on the visualization layer's 2D GIS (`visualization/js/map`): places, arcs, eddies and the plug-ins' layers on Equal Earth, named by the policy; the card under the pointer, the strip of years; the address it keeps, and its figures |
 | `src/plugins.js`, `src/data.js`, `src/state.js` | The plug-ins' forms and runs, the dialog for one's own data, what the views share |
 | `src/spacetime.js` | The currencies' sheet of lenses and their cumulative curvature |
 | `src/production.js`, `src/circuits.js`, `src/presets.js` | The editable table and network, and their examples |

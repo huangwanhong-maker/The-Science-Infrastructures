@@ -48,6 +48,8 @@ APP = Path(__file__).resolve().parent
 ROOT = APP.parents[1]
 PRODUCTS = ROOT / "data" / "cache" / "products"
 TRADE = PRODUCTS / "trade-flows.json"
+sys.path.insert(0, str(ROOT / "data" / "products"))
+from naming import POLICY  # noqa: E402  (the names of places, ADR 0069)
 CURRENCIES = PRODUCTS / "currency-spacetime.json"
 STORE = ROOT / "data" / "cache" / "economy-atlas" / "datasets"
 LIMIT_PLACES, LIMIT_FLOWS = 5000, 2_000_000
@@ -161,7 +163,8 @@ def make_flows(title: str, files: list[dict]) -> dict:
         if ident in places:
             canon[ident] = ident
             continue
-        e = by_code.get(ident.upper()) or by_name.get(ident.casefold())
+        # By code, by the library's name, or by a name the policy keeps as an alias (Taiwan, Turkey).
+        e = by_code.get(ident.upper()) or by_name.get(ident.casefold()) or by_code.get(POLICY.resolve(ident) or "")
         if e is None:
             unknown.append(ident)
             continue

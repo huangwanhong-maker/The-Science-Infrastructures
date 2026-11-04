@@ -27,7 +27,7 @@
         "data/acquisition/fetch.py",
         "natural-earth-50m"
       ],
-      "done": "data/cache/natural-earth-50m/retrieval.json"
+      "done": "data/cache/natural-earth-50m/ne_50m_admin_0_breakaway_disputed_areas.geojson"
     },
     {
       "id": "trade-flows",

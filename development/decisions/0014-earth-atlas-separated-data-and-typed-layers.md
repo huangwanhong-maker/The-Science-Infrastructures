@@ -1,6 +1,6 @@
 # 0014. The Earth Atlas: Separated Data and Typed Layers
 
-- **Status:** Accepted, provisionally: built while the user was away; open to revision on review. Amended by [0015](0015-earth-atlas-models-imagery-detail.md).
+- **Status:** Accepted, provisionally: built while the user was away; open to revision on review. Amended by [0015](0015-earth-atlas-models-imagery-detail.md) and [0069](0069-names-of-places-and-a-2d-gis.md) (the names of places and seas).
 - **Date:** 2026-10-22
 - **Decided by:** the user asked for an application for the Earth that integrates geography, oceanography, meteorology and climate, taking Windy as an inspiration but not as a design; asked that geographic data be kept separate, because many kinds of data will be shown on the Earth (climate simulations, climate data, our own results, economic and population data); and asked for high quality. Claude chose the design below.
 

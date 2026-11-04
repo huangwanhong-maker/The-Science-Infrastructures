@@ -39,6 +39,7 @@ KEPT = CACHE / "economy-atlas" / "tables"
 WDI = CACHE / "worldbank-indicators"
 sys.path.insert(0, str(APP))
 import datasets  # noqa: E402
+from naming import POLICY  # noqa: E402  (the names of places, ADR 0069; datasets put data/products on the path)
 
 # The World Bank's profiles the economies table joins, as columns (data/registry/worldbank-indicators.json).
 INDICATORS = [
@@ -125,7 +126,7 @@ def _economies() -> dict:
             cells.setdefault((code, int(r["date"])), {})[column] = float(value)
     rows = []
     for (code, year), c in sorted(cells.items(), key=lambda kv: (kv[0][0], kv[0][1])):
-        row = {"iso3": code, "name": names.get(code, code), "region": region.get(code, ""), "income": income.get(code, ""), "year": year, **c}
+        row = {"iso3": code, "name": POLICY.name(code, names.get(code, code)) or code, "region": region.get(code, ""), "income": income.get(code, ""), "year": year, **c}
         if "exports" in c or "imports" in c:
             row["exports"], row["imports"] = c.get("exports", 0.0), c.get("imports", 0.0)
             row["balance"] = row["imports"] - row["exports"]

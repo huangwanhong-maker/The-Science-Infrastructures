@@ -165,7 +165,7 @@ Reciprocal is the share of exports exchanged both ways; driven, local and global
 - **Drive.** The balances drive between 36% and 44% of the net flows' energy. The rest circulates, almost all of it through distant links: the balances explain less than half of who sends value to whom.
 - **Attraction.** Among the economies trading over 20 bn $, the exporters of oil, gas and ores have the lowest attraction every year (Qatar, Kuwait, Angola, Saudi Arabia, Guinea: −0.55 to −0.84). The highest belong to Panama and Liberia, flags under which ships built abroad are registered and to which they are recorded as exported, and Lebanon.
 - **The United States.** Its attraction is near the world's middle. Its large driven inflow comes from its partners' low attraction (China's, Germany's) times their large gross trade with it, not from a high attraction of its own.
-- **Eddies.** The largest circulation round a triangle of neighbours is, in most years, Korea → Taiwan → China → Korea: 10 bn $ in 2010, 26 bn $ in 2024. Belgium, Germany and the Netherlands (12 to 15 bn $ since 2022) and Denmark, the United Kingdom and the Netherlands follow. Local eddies are only about 1.3% of the energy, since 394 triangles span few of the net network's cycles, but they are where neighbours' trade runs round.
+- **Eddies.** The largest circulation round a triangle of neighbours is, in most years, Korea → Chinese Taipei → China → Korea: 10 bn $ in 2010, 26 bn $ in 2024. Belgium, Germany and the Netherlands (12 to 15 bn $ since 2022) and Denmark, the United Kingdom and the Netherlands follow. Local eddies are only about 1.3% of the energy, since 394 triangles span few of the net network's cycles, but they are where neighbours' trade runs round.
 
 ### 6.2 Currencies
 

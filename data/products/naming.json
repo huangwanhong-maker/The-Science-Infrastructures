@@ -1,0 +1,268 @@
+{
+  "schema": "place-names/1",
+  "title": "The names of places in the infrastructure's products and maps",
+  "policy": [
+    "Places are named by Natural Earth's long names, except where such a name is in dispute or out of date. Then the place takes the short name of the United Nations Statistics Division's Standard Country or Area Codes for Statistical Use (M49), the usage of international statistics.",
+    "A territory that M49 does not list, or lists under a name in dispute, is named as the international organisations whose statistics the infrastructure draws name it: the WTO, the OECD, the World Bank and the IMF.",
+    "A map draws no name for a territory whose status is in dispute (label false), and a territory without data and without a name in that usage is given none (name null). Its data, where there are data, keep the name of this file.",
+    "Names current before, or used by the source of a dataset, are kept as aliases, so that data of one's own written with them still resolve.",
+    "An area that Natural Earth lists as in dispute or breakaway (ne_50m_admin_0_breakaway_disputed_areas) is drawn on a map as an area in dispute, in no claimant's colour and without a name. A place in it is given no country, and no place in it, or in a territory the map does not label, is listed as a national capital; places named below are listed as they say."
+  ],
+  "names": {
+    "TWN": {
+      "name": "Chinese Taipei",
+      "label": false,
+      "source": "WTO and OECD (the separate customs territory of Taiwan, Penghu, Kinmen and Matsu); not listed in M49",
+      "aliases": [
+        "Taiwan",
+        "Taiwan, China",
+        "Taiwan Province of China"
+      ],
+      "local": {
+        "zh": "中华台北",
+        "zht": "中華台北",
+        "ja": "チャイニーズタイペイ",
+        "ko": "차이니스 타이베이"
+      }
+    },
+    "HKG": {
+      "name": "Hong Kong, China",
+      "source": "WTO and OECD; M49: China, Hong Kong Special Administrative Region",
+      "aliases": [
+        "Hong Kong",
+        "Hong Kong SAR, China",
+        "Hong Kong SAR"
+      ],
+      "local": {
+        "zh": "中国香港",
+        "zht": "中國香港",
+        "ja": "中国香港",
+        "ko": "중국 홍콩"
+      }
+    },
+    "MAC": {
+      "name": "Macao, China",
+      "source": "WTO and OECD; M49: China, Macao Special Administrative Region",
+      "aliases": [
+        "Macao",
+        "Macau",
+        "Macao SAR, China",
+        "Macau, China"
+      ],
+      "local": {
+        "zh": "中国澳门",
+        "zht": "中國澳門",
+        "ja": "中国マカオ",
+        "ko": "중국 마카오"
+      }
+    },
+    "PSE": {
+      "name": "West Bank and Gaza",
+      "label": false,
+      "source": "World Bank and IMF",
+      "aliases": [
+        "Palestine",
+        "State of Palestine",
+        "Palestinian Territories"
+      ],
+      "local": {
+        "zh": "约旦河西岸和加沙",
+        "zht": "約旦河西岸和加薩",
+        "ja": "ヨルダン川西岸・ガザ",
+        "ko": "요르단강 서안 지구와 가자 지구"
+      }
+    },
+    "PSX": {
+      "name": "West Bank and Gaza",
+      "label": false,
+      "source": "Natural Earth's code for the places of the West Bank and Gaza, named as PSE",
+      "local": {
+        "zh": "约旦河西岸和加沙",
+        "zht": "約旦河西岸和加薩",
+        "ja": "ヨルダン川西岸・ガザ",
+        "ko": "요르단강 서안 지구와 가자 지구"
+      }
+    },
+    "XKX": {
+      "name": "Kosovo (UNSCR 1244)",
+      "label": false,
+      "source": "United Nations, under Security Council resolution 1244 (1999); not listed in M49",
+      "aliases": [
+        "Kosovo"
+      ],
+      "local": {
+        "zh": "科索沃（安理会第1244号决议）",
+        "zht": "科索沃（安理會第1244號決議）",
+        "ja": "コソボ（国連安保理決議1244）",
+        "ko": "코소보 (안보리 결의 1244)"
+      }
+    },
+    "KOS": {
+      "name": "Kosovo (UNSCR 1244)",
+      "label": false,
+      "source": "Natural Earth's code for Kosovo's polygon, named as XKX",
+      "local": {
+        "zh": "科索沃（安理会第1244号决议）",
+        "zht": "科索沃（安理會第1244號決議）",
+        "ja": "コソボ（国連安保理決議1244）",
+        "ko": "코소보 (안보리 결의 1244)"
+      }
+    },
+    "ESH": {
+      "name": "Western Sahara",
+      "label": false,
+      "source": "M49 (a non-self-governing territory)",
+      "aliases": [
+        "W. Sahara"
+      ],
+      "local": {
+        "zh": "西撒哈拉",
+        "zht": "西撒哈拉",
+        "ja": "西サハラ",
+        "ko": "서사하라"
+      }
+    },
+    "SAH": {
+      "name": "Western Sahara",
+      "label": false,
+      "source": "Natural Earth's code for Western Sahara's polygon",
+      "local": {
+        "zh": "西撒哈拉",
+        "zht": "西撒哈拉",
+        "ja": "西サハラ",
+        "ko": "서사하라"
+      }
+    },
+    "FLK": {
+      "name": "Falkland Islands (Malvinas)",
+      "label": false,
+      "source": "M49",
+      "aliases": [
+        "Falkland Islands",
+        "Malvinas",
+        "Falkland Is."
+      ],
+      "local": {
+        "zh": "福克兰群岛（马尔维纳斯）",
+        "zht": "福克蘭群島（馬爾維納斯）",
+        "ja": "フォークランド（マルビナス）諸島",
+        "ko": "포클랜드 (말비나스) 제도"
+      }
+    },
+    "IOT": {
+      "name": null,
+      "label": false,
+      "source": "sovereignty under transfer (the Chagos Archipelago); not named where there are no data"
+    },
+    "CYN": {
+      "name": null,
+      "label": false,
+      "source": "a territory not recognised by the United Nations; not named"
+    },
+    "SOL": {
+      "name": null,
+      "label": false,
+      "source": "a territory not recognised by the United Nations; not named"
+    },
+    "KAS": {
+      "name": null,
+      "label": false,
+      "source": "a territory of indeterminate status; not named"
+    },
+    "TUR": {
+      "name": "Türkiye",
+      "source": "M49 (since 2022)",
+      "aliases": [
+        "Turkey",
+        "Turkiye"
+      ]
+    },
+    "CZE": {
+      "name": "Czechia",
+      "source": "M49",
+      "aliases": [
+        "Czech Republic"
+      ]
+    },
+    "SWZ": {
+      "name": "Eswatini",
+      "source": "M49",
+      "aliases": [
+        "Swaziland",
+        "eSwatini",
+        "Kingdom of eSwatini"
+      ]
+    },
+    "CPV": {
+      "name": "Cabo Verde",
+      "source": "M49",
+      "aliases": [
+        "Cape Verde",
+        "Republic of Cabo Verde"
+      ]
+    },
+    "CIV": {
+      "name": "Côte d'Ivoire",
+      "source": "M49",
+      "aliases": [
+        "Ivory Coast",
+        "Cote d'Ivoire"
+      ]
+    },
+    "MKD": {
+      "name": "North Macedonia",
+      "source": "M49 (since 2019)",
+      "aliases": [
+        "Macedonia",
+        "FYR Macedonia"
+      ]
+    },
+    "MMR": {
+      "name": "Myanmar",
+      "source": "M49",
+      "aliases": [
+        "Burma"
+      ]
+    },
+    "TLS": {
+      "name": "Timor-Leste",
+      "source": "M49",
+      "aliases": [
+        "East Timor"
+      ]
+    }
+  },
+  "places": {
+    "Nicosia": {
+      "kind": "Admin-0 capital",
+      "source": "the capital of Cyprus (M49); Natural Earth's point lies north of the buffer zone, in the area it lists as in dispute"
+    },
+    "Jerusalem": {
+      "kind": "Populated place",
+      "country": null,
+      "source": "its status is in dispute (UN General Assembly resolution 181, Security Council resolution 478); listed without a country and not as a capital"
+    }
+  },
+  "seas": {
+    "Sea of Japan": {
+      "label": false,
+      "source": "named the Sea of Japan by the IHO (S-23); the East Sea in Korean usage"
+    },
+    "Persian Gulf": {
+      "label": false,
+      "source": "named the Persian Gulf by the IHO and the UN; the Arabian Gulf in Arabic usage"
+    },
+    "Gulf of Mexico": {
+      "label": false,
+      "source": "named the Gulf of Mexico by the IHO; the Gulf of America in US federal usage since 2025"
+    },
+    "South China Sea": {
+      "label": false,
+      "source": "named the South China Sea by the IHO; the East Sea and the West Philippine Sea in Vietnamese and Philippine usage"
+    },
+    "Korea Strait": {
+      "label": false,
+      "source": "its eastern channel the Tsushima Strait in Japanese usage"
+    }
+  }
+}

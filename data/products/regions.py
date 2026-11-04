@@ -69,6 +69,7 @@ import numpy as np
 
 DATA = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from naming import POLICY  # noqa: E402  (place names after naming.json, ADR 0069)
 from product_index import OUT, register  # noqa: E402
 
 EARTH_RADIUS_KM = 6371.0088          # mean radius R1 of GRS 80 and WGS 84 (Moritz 2000)
@@ -101,7 +102,7 @@ def countries() -> tuple[list[dict], dict]:
         if code in taken:
             raise SystemExit(f"two countries claim the code {code}: {taken[code]} and {p['NAME']}")
         taken[code] = p["NAME"]
-        regions.append({"code": code, "name": p["NAME"], "country": code, "parent": None,
+        regions.append({"code": code, "name": POLICY.name(code, p["NAME"], p["ADM0_A3"]) or code, "country": code, "parent": None,
                         "adm0_a3": p["ADM0_A3"], "continent": p["CONTINENT"], "geometry": f["geometry"]})
     return regions, source_of(manifest, folder, "Natural Earth 1:50 million countries")
 

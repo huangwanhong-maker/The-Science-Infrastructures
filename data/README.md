@@ -157,6 +157,16 @@ Products are written to `data/cache/products/` and listed by kind in `index.json
 | `city-events` | `city_events.py` | A district's record for the workbench's Event Spacetime (ADR 0067): Melbourne's middle of the Hoddle Grid (Landscape Dynamics' district and 60 m about it), 2002–2024, in the city model's local metres. CLUE's base properties, each joined to the city model's building whose footprint holds its point (else the nearest within 15 m); CLUE's building rows at every census; the establishments with their ANZSIC 2006 classes (divisions by the ABS's ranges); and dated events, recorded only: births and refurbishments from CLUE, the Development Activity Monitor's completions, registrations on the Victorian Heritage Register and their last amendment, event permits on the district's streets. Each event typed (birth, alteration, institution, regime), labelled by an interval at its own resolution, matched by identifier (a property, a building, a rule, streets or a point), with its source; a report of counts, joins, drops and unmatched street names (`city-events-melbourne`). Building permits are to follow, once their addresses are geocoded to property boundaries. | `.json` (tables as columns and rows) |
 | `land-mask` | `land_mask.py` | Land and sea: Natural Earth's land at 1:50m rasterised at 20 pixels per degree and eroded by a pixel, the Caspian kept as land, for telling the sea from land below sea level. Not listed in the index. | `.png` and `.json` |
 
+### 4.1 The Names of Places
+
+Every product that names places follows one policy, kept as data in `products/naming.json` and read by `products/naming.py` ([ADR 0069](../development/decisions/0069-names-of-places-and-a-2d-gis.md)):
+
+- **Names.** Places take Natural Earth's long names, except where a name is in dispute or out of date. Those take the UN's M49 short name, or else the usage of the WTO, the OECD, the World Bank and the IMF (Chinese Taipei; Hong Kong, China; West Bank and Gaza; Kosovo (UNSCR 1244); Türkiye). Former names resolve as aliases.
+- **What a map does not draw.** It draws no name for a territory whose status is in dispute, nor for a sea whose name is in dispute.
+- **Areas in dispute.** Natural Earth's areas in dispute or breakaway (`ne_50m_admin_0_breakaway_disputed_areas`) are drawn in no claimant's colour and unnamed. A place in one has no country, and no place there, or in a territory not labelled, is listed as a national capital.
+
+The trade flows, the geography, the gazetteer and the regions apply it. Rebuild them after changing it. `tests/check_naming.py` checks it.
+
 ## 5. Datasets
 
 ### 5.1 Registered

@@ -33,6 +33,7 @@ import numpy as np
 
 DATA = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from naming import AREAS, POLICY  # noqa: E402  (place names after naming.json, ADR 0069)
 from product_index import OUT, register  # noqa: E402
 
 SOURCE = DATA / "cache" / "natural-earth-50m"
@@ -137,7 +138,8 @@ def build(name: str) -> dict:
                 "wb_a3": code(p["WB_A3"]), "iso_a2": code(p["ISO_A2"]), "iso_a2_eh": code(p["ISO_A2_EH"]),
                 "wb_a2": code(p["WB_A2"]), "iso_n3": code(p["ISO_N3"]), "sov_a3": code(p["SOV_A3"]),
             },
-            "names": names(p, "NAME_", "NAME") | {"long": p["NAME_LONG"], "formal": p.get("FORMAL_EN")},
+            "names": POLICY.local(code(p["ISO_A3"]) or code(p["ISO_A3_EH"]), names(p, "NAME_", "NAME") | {"long": p["NAME_LONG"], "formal": p.get("FORMAL_EN")}, p["ADM0_A3"]),
+            "labelled": POLICY.labelled(code(p["ISO_A3"]) or code(p["ISO_A3_EH"]), p["ADM0_A3"]),
             "type": p["TYPE"],
             "continent": p["CONTINENT"], "region_un": p["REGION_UN"], "subregion": p["SUBREGION"],
             "label": [p["LABEL_X"], p["LABEL_Y"]],
@@ -154,7 +156,7 @@ def build(name: str) -> dict:
     marine = []
     for f in read("geography_marine_polys"):
         p = f["properties"]
-        marine.append({"names": names(p, "name_", "name"), "class": p["featurecla"], "rank": p["scalerank"],
+        marine.append({"names": names(p, "name_", "name"), "labelled": POLICY.sea_labelled(p.get("name")), "class": p["featurecla"], "rank": p["scalerank"],
                        "min_label": p["min_label"], "label": label_point(f["geometry"]),
                        "rings": b.rings(f["geometry"])})
     glaciers = [{"rings": b.rings(f["geometry"])} for f in read("glaciated_areas")]
@@ -170,8 +172,11 @@ def build(name: str) -> dict:
     for f in read("populated_places"):
         p = f["properties"]
         lon, lat = f["geometry"]["coordinates"][:2]
-        places.append({"names": names(p, "NAME_", "NAME"), "lon": lon, "lat": lat, "country": code(p["ADM0_A3"]),
-                       "class": p["FEATURECLA"], "capital": bool(p["ADM0CAP"]), "rank": p["SCALERANK"],
+        # After the naming policy: no country in an area in dispute, and no national capital there or
+        # in a territory not labelled.
+        kind, keeps = POLICY.place(p["NAME"], p["FEATURECLA"], (p["ADM0_A3"], p.get("SOV_A3")), lon, lat, AREAS)
+        places.append({"names": names(p, "NAME_", "NAME"), "lon": lon, "lat": lat, "country": code(p["ADM0_A3"]) if keeps else None,
+                       "class": kind, "capital": bool(p["ADM0CAP"]) and kind == p["FEATURECLA"], "rank": p["SCALERANK"],
                        "label_rank": p["LABELRANK"], "timezone": p.get("TIMEZONE")})
     places.sort(key=lambda q: (q["rank"], q["label_rank"]))
 

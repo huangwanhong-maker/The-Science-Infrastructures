@@ -17,6 +17,11 @@
 // pans, finds a place, and gives its numbers away as files and itself as a figure composed for
 // publication. Its instruments name the projection and the place under the pointer; its side panels
 // fold away; its address keeps what it shows, so that a view can be linked and drawn again.
+//
+// The map is the visualization layer's 2D GIS (visualization/js/map, ADR 0069): its projection, paths
+// and arcs, its view, its pointer, its names and its figures; this file draws on it what names
+// economies. Places are named after the data library's naming policy (data/products/naming.json): the
+// map draws no name for a territory whose status is in dispute.
 
 import * as api from './api.js';
 import { el, svg, clear, put, fill, money, quantity, percent, signed, shareBar, download, csv } from './dom.js';
@@ -25,70 +30,25 @@ import { diverging, sequential, rampCss, PART, onTheme } from './palette.js';
 import { shared, on, dataset } from './state.js';
 import { datasetChooser } from './data.js';
 import { pluginsSection } from './plugins.js';
-import { equalEarth, extent, outline, inverse } from '/domains/geography/js/projections.js';
+import { createMap, planar, placeLabels, namingPolicy, composeFigure, figurePng as drawPng } from '/visualization/js/map/index.js';
 
 const COUNTRIES = '/data/natural-earth-50m/ne_50m_admin_0_countries.geojson';
-const SCALE = 300;   // plane units to SVG units
-const [XM, YM] = extent(equalEarth);
-const W = XM * SCALE, H = YM * SCALE;
-const DEG = Math.PI / 180;
+// Natural Earth's areas in dispute or breakaway, drawn in no country's colour (ADR 0069).
+const DISPUTED = '/data/natural-earth-50m/ne_50m_admin_0_breakaway_disputed_areas.geojson';
+const DISPUTED_TEXT = 'an area in dispute: in no country’s colour';
+const P = planar('equal-earth', 300);   // the map's plane: Equal Earth, 300 drawing units to the projection's unit
+const W = P.W;
 // Trading enough to rank: over 20 bn $ of exports and imports, for the library's trade.
 const RANKED = 2e4;
 
 const state = {
   geo: null, answer: null, selected: null, wanted: undefined, cache: new Map(), year: null, years: [],
-  timeline: new Map(), view: { k: 1, x: 0, y: 0 }, opts: { faces: true, eddies: true, labels: true, flowing: true, shown: 150 },
-  drawn: [], built: false, covered: new Set(), indicators: null, playing: null,
+  timeline: new Map(), opts: { faces: true, eddies: true, labels: true, flowing: true, shown: 150 },
+  drawn: [], covered: new Set(), indicators: null, playing: null, gis: null, policy: namingPolicy(), disputed: null,
 };
 
-// The raw projection, not `forward`, which wraps +180° to −180°: Natural Earth splits its polygons at
-// the antimeridian, and a ring's vertices on +180° must stay on the map's right edge.
-const project = (lon, lat) => {
-  const [x, y] = equalEarth.raw(Math.max(-180, Math.min(180, lon)) * DEG, lat * DEG);
-  return [x * SCALE, -y * SCALE];
-};
-
-function economyCode(p) {
-  for (const k of ['ISO_A3', 'ISO_A3_EH', 'ADM0_A3']) if (p[k] && p[k] !== '-99' && p[k].length === 3) return p[k];
-  return null;
-}
-
-function ringPath(ring) {
-  let d = '';
-  ring.forEach(([lon, lat], i) => {
-    const [x, y] = project(lon, lat);
-    d += `${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`;
-  });
-  return `${d}Z`;
-}
-
-function featurePath(geometry) {
-  const polygons = geometry.type === 'Polygon' ? [geometry.coordinates] : geometry.type === 'MultiPolygon' ? geometry.coordinates : [];
-  return polygons.map((poly) => poly.map(ringPath).join('')).join('');
-}
-
-// The great-circle arc between two places, projected, split where it crosses the map's edge, lifted a
-// little so that arcs between the same places part.
-function arcPath(a, b, bulge = 0.12) {
-  const toVec = (lat, lon) => [Math.cos(lat * DEG) * Math.cos(lon * DEG), Math.cos(lat * DEG) * Math.sin(lon * DEG), Math.sin(lat * DEG)];
-  const u = toVec(a.latitude, a.longitude), v = toVec(b.latitude, b.longitude);
-  const omega = Math.acos(Math.max(-1, Math.min(1, u[0] * v[0] + u[1] * v[1] + u[2] * v[2])));
-  if (omega < 1e-6) return '';
-  const n = Math.max(8, Math.ceil(omega * 40));
-  let d = '', prev = null;
-  for (let i = 0; i <= n; i++) {
-    const t = i / n;
-    const s0 = Math.sin((1 - t) * omega) / Math.sin(omega), s1 = Math.sin(t * omega) / Math.sin(omega);
-    const p = [s0 * u[0] + s1 * v[0], s0 * u[1] + s1 * v[1], s0 * u[2] + s1 * v[2]];
-    const lat = Math.asin(Math.max(-1, Math.min(1, p[2]))) / DEG, lon = Math.atan2(p[1], p[0]) / DEG;
-    let [x, y] = project(lon, lat);
-    y -= bulge * SCALE * Math.sin(Math.PI * t) * omega * 0.35;
-    const jump = prev && Math.abs(x - prev[0]) > W;
-    d += `${!prev || jump ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`;
-    prev = [x, y];
-  }
-  return d;
-}
+const project = P.project;
+const arcPath = (a, b) => P.greatCircle(a, b);
 
 // ---- layers: what colours the places, which arcs ----------------------------------------------------------
 
@@ -238,6 +198,7 @@ function legend(C) {
     el('div', { class: 'title', text: C.title }),
     el('div', { class: 'ramp', style: { background: rampCss(C.kind) } }),
     el('div', { class: 'ends' }, el('span', { text: C.ends[0] }), el('span', { text: C.ends[1] })),
+    state.disputed ? el('div', { class: 'key' }, el('i', { class: 'hatch' }), DISPUTED_TEXT) : null,
     L ? key(PART.plugin, `arcs: ${L.title}`) : shared.arcs === 'none' ? null : [
       key(PART.driven, 'mostly driven: from senders to drawers'),
       key(PART.local, 'mostly circulating round the triangles of neighbours'),
@@ -256,42 +217,14 @@ function sourceLine() {
   return `${what}${A?.year ? `, ${A.year}` : ''}${unit ? ` · ${unit}` : ''} · Equal Earth`;
 }
 
-function buildBase() {
-  const host = document.getElementById('map');
-  host.setAttribute('viewBox', `${-W - 8} ${-H - 8} ${2 * W + 16} ${2 * H + 16}`);
-  clear(host);
-  const world = svg('g', { id: 'world' });
-  const sphere = outline(equalEarth, 160).map(([x, y], i) => `${i ? 'L' : 'M'}${(x * SCALE).toFixed(1)},${(-y * SCALE).toFixed(1)}`).join('') + 'Z';
-  put(world, svg('defs', {}, svg('clipPath', { id: 'sphere-clip' }, svg('path', { d: sphere }))));
-  put(world, svg('path', { class: 'sphere', d: sphere }));
-  // A graticule every 30°.
-  let g = '';
-  for (let lon = -180; lon <= 180; lon += 30) {
-    for (let lat = -90, i = 0; lat <= 90; lat += 3, i++) { const [x, y] = project(lon, lat); g += `${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`; }
-  }
-  for (let lat = -60; lat <= 60; lat += 30) {
-    for (let lon = -180, i = 0; lon <= 180; lon += 3, i++) { const [x, y] = project(lon, lat); g += `${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`; }
-  }
-  put(world, svg('path', { class: 'graticule', d: g, 'clip-path': 'url(#sphere-clip)' }));
-  const countries = svg('g', { id: 'countries' });
-  for (const f of state.geo.features) {
-    put(countries, svg('path', { class: 'country', d: featurePath(f.geometry), 'data-code': economyCode(f.properties) || '', 'data-name': f.properties.NAME || '' }));
-  }
-  put(world, countries, svg('g', { id: 'over' }));
-  put(host, world);
-  applyView();
-  state.built = true;
-}
-
 function draw() {
   const A = state.answer;
-  if (!state.geo || !A) return;
-  if (!state.built) buildBase();
+  if (!state.gis || !A) return;
   const C = colouring(A);
   legend(C);
   const byCode = new Map(A.economies.map((e, i) => [e.iso3, i]));
   state.covered = new Set();
-  for (const path of document.querySelectorAll('#countries .country')) {
+  for (const path of state.gis.countries()) {
     const i = byCode.get(path.dataset.code);
     const e = i === undefined ? null : A.economies[i];
     const colour = e ? C.of(e) : null;
@@ -324,12 +257,12 @@ function keepAddress() {
 // What lies over the countries, drawn again when the view zooms (its sizes are kept on the screen).
 function drawOver(C = state.answer ? colouring(state.answer) : null) {
   const A = state.answer;
-  const over = document.getElementById('over');
+  const over = state.gis?.over;
   if (!over || !A) return;
   clear(over);
-  const k = state.view.k, sk = Math.sqrt(k);
+  const k = state.gis.view.k, sk = Math.sqrt(k);
   // Sizes are given in pixels of the screen: the map's units per pixel, at this zoom.
-  const px = (2 * W + 16) / Math.max(1, document.getElementById('map').clientWidth) / k;
+  const px = state.gis.px();
   // Places without a country of their own: circles, by their flows.
   const through = A.economies.map((e) => e.exports + e.imports);
   const big = Math.max(1e-12, ...through);
@@ -391,18 +324,18 @@ function drawOver(C = state.answer ? colouring(state.answer) : null) {
   // The largest flows' places, named.
   const labels = svg('g', {});
   if (state.opts.labels) {
-    // From the largest down, each name where it touches none placed before it.
-    const order = A.economies.map((e, i) => [through[i], i]).sort((a, b) => b[0] - a[0]).slice(0, Math.round(16 * sk));
-    const placed = [];
-    for (const [, i] of order) {
+    // From the largest down, each name where it touches none placed before it, and none for a
+    // territory the naming policy keeps off the map.
+    const order = A.economies.map((e, i) => [through[i], i]).sort((a, b) => b[0] - a[0]);
+    const items = order.map(([, i]) => {
       const e = A.economies[i];
       const [x, y] = project(e.longitude, e.latitude);
-      const text = e.name.length > 18 ? e.iso3 : e.name;
-      const w = 0.5 * 12 * px * text.length, h = 13 * px, box = [x - w / 2, y - 6 * px - h, x + w / 2, y - 6 * px + 2 * px];
-      if (placed.some((b) => box[0] < b[2] && b[0] < box[2] && box[1] < b[3] && b[1] < box[3])) continue;
-      placed.push(box);
-      put(labels, svg('text', { class: 'label', x: x.toFixed(1), y: (y - 6 * px).toFixed(1), 'text-anchor': 'middle', 'font-size': (12 * px).toFixed(2),
-        'stroke-width': (3 * px).toFixed(2), text }));
+      const name = state.policy.name(e.iso3, e.name);
+      return { id: e.iso3, text: name && name.length > 18 ? e.iso3 : name, x, y };
+    });
+    for (const q of placeLabels(items, { px, size: 12, charWidth: 0.55, limit: Math.round(16 * sk), policy: state.policy })) {
+      put(labels, svg('text', { class: 'label', x: q.x.toFixed(1), y: q.y.toFixed(1), 'text-anchor': 'middle', 'font-size': (12 * px).toFixed(2),
+        'stroke-width': (3 * px).toFixed(2), text: q.text }));
     }
   }
   const m = 4 * px;
@@ -414,52 +347,12 @@ function drawOver(C = state.answer ? colouring(state.answer) : null) {
     faces, places, arcLayer, sketches, labels);
 }
 
-// ---- zoom and pan ---------------------------------------------------------------------------------------------
-
-function applyView() {
-  const world = document.getElementById('world');
-  if (world) world.setAttribute('transform', `translate(${state.view.x.toFixed(2)},${state.view.y.toFixed(2)}) scale(${state.view.k.toFixed(4)})`);
-}
-
-let settle = null;
-function zoomTo(k, px, py) {
-  const v = state.view;
-  const k2 = Math.max(1, Math.min(18, k));
-  v.x = px - (px - v.x) * (k2 / v.k);
-  v.y = py - (py - v.y) * (k2 / v.k);
-  v.k = k2;
-  if (k2 === 1) { v.x = 0; v.y = 0; }
-  applyView();
-  readout(null);
-  clearTimeout(settle);
-  settle = setTimeout(() => drawOver(), 140);
-}
+// ---- the map's view ---------------------------------------------------------------------------------------------
 
 // A dataset of a region: the view fitted to its places; the world's, the whole map.
 function fitToPlaces() {
   const A = state.answer;
-  if (!A) return;
-  const pts = A.economies.map((e) => project(e.longitude, e.latitude));
-  const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
-  const bw = Math.max(...xs) - Math.min(...xs), bh = Math.max(...ys) - Math.min(...ys);
-  if (bw > 1.2 * W || bh > 1.2 * H) { state.view = { k: 1, x: 0, y: 0 }; applyView(); return; }
-  const k = Math.max(1, Math.min(18, 0.8 * (2 * W) / Math.max(bw, 40), 0.8 * (2 * H) / Math.max(bh, 30)));
-  const cx = (Math.max(...xs) + Math.min(...xs)) / 2, cy = (Math.max(...ys) + Math.min(...ys)) / 2;
-  state.view = { k, x: -cx * k, y: -cy * k };
-  applyView();
-}
-
-function resetView() {
-  state.view = { k: 1, x: 0, y: 0 };
-  applyView();
-  drawOver();
-}
-
-function svgPoint(host, event) {
-  const p = host.createSVGPoint();
-  p.x = event.clientX;
-  p.y = event.clientY;
-  return p.matrixTransform(host.getScreenCTM().inverse());
+  if (A && state.gis) state.gis.fit(A.economies.map((e) => project(e.longitude, e.latitude)));
 }
 
 // The panels fold away, so that the map takes the room; the choice is kept in this browser.
@@ -487,62 +380,10 @@ function panes() {
   put(stage, el('div', { class: 'panes' }, dockB, panelB), el('div', { class: 'readout', id: 'readout', 'aria-live': 'off' }));
 }
 
-// The projection, the place under the pointer and the zoom.
-function readout(e) {
-  const box = document.getElementById('readout');
-  if (!box) return;
-  const host = document.getElementById('map');
-  let where = '';
-  if (e) {
-    const p = svgPoint(host, e);
-    const x = (p.x - state.view.x) / state.view.k / SCALE, y = -(p.y - state.view.y) / state.view.k / SCALE;
-    const ll = inverse(equalEarth, x, y);
-    if (ll) {
-      const [lon, lat] = ll;
-      where = ` · ${Math.abs(lat).toFixed(1)}° ${lat >= 0 ? 'N' : 'S'}, ${Math.abs(lon).toFixed(1)}° ${lon >= 0 ? 'E' : 'W'}`;
-    }
-  }
-  fill(box, el('b', { text: 'Equal Earth' }), `${where} · ×${state.view.k.toFixed(1)}`);
-}
-
 function wire() {
-  const host = document.getElementById('map');
-  host.addEventListener('wheel', (e) => {
-    e.preventDefault();
-    const p = svgPoint(host, e);
-    zoomTo(state.view.k * Math.exp(-e.deltaY * 0.0016), p.x, p.y);
-  }, { passive: false });
-  let drag = null, moved = false;
-  host.addEventListener('pointerdown', (e) => {
-    if (e.button !== 0) return;
-    drag = { p: svgPoint(host, e), x: state.view.x, y: state.view.y };
-    moved = false;
-  });
-  host.addEventListener('pointermove', (e) => {
-    if (drag) {
-      const p = svgPoint(host, e);
-      const dx = p.x - drag.p.x, dy = p.y - drag.p.y;
-      if (!moved && Math.hypot(dx, dy) > 4) { moved = true; host.setPointerCapture(e.pointerId); host.classList.add('dragging'); hideTip(); }
-      if (moved) {
-        state.view.x = drag.x + dx;
-        state.view.y = drag.y + dy;
-        applyView();
-        return;
-      }
-    }
-    tip(e);
-    readout(e);
-  });
-  const end = () => { drag = null; host.classList.remove('dragging'); };
-  host.addEventListener('pointerup', (e) => {
-    if (drag && !moved) choose(e);
-    end();
-  });
-  host.addEventListener('pointerleave', () => { hideTip(); readout(null); });
-  host.addEventListener('dblclick', resetView);
-  document.getElementById('zoom-in').onclick = () => zoomTo(state.view.k * 1.6, 0, 0);
-  document.getElementById('zoom-out').onclick = () => zoomTo(state.view.k / 1.6, 0, 0);
-  document.getElementById('zoom-reset').onclick = resetView;
+  document.getElementById('zoom-in').onclick = () => state.gis.zoomBy(1.6);
+  document.getElementById('zoom-out').onclick = () => state.gis.zoomBy(1 / 1.6);
+  document.getElementById('zoom-reset').onclick = () => state.gis.reset();
   window.addEventListener('keydown', (e) => {
     if (document.querySelector('.view[data-view="map"]').hidden || e.target.closest?.('input, select, textarea, dialog')) return;
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
@@ -588,8 +429,11 @@ function tip(e) {
       content = [el('b', { text: `${from.name} → ${to.name}` }), row(a.title || 'net flow', amount(a.value))];
       if (a.parts) content.push(row('driven', amount(Math.abs(a.parts[3]))), row('round triangles', amount(Math.abs(a.parts[4]))), row('round holes', amount(Math.abs(a.parts[5]))));
     }
+  } else if (e.target.classList?.contains('area-disputed')) {
+    content = [el('span', { class: 'note', text: 'an area in dispute, drawn in no country’s colour' })];
   } else if (e.target.classList?.contains('country')) {
-    content = [el('b', { text: e.target.dataset.name }), el('span', { class: 'note', text: 'not in these data' })];
+    const name = state.policy.name(e.target.dataset.code, e.target.dataset.name);
+    content = [name ? el('b', { text: name }) : null, el('span', { class: 'note', text: 'not in these data' })];
   }
   if (!content) return hideTip();
   fill(box, ...content.filter(Boolean));
@@ -787,117 +631,32 @@ function downloads(A) {
     el('p', { class: 'note', text: 'A figure is the map as shown, with its title, legend, source and link, at 1800 pixels wide; the PNG at twice that.' }));
 }
 
-// The map's drawing with the page's styles written into it, its arcs standing still.
-function mapClone() {
-  const host = document.getElementById('map');
-  const copy = host.cloneNode(true);
-  const from = host.querySelectorAll('*'), to = copy.querySelectorAll('*');
-  const keep = ['fill', 'fill-opacity', 'stroke', 'stroke-width', 'stroke-opacity', 'stroke-dasharray', 'stroke-linecap', 'stroke-linejoin', 'paint-order', 'opacity',
-    'font-family', 'font-style', 'font-weight', 'font-variant', 'letter-spacing', 'vector-effect'];
-  from.forEach((node, n) => {
-    if (!(node instanceof SVGGraphicsElement) || node.closest('defs')) return;
-    const s = getComputedStyle(node);
-    const flowing = node.classList.contains('flowing');
-    to[n].setAttribute('style', keep.map((p) => `${p}:${p === 'stroke-dasharray' && flowing ? 'none' : s.getPropertyValue(p)}`).join(';'));
-    // On paper an arc does not move: it is drawn whole, with its head.
-    if (flowing) to[n].setAttribute('marker-end', 'url(#head)');
-    to[n].removeAttribute('class');
-  });
-  return copy;
-}
-
-// Source Serif 4 written into the figure, so that it is set in the page's type wherever it is
-// opened; without the network, the figure names the font and falls back to Georgia.
-let fontFaces = null;
-function embeddedFonts() {
-  fontFaces ??= (async () => {
-    const link = document.querySelector('link[href*="fonts.googleapis.com/css2"]');
-    if (!link) return '';
-    const css = await (await fetch(link.href)).text();
-    const faces = [...css.matchAll(/@font-face\s*{[^}]*}/g)].map((m) => m[0]).filter((f) => /latin \*\/|unicode-range: U\+0000-00FF/.test(f) || !/unicode-range/.test(f));
-    const out = [];
-    for (const face of (faces.length ? faces : [...css.matchAll(/@font-face\s*{[^}]*}/g)].map((m) => m[0])).slice(0, 4)) {
-      const url = face.match(/url\(([^)]+)\)/)?.[1];
-      if (!url) continue;
-      const bytes = new Uint8Array(await (await fetch(url)).arrayBuffer());
-      let bin = '';
-      for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
-      out.push(face.replace(url, `data:font/woff2;base64,${btoa(bin)}`));
-    }
-    return out.join('\n');
-  })().catch(() => '');
-  return fontFaces;
-}
-
-// The figure: a title, the map as shown, its legend, and a line of source, projection and link.
+// The figure: a title, the map as shown, its legend, and a line of source, projection and link
+// (the module's composition, ADR 0068 and 0069).
 async function figureSvg() {
   const A = state.answer;
   const C = colouring(A);
   const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
-  const map = document.getElementById('map');
-  const vb = map.viewBox.baseVal;
-  const Wf = 1800, pad = 48, top = 104, mapW = Wf - 2 * pad, mapH = Math.round((mapW * vb.height) / vb.width), keyH = 150;
-  const Hf = top + mapH + keyH;
-  const font = "'Source Serif 4', Georgia, serif";
-  const text = (x, y, t, size, extra = {}) => svg('text', { x, y, 'font-family': font, 'font-size': size, fill: css('--ink'), ...extra, text: t });
   const d = dataset(shared.flows);
   const title = `${shared.flows === 'library:trade' ? 'World trade in goods' : d?.title || 'Flows'}${A.year ? `, ${A.year}` : ''}`;
-  const sub = `Places coloured by ${C.title.charAt(0).toLowerCase()}${C.title.slice(1)}; arcs: ${shared.arcs === 'none' ? 'none' : layer(shared.arcs) ? layer(shared.arcs).title : `the ${state.opts.shown} largest ${shared.arcs === 'all' ? 'net flows' : `${shared.arcs} parts of the net flows`}`}.`;
-  const out = svg('svg', { width: Wf, height: Hf, viewBox: `0 0 ${Wf} ${Hf}` });
-  const fonts = await embeddedFonts();
-  if (fonts) put(out, svg('style', {}, fonts));
-  // The ramp of the legend, as a gradient of the colours the map uses.
+  const L = layer(shared.arcs);
+  // (A title opening on an acronym, GDP, keeps its capitals.)
+  const lower = /^.[A-Z]/.test(C.title) ? C.title : `${C.title.charAt(0).toLowerCase()}${C.title.slice(1)}`;
+  const subtitle = `Places coloured by ${lower}; arcs: ${shared.arcs === 'none' ? 'none' : L ? L.title : `the ${state.opts.shown} largest ${shared.arcs === 'all' ? 'net flows' : `${shared.arcs} parts of the net flows`}`}.`;
   const stops = C.kind === 'sequential' ? [0, 0.25, 0.5, 0.75, 1].map((t) => [t, sequential(t)]) : [-1, -0.5, -0.2, 0, 0.2, 0.5, 1].map((t) => [(t + 1) / 2, diverging(t)]);
-  put(out, svg('defs', {}, svg('linearGradient', { id: 'figure-ramp' }, stops.map(([o, c]) => svg('stop', { offset: o, 'stop-color': c })))));
-  put(out, svg('rect', { width: Wf, height: Hf, fill: css('--paper') }),
-    text(pad, 56, title, 30, { 'font-weight': 600 }),
-    text(pad, 86, sub, 17, { fill: css('--ink-2') }));
-  const inner = mapClone();
-  inner.setAttribute('x', pad);
-  inner.setAttribute('y', top);
-  inner.setAttribute('width', mapW);
-  inner.setAttribute('height', mapH);
-  inner.removeAttribute('id');
-  put(out, inner);
-  // The legend beneath: the ramp and its ends, then the arcs' keys.
-  const ly = top + mapH + 30;
-  put(out, svg('rect', { x: pad, y: ly, width: 360, height: 12, fill: 'url(#figure-ramp)' }),
-    text(pad, ly - 10, C.title, 15, { 'font-weight': 500 }),
-    text(pad, ly + 32, C.ends[0], 14, { fill: css('--ink-2') }),
-    text(pad + 360, ly + 32, C.ends[1], 14, { fill: css('--ink-2'), 'text-anchor': 'end' }));
-  const keys = layer(shared.arcs) ? [[PART.plugin, layer(shared.arcs).title]] : shared.arcs === 'none' ? []
+  const keys = L ? [[PART.plugin, L.title]] : shared.arcs === 'none' ? []
     : [[PART.driven, 'mostly driven: from senders to drawers'], [PART.local, 'mostly circulating round the triangles of neighbours'], [PART.global, 'mostly circulating round holes, through distant links']];
-  keys.forEach(([c, t], k) => put(out, svg('path', { d: `M${pad + 440} ${ly + 6 + 24 * k}h40`, stroke: c, 'stroke-width': 3, 'stroke-linecap': 'round' }),
-    text(pad + 492, ly + 11 + 24 * k, t, 14, { fill: css('--ink-2') })));
-  put(out, svg('path', { d: `M${pad} ${Hf - 40}H${Wf - pad}`, stroke: css('--border'), 'stroke-width': 1 }),
-    text(pad, Hf - 18, `${sourceLine()} projection (Šavrič, Patterson and Jenny 2018). Decomposed by the economics domain of The Science Infrastructures. ${new Date().toISOString().slice(0, 10)}.`, 13, { fill: css('--ink-faint') }),
-    text(Wf - pad, Hf - 18, location.href, 13, { fill: css('--ink-faint'), 'text-anchor': 'end' }));
-  return `<?xml version="1.0" encoding="utf-8"?>\n${new XMLSerializer().serializeToString(out)}\n`;
+  return composeFigure({
+    map: document.getElementById('map'), title, subtitle,
+    legend: { title: C.title, stops, ends: C.ends, keys, hatched: state.disputed ? [css('--map-disputed-ground'), css('--map-disputed-hatch'), DISPUTED_TEXT] : null },
+    footer: [`${sourceLine()} projection (Šavrič, Patterson and Jenny 2018). Decomposed by the economics domain of The Science Infrastructures. ${new Date().toISOString().slice(0, 10)}.`, location.href],
+    colours: { paper: css('--paper'), ink: css('--ink'), ink2: css('--ink-2'), faint: css('--ink-faint'), border: css('--border') },
+  });
 }
 
-// The figure drawn at twice its size into an image.
+// The figure drawn at twice its size into a PNG.
 function figurePng(stem) {
-  return async () => {
-    const text = await figureSvg();
-    const url = URL.createObjectURL(new Blob([text], { type: 'image/svg+xml' }));
-    const img = new Image();
-    img.onload = () => {
-      const c = document.createElement('canvas');
-      c.width = img.width * 2;
-      c.height = img.height * 2;
-      const g = c.getContext('2d');
-      g.scale(2, 2);
-      g.drawImage(img, 0, 0);
-      URL.revokeObjectURL(url);
-      c.toBlob((b) => {
-        const a = el('a', { href: URL.createObjectURL(b), download: `${stem}-figure.png` });
-        document.body.append(a);
-        a.click();
-        a.remove();
-      }, 'image/png');
-    };
-    img.src = url;
-  };
+  return async () => download(`${stem}-figure.png`, await drawPng(await figureSvg(), 2), 'image/png');
 }
 
 const ranked = (A, order, library) => A.economies.map((e, i) => ({ ...e, i }))
@@ -915,12 +674,7 @@ function findPlace(text) {
   const i = A.economies.findIndex((e) => e.name.toLowerCase() === q || e.iso3.toLowerCase() === q);
   const j = i >= 0 ? i : A.economies.findIndex((e) => e.name.toLowerCase().startsWith(q));
   if (j < 0) return;
-  if (state.view.k > 1) {
-    const [x, y] = project(A.economies[j].longitude, A.economies[j].latitude);
-    state.view.x = -x * state.view.k;
-    state.view.y = -y * state.view.k;
-    applyView();
-  }
+  if (state.gis.view.k > 1) state.gis.centreOn(...project(A.economies[j].longitude, A.economies[j].latitude));
   pick(j);
 }
 
@@ -996,7 +750,6 @@ async function load() {
   }
   if (state.fit) {
     state.fit = false;
-    if (!state.built && state.geo) buildBase();
     fitToPlaces();
   }
   const names = document.getElementById('map-places');
@@ -1022,9 +775,14 @@ async function changeDataset() {
 export async function showMap(data, params = {}) {
   if (!state.geo) {
     state.geo = await (await fetch(COUNTRIES)).json();
+    try { state.policy = namingPolicy(await api.names()); } catch { /* without the policy, the names as given */ }
+    try { state.disputed = await (await fetch(DISPUTED)).json(); } catch { state.disputed = null; /* not fetched: drawn as the countries say */ }
     panes();
+    state.gis = createMap(document.getElementById('map'), {
+      countries: state.geo, disputed: state.disputed, nameOf: (props) => props.NAME || '', readout: document.getElementById('readout'),
+      onPointer: tip, onLeave: hideTip, onPick: choose, onSettle: () => drawOver(),
+    });
     wire();
-    readout(null);
     on('layers', () => { refreshDock(); draw(); panel(); });
     on('dataset-chosen', (kind) => { if (kind === 'flows') changeDataset(); });
     on('datasets', () => { if (!document.querySelector('.view[data-view="map"]').hidden) refreshDock(); });

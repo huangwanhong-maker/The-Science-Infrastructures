@@ -1,7 +1,7 @@
 {
   "id": "natural-earth-50m",
   "domain": "geography",
-  "title": "Natural Earth 1:50 million: land, coastlines, countries, boundaries, lakes, rivers, ice, places and marine names",
+  "title": "Natural Earth 1:50 million: land, coastlines, countries, boundaries, areas in dispute, lakes, rivers, ice, places and marine names",
   "provider": "Natural Earth (N. V. Kelso, T. Patterson and contributors), version 5.1.2, GeoJSON from the natural-earth-vector repository",
   "credit": "Natural Earth",
   "files": [
@@ -64,6 +64,12 @@
       "file": "ne_50m_antarctic_ice_shelves_polys.geojson",
       "size": 131055,
       "sha256": "fedf866d20e20e37d037fa19968b6d3022fbe5323fd8728527b0f0ddb547e790"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/v5.1.2/geojson/ne_50m_admin_0_breakaway_disputed_areas.geojson",
+      "file": "ne_50m_admin_0_breakaway_disputed_areas.geojson",
+      "size": 147141,
+      "sha256": "e91f0f9518b24355ceec6668f4df874d6f39db7d0bc9ec22d9b14429bfb6be01"
     }
   ],
   "format": "GeoJSON; WGS 84 longitude and latitude in degrees; polygons and lines cut at the antimeridian",
@@ -71,6 +77,7 @@
   "licence": "Public domain",
   "citation": "Made with Natural Earth. Free vector and raster map data @ naturalearthdata.com.",
   "used_by": [
-    "applications/earth-atlas"
+    "applications/earth-atlas",
+    "applications/economy-atlas"
   ]
 }

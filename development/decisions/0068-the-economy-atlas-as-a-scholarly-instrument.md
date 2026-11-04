@@ -1,6 +1,6 @@
 # 0068. The Economy Atlas as a Scholarly Instrument: Porcelain and Gold, and Figures for Publication
 
-- **Status:** Accepted, provisionally (the colours, and the proposal of §3, are the user's to confirm)
+- **Status:** Accepted, provisionally (the colours, and the proposal of §3, are the user's to confirm); amended by [0069](0069-names-of-places-and-a-2d-gis.md), on which its map now stands
 - **Date:** 2026-11-04
 - **Amends:** [ADR 0046](0046-the-economy-atlas-data-and-plugins.md), [ADR 0056](0056-nomos-and-a-toolbox-of-quantitative-economics.md)
 - **Decided by:** the user handed in a brief for the interface's redesign ("a sophisticated scientific research instrument with the visual refinement of an exceptional contemporary cartographic publication") and asked that only its really good points be taken: "Not need fully trust the design." Claude chose which, adapted some, left others, and wrote this record.
