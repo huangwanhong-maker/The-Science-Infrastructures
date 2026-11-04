@@ -1,0 +1,27 @@
+scheme,chi,infinite,linkage_equilibrium
+roulette,0.10,0.913681,0.916667
+roulette,0.15,0.879443,0.884615
+roulette,0.25,0.824553,0.833333
+roulette,0.35,0.783126,0.794118
+roulette,0.50,0.737606,0.750000
+roulette,0.70,0.695861,0.708333
+roulette,1.00,0.655266,0.666667
+roulette,1.40,0.621770,0.631579
+roulette,2.00,0.591918,0.600000
+roulette,2.80,0.569006,0.575758
+roulette,4.00,0.549775,0.555556
+roulette,5.60,0.535747,0.540984
+roulette,8.00,0.524464,0.529412
+tournament 2,0.10,0.998889,nan
+tournament 2,0.15,0.998237,nan
+tournament 2,0.25,0.996678,nan
+tournament 2,0.35,0.994660,nan
+tournament 2,0.50,0.990188,nan
+tournament 2,0.70,0.976330,nan
+tournament 2,1.00,0.930161,nan
+tournament 2,1.40,0.872029,nan
+tournament 2,2.00,0.808039,nan
+tournament 2,2.80,0.751008,nan
+tournament 2,4.00,0.696691,nan
+tournament 2,5.60,0.652085,nan
+tournament 2,8.00,0.611899,nan

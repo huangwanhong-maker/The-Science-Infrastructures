@@ -1,6 +1,6 @@
 # research: Questions, Experiments and Papers
 
-*Status: planned.* Knowledge.
+*Status: draft (2026-11-05): the first experiments are written.* Knowledge.
 
 ## 1. Purpose
 
@@ -11,5 +11,5 @@ This directory keeps the research process explicit: what we are asking, what we 
 | Directory | Content |
 |---|---|
 | `questions/` | Open research questions, each with its motivation, status and related ideas |
-| `experiments/` | One record per experiment, giving the question, code version, parameters, data and results |
+| [`experiments/`](experiments/) | One record per experiment, giving the question, code version, parameters, data and results; the first fourteen are case studies of the search foundation heuresis (draft) |
 | `papers/` | Manuscripts, in LaTeX |

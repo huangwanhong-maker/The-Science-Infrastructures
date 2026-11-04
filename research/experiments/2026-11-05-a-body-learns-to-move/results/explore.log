@@ -1,0 +1,28 @@
+explore: 27 trials in 1.0 s
+asked 0.00 m/s, 0.08 m:  speed -0.009  CoT inf  power 1.91 W (copper 1.80 W)  apex 0.077 ± 0.002  pitch 7.8°  landings 6
+asked 0.10 m/s, 0.08 m:  speed 0.095  CoT 7.24  power 1.89 W (copper 1.78 W)  apex 0.076 ± 0.004  pitch 7.6°  landings 6
+asked 0.20 m/s, 0.08 m:  speed 0.198  CoT 3.51  power 1.91 W (copper 1.80 W)  apex 0.076 ± 0.005  pitch 7.5°  landings 6
+asked 0.30 m/s, 0.08 m:  speed 0.302  CoT 2.71  power 2.24 W (copper 2.13 W)  apex 0.077 ± 0.007  pitch 7.5°  landings 7
+asked 0.40 m/s, 0.08 m:  speed 0.408  CoT 2.03  power 2.28 W (copper 2.13 W)  apex 0.081 ± 0.008  pitch 7.5°  landings 6
+asked 0.50 m/s, 0.08 m:  speed 0.508  CoT 1.82  power 2.53 W (copper 2.31 W)  apex 0.084 ± 0.011  pitch 7.5°  landings 6
+asked 0.60 m/s, 0.08 m: FAILED tipped over speed 0.000  CoT 0.00  power 0.00 W (copper 0.00 W)  apex 0.000 ± 0.000  pitch 0.0°  landings 0
+asked 0.70 m/s, 0.08 m: FAILED tipped over speed 0.000  CoT 0.00  power 0.00 W (copper 0.00 W)  apex 0.000 ± 0.000  pitch 0.0°  landings 0
+asked 0.80 m/s, 0.08 m: FAILED tipped over speed 0.000  CoT 0.00  power 0.00 W (copper 0.00 W)  apex 0.000 ± 0.000  pitch 0.0°  landings 0
+asked 0.00 m/s, 0.12 m:  speed -0.011  CoT inf  power 2.50 W (copper 2.28 W)  apex 0.111 ± 0.011  pitch 7.1°  landings 5
+asked 0.10 m/s, 0.12 m:  speed 0.086  CoT 10.36  power 2.43 W (copper 2.24 W)  apex 0.109 ± 0.013  pitch 7.1°  landings 5
+asked 0.20 m/s, 0.12 m:  speed 0.191  CoT 4.68  power 2.45 W (copper 2.24 W)  apex 0.108 ± 0.014  pitch 7.1°  landings 5
+asked 0.30 m/s, 0.12 m:  speed 0.295  CoT 3.09  power 2.50 W (copper 2.28 W)  apex 0.113 ± 0.012  pitch 7.1°  landings 4
+asked 0.40 m/s, 0.12 m:  speed 0.400  CoT 2.52  power 2.76 W (copper 2.56 W)  apex 0.119 ± 0.016  pitch 7.1°  landings 5
+asked 0.50 m/s, 0.12 m:  speed 0.511  CoT 2.24  power 3.14 W (copper 2.87 W)  apex 0.124 ± 0.024  pitch 7.1°  landings 5
+asked 0.60 m/s, 0.12 m:  speed 0.589  CoT 1.89  power 3.05 W (copper 2.72 W)  apex 0.115 ± 0.008  pitch 54.6°  landings 5
+asked 0.70 m/s, 0.12 m: FAILED tipped over speed 0.000  CoT 0.00  power 0.00 W (copper 0.00 W)  apex 0.000 ± 0.000  pitch 0.0°  landings 0
+asked 0.80 m/s, 0.12 m: FAILED tipped over speed 0.000  CoT 0.00  power 0.00 W (copper 0.00 W)  apex 0.000 ± 0.000  pitch 0.0°  landings 0
+asked 0.00 m/s, 0.16 m:  speed -0.018  CoT 56.55  power 2.76 W (copper 2.50 W)  apex 0.148 ± 0.018  pitch 12.6°  landings 4
+asked 0.10 m/s, 0.16 m:  speed 0.080  CoT 12.26  power 2.67 W (copper 2.45 W)  apex 0.145 ± 0.019  pitch 12.8°  landings 4
+asked 0.20 m/s, 0.16 m:  speed 0.181  CoT 5.39  power 2.67 W (copper 2.47 W)  apex 0.146 ± 0.019  pitch 12.9°  landings 4
+asked 0.30 m/s, 0.16 m:  speed 0.287  CoT 3.50  power 2.75 W (copper 2.54 W)  apex 0.146 ± 0.023  pitch 13.1°  landings 4
+asked 0.40 m/s, 0.16 m:  speed 0.392  CoT 2.76  power 2.97 W (copper 2.67 W)  apex 0.148 ± 0.027  pitch 13.3°  landings 4
+asked 0.50 m/s, 0.16 m:  speed 0.503  CoT 2.46  power 3.39 W (copper 3.09 W)  apex 0.172 ± 0.026  pitch 13.5°  landings 4
+asked 0.60 m/s, 0.16 m:  speed 0.598  CoT 2.28  power 3.74 W (copper 3.36 W)  apex 0.180 ± 0.034  pitch 13.7°  landings 4
+asked 0.70 m/s, 0.16 m: FAILED tipped over speed 0.000  CoT 0.00  power 0.00 W (copper 0.00 W)  apex 0.000 ± 0.000  pitch 0.0°  landings 0
+asked 0.80 m/s, 0.16 m: FAILED fell speed 0.000  CoT 0.00  power 0.00 W (copper 0.00 W)  apex 0.000 ± 0.000  pitch 0.0°  landings 0

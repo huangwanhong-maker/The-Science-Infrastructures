@@ -1,0 +1,6 @@
+{
+  "n": 20, "k": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 19], "instances": 5, "nk_seed": 2026, "seeds_per_instance": 10,
+  "budgets": [5000, 50000], "walk_length": 200000,
+  "algorithms": {"random": "uniform bit strings", "(1+1) EA": "standard bit mutation 1/n", "GA": "mu 50, uniform crossover 0.9, bit flip 1/n, binary tournament, generational, 1 elite", "SA": "one-bit flips, modified Lam schedule, T0 0.05, steps = budget", "tabu": "one-flip neighbourhood, tenure 5, random start", "cGA": "K 50", "UMDA": "lambda 100, mu 50, borders 1/n"},
+  "threads": 6, "wall_seconds": 312.5891162
+}

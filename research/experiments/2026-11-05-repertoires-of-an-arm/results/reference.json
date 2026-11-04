@@ -1,0 +1,8 @@
+{
+  "joints": 12, "angle_box": [-3.141592654, 3.141592654], "seeds": 15, "budget": 100000,
+  "grid": [50, 50], "reachable_cells": 2040, "cvt_sites": 1000, "qd_offset": 9.869604401,
+  "map_elites_initial": 1000, "iso_line": [0.05, 0.3], "novelty": {"population": 100, "neighbours": 15, "threshold": 0.02},
+  "cma": {"regime": "ipop", "sigma0": 1.0, "bounds": "transform", "max_large_runs": 64},
+  "median_seeds": {"MAP-Elites, iso+line": 2, "MAP-Elites, Gaussian 0.03": 10, "MAP-Elites, Gaussian 0.1": 5, "MAP-Elites, Gaussian 0.3": 10, "CVT-MAP-Elites, iso+line": 6, "novelty search, Gaussian 0.1": 3, "random search": 12, "CMA-ES, IPOP": 13},
+  "threads": 8, "wall_seconds": 233.0764146
+}

@@ -2,7 +2,7 @@
 
 *Status: draft, 2026-10-31.*
 
-These are screenshots of the infrastructure's applications, the three atlases taken on 22 October 2026 from their local servers with the data of that day, the Spiking Simulator and the Complex Atlas on 23 October, the History Complex and the Genome Workbench on 24 October, the Economy Atlas on 24 October and again on 4 November, Cosmopoiesis on 30 October, the Urban Science Workbench on 31 October, and the Body Atlas on 4 November.
+These are screenshots of the infrastructure's applications, the three atlases taken on 22 October 2026 from their local servers with the data of that day, the Spiking Simulator and the Complex Atlas on 23 October, the History Complex and the Genome Workbench on 24 October, the Economy Atlas on 24 October and again on 4 November, Cosmopoiesis on 30 October, the Urban Science Workbench on 31 October, and the Body Atlas on 4 November. The search case studies' figures (§13) were drawn on 5 November from their records' results.
 
 - All are web applications without a build step.
 - Their science is the provisional JavaScript of the domains they draw on, tested against published references and closed-form answers in 422 checks, and the C++ of the foundations and of the metrology, geodesy, astronomy, geophysics, meteorology, navigation, neuroscience, history, genomics, evolution, economics, robotics, planetary-science, urban-science and anatomy domains, checked the same way.
@@ -663,7 +663,251 @@ The Body Atlas, renamed Fabrica, reconstructs the body's structures from images,
 </tr>
 </table>
 
-## 13. Credits
+<!-- search case studies: begin -->
+## 13. Search: Case Studies
+
+Case studies of the search foundation heuresis ([ADR 0073](../development/decisions/0073-the-search-foundation-heuresis.md)) on problems of the domains and on the algorithms themselves. Each is a record in [research/experiments](../research/experiments/README.md), with its question, code version, parameters, data, results and caveats. Its figures are drawn from its results by its own `figures.py` in one house style, and every number in a caption comes from its runs. The first record also builds a page that replays its six searches step by step (its `viewer/`).
+
+### 13.1 Six Searches on One Landscape
+
+Six algorithms of heuresis on three two-dimensional landscapes, drawn from the record [Search on a Landscape](../research/experiments/2026-11-05-search-on-a-landscape/README.md): their states on the landscape at three moments, their best values over 31 seeds, and how widely each searches.
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-01-rosenbrock.jpg"><img src="../assets/gallery/search-01-rosenbrock.jpg" alt="Six searches on Rosenbrock's function after about 50, 300 and 1500 evaluations, drawn on its contours"></a><br><b>Six searches in Rosenbrock's valley.</b> Seed 0 of the (1+1)-ES, CMA-ES, differential evolution, the Standard PSO 2011, the cross-entropy method and Bayesian optimisation, after about 50, 300 and 1500 evaluations (Bayesian optimisation: 6, 30 and 100). CMA-ES's ellipse turns along the valley and reaches (1, 1) in 756 evaluations; the cross-entropy method's law shrinks on the valley floor near (0, 0) and stalls there. Bayesian optimisation's column shows its surrogate's mean in place of the function. Computed by heuresis 6b3cc88, every state read through the ask–tell protocol.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/search-02-rastrigin.jpg"><img src="../assets/gallery/search-02-rastrigin.jpg" alt="Six searches on Rastrigin's function after about 50, 300 and 1500 evaluations"></a><br><b>Six searches on Rastrigin's egg crate.</b> The same six on a lattice of local minima. Differential evolution's population of 20 finds the global minimum (in all 31 seeds); CMA-ES with its default population of 6 and the (1+1)-ES settle in a local minimum near their start (27 and 29 of 31 seeds), and the swarm still flies across the box after 1500 evaluations. Seed 0 of each; the starts of the (1+1)-ES, CMA-ES and the cross-entropy method are marked ×.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-03-branin.jpg"><img src="../assets/gallery/search-03-branin.jpg" alt="Six searches on Branin's function, which has three global minima"></a><br><b>Six searches on Branin's three minima.</b> Each search settles in one of the three equal minima, which one depending on its start and its draws. Bayesian optimisation's surrogate after 100 evaluations has found all three; it reaches f − f* ≤ 10⁻⁴ after a median of 32 evaluations over 31 seeds, the (1+1)-ES after 116.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/search-04-anytime.jpg"><img src="../assets/gallery/search-04-anytime.jpg" alt="Best value against evaluations for seven algorithms on three landscapes, medians and quartiles"></a><br><b>The best value found, against evaluations.</b> Medians and quartiles over 31 seeds, from heuresis's <code>analysis::anytime_quantile</code>. CMA-ES and differential evolution reach 10⁻¹² on Rosenbrock's function; on Rastrigin's only differential evolution does, and CMA-ES's median after 2000 evaluations (1.23) is no better than random search's (1.22). Bayesian optimisation, given 100 evaluations, leads at low precision everywhere.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-05-spread.jpg"><img src="../assets/gallery/search-05-spread.jpg" alt="Distance to the optimum and spread of each search against evaluations"></a><br><b>How far from the optimum, and how widely each searches.</b> Above, the distance of the best point to the nearest minimiser; below, the spread of the search (σ√n, σ√tr C, the population's r.m.s. radius). Where a search fails its spread falls while its distance stays near 1: CMA-ES and the (1+1)-ES on Rastrigin's function, the cross-entropy method on Rosenbrock's. The Standard PSO 2011's spread barely falls at all in 2000 evaluations. Medians over 31 seeds.</td>
+<td width="50%" valign="top"></td>
+</tr>
+</table>
+
+### 13.2 Benchmarking Continuous Search
+
+Ten continuous searches of heuresis compared in the manner of COCO, on eight shifted and rotated functions in 2, 5, 10 and 20 dimensions, from the record [Benchmarking Continuous Search](../research/experiments/2026-11-05-benchmarking-continuous-search/README.md).
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-06-ecdf-by-dimension.jpg"><img src="../assets/gallery/search-06-ecdf-by-dimension.jpg" alt="Empirical runtime distributions of ten algorithms, one panel per dimension"></a><br><b>Runtime distributions, by dimension.</b> For each budget, the fraction of 1320 (run, target) pairs solved: 8 functions, 15 instances each, 11 targets from f − f* = 10² to 10⁻⁸. The (1+1)-ES leads up to 100·n evaluations, the CMA-ES family from about 300·n, and at the budget of 10⁴·n IPOP-CMA-ES (n = 5, 10) or SHADE (n = 2, 20). SPSO 2011 falls to 0.06 at n = 20, random search to 0.04. Computed by heuresis 6b3cc88's <code>analysis::runtime_distribution</code> over 4800 runs.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/search-07-ecdf-by-function.jpg"><img src="../assets/gallery/search-07-ecdf-by-function.jpg" alt="Runtime distributions on each of eight functions at n = 10"></a><br><b>Runtime distributions on each function, n = 10.</b> The same measure, function by function. CMA-ES reaches every target of the separable and the rotated ellipsoid at the same cost, as its rotation invariance requires, while the (1+1)-ES barely starts on either; on Schwefel's separable function only DE and SHADE, which cross coordinates over, reach the optimum; on rotated Rastrigin only the restarts with growing populations do (IPOP in 14 of 15 instances, BIPOP in 3).</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-08-ert.jpg"><img src="../assets/gallery/search-08-ert.jpg" alt="Expected running time per dimension against dimension for eight functions"></a><br><b>Expected running time against dimension.</b> ERT/n to f − f* ≤ 10⁻⁸, from <code>analysis::expected_running_time</code>: the evaluations independent restarts would need, failures counted at their full budget. Filled points: all 15 instances solved; open: some failed; none: none solved. DE's cost on the sphere grows from 351·n to 6345·n with its population of 10n; the CMA-ES family's stays between 131·n and 152·n.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/search-09-solved.jpg"><img src="../assets/gallery/search-09-solved.jpg" alt="Table of instances solved per algorithm, function and dimension"></a><br><b>Which algorithm solves which function.</b> In each cell, how many of 15 instances reached f − f* ≤ 10⁻⁸ within 10⁴·n evaluations; where none did, the median gap the runs reached instead. The failures are as informative as the successes: the inertia PSO and DE lose the ellipsoid when it is rotated, SPSO 2011 solves not even the sphere from n = 10, and the cross-entropy method, converging sublinearly, solves one instance beyond n = 2.</td>
+</tr>
+</table>
+
+### 13.3 Kepler's Third Law Rediscovered
+
+Genetic programming of heuresis (`programs`), typed by physical dimension and untyped, searches for the period of an orbit from ten orbits that JPL's DE440s gives: the nine planets about the Sun and the Moon about the Earth. Typed, it finds 2π√(a³/GM) on every seed. Untyped, in Kepler's own units, it finds T = a^{3/2}, which fails by a factor of 10⁹ once the units change. The record is [README.md](README.md).
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-10-kepler-law.jpg"><img src="../assets/gallery/search-10-kepler-law.jpg" alt="Kepler's third law on log-log axes for the planets and the Moon, with residuals body by body"></a><br><b>Kepler's third law in the ephemeris.</b> Ten orbits measured from JPL's DE440s over 1849–2150, read by the astronomy domain's SPK reader: the period from the ecliptic longitude, the axis as the time mean of the osculating one. Against a, the Moon lies far off the planets' line; against √(a³/GM), both centres lie on T = 2π x. Below, what the two-body law leaves: a few parts in 10⁶ for the inner planets, 10⁻⁴ for the outer ones in Jacobi coordinates (2.5 × 10⁻³ heliocentric), 5.3 × 10⁻³ for the Moon, which the Sun's tide slows.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/search-11-kepler-front.jpg"><img src="../assets/gallery/search-11-kepler-front.jpg" alt="The front of formulas, error against size, typed and untyped, with the formulas listed"></a><br><b>The front of formulas.</b> The most accurate formula of each size met in 30 runs of 30 000 evaluations, and their non-dominated set, by heuresis's dominance. Typed by dimension, the front drops to the data's own error at 10 nodes, with the law written as (a + a)π√(a/GM). Untyped, in au and years, it climbs down through a^{3/2} and additive patches for the Moon. Each of these is wrong by 10⁹ in SI, as the last column shows.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-12-kepler-success.jpg"><img src="../assets/gallery/search-12-kepler-success.jpg" alt="The share of seeds that have met the law over evaluations, and the median best error"></a><br><b>Typing finds the law; the untyped search finds the units.</b> The share of 30 seeds that have met the law, counted only if its form is right, it fits within 1 % and it still fits after a change of units; below, the median best error. Typed, every seed meets it (median 541 evaluations for two centres) in either system of units. Untyped, no seed meets it in au and years, and 2 do in SI. In au and years the untyped one-centre search reaches the law's error at once with a^{3/2}, a coincidence of the units.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/search-13-kepler-units.jpg"><img src="../assets/gallery/search-13-kepler-units.jpg" alt="Each formula's error before and after a change of units, and the GM implied by the one-centre front"></a><br><b>A law, or a coincidence of the units.</b> Every formula of the fronts, its error in the units searched against its error after converting the inputs and its declared-dimension constants: typed formulas lie on the diagonal, untyped ones 10⁶ to 10¹⁹ above it. Right: with the planets alone, typing forces a constant of the sort L³T⁻²; the front's laws read it as 39.51–39.53 au³ yr⁻² (one, of 7 nodes, as 39.29), within the planets' Jacobi μ, against the Sun's 39.4769.</td>
+</tr>
+</table>
+
+### 13.4 A Body Learns to Move
+
+The robotics domain's rabbit, 1.69 kg hopping on the Moon, has its controller's ten gains tuned by five searches of heuresis, and then its gains and its speed searched against the power it draws by NSGA-II and SMS-EMOA. A fall or a tip-over is a failure with its reason, and the body's physics is the domain's. The record is [README.md](README.md).
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-14-rabbit-convergence.jpg"><img src="../assets/gallery/search-14-rabbit-convergence.jpg" alt="The best feasible cost of transport over trials for five searches tuning the rabbit's gains"></a><br><b>Five searches teach the rabbit to hop at 0.6 m/s.</b> The best feasible cost of transport (median and quartiles of 8 seeds) over 800 trials of 8.5 s each, the speed within 3 cm/s, the apex within 2 cm of 12 cm and the pitch within 20°. The default gains pitch to 55° there. CMA-ES ends best (median 1.441), the (1+1)-ES gets there first, DE and PSO follow, and random search stalls at 1.655. Below, the share of seeds with a feasible gait: one CMA-ES seed never found one.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/search-15-rabbit-budget.jpg"><img src="../assets/gallery/search-15-rabbit-budget.jpg" alt="Each search's trials by what became of them, and each seed's final cost"></a><br><b>Where the trials go.</b> Of random search's trials 69 % fell or tipped over and 3.6 % hopped as asked. The (1+1)-ES keeps 79 % of its trials feasible by staying near what works; CMA-ES spends 23 % on falls while it spreads. Right, each seed's best feasible cost of transport at the end, against the median.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-16-rabbit-gains.jpg"><img src="../assets/gallery/search-16-rabbit-gains.jpg" alt="The best gains of every run on the unit box, with the build's defaults ringed"></a><br><b>The gains the searches settled on.</b> Each run's best feasible gains, coloured by search, on the ranges searched; the build's defaults ringed, the best of all runs in a diamond. The searches agree on a longer virtual leg (0.211 m against 0.20), the ankle stretched further in a hop (about 80° against 70°) and a smaller placement gain (about 0.067 s against 0.09); the other gains spread.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/search-17-rabbit-front.jpg"><img src="../assets/gallery/search-17-rabbit-front.jpg" alt="Speed against mean electrical power: the front of NSGA-II and SMS-EMOA, with lines of equal cost of transport"></a><br><b>Faster costs power.</b> The speed reached against the mean electrical power, the gains and the speed asked searched together by three runs each of NSGA-II and SMS-EMOA (2 000 trials, μ = 40). The front runs from 0.12 m/s at 1.42 W to 0.99 m/s at 3.80 W, about a third below the default gains (hollow) at the speeds they manage; grey rays are lines of equal cost of transport. Right, each run's hypervolume.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-18-rabbit-strobes.jpg"><img src="../assets/gallery/search-18-rabbit-strobes.jpg" alt="Strobes of four gaits of the front, side view"></a><br><b>Four gaits of the front.</b> The slowest, the fastest and two between, each drawn every 0.2 s over 2.5 s of its measured window, from the side: the torso, the hind leg of thigh, shank and long foot, the foreleg, and the centre of mass dashed. The fastest hops highest (13 cm) and pitches to the 20° bound.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/search-19-rabbit-before-after.jpg"><img src="../assets/gallery/search-19-rabbit-before-after.jpg" alt="The default and the tuned gains at 0.6 m/s: strobes and the pitch over time"></a><br><b>Before and after.</b> Asked to hop at 0.6 m/s, the default gains pitch nose-down to 55° in their first hops as they gather speed. The tuned gains (CMA-ES's best) hold the pitch within 7° and reach 0.61 m/s at 2.29 W, a cost of transport of 1.36 against 1.89.</td>
+</tr>
+</table>
+
+### 13.5 Fronts in Three Objectives
+
+NSGA-II, NSGA-III, MOEA/D (Tchebycheff and PBI) and SMS-EMOA, all of heuresis's `multiobjective` module, on DTLZ1, DTLZ2 and DTLZ7 in three objectives and ZDT1 and ZDT3 in two, with 15 seeds each ([the record](README.md)). The pictures are drawn by `figures.py` from `results/`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-20-fronts-dtlz1-dtlz2.jpg"><img src="../assets/gallery/search-20-fronts-dtlz1-dtlz2.jpg" alt="Final populations of five multi-objective searches on the fronts of DTLZ1 and DTLZ2 in three dimensions"></a><br><b>Five searches on DTLZ1 and DTLZ2.</b> The final population of each algorithm's median run (by hypervolume) after 40 000 evaluations, against the true front drawn as a surface: DTLZ1's simplex, behind 11⁵ − 1 local fronts, and DTLZ2's octant of the sphere. NSGA-III and MOEA/D with PBI sit on the 91 Das–Dennis directions. MOEA/D with Tchebycheff gathers its points in rings, and SMS-EMOA crowds DTLZ2's edges. NSGA-II spreads them unevenly. The note above each panel gives the median, over 15 seeds, of the hypervolume as a share of the front's (exact, by heuresis's sweeps).</td>
+<td width="50%" valign="top"><a href="../assets/gallery/search-21-disconnected-fronts.jpg"><img src="../assets/gallery/search-21-disconnected-fronts.jpg" alt="Final populations on the four patches of DTLZ7 and the five segments of ZDT3"></a><br><b>Disconnected fronts.</b> DTLZ7's front is four patches, the product of the running records of t(1 + sin 3πt) with themselves, and ZDT3's is five segments. Both fronts and their hypervolumes were derived for this study. Every search covers all four patches in at least 14 of 15 runs. SMS-EMOA reaches the highest hypervolume (0.968 of the front's) with the evenest share of points among the patches. MOEA/D with PBI puts 2, 7, 7 and 32 points on them. On ZDT3 SMS-EMOA is again first (0.9976) and MOEA/D with PBI last (0.9723).</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-22-convergence.jpg"><img src="../assets/gallery/search-22-convergence.jpg" alt="Hypervolume ratio and IGD against evaluations for five algorithms on five problems"></a><br><b>How fast each search approaches the front.</b> The hypervolume as a share of the front's (top) and IGD to a dense sample of the front (bottom), against evaluations: the median over 15 seeds, with the interquartile range as a band. The dashed line marks the same measures of μ points lying evenly on the front. On DTLZ2, NSGA-III and MOEA/D with PBI converge exactly onto it (0.869), and SMS-EMOA passes it (0.892) at the price of a worse IGD. On DTLZ1, NSGA-II is the slowest and fails in one run of 15.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/search-23-spread-on-the-simplex.jpg"><img src="../assets/gallery/search-23-spread-on-the-simplex.jpg" alt="Final points of five searches projected onto the simplex among 91 reference directions"></a><br><b>Where the points go among the 91 directions.</b> The final populations of the median runs on DTLZ1 and DTLZ2, each point projected along its ray from the origin onto the simplex. Rings mark the Das–Dennis directions (p = 12). NSGA-III and MOEA/D with PBI occupy all 91. MOEA/D with Tchebycheff occupies 49, since its optimum for a weight w lies on the ray through (1/w₁, 1/w₂, 1/w₃), not through w. SMS-EMOA occupies 84 on DTLZ1 and 56 on DTLZ2, where it favours the edges. A direction counts when heuresis's NSGA-III association assigns it a point within 0.01 of the front.</td>
+</tr>
+</table>
+
+### 13.6 Repertoires of an Arm
+
+Quality-diversity on heuresis's planar arm of twelve joints ([the record](README.md)). Six searches look for the evenest arm for every place its tip can reach; every evaluation of every search is offered to one grid of 50 × 50 cells, so that all are measured alike. The pictures are drawn by `figures.py` from `results/`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-24-repertoire-maps.jpg"><img src="../assets/gallery/search-24-repertoire-maps.jpg" alt="Six maps of the arm's reachable disc, coloured by the spread of the best arm's joint angles in each cell"></a><br><b>Six searches illuminating an arm's reach.</b> The disc is where the tip of heuresis's planar arm of twelve joints can be put. Each cell holds the evenest arm a search evaluated there, coloured by the standard deviation of its joint angles (dark is even). MAP-Elites with iso+line variation covers 96.9% of the 2 040 reachable cells, and CVT-MAP-Elites 98.6% of its own 1 000 Voronoi cells. Novelty search also covers 96.9% but keeps poorer arms, and random search and CMA-ES each reach about half the disc. The dark curve is the family of arms whose angles are all equal: CMA-ES, which minimises the spread alone, finds it and little else. The median run of 15 is shown, after 100 000 evaluations each.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/search-25-arms.jpg"><img src="../assets/gallery/search-25-arms.jpg" alt="Arms of the MAP-Elites repertoire drawn joint by joint for places on rings about the base"></a><br><b>A repertoire of arms.</b> Elites of the median MAP-Elites run (iso+line, 100 000 evaluations), drawn joint by joint for 32 places on two rings about the base. Beside them, on one scale, are three arms for each of five rings. Arms that reach near the base coil into nearly closed polygons, and those that reach the rim are nearly straight. Each arm is labelled with the standard deviation of its angles. The angles come from the run's archive (<code>results/arms.csv</code>).</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-26-coverage-and-qd.jpg"><img src="../assets/gallery/search-26-coverage-and-qd.jpg" alt="Coverage, QD-score and the elites' spread of angles against evaluations for eight searches"></a><br><b>How fast each search fills the map.</b> Coverage, the normalised QD-score and the root of the elites' mean variance against evaluations: the median over 15 seeds, with the interquartile range as a band. Iso+line variation reaches 90% coverage after 18 000 evaluations. The best Gaussian mutation (σ = 0.1 rad) needs 43 000, and iso+line keeps evener arms (mean variance 0.039 against 0.048). CVT-MAP-Elites is the fastest to 90% (15 000).</td>
+<td width="50%" valign="top"></td>
+</tr>
+</table>
+
+### 13.7 Rugged Landscapes
+
+Kauffman's NK landscapes of twenty bits, from smooth (k = 0) to uncorrelated (k = 19), each counted whole, all 2²⁰ points, by heuresis's `landscapes` module, and seven of heuresis's searches against them ([the record](README.md)). The pictures are drawn by `figures.py` from `results/`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-27-ruggedness.jpg"><img src="../assets/gallery/search-27-ruggedness.jpg" alt="Six panels of ruggedness against k for NK landscapes of twenty bits"></a><br><b>From smooth to rugged, counted whole.</b> The figure shows, against k, five measures of sixty NK landscapes (five per k): the local optima under one-bit flips, the one-step correlation ρ(1), the correlation length, the fitness–distance correlation and the share of the space in the global optimum's basin. A sixth panel gives the autocorrelation along a random walk. At k = 19 the landscape is uncorrelated, and its 49 830–50 119 local optima match 2²⁰/21 = 49 932. Weinberger's ρ(1) = 1 − (k+1)/n, corrected for tables of only 2^(k+1) entries, meets the exact values within 0.004.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/search-28-performance-against-k.jpg"><img src="../assets/gallery/search-28-performance-against-k.jpg" alt="Gap, rank and success of seven searches against k at two budgets"></a><br><b>Seven searches against ruggedness.</b> Random search, the (1+1) EA, a GA, simulated annealing, tabu search, the compact GA and UMDA each had 5 000 or 50 000 evaluations. Each panel is over fifty runs per k: the gap to the enumerated optimum, the rank of the best point among the 2²⁰, and the share of runs that found the optimum. Tabu search leads at 5 000 evaluations from k = 4 to 10. Annealing on the Lam schedule finds the optimum in every run up to k = 4 at 50 000. At k = 19 nothing does clearly better than random search.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-29-local-optima-and-basins.jpg"><img src="../assets/gallery/search-29-local-optima-and-basins.jpg" alt="Scatter plots of local optima by fitness and basin size for k = 2, 6 and 10"></a><br><b>Local optima and their basins.</b> Every local optimum of three landscapes (instance 0 at k = 2, 6 and 10: 56, 1 577 and 7 351 optima) is placed by its fitness and the size of its basin under steepest descent, and coloured by its Hamming distance to the global optimum (the star). Fitter optima have larger basins (correlation of F with the logarithm of the basin size 0.86–0.89), but from k = 4 on the optima lie at random distances from the best.</td>
+<td width="50%" valign="top"></td>
+</tr>
+</table>
+
+### 13.8 A Walk past Melbourne's Sensors
+
+The shortest closed walk through the City of Melbourne's 134 pedestrian counters, on geodesics of the WGS 84 ellipsoid, searched by every permutation search of heuresis at a budget of a million evaluations ([the record](../research/experiments/2026-11-05-a-walk-past-melbournes-sensors/README.md)).
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-30-melbourne-best-tour.jpg"><img src="../assets/gallery/search-30-melbourne-best-tour.jpg" alt="The best known closed tour through 134 pedestrian sensors drawn over Melbourne's streets, with the results of 32 restarts"></a><br><b>The best known walk.</b> 26.31 km through all 134 counters of the City of Melbourne's Pedestrian Counting System (positions CC BY 4.0), by iterated local search with white-box 2-opt and double-bridge kicks; 27 of 32 restarts end on it. Distances are Karney's geodesics from the geodesy domain; streets © OpenStreetMap contributors (ODbL), from the data library's city model.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/search-31-melbourne-tours-by-algorithm.jpg"><img src="../assets/gallery/search-31-melbourne-tours-by-algorithm.jpg" alt="Eight small maps, each the best tour of one search algorithm after a million evaluations"></a><br><b>Each search's best walk.</b> The shortest tour among each algorithm's runs at 10⁶ evaluations: random tours, the Plackett–Luce EDA, the GA with cycle, partially mapped and order crossover, the MAX–MIN ant system, simulated annealing and iterated local search, each a black box on heuresis's ask–tell protocol.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-32-melbourne-convergence.jpg"><img src="../assets/gallery/search-32-melbourne-convergence.jpg" alt="Excess tour length over the best known against evaluations for eight algorithms, log–log"></a><br><b>How fast each search closes in.</b> Median excess over the best known walk, with quartiles, against evaluations (10 seeds; the ant system 5). The ant system, given the distances as its heuristic, leads early and stagnates at 1.7 %; annealing ends best of the black boxes at 2.3 %; the positional Plackett–Luce law barely beats random tours.</td>
+<td width="50%" valign="top"></td>
+</tr>
+</table>
+
+### 13.9 Search across Machines
+
+How a good individual crosses a structured population, what keeping a generational search in step costs on workers of uneven speed, and how an archipelago's topology and migration interval decide a deceptive search, all on heuresis's own core, with simulated workers in place of a cluster ([the record](../research/experiments/2026-11-05-search-across-machines/README.md)).
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-33-takeover-waves.jpg"><img src="../assets/gallery/search-33-takeover-waves.jpg" alt="Eight heat maps of cells against generations showing the best individual spreading on a ring, a torus, a hypercube and a complete graph"></a><br><b>Takeover waves.</b> Selection alone on graphs of 256 cells (heuresis's cellular populations), each cell ordered by its distance from the first best. When every cell keeps the best of its neighbourhood the wave arrives exactly at each cell's distance; under binary tournaments it lags, by 230 generations against 128 on the ring.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/search-34-takeover-times.jpg"><img src="../assets/gallery/search-34-takeover-times.jpg" alt="Takeover time against eccentricity and against the number of cells for 25 graphs, with exact expectations"></a><br><b>Takeover time and eccentricity.</b> On all 25 graphs the deterministic takeover equals the eccentricity, found by morphe's breadth-first search. Tournaments, over 20 seeds, follow the exact expectations of two simple chains: two fronts at 5/9 of a cell a generation on rings, the logistic q ← q³ on complete graphs.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-35-synchronisation.jpg"><img src="../assets/gallery/search-35-synchronisation.jpg" alt="Makespan, quality and times to targets against the spread of evaluation durations for three schemes, and six identical runs"></a><br><b>What waiting costs.</b> A GA on Rastrigin's function on 32 simulated workers with lognormal durations. The generational GA's makespan follows the expected maximum of 32 durations, 15 times the ideal at σ = 2; the steady state keeps every worker busy. Right: the generational GA's states identical bit for bit on six placements, the steady state's not.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/search-36-island-topologies.jpg"><img src="../assets/gallery/search-36-island-topologies.jpg" alt="Success rates of 16 GA islands on deceptive traps by topology and migration interval"></a><br><b>Islands against deceptive traps.</b> 16 GA islands on eight traps of order 5, 40 runs for each topology and interval, with Clopper–Pearson intervals. Isolated islands never succeed and migrating every generation rarely does; at ten generations the hypercube succeeds 17 times and the ring 16, against 10 for one panmictic GA of the same size.</td>
+</tr>
+</table>
+
+### 13.10 Quantum Search
+
+Quantum search as heuresis states it: a device is a sampler of a law, emulated exactly, never simulated as a quantum computer, and its speed-up is counted in oracle calls; a quantum-inspired algorithm is a product law ([the record](../research/experiments/2026-11-05-quantum-search/README.md)).
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-37-grover-law.jpg"><img src="../assets/gallery/search-37-grover-law.jpg" alt="The probability of measuring a marked point after r Grover iterations, against r and against the rotation angle, with emulated frequencies"></a><br><b>Grover's law and its emulator.</b> sin²((2r + 1)θ), sin²θ = t/N, on N = 4096 points, against the iterations and against the rotation angle, where every t/N falls on one curve. Rings are the frequencies of heuresis's emulator, 4000 measurements each: Σz² = 157.9 on 176 cells, p = 0.83.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/search-38-grover-adaptive-search.jpg"><img src="../assets/gallery/search-38-grover-adaptive-search.jpg" alt="Oracle calls of Grover adaptive search against the size of the space, beside Dürr and Høyer's bound and random search; threshold descents on a QUBO"></a><br><b>Grover adaptive search in oracle calls.</b> Mean oracle calls to the unique minimum over 200 runs at each size, from 7 at 2⁶ points to 2685 at 2²⁰, below Dürr and Høyer's bound and with a slope tending to ½, against random search's N. Right: the threshold's rank falling on a QUBO of 20 bits, the minimum in a median of 2758 oracle calls.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-39-quantum-inspired.jpg"><img src="../assets/gallery/search-39-quantum-inspired.jpg" alt="Heat maps of the probability of reading each bit as the optimum's for the quantum-inspired EA and PBIL, with convergence curves"></a><br><b>A quantum-inspired search is a product law.</b> Han and Kim's QIEA beside PBIL on the same QUBO: each bit's probability of reading as the optimum's, generation by generation. Its 1 600 000 observed bits equal the product-Bernoulli family's reference draws at sin²φ on the same keyed streams, without one exception.</td>
+<td width="50%" valign="top"></td>
+</tr>
+</table>
+
+### 13.11 Fitting Neurons
+
+An adaptive exponential integrate-and-fire neuron of the neuroscience domain fitted to its own behaviour by four searches of heuresis, and the repertoire of its firing illuminated by MAP-Elites, from the record [Fitting Neurons, and the Repertoire of Their Firing](../research/experiments/2026-11-05-fitting-neurons/README.md).
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-40-fitting-neurons.jpg"><img src="../assets/gallery/search-40-fitting-neurons.jpg" alt="Best error so far of CMA-ES, DE, PSO and random search fitting an AdEx neuron, on its rates and on its spike times"></a><br><b>Fitting a neuron to its own behaviour.</b> Four hidden parameters of AdEx (a, τw, b, Vr) fitted to its trains under six currents, five runs of 1000 evaluations each. On the rates (left), CMA-ES matches all twelve exactly in 3 runs by evaluation 490 and DE in all 5 by 867; random search stays above 6 × 10⁻³. On the spike times (right), every CMA-ES run settles in another basin near 0.41 and only DE's seed 3 comes near the truth (0.037); refining CMA-ES's fits of the rates on the spike times reaches 3 × 10⁻³ to 8 × 10⁻³ in 4 of 5 runs. The domain's engine, Dormand–Prince on a 0.1 ms grid.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/search-41-identifiability.jpg"><img src="../assets/gallery/search-41-identifiability.jpg" alt="Error maps on the a–b and τw–b planes for the rate and spike-time errors, and the relative errors of recovered parameters"></a><br><b>What the rates leave open and the spike times pin down.</b> Both errors on 41 × 41 points of two planes through the truth (star). The rates leave a valley in which a and b trade off: the eight exact fits span a = 1.22–1.91 nS with b ≈ 67.9 − 3.96a pA (correlation −0.9986), while Vr is recovered to 0.26%. The spike-time error is a needle narrower than the grid. The two-stage fits recover every parameter to 0.14% (diamonds; seed 1 drifted to another basin).</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-42-firing-repertoire.jpg"><img src="../assets/gallery/search-42-firing-repertoire.jpg" alt="MAP-Elites map of firing rate against interval CV coloured by firing class, coverage curves and class counts"></a><br><b>The repertoire of one model neuron.</b> MAP-Elites over six parameters of AdEx under 500 pA, on a 44 × 30 grid of (rate, CV of the intervals), each cell holding the cell nearest Naud et al.'s tonic neuron that fires so, coloured by its firing class. In 20,000 evaluations it fills 74.5% of the cells against random search's 60.5%; bursting takes 494 cells, adapting 370, tonic 54, initial burst 50 (only between 5 and 12 Hz) and fast 15. Hairline squares: cells only random search found.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/search-43-firing-classes.jpg"><img src="../assets/gallery/search-43-firing-classes.jpg" alt="Membrane potential traces of five AdEx cells, one per firing class"></a><br><b>Five ways one model neuron fires under the same current.</b> For each class, the elite nearest the class's median behaviour, simulated again for 600 ms under 500 pA, with its parameters: tonic at 11 Hz, fast at 174 Hz, adapting at 23 Hz (its intervals lengthening from 7 to 52 ms), an initial burst (intervals of 17 and 38 ms, then 133 to 166 ms), and, after an opening burst of six, bursts of three spikes every 79 ms with a reset above threshold (Vr −46.7 mV). Recorded every 0.3 ms; spikes drawn to 0 mV.</td>
+</tr>
+</table>
+
+### 13.12 The Genetic Algorithm as a Population
+
+A genetic algorithm with roulette selection and no crossover is the Wright–Fisher model with selection: heuresis's operators held to the exact Markov chain and to the evolution domain's population genetics, and followed to where the bridge ends, from the record [The Genetic Algorithm as a Population](../research/experiments/2026-11-05-the-genetic-algorithm-as-a-population/README.md).
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-44-ga-as-wright-fisher.jpg"><img src="../assets/gallery/search-44-ga-as-wright-fisher.jpg" alt="One generation's law of carriers under three selection schemes, and fixation probability of one copy against the scaled selection coefficient"></a><br><b>A genetic algorithm with roulette selection is a Wright–Fisher population.</b> Left: from 10 carriers of fitness 1.5 among 40, roulette gives Binomial(40, 1/3) children (total variation 0.0047 over 200,000 generations), a tournament of two Binomial(40, 7/16), universal sampling only 13 or 14. Right: the fixation probability of one copy, M·u against S = 2Ms, for M = 20 to 200; the GA's runs (20,000 a point) agree with the exact chain within two standard errors at 30 of 32 points, while Kimura's diffusion overestimates by 8.7% where s = 0.4.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/search-45-drift-and-takeover.jpg"><img src="../assets/gallery/search-45-drift-and-takeover.jpg" alt="Heterozygosity decay under five selection schemes, and takeover curves of the best individual"></a><br><b>Drift without fitness, takeover with it.</b> Left: the mean heterozygosity of a neutral label among 50, 4000 runs a scheme, against (1 − c)^t with c the probability that two children share a parent. Roulette and the evolution domain's Wright–Fisher drift at 1 − 1/M; universal sampling not at all; a tournament of two with the library's ties to the earlier index at c = 0.0267 (measured 0.0274), a third faster, and with fresh ties at 1/M again. Right: takeover from one copy among 500, from 5.1 generations (truncation to a quarter) to 18.8 (roulette at s = 1); tournaments and truncation identical at s = 1 and 4.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-46-mutation-selection-balance.jpg"><img src="../assets/gallery/search-46-mutation-selection-balance.jpg" alt="Equilibrium share of ones on OneMax against mutation rate for roulette and tournament selection"></a><br><b>Mutation against selection on OneMax.</b> The equilibrium share of ones in 100 bits under standard bit mutation at rate χ/n, without elites or crossover, against the infinite population iterated exactly on OneMax's classes. Roulette settles at 0.655 at χ = 1 even in an infinite population (independent loci give 2/3), and finite populations fall further short (at χ = ¼: 0.618, 0.709 and 0.755 for M = 20, 100 and 500, against 0.825). The library's GA with tournaments of two holds 0.912 at χ = 1 for M = 100, against 0.930.</td>
+<td width="50%" valign="top"></td>
+</tr>
+</table>
+
+### 13.13 Tuning an Image Pipeline
+
+eikon's chain for vessels (Frangi's vesselness over a range of scales, hysteresis, growth) tuned by heuresis on synthetic phantoms of exact geometry, a tree of tubes among balls, and the tuned chains held to phantoms not seen in tuning, from the record [Tuning an Image Pipeline on Phantoms](../research/experiments/2026-11-05-tuning-an-image-pipeline/README.md).
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-47-vessel-chain-front.jpg"><img src="../assets/gallery/search-47-vessel-chain-front.jpg" alt="Dice against clDice of every evaluated chain with the non-dominated sets, and training Dice against worst held-out Dice"></a><br><b>Tuning for overlap and for centrelines, and what does not carry.</b> Left: 800 evaluations each of NSGA-II and random search on two phantoms, with eight parameters of the chain; every tuned chain rejects the balls (Dice 0.93) where the hand-set chain grows into them (0.61). The hypervolumes are nearly equal, 0.9262 and 0.9246. Right: each non-dominated chain held to three phantoms not seen. 60 of NSGA-II's 89 keep nothing at all on phantom 4; all 5 of random search's carry, their worst held-out Dice 0.86 to 0.93.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/search-48-vessel-reconstructions.jpg"><img src="../assets/gallery/search-48-vessel-reconstructions.jpg" alt="A held-out phantom's slice, projection and truth, and four chains' reconstructions coloured by agreement with the truth"></a><br><b>Four chains on a phantom none was tuned on.</b> Held-out phantom 4: a tree of 15 tubes (radii 0.68 to 2 mm, Murray's law) among four balls at noise σ 0.5, its middle slice, its maximum along y, the truth, and what four chains keep, projected along y. The hand-set chain keeps the tree and grows into the balls, 89% of their voxels (Dice 0.681); NSGA-II's best Dice and CMA-ES's seed 2 keep the tree alone (0.935, 0.934); NSGA-II's best mean, as good as they on the training phantoms, keeps nothing.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-49-vessel-chain-score.jpg"><img src="../assets/gallery/search-49-vessel-chain-score.jpg" alt="Convergence of CMA-ES, random search and NSGA-II on one score, and histograms of the scores of their evaluations"></a><br><b>One score, on a landscape of plateaus.</b> Left: 1 − (Dice + clDice)/2 on the training phantoms; CMA-ES reaches 0.0388–0.0398 in 320 evaluations, random search 0.0398–0.0441. Right: where the evaluations fell. Of random search's 1760, 46% keep nothing and 19% lie on the plateau of the tree with the balls, and only 0.5% score below 0.05; CMA-ES's runs straddle the plateaus (1.8% below 0.05). The searches gain little over random search because the score is three plateaus and a cliff.</td>
+<td width="50%" valign="top"></td>
+</tr>
+</table>
+
+### 13.14 Designing a District
+
+The blocks between Swanston and Russell Streets, Flinders Lane and Bourke Street, in Melbourne's Hoddle Grid, are redesigned as one search. Its decisions are of three kinds: each of 61 parcels' storeys and use, and eleven links of the walking network. Its five measures each come from the model that owns them:
+- floor area, from architecture's massing;
+- winter sun on the public ground, with the astronomy domain's Sun and the study's own shadows;
+- heating, from architecture's environment;
+- walks from homes to shops and open space, on urban science's district;
+- the mix of uses, by urban science's Definition 2.6.
+
+NSGA-III, MOEA/D, random search, NSGA-II and MAP-Elites search it, all on heuresis. This is a study of methods on a real place, not a planning proposal ([the record](README.md)).
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-50-district-as-built.jpg"><img src="../assets/gallery/search-50-district-as-built.jpg" alt="The blocks between Swanston and Russell Streets in three dimensions, coloured by use, with their shadows at noon on 21 June"></a><br><b>The district as built.</b> Sixty-one buildings, coloured by their predominant use in the City of Melbourne's latest CLUE census and raised to its floors above ground × 3.2 m. Around them the context stands pale, cut away in front, and the shadows are those of noon on 21 June. Beside them are the five measures as built: 440,046 m² of floor (plot ratio 8.2), 50,512 m²·h of winter sun on the public ground, 72.7 Wh per m² of heating, a 234 m walk from home to shop and open space, and a mix of 0.45 nats. Buildings and streets come from OpenStreetMap through the data library's city model, the Sun from the astronomy domain; drawn by the painter's algorithm in matplotlib.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/search-51-decisions-and-sun.jpg"><img src="../assets/gallery/search-51-decisions-and-sun.jpg" alt="A plan of the parcels' storey bounds, the walking network and the candidate links, beside a map of winter sun hours on the ground"></a><br><b>The decisions, and the winter sun as built.</b> On the left, each parcel's bound on its storeys and the walking network as the urban-science domain builds it, with its blocks that are 2-cells and those it leaves as holes. Over them run the eleven candidate links: eight blind lanes carried through to the street beyond, and three passages through blocks. On the right, the hours of sun between 10:00 and 14:00 on 21 June on 5,831 samples of unbuilt ground. Swanston Street keeps its sun, while Bourke Street and Flinders Lane lie in the shadow of the buildings to their north.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-52-front-parallel.jpg"><img src="../assets/gallery/search-52-front-parallel.jpg" alt="Parallel coordinates of the five-objective front with six chosen designs highlighted"></a><br><b>The five-objective front.</b> NSGA-III's 209 feasible non-dominated designs after 210 generations of 210 (seed 1), each a line across five axes with the better end up. Six designs are drawn in colour: the best in each measure, and the balanced design whose largest normalised objective is least. The district as built is dashed. 192 of the 209 designs are better than it in all five measures, and all meet the study's assumed constraints, which it does not (open space ≥ 15% of the land, homes ≥ 20% and shops 5–20% of the floor).</td>
+<td width="50%" valign="top"><a href="../assets/gallery/search-53-front-pairs.jpg"><img src="../assets/gallery/search-53-front-pairs.jpg" alt="A lower-triangular scatter matrix of the five measures for two fronts"></a><br><b>Trade-offs, two measures at a time.</b> The ten pairs of the five measures for the fronts of NSGA-III (teal) and MOEA/D (amber), seed 1, with the six chosen designs ringed and the district as built a star. Floor area trades most plainly against winter sun. MOEA/D's designs gather at the extremes, where its Tchebycheff directions point, and NSGA-III's spread through the middle.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-54-six-designs.jpg"><img src="../assets/gallery/search-54-six-designs.jpg" alt="Six designs of the district in three dimensions, in one view and scale"></a><br><b>Six designs from the front.</b> The most floor holds 1.57 million m² with almost exactly the winter sun of the district as built (50,400 against 50,512 m²·h). The most winter sun has 196,400 m²·h, and the least heating 41.5 Wh/m². The shortest walks average 23 m, and the most mixed reaches 1.03 nats. The balanced design has 1.07 million m², 164,856 m²·h of sun and a 157 m walk. All six are drawn in one view and scale, with their shadows at noon on 21 June; a link made is dashed. Most of them give the northern half-block to open space and build towers to its south.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/search-55-two-objectives.jpg"><img src="../assets/gallery/search-55-two-objectives.jpg" alt="NSGA-II's floor-against-sun fronts for three seeds beside NSGA-III's projected front, with three designs"></a><br><b>Two objectives: floor against winter sun.</b> Asked only these two, NSGA-II's three seeds draw nearly one curve, from 652k m² of floor with 228k m²·h of sun to 2,063k m² with 49.5k m²·h, the sun the district has as built. The five-objective front, seen in the same plane, lies well inside it: hypervolume 0.725 ± 0.021 against 0.509 ± 0.019. What NSGA-II gains here it pays for in the walks and the mix, which it does not see. Three of its designs are drawn alongside.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-56-hypervolume.jpg"><img src="../assets/gallery/search-56-hypervolume.jpg" alt="Hypervolume against evaluations for NSGA-III, MOEA/D and random search"></a><br><b>How far each search got.</b> The exact five-objective hypervolume (WFG), normalised by the union of the final fronts with the reference point 1.1, every 5 generations for three seeds each. MOEA/D ends highest at 0.691 (mean), NSGA-III at 0.575 and still rising, and random search at 0.139, its whole archive counted. Each run had 44,100 evaluations, on four threads with keyed draws, so a run is the same on any number of threads.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/search-57-repertoire-atlas.jpg"><img src="../assets/gallery/search-57-repertoire-atlas.jpg" alt="An atlas of small district drawings arranged by plot ratio and open share"></a><br><b>A repertoire of districts.</b> MAP-Elites over plot ratio (0–32) and the share of the land open to the public (0.05–0.65), in 16 × 12 cells. In each cell is drawn the design that keeps the most winter sun on the public ground, with homes ≥ 20% and shops 5–20% of the floor. After 84,000 evaluations it filled 156 cells (81%). Read along a row, the atlas shows where floor can be added at a given share of open ground, and what each addition costs in sun.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-58-repertoire-map.jpg"><img src="../assets/gallery/search-58-repertoire-map.jpg" alt="A map of the best winter sun over plot ratio and open share, with coverage and QD-score curves"></a><br><b>What the repertoire says.</b> The best winter sun found in each cell, relative to the district as built, on a scale diverging at 1. It ranges from 0.81 in the densest cell with the least open space to 5.1. At the density and the open share as built, the best design keeps 1.47 times the sun; with 15% open space at the same density, 1.88 times. NSGA-III's front is overlaid. Coverage and QD-score (426.8) are shown against evaluations.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/search-59-where-height-goes.jpg"><img src="../assets/gallery/search-59-where-height-goes.jpg" alt="Plans of the parcels' median storeys and most frequent use over the front"></a><br><b>Where the front puts height, and what it gives to the public.</b> Over NSGA-III's 209 designs, each parcel's median storeys when built (left), and its most frequent use with how often it is given to open space (right). The front gives a median 94% of the northern half-block, Little Collins to Bourke Street, to the public, and builds a median 42 storeys between Collins and Little Collins Streets. In the Southern Hemisphere's winter the Sun stands low in the north, 28.5° at noon on 21 June, so a low northern edge lets it reach the ground.</td>
+</tr>
+</table>
+
+<!-- search case studies: end -->
+
+## 14. Credits
 
 The screenshots are the infrastructure's, under its MIT licence, except the three that show Pangu-Weather's forecasts (§1.3: earth-15, earth-16 and earth-17). Those are shared under CC BY-NC-SA 4.0, the licence of the model's parameters: for learning and research, not for commercial use. The data in all of them keep their own licences.
 
@@ -731,7 +975,7 @@ The screenshots are the infrastructure's, under its MIT licence, except the thre
 | A woman's body | The Human Reference Atlas (HuBMAP), 3D Reference Organ Set for United, Female v1.8, modelled from the Visible Human Female | CC BY 4.0 |
 | Abdominal CT and its vessels' labels | The Medical Segmentation Decathlon, Task 08 (Antonelli et al. 2022; Memorial Sloan Kettering Cancer Center), cases 172 and 324 | CC BY-SA 4.0 |
 
-## 14. Making the Screenshots
+## 15. Making the Screenshots
 
 The screenshots were taken with headless Chrome at 1600 × 1000 pixels, driven over the DevTools protocol, and saved as JPEG.
 

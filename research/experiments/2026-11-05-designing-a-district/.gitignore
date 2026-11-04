@@ -1,0 +1,4 @@
+# Extracts of OpenStreetMap (ODbL 1.0), made again by prepare.py and the study's program from the data library's
+# cache; not committed, as the infrastructure commits no dataset (CLAUDE.md §7, Licences).
+results/district-inputs.json
+results/district-cells.json

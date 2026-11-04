@@ -1,0 +1,526 @@
+graph,kind,cells,eccentricity,selection,seed,takeover
+ring 16,ring,16,8,best,0,8
+ring 16,ring,16,8,tournament,0,9
+ring 16,ring,16,8,tournament,1,12
+ring 16,ring,16,8,tournament,2,13
+ring 16,ring,16,8,tournament,3,17
+ring 16,ring,16,8,tournament,4,12
+ring 16,ring,16,8,tournament,5,13
+ring 16,ring,16,8,tournament,6,14
+ring 16,ring,16,8,tournament,7,14
+ring 16,ring,16,8,tournament,8,14
+ring 16,ring,16,8,tournament,9,13
+ring 16,ring,16,8,tournament,10,13
+ring 16,ring,16,8,tournament,11,13
+ring 16,ring,16,8,tournament,12,16
+ring 16,ring,16,8,tournament,13,13
+ring 16,ring,16,8,tournament,14,16
+ring 16,ring,16,8,tournament,15,15
+ring 16,ring,16,8,tournament,16,15
+ring 16,ring,16,8,tournament,17,14
+ring 16,ring,16,8,tournament,18,12
+ring 16,ring,16,8,tournament,19,13
+ring 32,ring,32,16,best,0,16
+ring 32,ring,32,16,tournament,0,29
+ring 32,ring,32,16,tournament,1,33
+ring 32,ring,32,16,tournament,2,28
+ring 32,ring,32,16,tournament,3,37
+ring 32,ring,32,16,tournament,4,22
+ring 32,ring,32,16,tournament,5,23
+ring 32,ring,32,16,tournament,6,30
+ring 32,ring,32,16,tournament,7,22
+ring 32,ring,32,16,tournament,8,30
+ring 32,ring,32,16,tournament,9,33
+ring 32,ring,32,16,tournament,10,25
+ring 32,ring,32,16,tournament,11,30
+ring 32,ring,32,16,tournament,12,28
+ring 32,ring,32,16,tournament,13,27
+ring 32,ring,32,16,tournament,14,30
+ring 32,ring,32,16,tournament,15,29
+ring 32,ring,32,16,tournament,16,33
+ring 32,ring,32,16,tournament,17,31
+ring 32,ring,32,16,tournament,18,32
+ring 32,ring,32,16,tournament,19,27
+ring 64,ring,64,32,best,0,32
+ring 64,ring,64,32,tournament,0,50
+ring 64,ring,64,32,tournament,1,55
+ring 64,ring,64,32,tournament,2,56
+ring 64,ring,64,32,tournament,3,68
+ring 64,ring,64,32,tournament,4,58
+ring 64,ring,64,32,tournament,5,60
+ring 64,ring,64,32,tournament,6,59
+ring 64,ring,64,32,tournament,7,54
+ring 64,ring,64,32,tournament,8,55
+ring 64,ring,64,32,tournament,9,63
+ring 64,ring,64,32,tournament,10,54
+ring 64,ring,64,32,tournament,11,57
+ring 64,ring,64,32,tournament,12,59
+ring 64,ring,64,32,tournament,13,55
+ring 64,ring,64,32,tournament,14,57
+ring 64,ring,64,32,tournament,15,62
+ring 64,ring,64,32,tournament,16,60
+ring 64,ring,64,32,tournament,17,58
+ring 64,ring,64,32,tournament,18,59
+ring 64,ring,64,32,tournament,19,53
+ring 128,ring,128,64,best,0,64
+ring 128,ring,128,64,tournament,0,101
+ring 128,ring,128,64,tournament,1,112
+ring 128,ring,128,64,tournament,2,116
+ring 128,ring,128,64,tournament,3,118
+ring 128,ring,128,64,tournament,4,109
+ring 128,ring,128,64,tournament,5,120
+ring 128,ring,128,64,tournament,6,106
+ring 128,ring,128,64,tournament,7,105
+ring 128,ring,128,64,tournament,8,120
+ring 128,ring,128,64,tournament,9,124
+ring 128,ring,128,64,tournament,10,113
+ring 128,ring,128,64,tournament,11,109
+ring 128,ring,128,64,tournament,12,105
+ring 128,ring,128,64,tournament,13,109
+ring 128,ring,128,64,tournament,14,115
+ring 128,ring,128,64,tournament,15,115
+ring 128,ring,128,64,tournament,16,109
+ring 128,ring,128,64,tournament,17,110
+ring 128,ring,128,64,tournament,18,120
+ring 128,ring,128,64,tournament,19,103
+ring 256,ring,256,128,best,0,128
+ring 256,ring,256,128,tournament,0,233
+ring 256,ring,256,128,tournament,1,230
+ring 256,ring,256,128,tournament,2,242
+ring 256,ring,256,128,tournament,3,232
+ring 256,ring,256,128,tournament,4,218
+ring 256,ring,256,128,tournament,5,238
+ring 256,ring,256,128,tournament,6,230
+ring 256,ring,256,128,tournament,7,229
+ring 256,ring,256,128,tournament,8,221
+ring 256,ring,256,128,tournament,9,231
+ring 256,ring,256,128,tournament,10,239
+ring 256,ring,256,128,tournament,11,228
+ring 256,ring,256,128,tournament,12,235
+ring 256,ring,256,128,tournament,13,215
+ring 256,ring,256,128,tournament,14,224
+ring 256,ring,256,128,tournament,15,252
+ring 256,ring,256,128,tournament,16,215
+ring 256,ring,256,128,tournament,17,245
+ring 256,ring,256,128,tournament,18,233
+ring 256,ring,256,128,tournament,19,223
+torus 4x4,torus,16,4,best,0,4
+torus 4x4,torus,16,4,tournament,0,7
+torus 4x4,torus,16,4,tournament,1,5
+torus 4x4,torus,16,4,tournament,2,7
+torus 4x4,torus,16,4,tournament,3,5
+torus 4x4,torus,16,4,tournament,4,4
+torus 4x4,torus,16,4,tournament,5,8
+torus 4x4,torus,16,4,tournament,6,6
+torus 4x4,torus,16,4,tournament,7,6
+torus 4x4,torus,16,4,tournament,8,6
+torus 4x4,torus,16,4,tournament,9,5
+torus 4x4,torus,16,4,tournament,10,5
+torus 4x4,torus,16,4,tournament,11,6
+torus 4x4,torus,16,4,tournament,12,6
+torus 4x4,torus,16,4,tournament,13,6
+torus 4x4,torus,16,4,tournament,14,4
+torus 4x4,torus,16,4,tournament,15,6
+torus 4x4,torus,16,4,tournament,16,6
+torus 4x4,torus,16,4,tournament,17,5
+torus 4x4,torus,16,4,tournament,18,5
+torus 4x4,torus,16,4,tournament,19,6
+torus 6x9,torus,54,7,best,0,7
+torus 6x9,torus,54,7,tournament,0,12
+torus 6x9,torus,54,7,tournament,1,12
+torus 6x9,torus,54,7,tournament,2,11
+torus 6x9,torus,54,7,tournament,3,11
+torus 6x9,torus,54,7,tournament,4,9
+torus 6x9,torus,54,7,tournament,5,12
+torus 6x9,torus,54,7,tournament,6,9
+torus 6x9,torus,54,7,tournament,7,10
+torus 6x9,torus,54,7,tournament,8,11
+torus 6x9,torus,54,7,tournament,9,12
+torus 6x9,torus,54,7,tournament,10,12
+torus 6x9,torus,54,7,tournament,11,11
+torus 6x9,torus,54,7,tournament,12,12
+torus 6x9,torus,54,7,tournament,13,11
+torus 6x9,torus,54,7,tournament,14,11
+torus 6x9,torus,54,7,tournament,15,11
+torus 6x9,torus,54,7,tournament,16,11
+torus 6x9,torus,54,7,tournament,17,10
+torus 6x9,torus,54,7,tournament,18,13
+torus 6x9,torus,54,7,tournament,19,11
+torus 8x8,torus,64,8,best,0,8
+torus 8x8,torus,64,8,tournament,0,14
+torus 8x8,torus,64,8,tournament,1,11
+torus 8x8,torus,64,8,tournament,2,14
+torus 8x8,torus,64,8,tournament,3,13
+torus 8x8,torus,64,8,tournament,4,11
+torus 8x8,torus,64,8,tournament,5,11
+torus 8x8,torus,64,8,tournament,6,12
+torus 8x8,torus,64,8,tournament,7,10
+torus 8x8,torus,64,8,tournament,8,10
+torus 8x8,torus,64,8,tournament,9,11
+torus 8x8,torus,64,8,tournament,10,13
+torus 8x8,torus,64,8,tournament,11,13
+torus 8x8,torus,64,8,tournament,12,12
+torus 8x8,torus,64,8,tournament,13,13
+torus 8x8,torus,64,8,tournament,14,10
+torus 8x8,torus,64,8,tournament,15,12
+torus 8x8,torus,64,8,tournament,16,11
+torus 8x8,torus,64,8,tournament,17,10
+torus 8x8,torus,64,8,tournament,18,13
+torus 8x8,torus,64,8,tournament,19,12
+torus 8x32,torus,256,20,best,0,20
+torus 8x32,torus,256,20,tournament,0,32
+torus 8x32,torus,256,20,tournament,1,32
+torus 8x32,torus,256,20,tournament,2,35
+torus 8x32,torus,256,20,tournament,3,35
+torus 8x32,torus,256,20,tournament,4,26
+torus 8x32,torus,256,20,tournament,5,31
+torus 8x32,torus,256,20,tournament,6,32
+torus 8x32,torus,256,20,tournament,7,32
+torus 8x32,torus,256,20,tournament,8,32
+torus 8x32,torus,256,20,tournament,9,31
+torus 8x32,torus,256,20,tournament,10,32
+torus 8x32,torus,256,20,tournament,11,33
+torus 8x32,torus,256,20,tournament,12,31
+torus 8x32,torus,256,20,tournament,13,30
+torus 8x32,torus,256,20,tournament,14,31
+torus 8x32,torus,256,20,tournament,15,33
+torus 8x32,torus,256,20,tournament,16,33
+torus 8x32,torus,256,20,tournament,17,31
+torus 8x32,torus,256,20,tournament,18,33
+torus 8x32,torus,256,20,tournament,19,34
+torus 16x16,torus,256,16,best,0,16
+torus 16x16,torus,256,16,tournament,0,23
+torus 16x16,torus,256,16,tournament,1,24
+torus 16x16,torus,256,16,tournament,2,21
+torus 16x16,torus,256,16,tournament,3,21
+torus 16x16,torus,256,16,tournament,4,20
+torus 16x16,torus,256,16,tournament,5,26
+torus 16x16,torus,256,16,tournament,6,23
+torus 16x16,torus,256,16,tournament,7,23
+torus 16x16,torus,256,16,tournament,8,22
+torus 16x16,torus,256,16,tournament,9,23
+torus 16x16,torus,256,16,tournament,10,23
+torus 16x16,torus,256,16,tournament,11,21
+torus 16x16,torus,256,16,tournament,12,21
+torus 16x16,torus,256,16,tournament,13,23
+torus 16x16,torus,256,16,tournament,14,21
+torus 16x16,torus,256,16,tournament,15,23
+torus 16x16,torus,256,16,tournament,16,21
+torus 16x16,torus,256,16,tournament,17,20
+torus 16x16,torus,256,16,tournament,18,22
+torus 16x16,torus,256,16,tournament,19,24
+torus 32x32,torus,1024,32,best,0,32
+torus 32x32,torus,1024,32,tournament,0,44
+torus 32x32,torus,1024,32,tournament,1,47
+torus 32x32,torus,1024,32,tournament,2,43
+torus 32x32,torus,1024,32,tournament,3,43
+torus 32x32,torus,1024,32,tournament,4,43
+torus 32x32,torus,1024,32,tournament,5,44
+torus 32x32,torus,1024,32,tournament,6,42
+torus 32x32,torus,1024,32,tournament,7,41
+torus 32x32,torus,1024,32,tournament,8,45
+torus 32x32,torus,1024,32,tournament,9,45
+torus 32x32,torus,1024,32,tournament,10,44
+torus 32x32,torus,1024,32,tournament,11,40
+torus 32x32,torus,1024,32,tournament,12,44
+torus 32x32,torus,1024,32,tournament,13,42
+torus 32x32,torus,1024,32,tournament,14,41
+torus 32x32,torus,1024,32,tournament,15,45
+torus 32x32,torus,1024,32,tournament,16,42
+torus 32x32,torus,1024,32,tournament,17,42
+torus 32x32,torus,1024,32,tournament,18,46
+torus 32x32,torus,1024,32,tournament,19,41
+Moore torus 8x8,torus (Moore),64,4,best,0,4
+Moore torus 8x8,torus (Moore),64,4,tournament,0,8
+Moore torus 8x8,torus (Moore),64,4,tournament,1,9
+Moore torus 8x8,torus (Moore),64,4,tournament,2,8
+Moore torus 8x8,torus (Moore),64,4,tournament,3,11
+Moore torus 8x8,torus (Moore),64,4,tournament,4,9
+Moore torus 8x8,torus (Moore),64,4,tournament,5,9
+Moore torus 8x8,torus (Moore),64,4,tournament,6,10
+Moore torus 8x8,torus (Moore),64,4,tournament,7,7
+Moore torus 8x8,torus (Moore),64,4,tournament,8,9
+Moore torus 8x8,torus (Moore),64,4,tournament,9,9
+Moore torus 8x8,torus (Moore),64,4,tournament,10,8
+Moore torus 8x8,torus (Moore),64,4,tournament,11,8
+Moore torus 8x8,torus (Moore),64,4,tournament,12,9
+Moore torus 8x8,torus (Moore),64,4,tournament,13,8
+Moore torus 8x8,torus (Moore),64,4,tournament,14,7
+Moore torus 8x8,torus (Moore),64,4,tournament,15,8
+Moore torus 8x8,torus (Moore),64,4,tournament,16,9
+Moore torus 8x8,torus (Moore),64,4,tournament,17,10
+Moore torus 8x8,torus (Moore),64,4,tournament,18,9
+Moore torus 8x8,torus (Moore),64,4,tournament,19,9
+Moore torus 16x16,torus (Moore),256,8,best,0,8
+Moore torus 16x16,torus (Moore),256,8,tournament,0,18
+Moore torus 16x16,torus (Moore),256,8,tournament,1,18
+Moore torus 16x16,torus (Moore),256,8,tournament,2,15
+Moore torus 16x16,torus (Moore),256,8,tournament,3,17
+Moore torus 16x16,torus (Moore),256,8,tournament,4,17
+Moore torus 16x16,torus (Moore),256,8,tournament,5,16
+Moore torus 16x16,torus (Moore),256,8,tournament,6,17
+Moore torus 16x16,torus (Moore),256,8,tournament,7,17
+Moore torus 16x16,torus (Moore),256,8,tournament,8,20
+Moore torus 16x16,torus (Moore),256,8,tournament,9,18
+Moore torus 16x16,torus (Moore),256,8,tournament,10,15
+Moore torus 16x16,torus (Moore),256,8,tournament,11,18
+Moore torus 16x16,torus (Moore),256,8,tournament,12,16
+Moore torus 16x16,torus (Moore),256,8,tournament,13,15
+Moore torus 16x16,torus (Moore),256,8,tournament,14,16
+Moore torus 16x16,torus (Moore),256,8,tournament,15,15
+Moore torus 16x16,torus (Moore),256,8,tournament,16,17
+Moore torus 16x16,torus (Moore),256,8,tournament,17,17
+Moore torus 16x16,torus (Moore),256,8,tournament,18,17
+Moore torus 16x16,torus (Moore),256,8,tournament,19,16
+Moore torus 32x32,torus (Moore),1024,16,best,0,16
+Moore torus 32x32,torus (Moore),1024,16,tournament,0,30
+Moore torus 32x32,torus (Moore),1024,16,tournament,1,33
+Moore torus 32x32,torus (Moore),1024,16,tournament,2,31
+Moore torus 32x32,torus (Moore),1024,16,tournament,3,32
+Moore torus 32x32,torus (Moore),1024,16,tournament,4,33
+Moore torus 32x32,torus (Moore),1024,16,tournament,5,33
+Moore torus 32x32,torus (Moore),1024,16,tournament,6,30
+Moore torus 32x32,torus (Moore),1024,16,tournament,7,31
+Moore torus 32x32,torus (Moore),1024,16,tournament,8,33
+Moore torus 32x32,torus (Moore),1024,16,tournament,9,31
+Moore torus 32x32,torus (Moore),1024,16,tournament,10,31
+Moore torus 32x32,torus (Moore),1024,16,tournament,11,31
+Moore torus 32x32,torus (Moore),1024,16,tournament,12,30
+Moore torus 32x32,torus (Moore),1024,16,tournament,13,31
+Moore torus 32x32,torus (Moore),1024,16,tournament,14,32
+Moore torus 32x32,torus (Moore),1024,16,tournament,15,29
+Moore torus 32x32,torus (Moore),1024,16,tournament,16,34
+Moore torus 32x32,torus (Moore),1024,16,tournament,17,34
+Moore torus 32x32,torus (Moore),1024,16,tournament,18,31
+Moore torus 32x32,torus (Moore),1024,16,tournament,19,32
+hypercube 4,hypercube,16,4,best,0,4
+hypercube 4,hypercube,16,4,tournament,0,8
+hypercube 4,hypercube,16,4,tournament,1,7
+hypercube 4,hypercube,16,4,tournament,2,6
+hypercube 4,hypercube,16,4,tournament,3,8
+hypercube 4,hypercube,16,4,tournament,4,4
+hypercube 4,hypercube,16,4,tournament,5,6
+hypercube 4,hypercube,16,4,tournament,6,5
+hypercube 4,hypercube,16,4,tournament,7,5
+hypercube 4,hypercube,16,4,tournament,8,5
+hypercube 4,hypercube,16,4,tournament,9,7
+hypercube 4,hypercube,16,4,tournament,10,5
+hypercube 4,hypercube,16,4,tournament,11,7
+hypercube 4,hypercube,16,4,tournament,12,6
+hypercube 4,hypercube,16,4,tournament,13,5
+hypercube 4,hypercube,16,4,tournament,14,6
+hypercube 4,hypercube,16,4,tournament,15,5
+hypercube 4,hypercube,16,4,tournament,16,6
+hypercube 4,hypercube,16,4,tournament,17,4
+hypercube 4,hypercube,16,4,tournament,18,5
+hypercube 4,hypercube,16,4,tournament,19,6
+hypercube 5,hypercube,32,5,best,0,5
+hypercube 5,hypercube,32,5,tournament,0,7
+hypercube 5,hypercube,32,5,tournament,1,8
+hypercube 5,hypercube,32,5,tournament,2,6
+hypercube 5,hypercube,32,5,tournament,3,8
+hypercube 5,hypercube,32,5,tournament,4,6
+hypercube 5,hypercube,32,5,tournament,5,6
+hypercube 5,hypercube,32,5,tournament,6,8
+hypercube 5,hypercube,32,5,tournament,7,7
+hypercube 5,hypercube,32,5,tournament,8,8
+hypercube 5,hypercube,32,5,tournament,9,8
+hypercube 5,hypercube,32,5,tournament,10,8
+hypercube 5,hypercube,32,5,tournament,11,7
+hypercube 5,hypercube,32,5,tournament,12,7
+hypercube 5,hypercube,32,5,tournament,13,7
+hypercube 5,hypercube,32,5,tournament,14,8
+hypercube 5,hypercube,32,5,tournament,15,6
+hypercube 5,hypercube,32,5,tournament,16,7
+hypercube 5,hypercube,32,5,tournament,17,7
+hypercube 5,hypercube,32,5,tournament,18,8
+hypercube 5,hypercube,32,5,tournament,19,6
+hypercube 6,hypercube,64,6,best,0,6
+hypercube 6,hypercube,64,6,tournament,0,10
+hypercube 6,hypercube,64,6,tournament,1,9
+hypercube 6,hypercube,64,6,tournament,2,8
+hypercube 6,hypercube,64,6,tournament,3,8
+hypercube 6,hypercube,64,6,tournament,4,8
+hypercube 6,hypercube,64,6,tournament,5,8
+hypercube 6,hypercube,64,6,tournament,6,8
+hypercube 6,hypercube,64,6,tournament,7,7
+hypercube 6,hypercube,64,6,tournament,8,9
+hypercube 6,hypercube,64,6,tournament,9,9
+hypercube 6,hypercube,64,6,tournament,10,7
+hypercube 6,hypercube,64,6,tournament,11,7
+hypercube 6,hypercube,64,6,tournament,12,8
+hypercube 6,hypercube,64,6,tournament,13,8
+hypercube 6,hypercube,64,6,tournament,14,10
+hypercube 6,hypercube,64,6,tournament,15,8
+hypercube 6,hypercube,64,6,tournament,16,8
+hypercube 6,hypercube,64,6,tournament,17,9
+hypercube 6,hypercube,64,6,tournament,18,9
+hypercube 6,hypercube,64,6,tournament,19,7
+hypercube 7,hypercube,128,7,best,0,7
+hypercube 7,hypercube,128,7,tournament,0,10
+hypercube 7,hypercube,128,7,tournament,1,9
+hypercube 7,hypercube,128,7,tournament,2,10
+hypercube 7,hypercube,128,7,tournament,3,9
+hypercube 7,hypercube,128,7,tournament,4,10
+hypercube 7,hypercube,128,7,tournament,5,10
+hypercube 7,hypercube,128,7,tournament,6,10
+hypercube 7,hypercube,128,7,tournament,7,9
+hypercube 7,hypercube,128,7,tournament,8,9
+hypercube 7,hypercube,128,7,tournament,9,11
+hypercube 7,hypercube,128,7,tournament,10,11
+hypercube 7,hypercube,128,7,tournament,11,10
+hypercube 7,hypercube,128,7,tournament,12,10
+hypercube 7,hypercube,128,7,tournament,13,10
+hypercube 7,hypercube,128,7,tournament,14,11
+hypercube 7,hypercube,128,7,tournament,15,10
+hypercube 7,hypercube,128,7,tournament,16,8
+hypercube 7,hypercube,128,7,tournament,17,10
+hypercube 7,hypercube,128,7,tournament,18,9
+hypercube 7,hypercube,128,7,tournament,19,9
+hypercube 8,hypercube,256,8,best,0,8
+hypercube 8,hypercube,256,8,tournament,0,11
+hypercube 8,hypercube,256,8,tournament,1,11
+hypercube 8,hypercube,256,8,tournament,2,10
+hypercube 8,hypercube,256,8,tournament,3,11
+hypercube 8,hypercube,256,8,tournament,4,12
+hypercube 8,hypercube,256,8,tournament,5,11
+hypercube 8,hypercube,256,8,tournament,6,10
+hypercube 8,hypercube,256,8,tournament,7,11
+hypercube 8,hypercube,256,8,tournament,8,11
+hypercube 8,hypercube,256,8,tournament,9,12
+hypercube 8,hypercube,256,8,tournament,10,11
+hypercube 8,hypercube,256,8,tournament,11,11
+hypercube 8,hypercube,256,8,tournament,12,10
+hypercube 8,hypercube,256,8,tournament,13,11
+hypercube 8,hypercube,256,8,tournament,14,13
+hypercube 8,hypercube,256,8,tournament,15,10
+hypercube 8,hypercube,256,8,tournament,16,10
+hypercube 8,hypercube,256,8,tournament,17,10
+hypercube 8,hypercube,256,8,tournament,18,11
+hypercube 8,hypercube,256,8,tournament,19,12
+hypercube 9,hypercube,512,9,best,0,9
+hypercube 9,hypercube,512,9,tournament,0,12
+hypercube 9,hypercube,512,9,tournament,1,11
+hypercube 9,hypercube,512,9,tournament,2,11
+hypercube 9,hypercube,512,9,tournament,3,11
+hypercube 9,hypercube,512,9,tournament,4,13
+hypercube 9,hypercube,512,9,tournament,5,13
+hypercube 9,hypercube,512,9,tournament,6,11
+hypercube 9,hypercube,512,9,tournament,7,13
+hypercube 9,hypercube,512,9,tournament,8,10
+hypercube 9,hypercube,512,9,tournament,9,11
+hypercube 9,hypercube,512,9,tournament,10,12
+hypercube 9,hypercube,512,9,tournament,11,12
+hypercube 9,hypercube,512,9,tournament,12,10
+hypercube 9,hypercube,512,9,tournament,13,12
+hypercube 9,hypercube,512,9,tournament,14,14
+hypercube 9,hypercube,512,9,tournament,15,12
+hypercube 9,hypercube,512,9,tournament,16,12
+hypercube 9,hypercube,512,9,tournament,17,11
+hypercube 9,hypercube,512,9,tournament,18,13
+hypercube 9,hypercube,512,9,tournament,19,12
+hypercube 10,hypercube,1024,10,best,0,10
+hypercube 10,hypercube,1024,10,tournament,0,13
+hypercube 10,hypercube,1024,10,tournament,1,14
+hypercube 10,hypercube,1024,10,tournament,2,14
+hypercube 10,hypercube,1024,10,tournament,3,14
+hypercube 10,hypercube,1024,10,tournament,4,13
+hypercube 10,hypercube,1024,10,tournament,5,13
+hypercube 10,hypercube,1024,10,tournament,6,13
+hypercube 10,hypercube,1024,10,tournament,7,14
+hypercube 10,hypercube,1024,10,tournament,8,12
+hypercube 10,hypercube,1024,10,tournament,9,13
+hypercube 10,hypercube,1024,10,tournament,10,13
+hypercube 10,hypercube,1024,10,tournament,11,14
+hypercube 10,hypercube,1024,10,tournament,12,12
+hypercube 10,hypercube,1024,10,tournament,13,12
+hypercube 10,hypercube,1024,10,tournament,14,14
+hypercube 10,hypercube,1024,10,tournament,15,13
+hypercube 10,hypercube,1024,10,tournament,16,12
+hypercube 10,hypercube,1024,10,tournament,17,12
+hypercube 10,hypercube,1024,10,tournament,18,14
+hypercube 10,hypercube,1024,10,tournament,19,13
+complete 16,complete,16,1,best,0,1
+complete 16,complete,16,1,tournament,0,3
+complete 16,complete,16,1,tournament,1,4
+complete 16,complete,16,1,tournament,2,4
+complete 16,complete,16,1,tournament,3,4
+complete 16,complete,16,1,tournament,4,3
+complete 16,complete,16,1,tournament,5,4
+complete 16,complete,16,1,tournament,6,5
+complete 16,complete,16,1,tournament,7,5
+complete 16,complete,16,1,tournament,8,6
+complete 16,complete,16,1,tournament,9,3
+complete 16,complete,16,1,tournament,10,4
+complete 16,complete,16,1,tournament,11,3
+complete 16,complete,16,1,tournament,12,4
+complete 16,complete,16,1,tournament,13,4
+complete 16,complete,16,1,tournament,14,7
+complete 16,complete,16,1,tournament,15,4
+complete 16,complete,16,1,tournament,16,5
+complete 16,complete,16,1,tournament,17,4
+complete 16,complete,16,1,tournament,18,4
+complete 16,complete,16,1,tournament,19,4
+complete 64,complete,64,1,best,0,1
+complete 64,complete,64,1,tournament,0,7
+complete 64,complete,64,1,tournament,1,5
+complete 64,complete,64,1,tournament,2,6
+complete 64,complete,64,1,tournament,3,6
+complete 64,complete,64,1,tournament,4,6
+complete 64,complete,64,1,tournament,5,5
+complete 64,complete,64,1,tournament,6,6
+complete 64,complete,64,1,tournament,7,5
+complete 64,complete,64,1,tournament,8,5
+complete 64,complete,64,1,tournament,9,7
+complete 64,complete,64,1,tournament,10,6
+complete 64,complete,64,1,tournament,11,7
+complete 64,complete,64,1,tournament,12,6
+complete 64,complete,64,1,tournament,13,5
+complete 64,complete,64,1,tournament,14,6
+complete 64,complete,64,1,tournament,15,6
+complete 64,complete,64,1,tournament,16,7
+complete 64,complete,64,1,tournament,17,6
+complete 64,complete,64,1,tournament,18,5
+complete 64,complete,64,1,tournament,19,6
+complete 256,complete,256,1,best,0,1
+complete 256,complete,256,1,tournament,0,7
+complete 256,complete,256,1,tournament,1,7
+complete 256,complete,256,1,tournament,2,7
+complete 256,complete,256,1,tournament,3,8
+complete 256,complete,256,1,tournament,4,8
+complete 256,complete,256,1,tournament,5,8
+complete 256,complete,256,1,tournament,6,9
+complete 256,complete,256,1,tournament,7,8
+complete 256,complete,256,1,tournament,8,7
+complete 256,complete,256,1,tournament,9,7
+complete 256,complete,256,1,tournament,10,8
+complete 256,complete,256,1,tournament,11,6
+complete 256,complete,256,1,tournament,12,8
+complete 256,complete,256,1,tournament,13,6
+complete 256,complete,256,1,tournament,14,9
+complete 256,complete,256,1,tournament,15,8
+complete 256,complete,256,1,tournament,16,7
+complete 256,complete,256,1,tournament,17,8
+complete 256,complete,256,1,tournament,18,8
+complete 256,complete,256,1,tournament,19,7
+complete 1024,complete,1024,1,best,0,1
+complete 1024,complete,1024,1,tournament,0,9
+complete 1024,complete,1024,1,tournament,1,9
+complete 1024,complete,1024,1,tournament,2,9
+complete 1024,complete,1024,1,tournament,3,9
+complete 1024,complete,1024,1,tournament,4,8
+complete 1024,complete,1024,1,tournament,5,10
+complete 1024,complete,1024,1,tournament,6,8
+complete 1024,complete,1024,1,tournament,7,8
+complete 1024,complete,1024,1,tournament,8,8
+complete 1024,complete,1024,1,tournament,9,9
+complete 1024,complete,1024,1,tournament,10,8
+complete 1024,complete,1024,1,tournament,11,9
+complete 1024,complete,1024,1,tournament,12,9
+complete 1024,complete,1024,1,tournament,13,9
+complete 1024,complete,1024,1,tournament,14,8
+complete 1024,complete,1024,1,tournament,15,10
+complete 1024,complete,1024,1,tournament,16,8
+complete 1024,complete,1024,1,tournament,17,8
+complete 1024,complete,1024,1,tournament,18,8
+complete 1024,complete,1024,1,tournament,19,9

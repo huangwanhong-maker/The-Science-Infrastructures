@@ -1,0 +1,11 @@
+{
+  "budget": 20000,
+  "cells": 1320,
+  "wall_map_elites_s": 78.4,
+  "map_elites": {"filled": 983, "coverage": 0.74470, "qd_score": 1754.777},
+  "random": {"filled": 798, "coverage": 0.60455, "qd_score": 1338.590},
+  "classes_map_elites": {"adapting": 370, "bursting": 494, "fast": 15, "initial burst": 50, "tonic": 54},
+  "classes_random": {"adapting": 358, "bursting": 327, "fast": 11, "initial burst": 54, "tonic": 48},
+  "failures_map_elites": {"fewer than three spikes": 350, "outside the descriptor box": 2915},
+  "failures_random": {"fewer than three spikes": 485, "outside the descriptor box": 3053}
+}

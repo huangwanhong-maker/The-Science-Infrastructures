@@ -1,0 +1,19 @@
+{
+  "threads": 6,
+  "best_known_seconds": 67.7224,
+  "comparison_seconds": 1561.71,
+  "t0_annealing_m": 820.126,
+  "seeds": 10,
+  "ant_seeds": 5,
+  "budget": 1e+06,
+  "cpu_seconds_per_algorithm": {
+    "GA-CX": 229.615,
+    "GA-OX": 203.651,
+    "GA-PMX": 272.891,
+    "ILS": 132.848,
+    "MMAS": 7653.4,
+    "Plackett-Luce": 638.497,
+    "SA": 58.2552,
+    "random": 154.165
+  }
+}

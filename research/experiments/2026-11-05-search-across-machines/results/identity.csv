@@ -1,0 +1,1429 @@
+scheme,placement,generation,best
+generational,serial,0,255.01814551894353
+generational,serial,1,226.00034641553447
+generational,serial,2,225.6541381787529
+generational,serial,3,225.6541381787529
+generational,serial,4,195.47494620519808
+generational,serial,5,176.55366179836165
+generational,serial,6,168.09021060628947
+generational,serial,7,159.7714146104058
+generational,serial,8,159.7714146104058
+generational,serial,9,154.4089055289578
+generational,serial,10,147.83212939041761
+generational,serial,11,147.83212939041761
+generational,serial,12,143.26286119879546
+generational,serial,13,130.38978516789291
+generational,serial,14,128.29436194595058
+generational,serial,15,114.55206434723098
+generational,serial,16,114.55206434723098
+generational,serial,17,93.087969160352287
+generational,serial,18,75.044640587589541
+generational,serial,19,75.044640587589541
+generational,serial,20,75.044640587589541
+generational,serial,30,65.279694147532382
+generational,serial,40,45.097851072688094
+generational,serial,50,34.012039511778028
+generational,serial,60,31.975419475556848
+generational,serial,70,30.910541132444976
+generational,serial,80,26.384927666273022
+generational,serial,90,24.888936891085486
+generational,serial,100,24.533322270619863
+generational,serial,110,23.749651750666445
+generational,serial,120,23.749651750666445
+generational,serial,130,20.706972687993346
+generational,serial,140,18.534765858773472
+generational,serial,150,17.460201464581825
+generational,serial,160,17.417914708157326
+generational,serial,170,16.129926764401752
+generational,serial,180,16.026242363904345
+generational,serial,190,14.515648639151449
+generational,serial,200,14.515648639151449
+generational,serial,210,13.73457964515074
+generational,serial,220,12.99927437141667
+generational,serial,230,12.971276915221997
+generational,serial,240,12.97043591381574
+generational,serial,250,12.573708991947514
+generational,serial,260,10.022276075481281
+generational,serial,270,8.4604859237537795
+generational,serial,280,8.4504223579227542
+generational,serial,290,8.223830025348045
+generational,serial,300,7.7650121236587886
+generational,serial,310,7.7650121236587886
+generational,serial,320,6.0480996866165491
+generational,serial,330,6.0105157018264048
+generational,serial,340,5.9799995645172128
+generational,serial,350,4.8032590221921225
+generational,serial,360,4.5938251186399786
+generational,serial,370,4.5341317898561559
+generational,serial,380,4.5074801334858137
+generational,serial,390,4.5074801334858137
+generational,serial,400,4.5073256894726565
+generational,serial,410,4.4980593164359082
+generational,serial,420,4.4874136679656118
+generational,serial,430,3.7553279699263999
+generational,serial,440,2.6718299998772466
+generational,serial,450,2.6110686192139028
+generational,serial,460,2.6110686192139028
+generational,serial,470,2.6110686192139028
+generational,serial,480,1.5728374657270141
+generational,serial,490,1.5285824249596054
+generational,serial,500,1.5279973543441763
+generational,serial,510,1.5279973543441763
+generational,serial,520,1.4568356399309206
+generational,serial,530,1.4439800321045198
+generational,serial,540,1.3645186137101462
+generational,serial,550,1.3577471412819939
+generational,serial,560,1.3577471412819939
+generational,serial,570,1.344761481265385
+generational,serial,580,1.3314830204159023
+generational,serial,590,1.2784918321463401
+generational,serial,600,1.278183363566388
+generational,serial,610,1.2312184852237902
+generational,serial,620,1.1632939264639877
+generational,serial,630,1.156714624793004
+generational,serial,640,1.156714624793004
+generational,serial,650,1.1549524072419501
+generational,serial,660,1.1539552754597793
+generational,serial,670,1.1439399951854288
+generational,serial,680,1.1387057392871327
+generational,serial,690,1.1258857971349663
+generational,serial,700,1.1258857971349663
+generational,serial,710,1.1258857971349663
+generational,serial,720,1.1214948107056877
+generational,serial,730,1.1159675684449031
+generational,serial,740,1.1159675684449031
+generational,serial,750,1.1159354717251251
+generational,serial,760,1.1159354717251251
+generational,serial,770,1.1159354717251251
+generational,serial,780,1.1159354717251251
+generational,serial,790,1.1159354717251251
+generational,serial,800,0.53464446145370381
+generational,serial,810,0.11095637754159249
+generational,serial,820,0.091519016254924423
+generational,serial,830,0.091519016254924423
+generational,serial,840,0.091519016254924423
+generational,serial,850,0.091519016254924423
+generational,serial,860,0.091519016254924423
+generational,serial,870,0.083007454726287122
+generational,serial,880,0.083007454726287122
+generational,serial,890,0.083007454726287122
+generational,serial,900,0.079283653192527836
+generational,serial,910,0.078676317658231909
+generational,serial,920,0.07100511455018399
+generational,serial,930,0.07100511455018399
+generational,serial,940,0.066529658344808951
+generational,serial,950,0.066529658344808951
+generational,serial,960,0.066522860216569057
+generational,serial,970,0.066522860216569057
+generational,serial,980,0.066522860216569057
+generational,serial,990,0.066522860216569057
+generational,serial,999,0.066522860216569057
+generational,pool of 4 threads,0,255.01814551894353
+generational,pool of 4 threads,1,226.00034641553447
+generational,pool of 4 threads,2,225.6541381787529
+generational,pool of 4 threads,3,225.6541381787529
+generational,pool of 4 threads,4,195.47494620519808
+generational,pool of 4 threads,5,176.55366179836165
+generational,pool of 4 threads,6,168.09021060628947
+generational,pool of 4 threads,7,159.7714146104058
+generational,pool of 4 threads,8,159.7714146104058
+generational,pool of 4 threads,9,154.4089055289578
+generational,pool of 4 threads,10,147.83212939041761
+generational,pool of 4 threads,11,147.83212939041761
+generational,pool of 4 threads,12,143.26286119879546
+generational,pool of 4 threads,13,130.38978516789291
+generational,pool of 4 threads,14,128.29436194595058
+generational,pool of 4 threads,15,114.55206434723098
+generational,pool of 4 threads,16,114.55206434723098
+generational,pool of 4 threads,17,93.087969160352287
+generational,pool of 4 threads,18,75.044640587589541
+generational,pool of 4 threads,19,75.044640587589541
+generational,pool of 4 threads,20,75.044640587589541
+generational,pool of 4 threads,30,65.279694147532382
+generational,pool of 4 threads,40,45.097851072688094
+generational,pool of 4 threads,50,34.012039511778028
+generational,pool of 4 threads,60,31.975419475556848
+generational,pool of 4 threads,70,30.910541132444976
+generational,pool of 4 threads,80,26.384927666273022
+generational,pool of 4 threads,90,24.888936891085486
+generational,pool of 4 threads,100,24.533322270619863
+generational,pool of 4 threads,110,23.749651750666445
+generational,pool of 4 threads,120,23.749651750666445
+generational,pool of 4 threads,130,20.706972687993346
+generational,pool of 4 threads,140,18.534765858773472
+generational,pool of 4 threads,150,17.460201464581825
+generational,pool of 4 threads,160,17.417914708157326
+generational,pool of 4 threads,170,16.129926764401752
+generational,pool of 4 threads,180,16.026242363904345
+generational,pool of 4 threads,190,14.515648639151449
+generational,pool of 4 threads,200,14.515648639151449
+generational,pool of 4 threads,210,13.73457964515074
+generational,pool of 4 threads,220,12.99927437141667
+generational,pool of 4 threads,230,12.971276915221997
+generational,pool of 4 threads,240,12.97043591381574
+generational,pool of 4 threads,250,12.573708991947514
+generational,pool of 4 threads,260,10.022276075481281
+generational,pool of 4 threads,270,8.4604859237537795
+generational,pool of 4 threads,280,8.4504223579227542
+generational,pool of 4 threads,290,8.223830025348045
+generational,pool of 4 threads,300,7.7650121236587886
+generational,pool of 4 threads,310,7.7650121236587886
+generational,pool of 4 threads,320,6.0480996866165491
+generational,pool of 4 threads,330,6.0105157018264048
+generational,pool of 4 threads,340,5.9799995645172128
+generational,pool of 4 threads,350,4.8032590221921225
+generational,pool of 4 threads,360,4.5938251186399786
+generational,pool of 4 threads,370,4.5341317898561559
+generational,pool of 4 threads,380,4.5074801334858137
+generational,pool of 4 threads,390,4.5074801334858137
+generational,pool of 4 threads,400,4.5073256894726565
+generational,pool of 4 threads,410,4.4980593164359082
+generational,pool of 4 threads,420,4.4874136679656118
+generational,pool of 4 threads,430,3.7553279699263999
+generational,pool of 4 threads,440,2.6718299998772466
+generational,pool of 4 threads,450,2.6110686192139028
+generational,pool of 4 threads,460,2.6110686192139028
+generational,pool of 4 threads,470,2.6110686192139028
+generational,pool of 4 threads,480,1.5728374657270141
+generational,pool of 4 threads,490,1.5285824249596054
+generational,pool of 4 threads,500,1.5279973543441763
+generational,pool of 4 threads,510,1.5279973543441763
+generational,pool of 4 threads,520,1.4568356399309206
+generational,pool of 4 threads,530,1.4439800321045198
+generational,pool of 4 threads,540,1.3645186137101462
+generational,pool of 4 threads,550,1.3577471412819939
+generational,pool of 4 threads,560,1.3577471412819939
+generational,pool of 4 threads,570,1.344761481265385
+generational,pool of 4 threads,580,1.3314830204159023
+generational,pool of 4 threads,590,1.2784918321463401
+generational,pool of 4 threads,600,1.278183363566388
+generational,pool of 4 threads,610,1.2312184852237902
+generational,pool of 4 threads,620,1.1632939264639877
+generational,pool of 4 threads,630,1.156714624793004
+generational,pool of 4 threads,640,1.156714624793004
+generational,pool of 4 threads,650,1.1549524072419501
+generational,pool of 4 threads,660,1.1539552754597793
+generational,pool of 4 threads,670,1.1439399951854288
+generational,pool of 4 threads,680,1.1387057392871327
+generational,pool of 4 threads,690,1.1258857971349663
+generational,pool of 4 threads,700,1.1258857971349663
+generational,pool of 4 threads,710,1.1258857971349663
+generational,pool of 4 threads,720,1.1214948107056877
+generational,pool of 4 threads,730,1.1159675684449031
+generational,pool of 4 threads,740,1.1159675684449031
+generational,pool of 4 threads,750,1.1159354717251251
+generational,pool of 4 threads,760,1.1159354717251251
+generational,pool of 4 threads,770,1.1159354717251251
+generational,pool of 4 threads,780,1.1159354717251251
+generational,pool of 4 threads,790,1.1159354717251251
+generational,pool of 4 threads,800,0.53464446145370381
+generational,pool of 4 threads,810,0.11095637754159249
+generational,pool of 4 threads,820,0.091519016254924423
+generational,pool of 4 threads,830,0.091519016254924423
+generational,pool of 4 threads,840,0.091519016254924423
+generational,pool of 4 threads,850,0.091519016254924423
+generational,pool of 4 threads,860,0.091519016254924423
+generational,pool of 4 threads,870,0.083007454726287122
+generational,pool of 4 threads,880,0.083007454726287122
+generational,pool of 4 threads,890,0.083007454726287122
+generational,pool of 4 threads,900,0.079283653192527836
+generational,pool of 4 threads,910,0.078676317658231909
+generational,pool of 4 threads,920,0.07100511455018399
+generational,pool of 4 threads,930,0.07100511455018399
+generational,pool of 4 threads,940,0.066529658344808951
+generational,pool of 4 threads,950,0.066529658344808951
+generational,pool of 4 threads,960,0.066522860216569057
+generational,pool of 4 threads,970,0.066522860216569057
+generational,pool of 4 threads,980,0.066522860216569057
+generational,pool of 4 threads,990,0.066522860216569057
+generational,pool of 4 threads,999,0.066522860216569057
+generational,parts of 7,0,255.01814551894353
+generational,parts of 7,1,226.00034641553447
+generational,parts of 7,2,225.6541381787529
+generational,parts of 7,3,225.6541381787529
+generational,parts of 7,4,195.47494620519808
+generational,parts of 7,5,176.55366179836165
+generational,parts of 7,6,168.09021060628947
+generational,parts of 7,7,159.7714146104058
+generational,parts of 7,8,159.7714146104058
+generational,parts of 7,9,154.4089055289578
+generational,parts of 7,10,147.83212939041761
+generational,parts of 7,11,147.83212939041761
+generational,parts of 7,12,143.26286119879546
+generational,parts of 7,13,130.38978516789291
+generational,parts of 7,14,128.29436194595058
+generational,parts of 7,15,114.55206434723098
+generational,parts of 7,16,114.55206434723098
+generational,parts of 7,17,93.087969160352287
+generational,parts of 7,18,75.044640587589541
+generational,parts of 7,19,75.044640587589541
+generational,parts of 7,20,75.044640587589541
+generational,parts of 7,30,65.279694147532382
+generational,parts of 7,40,45.097851072688094
+generational,parts of 7,50,34.012039511778028
+generational,parts of 7,60,31.975419475556848
+generational,parts of 7,70,30.910541132444976
+generational,parts of 7,80,26.384927666273022
+generational,parts of 7,90,24.888936891085486
+generational,parts of 7,100,24.533322270619863
+generational,parts of 7,110,23.749651750666445
+generational,parts of 7,120,23.749651750666445
+generational,parts of 7,130,20.706972687993346
+generational,parts of 7,140,18.534765858773472
+generational,parts of 7,150,17.460201464581825
+generational,parts of 7,160,17.417914708157326
+generational,parts of 7,170,16.129926764401752
+generational,parts of 7,180,16.026242363904345
+generational,parts of 7,190,14.515648639151449
+generational,parts of 7,200,14.515648639151449
+generational,parts of 7,210,13.73457964515074
+generational,parts of 7,220,12.99927437141667
+generational,parts of 7,230,12.971276915221997
+generational,parts of 7,240,12.97043591381574
+generational,parts of 7,250,12.573708991947514
+generational,parts of 7,260,10.022276075481281
+generational,parts of 7,270,8.4604859237537795
+generational,parts of 7,280,8.4504223579227542
+generational,parts of 7,290,8.223830025348045
+generational,parts of 7,300,7.7650121236587886
+generational,parts of 7,310,7.7650121236587886
+generational,parts of 7,320,6.0480996866165491
+generational,parts of 7,330,6.0105157018264048
+generational,parts of 7,340,5.9799995645172128
+generational,parts of 7,350,4.8032590221921225
+generational,parts of 7,360,4.5938251186399786
+generational,parts of 7,370,4.5341317898561559
+generational,parts of 7,380,4.5074801334858137
+generational,parts of 7,390,4.5074801334858137
+generational,parts of 7,400,4.5073256894726565
+generational,parts of 7,410,4.4980593164359082
+generational,parts of 7,420,4.4874136679656118
+generational,parts of 7,430,3.7553279699263999
+generational,parts of 7,440,2.6718299998772466
+generational,parts of 7,450,2.6110686192139028
+generational,parts of 7,460,2.6110686192139028
+generational,parts of 7,470,2.6110686192139028
+generational,parts of 7,480,1.5728374657270141
+generational,parts of 7,490,1.5285824249596054
+generational,parts of 7,500,1.5279973543441763
+generational,parts of 7,510,1.5279973543441763
+generational,parts of 7,520,1.4568356399309206
+generational,parts of 7,530,1.4439800321045198
+generational,parts of 7,540,1.3645186137101462
+generational,parts of 7,550,1.3577471412819939
+generational,parts of 7,560,1.3577471412819939
+generational,parts of 7,570,1.344761481265385
+generational,parts of 7,580,1.3314830204159023
+generational,parts of 7,590,1.2784918321463401
+generational,parts of 7,600,1.278183363566388
+generational,parts of 7,610,1.2312184852237902
+generational,parts of 7,620,1.1632939264639877
+generational,parts of 7,630,1.156714624793004
+generational,parts of 7,640,1.156714624793004
+generational,parts of 7,650,1.1549524072419501
+generational,parts of 7,660,1.1539552754597793
+generational,parts of 7,670,1.1439399951854288
+generational,parts of 7,680,1.1387057392871327
+generational,parts of 7,690,1.1258857971349663
+generational,parts of 7,700,1.1258857971349663
+generational,parts of 7,710,1.1258857971349663
+generational,parts of 7,720,1.1214948107056877
+generational,parts of 7,730,1.1159675684449031
+generational,parts of 7,740,1.1159675684449031
+generational,parts of 7,750,1.1159354717251251
+generational,parts of 7,760,1.1159354717251251
+generational,parts of 7,770,1.1159354717251251
+generational,parts of 7,780,1.1159354717251251
+generational,parts of 7,790,1.1159354717251251
+generational,parts of 7,800,0.53464446145370381
+generational,parts of 7,810,0.11095637754159249
+generational,parts of 7,820,0.091519016254924423
+generational,parts of 7,830,0.091519016254924423
+generational,parts of 7,840,0.091519016254924423
+generational,parts of 7,850,0.091519016254924423
+generational,parts of 7,860,0.091519016254924423
+generational,parts of 7,870,0.083007454726287122
+generational,parts of 7,880,0.083007454726287122
+generational,parts of 7,890,0.083007454726287122
+generational,parts of 7,900,0.079283653192527836
+generational,parts of 7,910,0.078676317658231909
+generational,parts of 7,920,0.07100511455018399
+generational,parts of 7,930,0.07100511455018399
+generational,parts of 7,940,0.066529658344808951
+generational,parts of 7,950,0.066529658344808951
+generational,parts of 7,960,0.066522860216569057
+generational,parts of 7,970,0.066522860216569057
+generational,parts of 7,980,0.066522860216569057
+generational,parts of 7,990,0.066522860216569057
+generational,parts of 7,999,0.066522860216569057
+generational,workers at sigma 0.5,0,255.01814551894353
+generational,workers at sigma 0.5,1,226.00034641553447
+generational,workers at sigma 0.5,2,225.6541381787529
+generational,workers at sigma 0.5,3,225.6541381787529
+generational,workers at sigma 0.5,4,195.47494620519808
+generational,workers at sigma 0.5,5,176.55366179836165
+generational,workers at sigma 0.5,6,168.09021060628947
+generational,workers at sigma 0.5,7,159.7714146104058
+generational,workers at sigma 0.5,8,159.7714146104058
+generational,workers at sigma 0.5,9,154.4089055289578
+generational,workers at sigma 0.5,10,147.83212939041761
+generational,workers at sigma 0.5,11,147.83212939041761
+generational,workers at sigma 0.5,12,143.26286119879546
+generational,workers at sigma 0.5,13,130.38978516789291
+generational,workers at sigma 0.5,14,128.29436194595058
+generational,workers at sigma 0.5,15,114.55206434723098
+generational,workers at sigma 0.5,16,114.55206434723098
+generational,workers at sigma 0.5,17,93.087969160352287
+generational,workers at sigma 0.5,18,75.044640587589541
+generational,workers at sigma 0.5,19,75.044640587589541
+generational,workers at sigma 0.5,20,75.044640587589541
+generational,workers at sigma 0.5,30,65.279694147532382
+generational,workers at sigma 0.5,40,45.097851072688094
+generational,workers at sigma 0.5,50,34.012039511778028
+generational,workers at sigma 0.5,60,31.975419475556848
+generational,workers at sigma 0.5,70,30.910541132444976
+generational,workers at sigma 0.5,80,26.384927666273022
+generational,workers at sigma 0.5,90,24.888936891085486
+generational,workers at sigma 0.5,100,24.533322270619863
+generational,workers at sigma 0.5,110,23.749651750666445
+generational,workers at sigma 0.5,120,23.749651750666445
+generational,workers at sigma 0.5,130,20.706972687993346
+generational,workers at sigma 0.5,140,18.534765858773472
+generational,workers at sigma 0.5,150,17.460201464581825
+generational,workers at sigma 0.5,160,17.417914708157326
+generational,workers at sigma 0.5,170,16.129926764401752
+generational,workers at sigma 0.5,180,16.026242363904345
+generational,workers at sigma 0.5,190,14.515648639151449
+generational,workers at sigma 0.5,200,14.515648639151449
+generational,workers at sigma 0.5,210,13.73457964515074
+generational,workers at sigma 0.5,220,12.99927437141667
+generational,workers at sigma 0.5,230,12.971276915221997
+generational,workers at sigma 0.5,240,12.97043591381574
+generational,workers at sigma 0.5,250,12.573708991947514
+generational,workers at sigma 0.5,260,10.022276075481281
+generational,workers at sigma 0.5,270,8.4604859237537795
+generational,workers at sigma 0.5,280,8.4504223579227542
+generational,workers at sigma 0.5,290,8.223830025348045
+generational,workers at sigma 0.5,300,7.7650121236587886
+generational,workers at sigma 0.5,310,7.7650121236587886
+generational,workers at sigma 0.5,320,6.0480996866165491
+generational,workers at sigma 0.5,330,6.0105157018264048
+generational,workers at sigma 0.5,340,5.9799995645172128
+generational,workers at sigma 0.5,350,4.8032590221921225
+generational,workers at sigma 0.5,360,4.5938251186399786
+generational,workers at sigma 0.5,370,4.5341317898561559
+generational,workers at sigma 0.5,380,4.5074801334858137
+generational,workers at sigma 0.5,390,4.5074801334858137
+generational,workers at sigma 0.5,400,4.5073256894726565
+generational,workers at sigma 0.5,410,4.4980593164359082
+generational,workers at sigma 0.5,420,4.4874136679656118
+generational,workers at sigma 0.5,430,3.7553279699263999
+generational,workers at sigma 0.5,440,2.6718299998772466
+generational,workers at sigma 0.5,450,2.6110686192139028
+generational,workers at sigma 0.5,460,2.6110686192139028
+generational,workers at sigma 0.5,470,2.6110686192139028
+generational,workers at sigma 0.5,480,1.5728374657270141
+generational,workers at sigma 0.5,490,1.5285824249596054
+generational,workers at sigma 0.5,500,1.5279973543441763
+generational,workers at sigma 0.5,510,1.5279973543441763
+generational,workers at sigma 0.5,520,1.4568356399309206
+generational,workers at sigma 0.5,530,1.4439800321045198
+generational,workers at sigma 0.5,540,1.3645186137101462
+generational,workers at sigma 0.5,550,1.3577471412819939
+generational,workers at sigma 0.5,560,1.3577471412819939
+generational,workers at sigma 0.5,570,1.344761481265385
+generational,workers at sigma 0.5,580,1.3314830204159023
+generational,workers at sigma 0.5,590,1.2784918321463401
+generational,workers at sigma 0.5,600,1.278183363566388
+generational,workers at sigma 0.5,610,1.2312184852237902
+generational,workers at sigma 0.5,620,1.1632939264639877
+generational,workers at sigma 0.5,630,1.156714624793004
+generational,workers at sigma 0.5,640,1.156714624793004
+generational,workers at sigma 0.5,650,1.1549524072419501
+generational,workers at sigma 0.5,660,1.1539552754597793
+generational,workers at sigma 0.5,670,1.1439399951854288
+generational,workers at sigma 0.5,680,1.1387057392871327
+generational,workers at sigma 0.5,690,1.1258857971349663
+generational,workers at sigma 0.5,700,1.1258857971349663
+generational,workers at sigma 0.5,710,1.1258857971349663
+generational,workers at sigma 0.5,720,1.1214948107056877
+generational,workers at sigma 0.5,730,1.1159675684449031
+generational,workers at sigma 0.5,740,1.1159675684449031
+generational,workers at sigma 0.5,750,1.1159354717251251
+generational,workers at sigma 0.5,760,1.1159354717251251
+generational,workers at sigma 0.5,770,1.1159354717251251
+generational,workers at sigma 0.5,780,1.1159354717251251
+generational,workers at sigma 0.5,790,1.1159354717251251
+generational,workers at sigma 0.5,800,0.53464446145370381
+generational,workers at sigma 0.5,810,0.11095637754159249
+generational,workers at sigma 0.5,820,0.091519016254924423
+generational,workers at sigma 0.5,830,0.091519016254924423
+generational,workers at sigma 0.5,840,0.091519016254924423
+generational,workers at sigma 0.5,850,0.091519016254924423
+generational,workers at sigma 0.5,860,0.091519016254924423
+generational,workers at sigma 0.5,870,0.083007454726287122
+generational,workers at sigma 0.5,880,0.083007454726287122
+generational,workers at sigma 0.5,890,0.083007454726287122
+generational,workers at sigma 0.5,900,0.079283653192527836
+generational,workers at sigma 0.5,910,0.078676317658231909
+generational,workers at sigma 0.5,920,0.07100511455018399
+generational,workers at sigma 0.5,930,0.07100511455018399
+generational,workers at sigma 0.5,940,0.066529658344808951
+generational,workers at sigma 0.5,950,0.066529658344808951
+generational,workers at sigma 0.5,960,0.066522860216569057
+generational,workers at sigma 0.5,970,0.066522860216569057
+generational,workers at sigma 0.5,980,0.066522860216569057
+generational,workers at sigma 0.5,990,0.066522860216569057
+generational,workers at sigma 0.5,999,0.066522860216569057
+generational,workers at sigma 2,0,255.01814551894353
+generational,workers at sigma 2,1,226.00034641553447
+generational,workers at sigma 2,2,225.6541381787529
+generational,workers at sigma 2,3,225.6541381787529
+generational,workers at sigma 2,4,195.47494620519808
+generational,workers at sigma 2,5,176.55366179836165
+generational,workers at sigma 2,6,168.09021060628947
+generational,workers at sigma 2,7,159.7714146104058
+generational,workers at sigma 2,8,159.7714146104058
+generational,workers at sigma 2,9,154.4089055289578
+generational,workers at sigma 2,10,147.83212939041761
+generational,workers at sigma 2,11,147.83212939041761
+generational,workers at sigma 2,12,143.26286119879546
+generational,workers at sigma 2,13,130.38978516789291
+generational,workers at sigma 2,14,128.29436194595058
+generational,workers at sigma 2,15,114.55206434723098
+generational,workers at sigma 2,16,114.55206434723098
+generational,workers at sigma 2,17,93.087969160352287
+generational,workers at sigma 2,18,75.044640587589541
+generational,workers at sigma 2,19,75.044640587589541
+generational,workers at sigma 2,20,75.044640587589541
+generational,workers at sigma 2,30,65.279694147532382
+generational,workers at sigma 2,40,45.097851072688094
+generational,workers at sigma 2,50,34.012039511778028
+generational,workers at sigma 2,60,31.975419475556848
+generational,workers at sigma 2,70,30.910541132444976
+generational,workers at sigma 2,80,26.384927666273022
+generational,workers at sigma 2,90,24.888936891085486
+generational,workers at sigma 2,100,24.533322270619863
+generational,workers at sigma 2,110,23.749651750666445
+generational,workers at sigma 2,120,23.749651750666445
+generational,workers at sigma 2,130,20.706972687993346
+generational,workers at sigma 2,140,18.534765858773472
+generational,workers at sigma 2,150,17.460201464581825
+generational,workers at sigma 2,160,17.417914708157326
+generational,workers at sigma 2,170,16.129926764401752
+generational,workers at sigma 2,180,16.026242363904345
+generational,workers at sigma 2,190,14.515648639151449
+generational,workers at sigma 2,200,14.515648639151449
+generational,workers at sigma 2,210,13.73457964515074
+generational,workers at sigma 2,220,12.99927437141667
+generational,workers at sigma 2,230,12.971276915221997
+generational,workers at sigma 2,240,12.97043591381574
+generational,workers at sigma 2,250,12.573708991947514
+generational,workers at sigma 2,260,10.022276075481281
+generational,workers at sigma 2,270,8.4604859237537795
+generational,workers at sigma 2,280,8.4504223579227542
+generational,workers at sigma 2,290,8.223830025348045
+generational,workers at sigma 2,300,7.7650121236587886
+generational,workers at sigma 2,310,7.7650121236587886
+generational,workers at sigma 2,320,6.0480996866165491
+generational,workers at sigma 2,330,6.0105157018264048
+generational,workers at sigma 2,340,5.9799995645172128
+generational,workers at sigma 2,350,4.8032590221921225
+generational,workers at sigma 2,360,4.5938251186399786
+generational,workers at sigma 2,370,4.5341317898561559
+generational,workers at sigma 2,380,4.5074801334858137
+generational,workers at sigma 2,390,4.5074801334858137
+generational,workers at sigma 2,400,4.5073256894726565
+generational,workers at sigma 2,410,4.4980593164359082
+generational,workers at sigma 2,420,4.4874136679656118
+generational,workers at sigma 2,430,3.7553279699263999
+generational,workers at sigma 2,440,2.6718299998772466
+generational,workers at sigma 2,450,2.6110686192139028
+generational,workers at sigma 2,460,2.6110686192139028
+generational,workers at sigma 2,470,2.6110686192139028
+generational,workers at sigma 2,480,1.5728374657270141
+generational,workers at sigma 2,490,1.5285824249596054
+generational,workers at sigma 2,500,1.5279973543441763
+generational,workers at sigma 2,510,1.5279973543441763
+generational,workers at sigma 2,520,1.4568356399309206
+generational,workers at sigma 2,530,1.4439800321045198
+generational,workers at sigma 2,540,1.3645186137101462
+generational,workers at sigma 2,550,1.3577471412819939
+generational,workers at sigma 2,560,1.3577471412819939
+generational,workers at sigma 2,570,1.344761481265385
+generational,workers at sigma 2,580,1.3314830204159023
+generational,workers at sigma 2,590,1.2784918321463401
+generational,workers at sigma 2,600,1.278183363566388
+generational,workers at sigma 2,610,1.2312184852237902
+generational,workers at sigma 2,620,1.1632939264639877
+generational,workers at sigma 2,630,1.156714624793004
+generational,workers at sigma 2,640,1.156714624793004
+generational,workers at sigma 2,650,1.1549524072419501
+generational,workers at sigma 2,660,1.1539552754597793
+generational,workers at sigma 2,670,1.1439399951854288
+generational,workers at sigma 2,680,1.1387057392871327
+generational,workers at sigma 2,690,1.1258857971349663
+generational,workers at sigma 2,700,1.1258857971349663
+generational,workers at sigma 2,710,1.1258857971349663
+generational,workers at sigma 2,720,1.1214948107056877
+generational,workers at sigma 2,730,1.1159675684449031
+generational,workers at sigma 2,740,1.1159675684449031
+generational,workers at sigma 2,750,1.1159354717251251
+generational,workers at sigma 2,760,1.1159354717251251
+generational,workers at sigma 2,770,1.1159354717251251
+generational,workers at sigma 2,780,1.1159354717251251
+generational,workers at sigma 2,790,1.1159354717251251
+generational,workers at sigma 2,800,0.53464446145370381
+generational,workers at sigma 2,810,0.11095637754159249
+generational,workers at sigma 2,820,0.091519016254924423
+generational,workers at sigma 2,830,0.091519016254924423
+generational,workers at sigma 2,840,0.091519016254924423
+generational,workers at sigma 2,850,0.091519016254924423
+generational,workers at sigma 2,860,0.091519016254924423
+generational,workers at sigma 2,870,0.083007454726287122
+generational,workers at sigma 2,880,0.083007454726287122
+generational,workers at sigma 2,890,0.083007454726287122
+generational,workers at sigma 2,900,0.079283653192527836
+generational,workers at sigma 2,910,0.078676317658231909
+generational,workers at sigma 2,920,0.07100511455018399
+generational,workers at sigma 2,930,0.07100511455018399
+generational,workers at sigma 2,940,0.066529658344808951
+generational,workers at sigma 2,950,0.066529658344808951
+generational,workers at sigma 2,960,0.066522860216569057
+generational,workers at sigma 2,970,0.066522860216569057
+generational,workers at sigma 2,980,0.066522860216569057
+generational,workers at sigma 2,990,0.066522860216569057
+generational,workers at sigma 2,999,0.066522860216569057
+generational,workers with a straggler,0,255.01814551894353
+generational,workers with a straggler,1,226.00034641553447
+generational,workers with a straggler,2,225.6541381787529
+generational,workers with a straggler,3,225.6541381787529
+generational,workers with a straggler,4,195.47494620519808
+generational,workers with a straggler,5,176.55366179836165
+generational,workers with a straggler,6,168.09021060628947
+generational,workers with a straggler,7,159.7714146104058
+generational,workers with a straggler,8,159.7714146104058
+generational,workers with a straggler,9,154.4089055289578
+generational,workers with a straggler,10,147.83212939041761
+generational,workers with a straggler,11,147.83212939041761
+generational,workers with a straggler,12,143.26286119879546
+generational,workers with a straggler,13,130.38978516789291
+generational,workers with a straggler,14,128.29436194595058
+generational,workers with a straggler,15,114.55206434723098
+generational,workers with a straggler,16,114.55206434723098
+generational,workers with a straggler,17,93.087969160352287
+generational,workers with a straggler,18,75.044640587589541
+generational,workers with a straggler,19,75.044640587589541
+generational,workers with a straggler,20,75.044640587589541
+generational,workers with a straggler,30,65.279694147532382
+generational,workers with a straggler,40,45.097851072688094
+generational,workers with a straggler,50,34.012039511778028
+generational,workers with a straggler,60,31.975419475556848
+generational,workers with a straggler,70,30.910541132444976
+generational,workers with a straggler,80,26.384927666273022
+generational,workers with a straggler,90,24.888936891085486
+generational,workers with a straggler,100,24.533322270619863
+generational,workers with a straggler,110,23.749651750666445
+generational,workers with a straggler,120,23.749651750666445
+generational,workers with a straggler,130,20.706972687993346
+generational,workers with a straggler,140,18.534765858773472
+generational,workers with a straggler,150,17.460201464581825
+generational,workers with a straggler,160,17.417914708157326
+generational,workers with a straggler,170,16.129926764401752
+generational,workers with a straggler,180,16.026242363904345
+generational,workers with a straggler,190,14.515648639151449
+generational,workers with a straggler,200,14.515648639151449
+generational,workers with a straggler,210,13.73457964515074
+generational,workers with a straggler,220,12.99927437141667
+generational,workers with a straggler,230,12.971276915221997
+generational,workers with a straggler,240,12.97043591381574
+generational,workers with a straggler,250,12.573708991947514
+generational,workers with a straggler,260,10.022276075481281
+generational,workers with a straggler,270,8.4604859237537795
+generational,workers with a straggler,280,8.4504223579227542
+generational,workers with a straggler,290,8.223830025348045
+generational,workers with a straggler,300,7.7650121236587886
+generational,workers with a straggler,310,7.7650121236587886
+generational,workers with a straggler,320,6.0480996866165491
+generational,workers with a straggler,330,6.0105157018264048
+generational,workers with a straggler,340,5.9799995645172128
+generational,workers with a straggler,350,4.8032590221921225
+generational,workers with a straggler,360,4.5938251186399786
+generational,workers with a straggler,370,4.5341317898561559
+generational,workers with a straggler,380,4.5074801334858137
+generational,workers with a straggler,390,4.5074801334858137
+generational,workers with a straggler,400,4.5073256894726565
+generational,workers with a straggler,410,4.4980593164359082
+generational,workers with a straggler,420,4.4874136679656118
+generational,workers with a straggler,430,3.7553279699263999
+generational,workers with a straggler,440,2.6718299998772466
+generational,workers with a straggler,450,2.6110686192139028
+generational,workers with a straggler,460,2.6110686192139028
+generational,workers with a straggler,470,2.6110686192139028
+generational,workers with a straggler,480,1.5728374657270141
+generational,workers with a straggler,490,1.5285824249596054
+generational,workers with a straggler,500,1.5279973543441763
+generational,workers with a straggler,510,1.5279973543441763
+generational,workers with a straggler,520,1.4568356399309206
+generational,workers with a straggler,530,1.4439800321045198
+generational,workers with a straggler,540,1.3645186137101462
+generational,workers with a straggler,550,1.3577471412819939
+generational,workers with a straggler,560,1.3577471412819939
+generational,workers with a straggler,570,1.344761481265385
+generational,workers with a straggler,580,1.3314830204159023
+generational,workers with a straggler,590,1.2784918321463401
+generational,workers with a straggler,600,1.278183363566388
+generational,workers with a straggler,610,1.2312184852237902
+generational,workers with a straggler,620,1.1632939264639877
+generational,workers with a straggler,630,1.156714624793004
+generational,workers with a straggler,640,1.156714624793004
+generational,workers with a straggler,650,1.1549524072419501
+generational,workers with a straggler,660,1.1539552754597793
+generational,workers with a straggler,670,1.1439399951854288
+generational,workers with a straggler,680,1.1387057392871327
+generational,workers with a straggler,690,1.1258857971349663
+generational,workers with a straggler,700,1.1258857971349663
+generational,workers with a straggler,710,1.1258857971349663
+generational,workers with a straggler,720,1.1214948107056877
+generational,workers with a straggler,730,1.1159675684449031
+generational,workers with a straggler,740,1.1159675684449031
+generational,workers with a straggler,750,1.1159354717251251
+generational,workers with a straggler,760,1.1159354717251251
+generational,workers with a straggler,770,1.1159354717251251
+generational,workers with a straggler,780,1.1159354717251251
+generational,workers with a straggler,790,1.1159354717251251
+generational,workers with a straggler,800,0.53464446145370381
+generational,workers with a straggler,810,0.11095637754159249
+generational,workers with a straggler,820,0.091519016254924423
+generational,workers with a straggler,830,0.091519016254924423
+generational,workers with a straggler,840,0.091519016254924423
+generational,workers with a straggler,850,0.091519016254924423
+generational,workers with a straggler,860,0.091519016254924423
+generational,workers with a straggler,870,0.083007454726287122
+generational,workers with a straggler,880,0.083007454726287122
+generational,workers with a straggler,890,0.083007454726287122
+generational,workers with a straggler,900,0.079283653192527836
+generational,workers with a straggler,910,0.078676317658231909
+generational,workers with a straggler,920,0.07100511455018399
+generational,workers with a straggler,930,0.07100511455018399
+generational,workers with a straggler,940,0.066529658344808951
+generational,workers with a straggler,950,0.066529658344808951
+generational,workers with a straggler,960,0.066522860216569057
+generational,workers with a straggler,970,0.066522860216569057
+generational,workers with a straggler,980,0.066522860216569057
+generational,workers with a straggler,990,0.066522860216569057
+generational,workers with a straggler,999,0.066522860216569057
+steady-state,serial,0,310.79032545131423
+steady-state,serial,1,302.00165524643199
+steady-state,serial,2,260.05532130835172
+steady-state,serial,3,238.89978578666611
+steady-state,serial,4,228.8451749662083
+steady-state,serial,5,206.20444595915421
+steady-state,serial,6,200.87521476966083
+steady-state,serial,7,175.14049426886868
+steady-state,serial,8,165.29731752628987
+steady-state,serial,9,165.29731752628987
+steady-state,serial,10,154.79760579148544
+steady-state,serial,11,139.12155612261495
+steady-state,serial,12,139.12155612261495
+steady-state,serial,13,134.80850666215949
+steady-state,serial,14,130.37371047378281
+steady-state,serial,15,130.37371047378281
+steady-state,serial,16,120.38051883432362
+steady-state,serial,17,119.62314217577759
+steady-state,serial,18,109.5608114699304
+steady-state,serial,19,109.5608114699304
+steady-state,serial,20,107.48174661652928
+steady-state,serial,30,75.556224853974044
+steady-state,serial,40,57.709770438302272
+steady-state,serial,50,49.914725803561069
+steady-state,serial,60,36.947885474119794
+steady-state,serial,70,25.501796802426643
+steady-state,serial,80,20.757321979384329
+steady-state,serial,90,17.675137939440912
+steady-state,serial,100,15.098659651067337
+steady-state,serial,110,13.374423312848775
+steady-state,serial,120,12.872461660865461
+steady-state,serial,130,10.698557564071168
+steady-state,serial,140,9.3049282374602331
+steady-state,serial,150,9.0456106744047169
+steady-state,serial,160,7.0702724235959931
+steady-state,serial,170,6.1684572675275362
+steady-state,serial,180,5.7957277293827261
+steady-state,serial,190,5.5249921775939335
+steady-state,serial,200,5.4090767463159857
+steady-state,serial,210,4.6386016227463625
+steady-state,serial,220,4.3946521904224465
+steady-state,serial,230,3.9885891005744973
+steady-state,serial,240,3.8678313880761479
+steady-state,serial,250,3.835128692963691
+steady-state,serial,260,3.386689363591195
+steady-state,serial,270,2.4727165725430229
+steady-state,serial,280,2.4260948800488968
+steady-state,serial,290,2.2688803414876126
+steady-state,serial,300,2.2417238792065248
+steady-state,serial,310,2.2376394641605781
+steady-state,serial,320,2.2254021311969545
+steady-state,serial,330,2.1747287987086352
+steady-state,serial,340,1.1558098069285681
+steady-state,serial,350,1.1359979698655938
+steady-state,serial,360,1.1285896128703374
+steady-state,serial,370,1.1167668159004851
+steady-state,serial,380,1.1100214162112341
+steady-state,serial,390,1.1069999371597223
+steady-state,serial,400,1.0988317044726248
+steady-state,serial,410,1.0854963976915517
+steady-state,serial,420,1.0854961483748102
+steady-state,serial,430,1.0854204406983303
+steady-state,serial,440,1.0854196274733372
+steady-state,serial,450,1.0434554006297905
+steady-state,serial,460,1.0361512136787727
+steady-state,serial,470,1.035803972299016
+steady-state,serial,480,1.0334537215795958
+steady-state,serial,490,1.0334537215779473
+steady-state,serial,500,1.033453721577942
+steady-state,serial,510,0.67336048574533436
+steady-state,serial,520,0.57613788180068326
+steady-state,serial,530,0.57492793274774812
+steady-state,serial,540,0.5708146932594147
+steady-state,serial,550,0.57080274557898747
+steady-state,serial,560,0.57080196936355776
+steady-state,serial,570,0.57080196913658199
+steady-state,serial,580,0.27727777157375044
+steady-state,serial,590,0.25941857235960697
+steady-state,serial,600,0.25941758563496364
+steady-state,serial,610,0.25941758563496364
+steady-state,serial,620,0.25941758563496364
+steady-state,serial,630,0.25941758563496364
+steady-state,serial,640,0.25886365730730176
+steady-state,serial,650,0.25646777902468187
+steady-state,serial,660,0.062177114730175731
+steady-state,serial,670,0.060898545632227297
+steady-state,serial,680,0.060898069551008405
+steady-state,serial,690,0.057052464491675892
+steady-state,serial,700,0.055562328834398045
+steady-state,serial,710,0.05479787906097755
+steady-state,serial,720,0.05159436178706045
+steady-state,serial,730,0.051591990364904916
+steady-state,serial,740,0.051036160022263743
+steady-state,serial,750,0.051036159953504523
+steady-state,serial,760,0.050995245776981335
+steady-state,serial,770,0.050995241418881676
+steady-state,serial,780,0.050995241412771009
+steady-state,serial,790,0.050995241412714165
+steady-state,serial,800,0.050995241412714165
+steady-state,serial,810,0.050995241412714165
+steady-state,serial,820,0.050995241412714165
+steady-state,serial,830,0.015468724028345093
+steady-state,serial,840,0.015078906228957578
+steady-state,serial,850,0.015077978379913759
+steady-state,serial,860,0.015077972662574268
+steady-state,serial,870,0.014700070986840785
+steady-state,serial,880,0.014501939267979935
+steady-state,serial,890,0.0081134197443830658
+steady-state,serial,900,0.0067417803095324302
+steady-state,serial,910,0.0067417304435721803
+steady-state,serial,920,0.0063889104085959048
+steady-state,serial,930,0.0063889091689119937
+steady-state,serial,940,0.0063889091687556743
+steady-state,serial,950,0.006223805990238418
+steady-state,serial,960,0.006201449950459903
+steady-state,serial,970,0.0062014349299417404
+steady-state,serial,980,0.0062014349296291016
+steady-state,serial,990,0.0050627331944568255
+steady-state,serial,999,0.0050626463535436983
+steady-state,pool of 4 threads,0,310.79032545131423
+steady-state,pool of 4 threads,1,302.00165524643199
+steady-state,pool of 4 threads,2,260.05532130835172
+steady-state,pool of 4 threads,3,238.89978578666611
+steady-state,pool of 4 threads,4,228.8451749662083
+steady-state,pool of 4 threads,5,206.20444595915421
+steady-state,pool of 4 threads,6,200.87521476966083
+steady-state,pool of 4 threads,7,175.14049426886868
+steady-state,pool of 4 threads,8,165.29731752628987
+steady-state,pool of 4 threads,9,165.29731752628987
+steady-state,pool of 4 threads,10,154.79760579148544
+steady-state,pool of 4 threads,11,139.12155612261495
+steady-state,pool of 4 threads,12,139.12155612261495
+steady-state,pool of 4 threads,13,134.80850666215949
+steady-state,pool of 4 threads,14,130.37371047378281
+steady-state,pool of 4 threads,15,130.37371047378281
+steady-state,pool of 4 threads,16,120.38051883432362
+steady-state,pool of 4 threads,17,119.62314217577759
+steady-state,pool of 4 threads,18,109.5608114699304
+steady-state,pool of 4 threads,19,109.5608114699304
+steady-state,pool of 4 threads,20,107.48174661652928
+steady-state,pool of 4 threads,30,75.556224853974044
+steady-state,pool of 4 threads,40,57.709770438302272
+steady-state,pool of 4 threads,50,49.914725803561069
+steady-state,pool of 4 threads,60,36.947885474119794
+steady-state,pool of 4 threads,70,25.501796802426643
+steady-state,pool of 4 threads,80,20.757321979384329
+steady-state,pool of 4 threads,90,17.675137939440912
+steady-state,pool of 4 threads,100,15.098659651067337
+steady-state,pool of 4 threads,110,13.374423312848775
+steady-state,pool of 4 threads,120,12.872461660865461
+steady-state,pool of 4 threads,130,10.698557564071168
+steady-state,pool of 4 threads,140,9.3049282374602331
+steady-state,pool of 4 threads,150,9.0456106744047169
+steady-state,pool of 4 threads,160,7.0702724235959931
+steady-state,pool of 4 threads,170,6.1684572675275362
+steady-state,pool of 4 threads,180,5.7957277293827261
+steady-state,pool of 4 threads,190,5.5249921775939335
+steady-state,pool of 4 threads,200,5.4090767463159857
+steady-state,pool of 4 threads,210,4.6386016227463625
+steady-state,pool of 4 threads,220,4.3946521904224465
+steady-state,pool of 4 threads,230,3.9885891005744973
+steady-state,pool of 4 threads,240,3.8678313880761479
+steady-state,pool of 4 threads,250,3.835128692963691
+steady-state,pool of 4 threads,260,3.386689363591195
+steady-state,pool of 4 threads,270,2.4727165725430229
+steady-state,pool of 4 threads,280,2.4260948800488968
+steady-state,pool of 4 threads,290,2.2688803414876126
+steady-state,pool of 4 threads,300,2.2417238792065248
+steady-state,pool of 4 threads,310,2.2376394641605781
+steady-state,pool of 4 threads,320,2.2254021311969545
+steady-state,pool of 4 threads,330,2.1747287987086352
+steady-state,pool of 4 threads,340,1.1558098069285681
+steady-state,pool of 4 threads,350,1.1359979698655938
+steady-state,pool of 4 threads,360,1.1285896128703374
+steady-state,pool of 4 threads,370,1.1167668159004851
+steady-state,pool of 4 threads,380,1.1100214162112341
+steady-state,pool of 4 threads,390,1.1069999371597223
+steady-state,pool of 4 threads,400,1.0988317044726248
+steady-state,pool of 4 threads,410,1.0854963976915517
+steady-state,pool of 4 threads,420,1.0854961483748102
+steady-state,pool of 4 threads,430,1.0854204406983303
+steady-state,pool of 4 threads,440,1.0854196274733372
+steady-state,pool of 4 threads,450,1.0434554006297905
+steady-state,pool of 4 threads,460,1.0361512136787727
+steady-state,pool of 4 threads,470,1.035803972299016
+steady-state,pool of 4 threads,480,1.0334537215795958
+steady-state,pool of 4 threads,490,1.0334537215779473
+steady-state,pool of 4 threads,500,1.033453721577942
+steady-state,pool of 4 threads,510,0.67336048574533436
+steady-state,pool of 4 threads,520,0.57613788180068326
+steady-state,pool of 4 threads,530,0.57492793274774812
+steady-state,pool of 4 threads,540,0.5708146932594147
+steady-state,pool of 4 threads,550,0.57080274557898747
+steady-state,pool of 4 threads,560,0.57080196936355776
+steady-state,pool of 4 threads,570,0.57080196913658199
+steady-state,pool of 4 threads,580,0.27727777157375044
+steady-state,pool of 4 threads,590,0.25941857235960697
+steady-state,pool of 4 threads,600,0.25941758563496364
+steady-state,pool of 4 threads,610,0.25941758563496364
+steady-state,pool of 4 threads,620,0.25941758563496364
+steady-state,pool of 4 threads,630,0.25941758563496364
+steady-state,pool of 4 threads,640,0.25886365730730176
+steady-state,pool of 4 threads,650,0.25646777902468187
+steady-state,pool of 4 threads,660,0.062177114730175731
+steady-state,pool of 4 threads,670,0.060898545632227297
+steady-state,pool of 4 threads,680,0.060898069551008405
+steady-state,pool of 4 threads,690,0.057052464491675892
+steady-state,pool of 4 threads,700,0.055562328834398045
+steady-state,pool of 4 threads,710,0.05479787906097755
+steady-state,pool of 4 threads,720,0.05159436178706045
+steady-state,pool of 4 threads,730,0.051591990364904916
+steady-state,pool of 4 threads,740,0.051036160022263743
+steady-state,pool of 4 threads,750,0.051036159953504523
+steady-state,pool of 4 threads,760,0.050995245776981335
+steady-state,pool of 4 threads,770,0.050995241418881676
+steady-state,pool of 4 threads,780,0.050995241412771009
+steady-state,pool of 4 threads,790,0.050995241412714165
+steady-state,pool of 4 threads,800,0.050995241412714165
+steady-state,pool of 4 threads,810,0.050995241412714165
+steady-state,pool of 4 threads,820,0.050995241412714165
+steady-state,pool of 4 threads,830,0.015468724028345093
+steady-state,pool of 4 threads,840,0.015078906228957578
+steady-state,pool of 4 threads,850,0.015077978379913759
+steady-state,pool of 4 threads,860,0.015077972662574268
+steady-state,pool of 4 threads,870,0.014700070986840785
+steady-state,pool of 4 threads,880,0.014501939267979935
+steady-state,pool of 4 threads,890,0.0081134197443830658
+steady-state,pool of 4 threads,900,0.0067417803095324302
+steady-state,pool of 4 threads,910,0.0067417304435721803
+steady-state,pool of 4 threads,920,0.0063889104085959048
+steady-state,pool of 4 threads,930,0.0063889091689119937
+steady-state,pool of 4 threads,940,0.0063889091687556743
+steady-state,pool of 4 threads,950,0.006223805990238418
+steady-state,pool of 4 threads,960,0.006201449950459903
+steady-state,pool of 4 threads,970,0.0062014349299417404
+steady-state,pool of 4 threads,980,0.0062014349296291016
+steady-state,pool of 4 threads,990,0.0050627331944568255
+steady-state,pool of 4 threads,999,0.0050626463535436983
+steady-state,parts of 7,0,310.79032545131423
+steady-state,parts of 7,1,302.00165524643199
+steady-state,parts of 7,2,260.05532130835172
+steady-state,parts of 7,3,238.89978578666611
+steady-state,parts of 7,4,228.8451749662083
+steady-state,parts of 7,5,206.20444595915421
+steady-state,parts of 7,6,200.87521476966083
+steady-state,parts of 7,7,175.14049426886868
+steady-state,parts of 7,8,165.29731752628987
+steady-state,parts of 7,9,165.29731752628987
+steady-state,parts of 7,10,154.79760579148544
+steady-state,parts of 7,11,139.12155612261495
+steady-state,parts of 7,12,139.12155612261495
+steady-state,parts of 7,13,134.80850666215949
+steady-state,parts of 7,14,130.37371047378281
+steady-state,parts of 7,15,130.37371047378281
+steady-state,parts of 7,16,120.38051883432362
+steady-state,parts of 7,17,119.62314217577759
+steady-state,parts of 7,18,109.5608114699304
+steady-state,parts of 7,19,109.5608114699304
+steady-state,parts of 7,20,107.48174661652928
+steady-state,parts of 7,30,75.556224853974044
+steady-state,parts of 7,40,57.709770438302272
+steady-state,parts of 7,50,49.914725803561069
+steady-state,parts of 7,60,36.947885474119794
+steady-state,parts of 7,70,25.501796802426643
+steady-state,parts of 7,80,20.757321979384329
+steady-state,parts of 7,90,17.675137939440912
+steady-state,parts of 7,100,15.098659651067337
+steady-state,parts of 7,110,13.374423312848775
+steady-state,parts of 7,120,12.872461660865461
+steady-state,parts of 7,130,10.698557564071168
+steady-state,parts of 7,140,9.3049282374602331
+steady-state,parts of 7,150,9.0456106744047169
+steady-state,parts of 7,160,7.0702724235959931
+steady-state,parts of 7,170,6.1684572675275362
+steady-state,parts of 7,180,5.7957277293827261
+steady-state,parts of 7,190,5.5249921775939335
+steady-state,parts of 7,200,5.4090767463159857
+steady-state,parts of 7,210,4.6386016227463625
+steady-state,parts of 7,220,4.3946521904224465
+steady-state,parts of 7,230,3.9885891005744973
+steady-state,parts of 7,240,3.8678313880761479
+steady-state,parts of 7,250,3.835128692963691
+steady-state,parts of 7,260,3.386689363591195
+steady-state,parts of 7,270,2.4727165725430229
+steady-state,parts of 7,280,2.4260948800488968
+steady-state,parts of 7,290,2.2688803414876126
+steady-state,parts of 7,300,2.2417238792065248
+steady-state,parts of 7,310,2.2376394641605781
+steady-state,parts of 7,320,2.2254021311969545
+steady-state,parts of 7,330,2.1747287987086352
+steady-state,parts of 7,340,1.1558098069285681
+steady-state,parts of 7,350,1.1359979698655938
+steady-state,parts of 7,360,1.1285896128703374
+steady-state,parts of 7,370,1.1167668159004851
+steady-state,parts of 7,380,1.1100214162112341
+steady-state,parts of 7,390,1.1069999371597223
+steady-state,parts of 7,400,1.0988317044726248
+steady-state,parts of 7,410,1.0854963976915517
+steady-state,parts of 7,420,1.0854961483748102
+steady-state,parts of 7,430,1.0854204406983303
+steady-state,parts of 7,440,1.0854196274733372
+steady-state,parts of 7,450,1.0434554006297905
+steady-state,parts of 7,460,1.0361512136787727
+steady-state,parts of 7,470,1.035803972299016
+steady-state,parts of 7,480,1.0334537215795958
+steady-state,parts of 7,490,1.0334537215779473
+steady-state,parts of 7,500,1.033453721577942
+steady-state,parts of 7,510,0.67336048574533436
+steady-state,parts of 7,520,0.57613788180068326
+steady-state,parts of 7,530,0.57492793274774812
+steady-state,parts of 7,540,0.5708146932594147
+steady-state,parts of 7,550,0.57080274557898747
+steady-state,parts of 7,560,0.57080196936355776
+steady-state,parts of 7,570,0.57080196913658199
+steady-state,parts of 7,580,0.27727777157375044
+steady-state,parts of 7,590,0.25941857235960697
+steady-state,parts of 7,600,0.25941758563496364
+steady-state,parts of 7,610,0.25941758563496364
+steady-state,parts of 7,620,0.25941758563496364
+steady-state,parts of 7,630,0.25941758563496364
+steady-state,parts of 7,640,0.25886365730730176
+steady-state,parts of 7,650,0.25646777902468187
+steady-state,parts of 7,660,0.062177114730175731
+steady-state,parts of 7,670,0.060898545632227297
+steady-state,parts of 7,680,0.060898069551008405
+steady-state,parts of 7,690,0.057052464491675892
+steady-state,parts of 7,700,0.055562328834398045
+steady-state,parts of 7,710,0.05479787906097755
+steady-state,parts of 7,720,0.05159436178706045
+steady-state,parts of 7,730,0.051591990364904916
+steady-state,parts of 7,740,0.051036160022263743
+steady-state,parts of 7,750,0.051036159953504523
+steady-state,parts of 7,760,0.050995245776981335
+steady-state,parts of 7,770,0.050995241418881676
+steady-state,parts of 7,780,0.050995241412771009
+steady-state,parts of 7,790,0.050995241412714165
+steady-state,parts of 7,800,0.050995241412714165
+steady-state,parts of 7,810,0.050995241412714165
+steady-state,parts of 7,820,0.050995241412714165
+steady-state,parts of 7,830,0.015468724028345093
+steady-state,parts of 7,840,0.015078906228957578
+steady-state,parts of 7,850,0.015077978379913759
+steady-state,parts of 7,860,0.015077972662574268
+steady-state,parts of 7,870,0.014700070986840785
+steady-state,parts of 7,880,0.014501939267979935
+steady-state,parts of 7,890,0.0081134197443830658
+steady-state,parts of 7,900,0.0067417803095324302
+steady-state,parts of 7,910,0.0067417304435721803
+steady-state,parts of 7,920,0.0063889104085959048
+steady-state,parts of 7,930,0.0063889091689119937
+steady-state,parts of 7,940,0.0063889091687556743
+steady-state,parts of 7,950,0.006223805990238418
+steady-state,parts of 7,960,0.006201449950459903
+steady-state,parts of 7,970,0.0062014349299417404
+steady-state,parts of 7,980,0.0062014349296291016
+steady-state,parts of 7,990,0.0050627331944568255
+steady-state,parts of 7,999,0.0050626463535436983
+steady-state,workers at sigma 0.5,0,310.79032545131423
+steady-state,workers at sigma 0.5,1,283.12950470748547
+steady-state,workers at sigma 0.5,2,275.01679916913974
+steady-state,workers at sigma 0.5,3,259.50646524135141
+steady-state,workers at sigma 0.5,4,234.33312368081602
+steady-state,workers at sigma 0.5,5,215.70492800631098
+steady-state,workers at sigma 0.5,6,210.54271058045364
+steady-state,workers at sigma 0.5,7,188.0145702800323
+steady-state,workers at sigma 0.5,8,175.56886292470784
+steady-state,workers at sigma 0.5,9,172.57154669185422
+steady-state,workers at sigma 0.5,10,154.2076915830024
+steady-state,workers at sigma 0.5,11,121.31040203100395
+steady-state,workers at sigma 0.5,12,121.31040203100395
+steady-state,workers at sigma 0.5,13,121.31040203100395
+steady-state,workers at sigma 0.5,14,107.33249506912827
+steady-state,workers at sigma 0.5,15,107.33249506912827
+steady-state,workers at sigma 0.5,16,98.614279526171288
+steady-state,workers at sigma 0.5,17,87.027713189600064
+steady-state,workers at sigma 0.5,18,87.027713189600064
+steady-state,workers at sigma 0.5,19,86.638282190598588
+steady-state,workers at sigma 0.5,20,82.456909220211543
+steady-state,workers at sigma 0.5,30,39.985647287111078
+steady-state,workers at sigma 0.5,40,36.996231192791015
+steady-state,workers at sigma 0.5,50,28.557007259570902
+steady-state,workers at sigma 0.5,60,20.491181303414756
+steady-state,workers at sigma 0.5,70,13.909692052944227
+steady-state,workers at sigma 0.5,80,12.799723793893042
+steady-state,workers at sigma 0.5,90,11.571050978388705
+steady-state,workers at sigma 0.5,100,10.412264842522079
+steady-state,workers at sigma 0.5,110,9.0048314318577987
+steady-state,workers at sigma 0.5,120,8.0990917555858868
+steady-state,workers at sigma 0.5,130,7.4449727400056851
+steady-state,workers at sigma 0.5,140,6.8143264902352332
+steady-state,workers at sigma 0.5,150,6.0204323015831935
+steady-state,workers at sigma 0.5,160,5.5982264127017185
+steady-state,workers at sigma 0.5,170,5.5460343421430078
+steady-state,workers at sigma 0.5,180,5.517379078434363
+steady-state,workers at sigma 0.5,190,5.505798829629807
+steady-state,workers at sigma 0.5,200,4.5928562060542308
+steady-state,workers at sigma 0.5,210,4.4425752884052656
+steady-state,workers at sigma 0.5,220,4.3851200123795273
+steady-state,workers at sigma 0.5,230,4.327077477128114
+steady-state,workers at sigma 0.5,240,4.1700197835312771
+steady-state,workers at sigma 0.5,250,4.1086957301766525
+steady-state,workers at sigma 0.5,260,4.0928081377442869
+steady-state,workers at sigma 0.5,270,4.0791929194355223
+steady-state,workers at sigma 0.5,280,3.0833221379070697
+steady-state,workers at sigma 0.5,290,2.0879787066673998
+steady-state,workers at sigma 0.5,300,2.0877525943933986
+steady-state,workers at sigma 0.5,310,2.0877477889927576
+steady-state,workers at sigma 0.5,320,2.0877473655449883
+steady-state,workers at sigma 0.5,330,2.087077821367906
+steady-state,workers at sigma 0.5,340,2.0870772514544882
+steady-state,workers at sigma 0.5,350,2.0780897672718694
+steady-state,workers at sigma 0.5,360,2.0668581279526759
+steady-state,workers at sigma 0.5,370,2.0657587339729204
+steady-state,workers at sigma 0.5,380,1.0840222780720339
+steady-state,workers at sigma 0.5,390,1.0834166080636738
+steady-state,workers at sigma 0.5,400,1.0833699282103186
+steady-state,workers at sigma 0.5,410,1.083369873646836
+steady-state,workers at sigma 0.5,420,1.0803904203482304
+steady-state,workers at sigma 0.5,430,1.0803821590872857
+steady-state,workers at sigma 0.5,440,1.0803821383634542
+steady-state,workers at sigma 0.5,450,1.0777164106804022
+steady-state,workers at sigma 0.5,460,1.0776678029672517
+steady-state,workers at sigma 0.5,470,1.0644976125814409
+steady-state,workers at sigma 0.5,480,1.063701821552236
+steady-state,workers at sigma 0.5,490,1.0621387088536931
+steady-state,workers at sigma 0.5,500,1.0588758904226303
+steady-state,workers at sigma 0.5,510,1.0515664547386177
+steady-state,workers at sigma 0.5,520,1.0386643282244776
+steady-state,workers at sigma 0.5,530,1.0355402602941925
+steady-state,workers at sigma 0.5,540,1.0301859492532071
+steady-state,workers at sigma 0.5,550,0.75330902631712249
+steady-state,workers at sigma 0.5,560,0.16033442091501371
+steady-state,workers at sigma 0.5,570,0.043959492623498519
+steady-state,workers at sigma 0.5,580,0.043158421164280369
+steady-state,workers at sigma 0.5,590,0.043089458415234816
+steady-state,workers at sigma 0.5,600,0.034341869863078855
+steady-state,workers at sigma 0.5,610,0.034329128874540871
+steady-state,workers at sigma 0.5,620,0.034328153886031387
+steady-state,workers at sigma 0.5,630,0.034328105579843893
+steady-state,workers at sigma 0.5,640,0.024039888081532013
+steady-state,workers at sigma 0.5,650,0.020291744520841704
+steady-state,workers at sigma 0.5,660,0.020213284100432105
+steady-state,workers at sigma 0.5,670,0.020156725543873932
+steady-state,workers at sigma 0.5,680,0.020145645184218353
+steady-state,workers at sigma 0.5,690,0.020143745854404926
+steady-state,workers at sigma 0.5,700,0.014617848315527482
+steady-state,workers at sigma 0.5,710,0.013977870771062939
+steady-state,workers at sigma 0.5,720,0.0098329405443458029
+steady-state,workers at sigma 0.5,730,0.0095538515423836401
+steady-state,workers at sigma 0.5,740,0.0075300932926296582
+steady-state,workers at sigma 0.5,750,0.0075257029035356027
+steady-state,workers at sigma 0.5,760,0.0075038451144031626
+steady-state,workers at sigma 0.5,770,0.0075036854524732632
+steady-state,workers at sigma 0.5,780,0.0075035662513194268
+steady-state,workers at sigma 0.5,790,0.0074307453597040052
+steady-state,workers at sigma 0.5,800,0.0065413887432796969
+steady-state,workers at sigma 0.5,810,0.0063624809983160446
+steady-state,workers at sigma 0.5,820,0.0063622538784464666
+steady-state,workers at sigma 0.5,830,0.0063622505478715397
+steady-state,workers at sigma 0.5,840,0.0063622505377090022
+steady-state,workers at sigma 0.5,850,0.0063622505375047211
+steady-state,workers at sigma 0.5,860,0.0063622505372133986
+steady-state,workers at sigma 0.5,870,0.0063622505372080695
+steady-state,workers at sigma 0.5,880,0.0063622505372080695
+steady-state,workers at sigma 0.5,890,0.0063622505372080695
+steady-state,workers at sigma 0.5,900,0.0063622505372080695
+steady-state,workers at sigma 0.5,910,0.006250734319181106
+steady-state,workers at sigma 0.5,920,0.0062483745501111798
+steady-state,workers at sigma 0.5,930,0.0062482073432761354
+steady-state,workers at sigma 0.5,940,0.0062482057241624034
+steady-state,workers at sigma 0.5,950,0.006248205722343414
+steady-state,workers at sigma 0.5,960,0.0062117221914377296
+steady-state,workers at sigma 0.5,970,0.0061281793250600458
+steady-state,workers at sigma 0.5,980,0.0061257825617389017
+steady-state,workers at sigma 0.5,990,0.0058904614058690186
+steady-state,workers at sigma 0.5,999,0.0058792124915783006
+steady-state,workers at sigma 2,0,227.08393045020208
+steady-state,workers at sigma 2,1,227.08393045020208
+steady-state,workers at sigma 2,2,227.08393045020208
+steady-state,workers at sigma 2,3,218.66846030475534
+steady-state,workers at sigma 2,4,206.25275464762277
+steady-state,workers at sigma 2,5,205.65420334415256
+steady-state,workers at sigma 2,6,180.56793068732671
+steady-state,workers at sigma 2,7,175.77153716169553
+steady-state,workers at sigma 2,8,175.77153716169553
+steady-state,workers at sigma 2,9,166.89484618097813
+steady-state,workers at sigma 2,10,162.19911565938872
+steady-state,workers at sigma 2,11,158.96624825632452
+steady-state,workers at sigma 2,12,153.72659511681468
+steady-state,workers at sigma 2,13,150.04466230184906
+steady-state,workers at sigma 2,14,144.80077372813307
+steady-state,workers at sigma 2,15,144.0121452033288
+steady-state,workers at sigma 2,16,133.44414720352316
+steady-state,workers at sigma 2,17,122.10518288924932
+steady-state,workers at sigma 2,18,104.02012776448578
+steady-state,workers at sigma 2,19,104.02012776448578
+steady-state,workers at sigma 2,20,104.02012776448578
+steady-state,workers at sigma 2,30,87.058628252237199
+steady-state,workers at sigma 2,40,63.677623429514149
+steady-state,workers at sigma 2,50,53.343146285319634
+steady-state,workers at sigma 2,60,47.441567918068564
+steady-state,workers at sigma 2,70,36.0639519661568
+steady-state,workers at sigma 2,80,28.356832090515717
+steady-state,workers at sigma 2,90,25.189022320176594
+steady-state,workers at sigma 2,100,22.879907719606191
+steady-state,workers at sigma 2,110,21.828943561925239
+steady-state,workers at sigma 2,120,17.827643680556776
+steady-state,workers at sigma 2,130,16.536872511844628
+steady-state,workers at sigma 2,140,16.524661175212515
+steady-state,workers at sigma 2,150,14.120975421584729
+steady-state,workers at sigma 2,160,11.056643770101367
+steady-state,workers at sigma 2,170,9.5525833704875325
+steady-state,workers at sigma 2,180,8.6530891068867177
+steady-state,workers at sigma 2,190,8.4900322100948458
+steady-state,workers at sigma 2,200,8.3123373508243006
+steady-state,workers at sigma 2,210,7.4472820395587149
+steady-state,workers at sigma 2,220,6.3087014570875368
+steady-state,workers at sigma 2,230,4.9540458045572322
+steady-state,workers at sigma 2,240,4.3371045551021812
+steady-state,workers at sigma 2,250,4.3123892271251236
+steady-state,workers at sigma 2,260,3.3843588299938574
+steady-state,workers at sigma 2,270,2.278867343831589
+steady-state,workers at sigma 2,280,2.2779002152269907
+steady-state,workers at sigma 2,290,2.1938883191432019
+steady-state,workers at sigma 2,300,2.1794404883182956
+steady-state,workers at sigma 2,310,2.178368446573689
+steady-state,workers at sigma 2,320,1.1856627048967034
+steady-state,workers at sigma 2,330,0.19141417066662214
+steady-state,workers at sigma 2,340,0.18895689920939063
+steady-state,workers at sigma 2,350,0.10580719912113423
+steady-state,workers at sigma 2,360,0.1054250113194577
+steady-state,workers at sigma 2,370,0.084966678009298136
+steady-state,workers at sigma 2,380,0.084065747124771661
+steady-state,workers at sigma 2,390,0.083977373605765848
+steady-state,workers at sigma 2,400,0.082761850922725699
+steady-state,workers at sigma 2,410,0.082756540047814298
+steady-state,workers at sigma 2,420,0.082756538349503472
+steady-state,workers at sigma 2,430,0.071341319857868513
+steady-state,workers at sigma 2,440,0.066582131500755537
+steady-state,workers at sigma 2,450,0.034551737419551642
+steady-state,workers at sigma 2,460,0.033046663653376385
+steady-state,workers at sigma 2,470,0.032049631004522183
+steady-state,workers at sigma 2,480,0.030219230840193845
+steady-state,workers at sigma 2,490,0.030167416530082036
+steady-state,workers at sigma 2,500,0.030164028066289816
+steady-state,workers at sigma 2,510,0.026753129088122662
+steady-state,workers at sigma 2,520,0.026732613794418825
+steady-state,workers at sigma 2,530,0.020328678831774027
+steady-state,workers at sigma 2,540,0.011717168362297414
+steady-state,workers at sigma 2,550,0.011713272976088263
+steady-state,workers at sigma 2,560,0.011713268222933948
+steady-state,workers at sigma 2,570,0.011713268221290818
+steady-state,workers at sigma 2,580,0.010775580342082591
+steady-state,workers at sigma 2,590,0.010761321373138344
+steady-state,workers at sigma 2,600,0.010760833154158433
+steady-state,workers at sigma 2,610,0.010760829341187161
+steady-state,workers at sigma 2,620,0.010760829340064504
+steady-state,workers at sigma 2,630,0.010760829339908184
+steady-state,workers at sigma 2,640,0.010652049754561688
+steady-state,workers at sigma 2,650,0.010601191803537802
+steady-state,workers at sigma 2,660,0.010481288114577936
+steady-state,workers at sigma 2,670,0.010481271506401768
+steady-state,workers at sigma 2,680,0.010426021041617162
+steady-state,workers at sigma 2,690,0.010426019460298974
+steady-state,workers at sigma 2,700,0.010407664125649418
+steady-state,workers at sigma 2,710,0.0097605546235843832
+steady-state,workers at sigma 2,720,0.0079624042284791585
+steady-state,workers at sigma 2,730,0.0061159301292477153
+steady-state,workers at sigma 2,740,0.005740511414300542
+steady-state,workers at sigma 2,750,0.005738481102149251
+steady-state,workers at sigma 2,760,0.005734523339414821
+steady-state,workers at sigma 2,770,0.0057344390581821614
+steady-state,workers at sigma 2,780,0.0057344347429726383
+steady-state,workers at sigma 2,790,0.0057344089672266563
+steady-state,workers at sigma 2,800,0.0057344080465568936
+steady-state,workers at sigma 2,810,0.0057344079978633999
+steady-state,workers at sigma 2,820,0.0057344079977621476
+steady-state,workers at sigma 2,830,0.0057344079977621476
+steady-state,workers at sigma 2,840,0.0057344079977621476
+steady-state,workers at sigma 2,850,0.0057177849695371208
+steady-state,workers at sigma 2,860,0.0057177843673468232
+steady-state,workers at sigma 2,870,0.0057177843560562991
+steady-state,workers at sigma 2,880,0.0057177843560562991
+steady-state,workers at sigma 2,890,0.0057177843560562991
+steady-state,workers at sigma 2,900,0.0057177843560562991
+steady-state,workers at sigma 2,910,0.0057177843560562991
+steady-state,workers at sigma 2,920,0.004655891020929559
+steady-state,workers at sigma 2,930,0.0046489423248221584
+steady-state,workers at sigma 2,940,0.0046489413161463489
+steady-state,workers at sigma 2,950,0.0046489413033068416
+steady-state,workers at sigma 2,960,0.0046489413033068416
+steady-state,workers at sigma 2,970,0.0046489413033068416
+steady-state,workers at sigma 2,980,0.0046489413033068416
+steady-state,workers at sigma 2,990,0.0045132835114340963
+steady-state,workers at sigma 2,999,0.0045132819363313814
+steady-state,workers with a straggler,0,310.79032545131423
+steady-state,workers with a straggler,1,268.66369330819316
+steady-state,workers with a straggler,2,268.66369330819316
+steady-state,workers with a straggler,3,225.60158329021718
+steady-state,workers with a straggler,4,225.60158329021718
+steady-state,workers with a straggler,5,223.10094155711627
+steady-state,workers with a straggler,6,208.3943392451188
+steady-state,workers with a straggler,7,207.55878708529474
+steady-state,workers with a straggler,8,207.55878708529474
+steady-state,workers with a straggler,9,172.02555148778762
+steady-state,workers with a straggler,10,150.12620336384632
+steady-state,workers with a straggler,11,150.12620336384632
+steady-state,workers with a straggler,12,150.12620336384632
+steady-state,workers with a straggler,13,147.21141484408642
+steady-state,workers with a straggler,14,129.70552959374342
+steady-state,workers with a straggler,15,108.99281474115196
+steady-state,workers with a straggler,16,81.168031838304131
+steady-state,workers with a straggler,17,81.168031838304131
+steady-state,workers with a straggler,18,81.168031838304131
+steady-state,workers with a straggler,19,81.168031838304131
+steady-state,workers with a straggler,20,80.787878973011289
+steady-state,workers with a straggler,30,35.403222831619885
+steady-state,workers with a straggler,40,31.640391261221517
+steady-state,workers with a straggler,50,28.918028173466944
+steady-state,workers with a straggler,60,27.459034081271071
+steady-state,workers with a straggler,70,23.929633474472517
+steady-state,workers with a straggler,80,21.494580314533206
+steady-state,workers with a straggler,90,18.401448205817132
+steady-state,workers with a straggler,100,15.789088942495436
+steady-state,workers with a straggler,110,12.459446696354389
+steady-state,workers with a straggler,120,10.343913117258571
+steady-state,workers with a straggler,130,9.222995824531953
+steady-state,workers with a straggler,140,8.6381034384957189
+steady-state,workers with a straggler,150,7.4812606299098263
+steady-state,workers with a straggler,160,6.17484537455063
+steady-state,workers with a straggler,170,5.2951307586842802
+steady-state,workers with a straggler,180,5.0618185100036417
+steady-state,workers with a straggler,190,4.7776675355553362
+steady-state,workers with a straggler,200,4.6613545889819914
+steady-state,workers with a straggler,210,4.5077968331191549
+steady-state,workers with a straggler,220,4.4444599160444422
+steady-state,workers with a straggler,230,4.4052490253630427
+steady-state,workers with a straggler,240,4.318647372794107
+steady-state,workers with a straggler,250,4.251320628380542
+steady-state,workers with a straggler,260,4.2292483466199435
+steady-state,workers with a straggler,270,3.3747465458540269
+steady-state,workers with a straggler,280,2.2463181468208422
+steady-state,workers with a straggler,290,2.2113599909191741
+steady-state,workers with a straggler,300,2.1491202401261003
+steady-state,workers with a straggler,310,1.7361105688145742
+steady-state,workers with a straggler,320,1.2515376285193227
+steady-state,workers with a straggler,330,1.2503824192021682
+steady-state,workers with a straggler,340,1.2330095010619182
+steady-state,workers with a straggler,350,1.224020831299482
+steady-state,workers with a straggler,360,1.1905775210744043
+steady-state,workers with a straggler,370,1.1826158498730788
+steady-state,workers with a straggler,380,1.1423822900880864
+steady-state,workers with a straggler,390,1.1411495991577922
+steady-state,workers with a straggler,400,1.1403193413211596
+steady-state,workers with a straggler,410,1.1396202521143728
+steady-state,workers with a straggler,420,1.1183643101519447
+steady-state,workers with a straggler,430,1.0982470908465665
+steady-state,workers with a straggler,440,1.0674883218467475
+steady-state,workers with a straggler,450,1.0410927580058846
+steady-state,workers with a straggler,460,1.040536956418201
+steady-state,workers with a straggler,470,1.0319028577433116
+steady-state,workers with a straggler,480,1.0301866424568331
+steady-state,workers with a straggler,490,1.0300987941561903
+steady-state,workers with a straggler,500,1.0300941872649858
+steady-state,workers with a straggler,510,0.045819140686178983
+steady-state,workers with a straggler,520,0.038358540389431539
+steady-state,workers with a straggler,530,0.037147901847106368
+steady-state,workers with a straggler,540,0.030070750420694736
+steady-state,workers with a straggler,550,0.02976805128107074
+steady-state,workers with a straggler,560,0.0297568250445579
+steady-state,workers with a straggler,570,0.029756725444510579
+steady-state,workers with a straggler,580,0.029756722341101494
+steady-state,workers with a straggler,590,0.027009365800356733
+steady-state,workers with a straggler,600,0.026937835526883447
+steady-state,workers with a straggler,610,0.025110973551569771
+steady-state,workers with a straggler,620,0.025010688853452478
+steady-state,workers with a straggler,630,0.025009917431741968
+steady-state,workers with a straggler,640,0.025009910193158902
+steady-state,workers with a straggler,650,0.025009906946170446
+steady-state,workers with a straggler,660,0.015418758989639514
+steady-state,workers with a straggler,670,0.015410614344112616
+steady-state,workers with a straggler,680,0.014376952086358585
+steady-state,workers with a straggler,690,0.014361913812557248
+steady-state,workers with a straggler,700,0.014358731243561351
+steady-state,workers with a straggler,710,0.014358717207702654
+steady-state,workers with a straggler,720,0.01435871661315069
+steady-state,workers with a straggler,730,0.013842325327621197
+steady-state,workers with a straggler,740,0.013288774773135614
+steady-state,workers with a straggler,750,0.013155948115572969
+steady-state,workers with a straggler,760,0.013155799780056654
+steady-state,workers with a straggler,770,0.012899764045405604
+steady-state,workers with a straggler,780,0.012844439293266063
+steady-state,workers with a straggler,790,0.011586997238048014
+steady-state,workers with a straggler,800,0.011083945895506986
+steady-state,workers with a straggler,810,0.0098849095909905316
+steady-state,workers with a straggler,820,0.0098838692314018317
+steady-state,workers with a straggler,830,0.0097876352870809313
+steady-state,workers with a straggler,840,0.0096962876781763185
+steady-state,workers with a straggler,850,0.0094531403320452512
+steady-state,workers with a straggler,860,0.0094354564208032343
+steady-state,workers with a straggler,870,0.0094354173993629331
+steady-state,workers with a straggler,880,0.0090864031594364292
+steady-state,workers with a straggler,890,0.0090860389620566195
+steady-state,workers with a straggler,900,0.0090860353833335239
+steady-state,workers with a straggler,910,0.009086035338352616
+steady-state,workers with a straggler,920,0.0085884276124232883
+steady-state,workers with a straggler,930,0.0085864331988609877
+steady-state,workers with a straggler,940,0.008586432110426756
+steady-state,workers with a straggler,950,0.0085864321100608265
+steady-state,workers with a straggler,960,0.0085864321100430629
+steady-state,workers with a straggler,970,0.0085864321100395102
+steady-state,workers with a straggler,980,0.0085511616075883978
+steady-state,workers with a straggler,990,0.0085460594178279337
+steady-state,workers with a straggler,999,0.0085460553972929176

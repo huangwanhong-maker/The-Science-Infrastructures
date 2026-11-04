@@ -1,0 +1,10 @@
+{
+  "root": "4153cb9",
+  "heuresis": "6b3cc88",
+  "calx": "90aa710",
+  "morphe": "14b3fb8",
+  "physis": "e2b98d8",
+  "tyche": "b4034b8",
+  "note": "run on 2026-11-05 from the working tree that the root committed as 4153cb9, every foundation at the commit listed (tyche's b4034b8, hidden Markov models in processes/ and a change in decision/, was then uncommitted; these studies use neither); built in WSL with g++ 11.5 and CMake 3.28, Release",
+  "recorded": "2026-11-05"
+}

@@ -1,0 +1,5 @@
+{
+  "nsga_budget": 800, "nsga_mu": 32, "cma_budget": 320, "seeds": 3,
+  "hypervolume_nsga": 0.926173, "hypervolume_random": 0.924643,
+  "walls_s": {"CMA-ES 1": 31.3, "CMA-ES 2": 35.0, "CMA-ES 3": 36.4, "NSGA-II": 85.6, "random (two objectives)": 90.0}
+}

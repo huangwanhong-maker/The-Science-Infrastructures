@@ -1,0 +1,14 @@
+# Repertoires of an Arm: the Pictures
+
+Quality-diversity on heuresis's planar arm of twelve joints ([the record](README.md)). Six searches look for the evenest arm for every place its tip can reach; every evaluation of every search is offered to one grid of 50 × 50 cells, so that all are measured alike. The pictures are drawn by `figures.py` from `results/`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-24-repertoire-maps.jpg"><img src="../assets/gallery/search-24-repertoire-maps.jpg" alt="Six maps of the arm's reachable disc, coloured by the spread of the best arm's joint angles in each cell"></a><br><b>Six searches illuminating an arm's reach.</b> The disc is where the tip of heuresis's planar arm of twelve joints can be put. Each cell holds the evenest arm a search evaluated there, coloured by the standard deviation of its joint angles (dark is even). MAP-Elites with iso+line variation covers 96.9% of the 2 040 reachable cells, and CVT-MAP-Elites 98.6% of its own 1 000 Voronoi cells. Novelty search also covers 96.9% but keeps poorer arms, and random search and CMA-ES each reach about half the disc. The dark curve is the family of arms whose angles are all equal: CMA-ES, which minimises the spread alone, finds it and little else. The median run of 15 is shown, after 100 000 evaluations each.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/search-25-arms.jpg"><img src="../assets/gallery/search-25-arms.jpg" alt="Arms of the MAP-Elites repertoire drawn joint by joint for places on rings about the base"></a><br><b>A repertoire of arms.</b> Elites of the median MAP-Elites run (iso+line, 100 000 evaluations), drawn joint by joint for 32 places on two rings about the base. Beside them, on one scale, are three arms for each of five rings. Arms that reach near the base coil into nearly closed polygons, and those that reach the rim are nearly straight. Each arm is labelled with the standard deviation of its angles. The angles come from the run's archive (<code>results/arms.csv</code>).</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-26-coverage-and-qd.jpg"><img src="../assets/gallery/search-26-coverage-and-qd.jpg" alt="Coverage, QD-score and the elites' spread of angles against evaluations for eight searches"></a><br><b>How fast each search fills the map.</b> Coverage, the normalised QD-score and the root of the elites' mean variance against evaluations: the median over 15 seeds, with the interquartile range as a band. Iso+line variation reaches 90% coverage after 18 000 evaluations. The best Gaussian mutation (σ = 0.1 rad) needs 43 000, and iso+line keeps evener arms (mean variance 0.039 against 0.048). CVT-MAP-Elites is the fastest to 90% (15 000).</td>
+<td width="50%" valign="top"></td>
+</tr>
+</table>

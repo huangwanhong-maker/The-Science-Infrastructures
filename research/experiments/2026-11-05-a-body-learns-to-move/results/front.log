@@ -1,0 +1,11 @@
+SMS-EMOA seed 3001: 1440 feasible of 2000, hypervolume 3.3871, 118 s
+NSGA-II  seed 3001: 1519 feasible of 2000, hypervolume 3.5848, 118 s
+NSGA-II  seed 3002: 1439 feasible of 2000, hypervolume 3.6184, 119 s
+NSGA-II  seed 3000: 1444 feasible of 2000, hypervolume 2.9937, 119 s
+SMS-EMOA seed 3000: 1456 feasible of 2000, hypervolume 3.2641, 119 s
+SMS-EMOA seed 3002: 1573 feasible of 2000, hypervolume 3.5309, 120 s
+front: 6 runs in 120.3 s
+front point 0: asked 0.132 m/s, reached 0.124 m/s at 1.42 W (CoT 4.18), apex 0.109, pitch 7.7°
+front point 1: asked 0.422 m/s, reached 0.413 m/s at 1.82 W (CoT 1.61), apex 0.105, pitch 7.0°
+front point 2: asked 0.999 m/s, reached 0.706 m/s at 2.58 W (CoT 1.33), apex 0.105, pitch 6.7°
+front point 3: asked 0.992 m/s, reached 0.988 m/s at 3.80 W (CoT 1.40), apex 0.131, pitch 19.6°

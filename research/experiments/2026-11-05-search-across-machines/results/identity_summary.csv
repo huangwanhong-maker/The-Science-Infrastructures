@@ -1,0 +1,13 @@
+scheme,placement,generations,largest_difference_from_serial,identical
+generational,serial,1000,0,1
+generational,pool of 4 threads,1000,0,1
+generational,parts of 7,1000,0,1
+generational,workers at sigma 0.5,1000,0,1
+generational,workers at sigma 2,1000,0,1
+generational,workers with a straggler,1000,0,1
+steady-state,serial,1000,0,1
+steady-state,pool of 4 threads,1000,0,1
+steady-state,parts of 7,1000,0,1
+steady-state,workers at sigma 0.5,1000,41.912935846783895,0
+steady-state,workers at sigma 2,1000,83.706395001112156,0
+steady-state,workers with a straggler,1000,44.571584874663941,0

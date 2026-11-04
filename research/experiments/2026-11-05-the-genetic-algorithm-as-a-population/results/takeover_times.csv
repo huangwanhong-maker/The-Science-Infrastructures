@@ -1,0 +1,9 @@
+case,replicates,fixed,mean_time,sd_time,deterministic_time,closed_form
+tournament 2,1000,809,12.393,1.531,12,11.601
+tournament 4,1000,974,6.458,0.601,6,5.801
+truncation 1/2,1000,800,9.671,1.478,9,8.966
+truncation 1/4,1000,983,5.128,0.534,5,4.483
+roulette s = 1,1000,780,18.788,2.378,19,17.926
+roulette s = 4,1000,993,8.611,0.904,9,7.720
+tournament 2 s = 4,1000,809,12.393,1.531,12,11.601
+truncation 1/2 s = 4,1000,800,9.671,1.478,9,8.966

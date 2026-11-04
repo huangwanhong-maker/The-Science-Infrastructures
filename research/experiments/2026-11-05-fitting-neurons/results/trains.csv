@@ -1,0 +1,457 @@
+who,current_pA,spike_s
+truth,300,0.0357
+truth,300,0.0952
+truth,300,0.3459
+truth,300,0.6390
+truth,300,0.9321
+truth,400,0.0207
+truth,400,0.0390
+truth,400,0.0678
+truth,400,0.1257
+truth,400,0.2336
+truth,400,0.3538
+truth,400,0.4744
+truth,400,0.5950
+truth,400,0.7156
+truth,400,0.8362
+truth,400,0.9568
+truth,500,0.0150
+truth,500,0.0263
+truth,500,0.0407
+truth,500,0.0604
+truth,500,0.0899
+truth,500,0.1377
+truth,500,0.2054
+truth,500,0.2802
+truth,500,0.3560
+truth,500,0.4319
+truth,500,0.5079
+truth,500,0.5838
+truth,500,0.6597
+truth,500,0.7357
+truth,500,0.8116
+truth,500,0.8875
+truth,500,0.9635
+truth,600,0.0118
+truth,600,0.0201
+truth,600,0.0299
+truth,600,0.0419
+truth,600,0.0570
+truth,600,0.0771
+truth,600,0.1051
+truth,600,0.1442
+truth,600,0.1934
+truth,600,0.2472
+truth,600,0.3023
+truth,600,0.3577
+truth,600,0.4131
+truth,600,0.4685
+truth,600,0.5240
+truth,600,0.5794
+truth,600,0.6349
+truth,600,0.6903
+truth,600,0.7458
+truth,600,0.8012
+truth,600,0.8567
+truth,600,0.9121
+truth,600,0.9676
+truth,700,0.0098
+truth,700,0.0164
+truth,700,0.0239
+truth,700,0.0326
+truth,700,0.0428
+truth,700,0.0551
+truth,700,0.0704
+truth,700,0.0901
+truth,700,0.1158
+truth,700,0.1485
+truth,700,0.1871
+truth,700,0.2289
+truth,700,0.2720
+truth,700,0.3155
+truth,700,0.3591
+truth,700,0.4028
+truth,700,0.4465
+truth,700,0.4902
+truth,700,0.5339
+truth,700,0.5776
+truth,700,0.6213
+truth,700,0.6650
+truth,700,0.7087
+truth,700,0.7524
+truth,700,0.7961
+truth,700,0.8398
+truth,700,0.8835
+truth,700,0.9272
+truth,700,0.9709
+truth,800,0.0084
+truth,800,0.0139
+truth,800,0.0200
+truth,800,0.0269
+truth,800,0.0347
+truth,800,0.0436
+truth,800,0.0541
+truth,800,0.0666
+truth,800,0.0818
+truth,800,0.1006
+truth,800,0.1238
+truth,800,0.1518
+truth,800,0.1836
+truth,800,0.2177
+truth,800,0.2530
+truth,800,0.2888
+truth,800,0.3247
+truth,800,0.3607
+truth,800,0.3968
+truth,800,0.4329
+truth,800,0.4689
+truth,800,0.5050
+truth,800,0.5411
+truth,800,0.5772
+truth,800,0.6132
+truth,800,0.6493
+truth,800,0.6854
+truth,800,0.7215
+truth,800,0.7575
+truth,800,0.7936
+truth,800,0.8297
+truth,800,0.8658
+truth,800,0.9018
+truth,800,0.9379
+truth,800,0.9740
+rates fit,300,0.0356
+rates fit,300,0.0951
+rates fit,300,0.3111
+rates fit,300,0.5593
+rates fit,300,0.8075
+rates fit,400,0.0207
+rates fit,400,0.0390
+rates fit,400,0.0686
+rates fit,400,0.1295
+rates fit,400,0.2348
+rates fit,400,0.3485
+rates fit,400,0.4624
+rates fit,400,0.5763
+rates fit,400,0.6902
+rates fit,400,0.8041
+rates fit,400,0.9180
+rates fit,500,0.0149
+rates fit,500,0.0262
+rates fit,500,0.0408
+rates fit,500,0.0611
+rates fit,500,0.0925
+rates fit,500,0.1437
+rates fit,500,0.2123
+rates fit,500,0.2855
+rates fit,500,0.3593
+rates fit,500,0.4331
+rates fit,500,0.5070
+rates fit,500,0.5808
+rates fit,500,0.6547
+rates fit,500,0.7285
+rates fit,500,0.8024
+rates fit,500,0.8762
+rates fit,500,0.9501
+rates fit,600,0.0118
+rates fit,600,0.0201
+rates fit,600,0.0300
+rates fit,600,0.0422
+rates fit,600,0.0579
+rates fit,600,0.0792
+rates fit,600,0.1095
+rates fit,600,0.1515
+rates fit,600,0.2022
+rates fit,600,0.2559
+rates fit,600,0.3104
+rates fit,600,0.3650
+rates fit,600,0.4197
+rates fit,600,0.4743
+rates fit,600,0.5290
+rates fit,600,0.5836
+rates fit,600,0.6383
+rates fit,600,0.6929
+rates fit,600,0.7476
+rates fit,600,0.8022
+rates fit,600,0.8569
+rates fit,600,0.9116
+rates fit,600,0.9662
+rates fit,700,0.0098
+rates fit,700,0.0164
+rates fit,700,0.0239
+rates fit,700,0.0327
+rates fit,700,0.0431
+rates fit,700,0.0559
+rates fit,700,0.0721
+rates fit,700,0.0933
+rates fit,700,0.1213
+rates fit,700,0.1564
+rates fit,700,0.1965
+rates fit,700,0.2389
+rates fit,700,0.2820
+rates fit,700,0.3253
+rates fit,700,0.3687
+rates fit,700,0.4121
+rates fit,700,0.4555
+rates fit,700,0.4989
+rates fit,700,0.5423
+rates fit,700,0.5857
+rates fit,700,0.6291
+rates fit,700,0.6725
+rates fit,700,0.7159
+rates fit,700,0.7593
+rates fit,700,0.8027
+rates fit,700,0.8461
+rates fit,700,0.8895
+rates fit,700,0.9329
+rates fit,700,0.9763
+rates fit,800,0.0084
+rates fit,800,0.0139
+rates fit,800,0.0200
+rates fit,800,0.0269
+rates fit,800,0.0348
+rates fit,800,0.0440
+rates fit,800,0.0549
+rates fit,800,0.0680
+rates fit,800,0.0843
+rates fit,800,0.1047
+rates fit,800,0.1301
+rates fit,800,0.1601
+rates fit,800,0.1933
+rates fit,800,0.2282
+rates fit,800,0.2638
+rates fit,800,0.2997
+rates fit,800,0.3356
+rates fit,800,0.3716
+rates fit,800,0.4076
+rates fit,800,0.4436
+rates fit,800,0.4796
+rates fit,800,0.5156
+rates fit,800,0.5516
+rates fit,800,0.5876
+rates fit,800,0.6236
+rates fit,800,0.6596
+rates fit,800,0.6956
+rates fit,800,0.7316
+rates fit,800,0.7676
+rates fit,800,0.8036
+rates fit,800,0.8396
+rates fit,800,0.8756
+rates fit,800,0.9116
+rates fit,800,0.9476
+rates fit,800,0.9836
+two-stage fit,300,0.0357
+two-stage fit,300,0.0952
+two-stage fit,300,0.3460
+two-stage fit,300,0.6391
+two-stage fit,300,0.9322
+two-stage fit,400,0.0207
+two-stage fit,400,0.0389
+two-stage fit,400,0.0676
+two-stage fit,400,0.1255
+two-stage fit,400,0.2335
+two-stage fit,400,0.3538
+two-stage fit,400,0.4744
+two-stage fit,400,0.5950
+two-stage fit,400,0.7156
+two-stage fit,400,0.8362
+two-stage fit,400,0.9568
+two-stage fit,500,0.0150
+two-stage fit,500,0.0263
+two-stage fit,500,0.0407
+two-stage fit,500,0.0603
+two-stage fit,500,0.0898
+two-stage fit,500,0.1376
+two-stage fit,500,0.2054
+two-stage fit,500,0.2803
+two-stage fit,500,0.3561
+two-stage fit,500,0.4320
+two-stage fit,500,0.5080
+two-stage fit,500,0.5839
+two-stage fit,500,0.6598
+two-stage fit,500,0.7358
+two-stage fit,500,0.8117
+two-stage fit,500,0.8877
+two-stage fit,500,0.9636
+two-stage fit,600,0.0118
+two-stage fit,600,0.0201
+two-stage fit,600,0.0299
+two-stage fit,600,0.0418
+two-stage fit,600,0.0569
+two-stage fit,600,0.0769
+two-stage fit,600,0.1049
+two-stage fit,600,0.1441
+two-stage fit,600,0.1933
+two-stage fit,600,0.2472
+two-stage fit,600,0.3023
+two-stage fit,600,0.3577
+two-stage fit,600,0.4131
+two-stage fit,600,0.4685
+two-stage fit,600,0.5240
+two-stage fit,600,0.5794
+two-stage fit,600,0.6349
+two-stage fit,600,0.6903
+two-stage fit,600,0.7458
+two-stage fit,600,0.8012
+two-stage fit,600,0.8567
+two-stage fit,600,0.9121
+two-stage fit,600,0.9676
+two-stage fit,700,0.0098
+two-stage fit,700,0.0164
+two-stage fit,700,0.0239
+two-stage fit,700,0.0326
+two-stage fit,700,0.0428
+two-stage fit,700,0.0551
+two-stage fit,700,0.0704
+two-stage fit,700,0.0900
+two-stage fit,700,0.1157
+two-stage fit,700,0.1485
+two-stage fit,700,0.1871
+two-stage fit,700,0.2290
+two-stage fit,700,0.2721
+two-stage fit,700,0.3156
+two-stage fit,700,0.3592
+two-stage fit,700,0.4029
+two-stage fit,700,0.4466
+two-stage fit,700,0.4903
+two-stage fit,700,0.5340
+two-stage fit,700,0.5777
+two-stage fit,700,0.6214
+two-stage fit,700,0.6651
+two-stage fit,700,0.7088
+two-stage fit,700,0.7525
+two-stage fit,700,0.7962
+two-stage fit,700,0.8399
+two-stage fit,700,0.8836
+two-stage fit,700,0.9273
+two-stage fit,700,0.9710
+two-stage fit,800,0.0084
+two-stage fit,800,0.0139
+two-stage fit,800,0.0200
+two-stage fit,800,0.0269
+two-stage fit,800,0.0347
+two-stage fit,800,0.0436
+two-stage fit,800,0.0540
+two-stage fit,800,0.0665
+two-stage fit,800,0.0817
+two-stage fit,800,0.1005
+two-stage fit,800,0.1238
+two-stage fit,800,0.1518
+two-stage fit,800,0.1836
+two-stage fit,800,0.2177
+two-stage fit,800,0.2530
+two-stage fit,800,0.2888
+two-stage fit,800,0.3247
+two-stage fit,800,0.3607
+two-stage fit,800,0.3968
+two-stage fit,800,0.4329
+two-stage fit,800,0.4689
+two-stage fit,800,0.5050
+two-stage fit,800,0.5411
+two-stage fit,800,0.5772
+two-stage fit,800,0.6132
+two-stage fit,800,0.6493
+two-stage fit,800,0.6854
+two-stage fit,800,0.7215
+two-stage fit,800,0.7575
+two-stage fit,800,0.7936
+two-stage fit,800,0.8297
+two-stage fit,800,0.8657
+two-stage fit,800,0.9018
+two-stage fit,800,0.9379
+two-stage fit,800,0.9740
+spike-time fit,300,0.0360
+spike-time fit,300,0.0953
+spike-time fit,400,0.0208
+spike-time fit,400,0.0418
+spike-time fit,400,0.0709
+spike-time fit,400,0.1187
+spike-time fit,400,0.2402
+spike-time fit,400,0.4744
+spike-time fit,400,0.7156
+spike-time fit,400,0.9568
+spike-time fit,500,0.0150
+spike-time fit,500,0.0285
+spike-time fit,500,0.0447
+spike-time fit,500,0.0649
+spike-time fit,500,0.0914
+spike-time fit,500,0.1294
+spike-time fit,500,0.1908
+spike-time fit,500,0.2899
+spike-time fit,500,0.4092
+spike-time fit,500,0.5312
+spike-time fit,500,0.6534
+spike-time fit,500,0.7756
+spike-time fit,500,0.8978
+spike-time fit,600,0.0118
+spike-time fit,600,0.0219
+spike-time fit,600,0.0334
+spike-time fit,600,0.0466
+spike-time fit,600,0.0622
+spike-time fit,600,0.0811
+spike-time fit,600,0.1049
+spike-time fit,600,0.1361
+spike-time fit,600,0.1790
+spike-time fit,600,0.2380
+spike-time fit,600,0.3112
+spike-time fit,600,0.3910
+spike-time fit,600,0.4726
+spike-time fit,600,0.5547
+spike-time fit,600,0.6368
+spike-time fit,600,0.7190
+spike-time fit,600,0.8012
+spike-time fit,600,0.8834
+spike-time fit,600,0.9656
+spike-time fit,700,0.0098
+spike-time fit,700,0.0179
+spike-time fit,700,0.0269
+spike-time fit,700,0.0369
+spike-time fit,700,0.0481
+spike-time fit,700,0.0609
+spike-time fit,700,0.0758
+spike-time fit,700,0.0934
+spike-time fit,700,0.1147
+spike-time fit,700,0.1411
+spike-time fit,700,0.1746
+spike-time fit,700,0.2168
+spike-time fit,700,0.2677
+spike-time fit,700,0.3248
+spike-time fit,700,0.3850
+spike-time fit,700,0.4464
+spike-time fit,700,0.5083
+spike-time fit,700,0.5703
+spike-time fit,700,0.6324
+spike-time fit,700,0.6945
+spike-time fit,700,0.7566
+spike-time fit,700,0.8187
+spike-time fit,700,0.8808
+spike-time fit,700,0.9429
+spike-time fit,800,0.0084
+spike-time fit,800,0.0152
+spike-time fit,800,0.0226
+spike-time fit,800,0.0306
+spike-time fit,800,0.0394
+spike-time fit,800,0.0492
+spike-time fit,800,0.0601
+spike-time fit,800,0.0724
+spike-time fit,800,0.0865
+spike-time fit,800,0.1028
+spike-time fit,800,0.1220
+spike-time fit,800,0.1449
+spike-time fit,800,0.1725
+spike-time fit,800,0.2056
+spike-time fit,800,0.2443
+spike-time fit,800,0.2878
+spike-time fit,800,0.3345
+spike-time fit,800,0.3829
+spike-time fit,800,0.4322
+spike-time fit,800,0.4819
+spike-time fit,800,0.5318
+spike-time fit,800,0.5818
+spike-time fit,800,0.6318
+spike-time fit,800,0.6818
+spike-time fit,800,0.7318
+spike-time fit,800,0.7818
+spike-time fit,800,0.8318
+spike-time fit,800,0.8818
+spike-time fit,800,0.9318
+spike-time fit,800,0.9818

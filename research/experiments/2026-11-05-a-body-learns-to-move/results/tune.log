@@ -1,0 +1,42 @@
+random    seed 2000: best  1.6019 (violation 0.000), 35 feasible of 800, budget, 85 s
+random    seed 2001: best  1.6455 (violation 0.000), 27 feasible of 800, budget, 85 s
+PSO       seed 2000: best  1.5514 (violation 0.000), 367 feasible of 800, budget, 129 s
+DE        seed 2000: best  1.4766 (violation 0.000), 375 feasible of 800, budget, 135 s
+(1+1)-ES  seed 2001: best  1.4111 (violation 0.000), 564 feasible of 800, budget, 136 s
+CMA-ES    seed 2000: best  1.4078 (violation 0.000), 508 feasible of 800, budget, 139 s
+(1+1)-ES  seed 2000: best  1.4248 (violation 0.000), 682 feasible of 800, budget, 141 s
+CMA-ES    seed 2001: best  1.3937 (violation 0.000), 555 feasible of 800, budget, 143 s
+DE        seed 2001: best  1.4864 (violation 0.000), 375 feasible of 800, budget, 131 s
+random    seed 2002: best  1.7418 (violation 0.000), 27 feasible of 800, budget, 89 s
+PSO       seed 2001: best  1.5396 (violation 0.000), 326 feasible of 800, budget, 138 s
+random    seed 2003: best  1.6896 (violation 0.000), 25 feasible of 800, budget, 86 s
+CMA-ES    seed 2002: best  1.4721 (violation 0.000), 283 feasible of 800, budget, 137 s
+DE        seed 2002: best  1.4819 (violation 0.000), 365 feasible of 800, budget, 137 s
+PSO       seed 2002: best  1.4727 (violation 0.000), 305 feasible of 800, budget, 135 s
+(1+1)-ES  seed 2002: best  1.5240 (violation 0.000), 557 feasible of 800, budget, 142 s
+CMA-ES    seed 2003: best  1.4466 (violation 0.000), 520 feasible of 800, budget, 105 s
+PSO       seed 2003: best  1.5148 (violation 0.000), 317 feasible of 800, budget, 97 s
+random    seed 2004: best  1.7348 (violation 0.000), 34 feasible of 800, budget, 54 s
+DE        seed 2003: best  1.4654 (violation 0.000), 441 feasible of 800, budget, 109 s
+(1+1)-ES  seed 2003: best  1.4664 (violation 0.000), 713 feasible of 800, budget, 119 s
+DE        seed 2004: best  1.4975 (violation 0.000), 330 feasible of 800, budget, 93 s
+CMA-ES    seed 2004: best  1.5478 (violation 0.000), 429 feasible of 800, budget, 96 s
+(1+1)-ES  seed 2004: best  1.4650 (violation 0.000), 752 feasible of 800, budget, 97 s
+random    seed 2005: best  1.4939 (violation 0.000), 33 feasible of 800, budget, 54 s
+PSO       seed 2004: best  1.5221 (violation 0.000), 360 feasible of 800, budget, 85 s
+CMA-ES    seed 2006: best failed inf (violation 0.000), 0 feasible of 800, budget, 30 s
+CMA-ES    seed 2005: best  1.3619 (violation 0.000), 474 feasible of 800, budget, 86 s
+(1+1)-ES  seed 2005: best  1.3958 (violation 0.000), 656 feasible of 800, budget, 93 s
+DE        seed 2005: best  1.4537 (violation 0.000), 355 feasible of 800, budget, 87 s
+random    seed 2006: best  1.6637 (violation 0.000), 22 feasible of 800, budget, 54 s
+PSO       seed 2005: best  1.4460 (violation 0.000), 317 feasible of 800, budget, 85 s
+(1+1)-ES  seed 2006: best  1.5689 (violation 0.000), 712 feasible of 800, budget, 97 s
+random    seed 2007: best  1.6028 (violation 0.000), 29 feasible of 800, budget, 53 s
+DE        seed 2006: best  1.4782 (violation 0.000), 375 feasible of 800, budget, 84 s
+PSO       seed 2006: best  1.4512 (violation 0.000), 339 feasible of 800, budget, 85 s
+CMA-ES    seed 2007: best  1.4347 (violation 0.000), 499 feasible of 800, budget, 79 s
+DE        seed 2007: best  1.5115 (violation 0.000), 255 feasible of 800, budget, 76 s
+(1+1)-ES  seed 2007: best  1.5368 (violation 0.000), 391 feasible of 800, budget, 83 s
+PSO       seed 2007: best  1.4478 (violation 0.000), 299 feasible of 800, budget, 55 s
+tune: 40 runs in 510.2 s
+default gains on the task:   speed 0.589 CoT 1.894 pitch 54.6°; best (CMA-ES, seed 2005): speed 0.615 CoT 1.362 power 2.29 W apex 0.110 pitch 7.4°

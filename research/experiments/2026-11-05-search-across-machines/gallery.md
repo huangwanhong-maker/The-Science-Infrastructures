@@ -1,0 +1,14 @@
+### Search across Machines
+
+How a good individual crosses a structured population, what keeping a generational search in step costs on workers of uneven speed, and how an archipelago's topology and migration interval decide a deceptive search, all on heuresis's own core, with simulated workers in place of a cluster ([the record](../research/experiments/2026-11-05-search-across-machines/README.md)).
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-33-takeover-waves.jpg"><img src="../assets/gallery/search-33-takeover-waves.jpg" alt="Eight heat maps of cells against generations showing the best individual spreading on a ring, a torus, a hypercube and a complete graph"></a><br><b>Takeover waves.</b> Selection alone on graphs of 256 cells (heuresis's cellular populations), each cell ordered by its distance from the first best. When every cell keeps the best of its neighbourhood the wave arrives exactly at each cell's distance; under binary tournaments it lags, by 230 generations against 128 on the ring.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/search-34-takeover-times.jpg"><img src="../assets/gallery/search-34-takeover-times.jpg" alt="Takeover time against eccentricity and against the number of cells for 25 graphs, with exact expectations"></a><br><b>Takeover time and eccentricity.</b> On all 25 graphs the deterministic takeover equals the eccentricity, found by morphe's breadth-first search. Tournaments, over 20 seeds, follow the exact expectations of two simple chains: two fronts at 5/9 of a cell a generation on rings, the logistic q ← q³ on complete graphs.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/search-35-synchronisation.jpg"><img src="../assets/gallery/search-35-synchronisation.jpg" alt="Makespan, quality and times to targets against the spread of evaluation durations for three schemes, and six identical runs"></a><br><b>What waiting costs.</b> A GA on Rastrigin's function on 32 simulated workers with lognormal durations. The generational GA's makespan follows the expected maximum of 32 durations, 15 times the ideal at σ = 2; the steady state keeps every worker busy. Right: the generational GA's states identical bit for bit on six placements, the steady state's not.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/search-36-island-topologies.jpg"><img src="../assets/gallery/search-36-island-topologies.jpg" alt="Success rates of 16 GA islands on deceptive traps by topology and migration interval"></a><br><b>Islands against deceptive traps.</b> 16 GA islands on eight traps of order 5, 40 runs for each topology and interval, with Clopper–Pearson intervals. Isolated islands never succeed and migrating every generation rarely does; at ten generations the hypercube succeeds 17 times and the ring 16, against 10 for one panmictic GA of the same size.</td>
+</tr>
+</table>

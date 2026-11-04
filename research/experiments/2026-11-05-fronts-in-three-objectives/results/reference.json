@@ -1,0 +1,21 @@
+{
+  "dtlz7_integral": {"cells_1e5": 2.45766918474, "cells_1e6": 2.45766918506, "cells_4e6": 2.45766918501},
+  "dtlz7_sampled_front_grid_201": {"points": 9409, "hypervolume": 2.44918237852},
+  "dtlz7_sampled_front_grid_801": {"points": 148225, "hypervolume": 2.45554887156},
+  "dtlz7_sampled_front_grid_2001": {"points": 921600, "hypervolume": 2.45682248607},
+  "zdt3_integral": {"cells_1e5": 1.04442600797, "cells_1e6": 1.04442600747, "cells_4e6": 1.04442600744},
+  "zdt3_sampled_front_grid_1001": {"points": 269, "hypervolume": 1.04351768386},
+  "zdt3_sampled_front_grid_10001": {"points": 2660, "hypervolume": 1.04433700687},
+  "zdt3_sampled_front_grid_100001": {"points": 26574, "hypervolume": 1.0444171331},
+  "dtlz7_check": {"grid": "61 x 61", "non_dominated": 961, "records_squared": 961},
+  "zdt3_check": {"grid": 2001, "non_dominated": 536, "records": 536},
+  "zdt3_segments": 5, "dtlz7_intervals": 2,
+  "seeds": 15, "near": 0.01, "threads": 8, "wall_seconds": 1267.70656365,
+  "problems": [
+    {"name": "DTLZ1", "m": 3, "n": 7, "budget": 40000, "mu": 92, "weights": 91, "divisions": 12, "reference": [1, 1, 1], "hv_true": 0.979166666667, "hv_how": "closed form 1 - 2^-m/m!", "hv_set": 0.973668981481, "hv_set_ratio": 0.99438534279, "igd_set": 0.0205084031444, "hv_set_how": "the 91 Das-Dennis directions (p = 12) where they meet the front", "igd_reference_points": 5050},
+    {"name": "DTLZ2", "m": 3, "n": 12, "budget": 40000, "mu": 92, "weights": 91, "divisions": 12, "reference": [1, 1, 1], "hv_true": 0.476401224402, "hv_how": "closed form 1 - pi^(m/2)/(2^m Gamma(m/2+1))", "hv_set": 0.413850899188, "hv_set_ratio": 0.868702425583, "igd_set": 0.054291368158, "hv_set_how": "the 91 Das-Dennis directions (p = 12) where they meet the front", "igd_reference_points": 5050},
+    {"name": "DTLZ7", "m": 3, "n": 22, "budget": 40000, "mu": 92, "weights": 91, "divisions": 12, "reference": [1, 1, 7], "hv_true": 2.45766918501, "hv_how": "1 + 2 * integral of the running maximum of t(1 + sin 3 pi t), midpoint rule on 4e6 cells", "igd_reference_points": 5476},
+    {"name": "ZDT1", "m": 2, "n": 30, "budget": 25000, "mu": 100, "weights": 100, "divisions": 99, "reference": [1, 1], "hv_true": 0.666666666667, "hv_how": "closed form 2/3", "hv_set": 0.661409368921, "hv_set_ratio": 0.992114053381, "igd_set": 0.0037244278809, "hv_set_how": "100 points of the front evenly spaced in f1", "igd_reference_points": 1000},
+    {"name": "ZDT3", "m": 2, "n": 30, "budget": 25000, "mu": 100, "weights": 100, "divisions": 99, "reference": [1, 1], "hv_true": 1.04442600744, "hv_how": "integral of 1 minus the running minimum of 1 - sqrt t - t sin 10 pi t, midpoint rule on 4e6 cells", "igd_reference_points": 1066}
+  ]
+}

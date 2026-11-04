@@ -1,0 +1,19 @@
+district: 61 parcels, 11 candidate links, 5831 ground samples, 49 places; 0 segments dropped by planarisation
+as built: floor 440046 m2, sun 50512 m2h, heating 0.0727 kWh/m2/day, walk 234.2 m (shop 37.8, open 196.4), mix 0.4526 nats; open 0.068, homes 0.041, shops 0.152, plot ratio 8.22
+prepared in 0.4 s
+400 random designs: 3.46 ms each on 4 threads; 61 feasible, 0 failed; per evaluation: massing 2.05 ms heating 2.98 ms sun 0.32 ms walking 8.18 ms mix 0.00 ms
+NSGA-III seed 1: 44100 evaluations in 61 s, front 209
+NSGA-III seed 2: 44100 evaluations in 58 s, front 209
+NSGA-III seed 3: 44100 evaluations in 49 s, front 209
+MOEA/D seed 1: 44100 evaluations in 44 s, front 111
+MOEA/D seed 2: 44100 evaluations in 46 s, front 134
+MOEA/D seed 3: 44100 evaluations in 46 s, front 127
+random seed 1: 44100 evaluations in 63 s, archive 334
+random seed 2: 44100 evaluations in 63 s, archive 325
+random seed 3: 44100 evaluations in 69 s, archive 388
+hypervolumes in 3 s
+NSGA-II seed 1: 21000 evaluations in 32 s, front 100
+NSGA-II seed 2: 21000 evaluations in 29 s, front 100
+NSGA-II seed 3: 21000 evaluations in 29 s, front 100
+MAP-Elites: 84000 evaluations in 108 s, coverage 0.812, QD-score 426.83
+done in 711 s

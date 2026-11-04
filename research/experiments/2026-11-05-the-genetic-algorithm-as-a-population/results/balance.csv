@@ -1,0 +1,145 @@
+scheme,M,chi,seed,equilibrium
+roulette,20,0.25,1,0.588382
+roulette,20,0.25,2,0.642996
+roulette,20,0.25,3,0.600284
+roulette,20,0.25,4,0.640030
+roulette,20,0.50,1,0.606429
+roulette,20,0.50,2,0.630115
+roulette,20,0.50,3,0.584312
+roulette,20,0.50,4,0.585882
+roulette,20,1.00,1,0.580211
+roulette,20,1.00,2,0.574253
+roulette,20,1.00,3,0.574777
+roulette,20,1.00,4,0.584481
+roulette,20,2.00,1,0.561502
+roulette,20,2.00,2,0.546888
+roulette,20,2.00,3,0.552175
+roulette,20,2.00,4,0.558013
+roulette,20,4.00,1,0.537959
+roulette,20,4.00,2,0.537858
+roulette,20,4.00,3,0.540388
+roulette,20,4.00,4,0.539900
+roulette,20,8.00,1,0.520165
+roulette,20,8.00,2,0.522860
+roulette,20,8.00,3,0.522088
+roulette,20,8.00,4,0.521902
+roulette,100,0.25,1,0.713943
+roulette,100,0.25,2,0.707069
+roulette,100,0.25,3,0.725558
+roulette,100,0.25,4,0.689615
+roulette,100,0.50,1,0.667911
+roulette,100,0.50,2,0.647079
+roulette,100,0.50,3,0.667931
+roulette,100,0.50,4,0.672232
+roulette,100,1.00,1,0.610275
+roulette,100,1.00,2,0.613498
+roulette,100,1.00,3,0.623050
+roulette,100,1.00,4,0.607596
+roulette,100,2.00,1,0.578980
+roulette,100,2.00,2,0.585344
+roulette,100,2.00,3,0.578375
+roulette,100,2.00,4,0.581438
+roulette,100,4.00,1,0.547914
+roulette,100,4.00,2,0.546992
+roulette,100,4.00,3,0.544099
+roulette,100,4.00,4,0.545924
+roulette,100,8.00,1,0.524025
+roulette,100,8.00,2,0.523754
+roulette,100,8.00,3,0.524638
+roulette,100,8.00,4,0.523390
+roulette,500,0.25,1,0.752777
+roulette,500,0.25,2,0.768753
+roulette,500,0.25,3,0.766470
+roulette,500,0.25,4,0.733275
+roulette,500,0.50,1,0.697519
+roulette,500,0.50,2,0.700663
+roulette,500,0.50,3,0.682703
+roulette,500,0.50,4,0.704162
+roulette,500,1.00,1,0.637758
+roulette,500,1.00,2,0.641566
+roulette,500,1.00,3,0.637159
+roulette,500,1.00,4,0.637327
+roulette,500,2.00,1,0.583972
+roulette,500,2.00,2,0.586661
+roulette,500,2.00,3,0.585436
+roulette,500,2.00,4,0.586870
+roulette,500,4.00,1,0.550601
+roulette,500,4.00,2,0.549431
+roulette,500,4.00,3,0.548174
+roulette,500,4.00,4,0.549935
+roulette,500,8.00,1,0.524017
+roulette,500,8.00,2,0.524359
+roulette,500,8.00,3,0.524522
+roulette,500,8.00,4,0.523808
+tournament 2,20,0.25,1,0.996301
+tournament 2,20,0.25,2,0.996314
+tournament 2,20,0.25,3,0.996311
+tournament 2,20,0.25,4,0.996399
+tournament 2,20,0.50,1,0.975004
+tournament 2,20,0.50,2,0.979538
+tournament 2,20,0.50,3,0.975472
+tournament 2,20,0.50,4,0.981405
+tournament 2,20,1.00,1,0.872325
+tournament 2,20,1.00,2,0.875736
+tournament 2,20,1.00,3,0.877647
+tournament 2,20,1.00,4,0.872035
+tournament 2,20,2.00,1,0.765928
+tournament 2,20,2.00,2,0.766951
+tournament 2,20,2.00,3,0.761368
+tournament 2,20,2.00,4,0.764327
+tournament 2,20,4.00,1,0.672571
+tournament 2,20,4.00,2,0.671492
+tournament 2,20,4.00,3,0.674050
+tournament 2,20,4.00,4,0.675580
+tournament 2,20,8.00,1,0.600027
+tournament 2,20,8.00,2,0.602710
+tournament 2,20,8.00,3,0.600589
+tournament 2,20,8.00,4,0.602659
+tournament 2,100,0.25,1,0.996696
+tournament 2,100,0.25,2,0.996615
+tournament 2,100,0.25,3,0.996626
+tournament 2,100,0.25,4,0.996641
+tournament 2,100,0.50,1,0.989876
+tournament 2,100,0.50,2,0.989841
+tournament 2,100,0.50,3,0.989796
+tournament 2,100,0.50,4,0.989895
+tournament 2,100,1.00,1,0.909030
+tournament 2,100,1.00,2,0.913955
+tournament 2,100,1.00,3,0.914264
+tournament 2,100,1.00,4,0.909989
+tournament 2,100,2.00,1,0.795693
+tournament 2,100,2.00,2,0.792242
+tournament 2,100,2.00,3,0.796851
+tournament 2,100,2.00,4,0.795882
+tournament 2,100,4.00,1,0.689863
+tournament 2,100,4.00,2,0.688878
+tournament 2,100,4.00,3,0.691376
+tournament 2,100,4.00,4,0.691004
+tournament 2,100,8.00,1,0.610749
+tournament 2,100,8.00,2,0.608639
+tournament 2,100,8.00,3,0.610450
+tournament 2,100,8.00,4,0.610484
+tournament 2,500,0.25,1,0.996694
+tournament 2,500,0.25,2,0.996669
+tournament 2,500,0.25,3,0.996619
+tournament 2,500,0.25,4,0.996669
+tournament 2,500,0.50,1,0.990187
+tournament 2,500,0.50,2,0.990089
+tournament 2,500,0.50,3,0.989924
+tournament 2,500,0.50,4,0.990108
+tournament 2,500,1.00,1,0.925697
+tournament 2,500,1.00,2,0.924812
+tournament 2,500,1.00,3,0.923216
+tournament 2,500,1.00,4,0.926042
+tournament 2,500,2.00,1,0.801964
+tournament 2,500,2.00,2,0.801165
+tournament 2,500,2.00,3,0.804693
+tournament 2,500,2.00,4,0.804271
+tournament 2,500,4.00,1,0.695181
+tournament 2,500,4.00,2,0.693644
+tournament 2,500,4.00,3,0.695737
+tournament 2,500,4.00,4,0.694976
+tournament 2,500,8.00,1,0.611136
+tournament 2,500,8.00,2,0.611616
+tournament 2,500,8.00,3,0.611537
+tournament 2,500,8.00,4,0.611055

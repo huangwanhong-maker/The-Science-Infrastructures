@@ -1,0 +1,305 @@
+<title>Searches on a Landscape</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,400&display=swap">
+<style>
+/* Layout: a working instrument on warm paper. Controls in one hairline bar, six searches as equal panels
+   synchronised on one evaluation count, the anytime chart beneath, the key to the marks last. */
+:root {
+  --paper: #FBF6F1; --panel: #F5ECE7; --ink: #3B2F3A; --muted: #85777F; --hair: #DCCFD6; --accent: #8E3B78;
+  --map-lo: #B27AA4; --map-mid: #E6CCDC; --map-hi: #FBF6F1; --mark: #3B2F3A;
+  --a-es: #B9785A; --a-cma: #8E3B78; --a-de: #3F807C; --a-pso: #C08524; --a-ce: #557BB0; --a-bo: #C9566F;
+  --serif: "Source Serif 4", "Source Serif Pro", Georgia, Cambria, serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #1C1520; --panel: #251C2A; --ink: #EDE2EA; --muted: #A493A0; --hair: #43354A; --accent: #D493C4;
+    --map-lo: #8F5585; --map-mid: #3E2B44; --map-hi: #1C1520; --mark: #F3E8EF;
+    --a-es: #E0A486; --a-cma: #D68CC4; --a-de: #6FC0BA; --a-pso: #E7B45A; --a-ce: #8FB0E0; --a-bo: #EE8BA0;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #1C1520; --panel: #251C2A; --ink: #EDE2EA; --muted: #A493A0; --hair: #43354A; --accent: #D493C4;
+  --map-lo: #8F5585; --map-mid: #3E2B44; --map-hi: #1C1520; --mark: #F3E8EF;
+  --a-es: #E0A486; --a-cma: #D68CC4; --a-de: #6FC0BA; --a-pso: #E7B45A; --a-ce: #8FB0E0; --a-bo: #EE8BA0;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--paper); color: var(--ink); font-family: var(--serif); font-size: 16px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 40px;
+}
+main { max-width: 1240px; margin: 0 auto; display: grid; gap: 22px; }
+header { display: grid; gap: 6px; }
+h1 { font-weight: 400; font-size: clamp(1.7rem, 3.2vw, 2.4rem); line-height: 1.15; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+.lede { color: var(--muted); margin: 0; max-width: 70ch; }
+.bar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px;
+  border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair); padding-block: 12px;
+}
+.group { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-right: 4px; }
+button {
+  font: inherit; font-size: 0.95rem; color: var(--ink); background: transparent; border: 1px solid var(--hair);
+  padding: 4px 12px; border-radius: 2px; cursor: pointer;
+}
+button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); background: var(--panel); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.scrub { flex: 1 1 280px; display: flex; align-items: center; gap: 12px; min-width: 0; }
+.scrub input { flex: 1; min-width: 0; accent-color: var(--accent); }
+.count { font-variant-numeric: tabular-nums; min-width: 11ch; text-align: right; }
+.panels { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 14px; }
+@media (min-width: 900px) { .panels { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1180px) { .panels { grid-template-columns: repeat(6, 1fr); } }
+figure.panel { margin: 0; display: grid; gap: 6px; min-width: 0; }
+.panel h2 { font-size: 1.05rem; font-weight: 500; margin: 0; }
+.panel .state { font-size: 0.82rem; color: var(--muted); font-variant-numeric: tabular-nums; min-height: 2.6em; white-space: pre-line; }
+.panel canvas { width: 100%; aspect-ratio: 1 / 1; max-width: 100%; display: block; border: 1px solid var(--hair); background: var(--panel); }
+.anytime { display: grid; gap: 8px; }
+.anytime h2, .key h2 { font-size: 1.15rem; font-weight: 500; margin: 0; }
+.anytime canvas { width: 100%; height: 280px; max-width: 100%; display: block; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 0.9rem; }
+.legend span::before { content: ""; display: inline-block; width: 18px; height: 3px; margin-right: 7px; vertical-align: middle; background: var(--c); }
+.key { display: grid; gap: 10px; border-top: 1px solid var(--hair); padding-top: 18px; }
+.key dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px 28px; margin: 0; }
+.key dt { font-weight: 500; }
+.key dd { margin: 0; color: var(--muted); font-size: 0.93rem; max-width: 60ch; }
+footer { color: var(--muted); font-size: 0.82rem; }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; } }
+</style>
+
+<main>
+  <header>
+    <h1>Six searches in one landscape, step by step</h1>
+    <p class="lede">The (1+1)-ES, CMA-ES, differential evolution, a particle swarm, the cross-entropy method and Bayesian optimisation, each started the same way and run by heuresis, replayed at equal numbers of evaluations. Drag the count or press play; the shading is the landscape, log f − f*, darker where lower.</p>
+  </header>
+
+  <div class="bar" role="toolbar" aria-label="Replay controls">
+    <div class="group" id="functions"><span class="label">Landscape</span></div>
+    <div class="group"><button id="play" type="button" aria-pressed="false">Play</button></div>
+    <div class="scrub">
+      <span class="label">Evaluations</span>
+      <input id="evaluations" type="range" min="0" max="1000" value="750" aria-label="Number of evaluations">
+      <span class="count" id="count">300</span>
+    </div>
+  </div>
+
+  <section class="panels" id="panels" aria-label="The six searches"></section>
+
+  <section class="anytime">
+    <h2>The best found so far</h2>
+    <div class="legend" id="legend"></div>
+    <canvas id="anytime" aria-label="Best value found against evaluations, for each search"></canvas>
+  </section>
+
+  <section class="key">
+    <h2>What each search keeps, and what is drawn</h2>
+    <dl>
+      <div><dt>(1+1)-ES</dt><dd>One parent and a step size σ, adapted by the one-fifth success rule. Drawn: its path, the latest offspring, and the circle of radius σ.</dd></div>
+      <div><dt>CMA-ES</dt><dd>A Gaussian N(m, σ²C) whose covariance learns the shape of the valley. Drawn: the path of its mean, the generation's samples, and its 1-σ and 2-σ ellipses.</dd></div>
+      <div><dt>Differential evolution</dt><dd>A population that moves by the differences of its own members. Drawn: the population after selection (filled) and the trial points of the generation (rings).</dd></div>
+      <div><dt>Particle swarm</dt><dd>Particles with velocities, drawn towards their own and their neighbours' best (the Standard PSO 2011). Drawn: the particles and the steps that brought them there.</dd></div>
+      <div><dt>Cross-entropy method</dt><dd>A Gaussian refitted to the best samples of each generation, smoothed. Drawn: its samples and its 1-σ and 2-σ ellipses.</dd></div>
+      <div><dt>Bayesian optimisation</dt><dd>A Gaussian-process model of the landscape, sampled where the expected improvement is largest. Drawn: every point it has evaluated, over its model's mean in place of the true landscape. Its budget is 100 evaluations.</dd></div>
+    </dl>
+  </section>
+
+  <footer id="provenance"></footer>
+</main>
+
+<script id="data" type="application/json">/*DATA*/</script>
+<script>
+(() => {
+  const DATA = JSON.parse(document.getElementById('data').textContent);
+  const T = DATA.trajectories, L = DATA.landscapes;
+  const ALGS = [
+    ['(1+1)-ES', '--a-es', '(1+1)-ES'], ['CMA-ES', '--a-cma', 'CMA-ES'], ['DE', '--a-de', 'Differential evolution'],
+    ['PSO', '--a-pso', 'Particle swarm'], ['CE', '--a-ce', 'Cross-entropy'], ['BO', '--a-bo', 'Bayesian optimisation'],
+  ];
+  const NAMES = { rosenbrock: "Rosenbrock's valley", rastrigin: 'Rastrigin', branin: 'Branin' };
+  const BUDGET = T.meta.budget;
+  const css = () => getComputedStyle(document.documentElement);
+  const tok = (name) => css().getPropertyValue(name).trim();
+
+  let fn = Object.keys(T.functions).includes(location.hash.slice(1)) ? location.hash.slice(1) : 'rosenbrock';
+  let maps = {}, playing = false, last = 0;
+
+  // ---- colours and the shaded landscape --------------------------------------------------------------
+  const hex = (h) => { const n = parseInt(h.replace('#', ''), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
+  function ramp(t) {  // 0 = low (dark), 1 = high (paper)
+    const lo = hex(tok('--map-lo')), mid = hex(tok('--map-mid')), hi = hex(tok('--map-hi'));
+    const [a, b, u] = t < 0.5 ? [lo, mid, t / 0.5] : [mid, hi, (t - 0.5) / 0.5];
+    return a.map((v, i) => Math.round(v + (b[i] - v) * u));
+  }
+  function shade(values, n) {
+    const logs = values.map((v) => Math.log10(Math.max(v, 0) + 1e-3));
+    const sorted = [...logs].sort((a, b) => a - b), lo = sorted[Math.floor(0.02 * sorted.length)], hi = sorted[sorted.length - 1];  // the minimiser's own value would flatten the rest
+    const c = document.createElement('canvas'); c.width = c.height = n;
+    const g = c.getContext('2d'), img = g.createImageData(n, n);
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
+      const t = Math.floor(Math.min(1, Math.max(0, (logs[j * n + i] - lo) / (hi - lo || 1))) * 14) / 14;  // bands, read as contours
+      const [r, gr, b] = ramp(t), k = ((n - 1 - j) * n + i) * 4;
+      img.data[k] = r; img.data[k + 1] = gr; img.data[k + 2] = b; img.data[k + 3] = 255;
+    }
+    g.putImageData(img, 0, 0);
+    return { canvas: c, lo, hi };
+  }
+  function buildMaps() {
+    maps = {};
+    for (const [name, f] of Object.entries(L.functions)) maps[name] = shade(f.values, L.grid);
+    const bo = {};
+    for (const [name, f] of Object.entries(T.functions)) {
+      const gp = f.algorithms.BO.gp;
+      bo[name] = gp.snapshots.map((s) => ({ count: s.count, map: shade(s.mean, gp.grid) }));
+    }
+    maps.bo = bo;
+  }
+
+  // ---- the evaluation count, on a log scale -----------------------------------------------------------
+  const slider = document.getElementById('evaluations'), countEl = document.getElementById('count');
+  const evaluations = () => Math.max(1, Math.round(Math.pow(BUDGET, slider.value / 1000)));
+
+  // ---- panels ---------------------------------------------------------------------------------------
+  const panels = document.getElementById('panels');
+  const views = ALGS.map(([key, colour, title]) => {
+    const fig = document.createElement('figure'); fig.className = 'panel';
+    fig.innerHTML = `<h2 style="color: var(${colour})">${title}</h2><canvas></canvas><figcaption class="state"></figcaption>`;
+    panels.appendChild(fig);
+    return { key, colour, canvas: fig.querySelector('canvas'), state: fig.querySelector('.state') };
+  });
+
+  const fmt = (v) => v === 0 ? '0' : Math.abs(v) >= 0.01 && Math.abs(v) < 1e4 ? v.toPrecision(3) : v.toExponential(1).replace('e', '×10^').replace(/\^\+?(-?)0*(\d+)/, (_, s, d) => sup(s + d));
+  function sup(s) { const m = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' }; return [...s].map((c) => m[c] ?? c).join(''); }
+
+  function fit(canvas) {
+    const dpr = window.devicePixelRatio || 1, w = canvas.clientWidth, h = canvas.clientHeight;
+    if (canvas.width !== Math.round(w * dpr) || canvas.height !== Math.round(h * dpr)) { canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr); }
+    const g = canvas.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); return [g, w, h];
+  }
+
+  function ellipse(g, X, Y, m, C, k, scale) {  // the k-σ ellipse of N(m, scale² C), C = [c11, c12, c22]
+    const [a, b, c] = C.map((v) => v * scale * scale), tr = a + c, det = a * c - b * b, disc = Math.sqrt(Math.max(tr * tr / 4 - det, 0));
+    const l1 = tr / 2 + disc, l2 = Math.max(tr / 2 - disc, 0), th = Math.abs(b) > 1e-300 ? Math.atan2(l1 - a, b) : (a >= c ? 0 : Math.PI / 2);
+    g.beginPath();
+    for (let s = 0; s <= 64; s++) {
+      const t = (s / 64) * 2 * Math.PI, u = k * Math.sqrt(l1) * Math.cos(t), v = k * Math.sqrt(l2) * Math.sin(t);
+      const x = m[0] + u * Math.cos(th) - v * Math.sin(th), y = m[1] + u * Math.sin(th) + v * Math.cos(th);
+      s ? g.lineTo(X(x), Y(y)) : g.moveTo(X(x), Y(y));
+    }
+    g.stroke();
+  }
+
+  function draw() {
+    const E = evaluations(); countEl.textContent = E.toLocaleString('en-GB');
+    const F = T.functions[fn];
+    const [x0, y0] = F.lower, [x1, y1] = F.upper, ink = tok('--mark'), muted = tok('--muted');
+    for (const v of views) {
+      const [g, w, h] = fit(v.canvas), colour = tok(v.colour);
+      const X = (x) => ((x - x0) / (x1 - x0)) * w, Y = (y) => h - ((y - y0) / (y1 - y0)) * h;
+      const run = F.algorithms[v.key], gens = run.generations;
+      let k = -1;
+      for (let i = 0; i < gens.length && gens[i].e <= E; i++) k = i;
+      // the landscape, or for BO its surrogate's mean
+      let bg = maps[fn].canvas;
+      if (v.key === 'BO') { const snaps = maps.bo[fn].filter((s) => s.count <= Math.max(E, maps.bo[fn][0].count)); bg = snaps[snaps.length - 1].map.canvas; }
+      g.imageSmoothingEnabled = true; g.drawImage(bg, 0, 0, w, h);
+      g.strokeStyle = ink; g.lineWidth = 1.2;
+      for (const [mx, my] of F.minimisers) { g.beginPath(); g.moveTo(X(mx) - 5, Y(my)); g.lineTo(X(mx) + 5, Y(my)); g.moveTo(X(mx), Y(my) - 5); g.lineTo(X(mx), Y(my) + 5); g.stroke(); }
+      if (k < 0) { v.state.textContent = 'not started'; continue; }
+      const gen = gens[k], dot = (p, r, fill = true) => { g.beginPath(); g.arc(X(p[0]), Y(p[1]), r, 0, 2 * Math.PI); fill ? g.fill() : g.stroke(); };
+      g.fillStyle = colour; g.strokeStyle = colour; g.lineWidth = 1.4;
+      if (v.key === '(1+1)-ES' || v.key === 'CMA-ES') {  // the path of the parent or mean
+        g.globalAlpha = 0.85; g.beginPath();
+        for (let i = 0; i <= k; i++) { const m = gens[i].m; i ? g.lineTo(X(m[0]), Y(m[1])) : g.moveTo(X(m[0]), Y(m[1])); }
+        g.stroke(); g.globalAlpha = 1;
+      }
+      if (v.key === '(1+1)-ES') {
+        const from = Math.max(0, k - 15);
+        g.globalAlpha = 0.6; for (let i = from; i <= k; i++) dot(gens[i].pts[0], 2, false); g.globalAlpha = 1;
+        const m = gen.m, r = (gen.s / (x1 - x0)) * w;
+        g.beginPath(); g.arc(X(m[0]), Y(m[1]), Math.max(r, 2), 0, 2 * Math.PI); g.stroke(); dot(m, 3.2);
+      } else if (v.key === 'CMA-ES' || v.key === 'CE') {
+        const scale = v.key === 'CMA-ES' ? gen.s : 1;  // CMA-ES samples N(m, σ²C); CE keeps its covariance whole
+        g.lineWidth = 1.5; ellipse(g, X, Y, gen.m, gen.C, 1, scale);
+        g.setLineDash([4, 4]); g.lineWidth = 1; ellipse(g, X, Y, gen.m, gen.C, 2, scale); g.setLineDash([]);
+        g.globalAlpha = 0.75; for (const p of gen.pts) dot(p, 2.4); g.globalAlpha = 1;
+        g.fillStyle = ink; dot(gen.m, 2.6);
+      } else if (v.key === 'DE') {
+        g.globalAlpha = 0.7; for (const p of gen.pts) dot(p, 2.6, false); g.globalAlpha = 1;
+        for (const p of gen.pop) dot(p, 2.8);
+      } else if (v.key === 'PSO') {
+        g.globalAlpha = 0.6; g.lineWidth = 1;
+        gen.pts.forEach((p, i) => { const d = gen.v?.[i]; if (!d) return; g.beginPath(); g.moveTo(X(p[0] - d[0]), Y(p[1] - d[1])); g.lineTo(X(p[0]), Y(p[1])); g.stroke(); });
+        g.globalAlpha = 1; for (const p of gen.pts) dot(p, 2.6);
+      } else if (v.key === 'BO') {
+        g.globalAlpha = 0.85; for (let i = 0; i <= k; i++) for (const p of gens[i].pts) dot(p, 2.6); g.globalAlpha = 1;
+        g.lineWidth = 1.5; for (const p of gen.pts) { g.beginPath(); g.arc(X(p[0]), Y(p[1]), 6, 0, 2 * Math.PI); g.stroke(); }
+      }
+      const ended = k === gens.length - 1 && gen.e < E ? ` · ended (${run.ending})` : '';
+      v.state.textContent = `generation ${k + 1} · ${gen.e.toLocaleString('en-GB')} evaluations${ended}\nbest f − f* = ${fmt(gen.gap)}`;
+    }
+    drawAnytime(E);
+  }
+
+  // ---- the anytime chart -----------------------------------------------------------------------------
+  const legend = document.getElementById('legend');
+  legend.innerHTML = ALGS.map(([, colour, title]) => `<span style="--c: var(${colour})">${title}</span>`).join('');
+  function drawAnytime(E) {
+    const canvas = document.getElementById('anytime'), [g, w, h] = fit(canvas), F = T.functions[fn];
+    const padL = 64, padR = 16, padT = 10, padB = 48, ink = tok('--ink'), muted = tok('--muted'), hair = tok('--hair');
+    const lx0 = 0, lx1 = Math.log10(BUDGET), ly0 = -13, ly1 = 4;
+    const X = (e) => padL + ((Math.log10(e) - lx0) / (lx1 - lx0)) * (w - padL - padR);
+    const Y = (v) => padT + (1 - (Math.log10(Math.max(v, 1e-13)) - ly0) / (ly1 - ly0)) * (h - padT - padB);
+    g.clearRect(0, 0, w, h);
+    g.font = `13px ${tok('--serif')}`; g.fillStyle = muted; g.strokeStyle = hair; g.lineWidth = 0.7;
+    for (let p = ly0; p <= ly1; p += 2) { g.beginPath(); g.moveTo(padL, Y(10 ** p)); g.lineTo(w - padR, Y(10 ** p)); g.stroke(); g.textAlign = 'right'; g.textBaseline = 'middle'; g.fillText(`10${sup(String(p))}`, padL - 8, Y(10 ** p)); }
+    for (const e of [1, 10, 100, 1000, BUDGET]) { g.beginPath(); g.moveTo(X(e), padT); g.lineTo(X(e), h - padB); g.stroke(); g.textAlign = 'center'; g.textBaseline = 'top'; g.fillText(e.toLocaleString('en-GB'), X(e), h - padB + 8); }
+    g.textAlign = 'right'; g.textBaseline = 'bottom'; g.fillText('evaluations (log scale)', w - padR, h - 2); g.save(); g.translate(14, padT + (h - padT - padB) / 2); g.rotate(-Math.PI / 2); g.textAlign = 'center'; g.fillText('best f − f*', 0, 0); g.restore();
+    for (const [key, colour] of ALGS) {
+      const gens = F.algorithms[key].generations; g.strokeStyle = tok(colour); g.lineWidth = 2; g.beginPath();
+      gens.forEach((q, i) => { const x = X(q.e), y = Y(q.gap); if (!i) g.moveTo(x, y); else { g.lineTo(x, Y(gens[i - 1].gap)); g.lineTo(x, y); } });
+      g.stroke();
+    }
+    g.strokeStyle = ink; g.lineWidth = 1; g.setLineDash([3, 3]); g.beginPath(); g.moveTo(X(E), padT); g.lineTo(X(E), h - padB); g.stroke(); g.setLineDash([]);
+  }
+
+  // ---- controls -------------------------------------------------------------------------------------
+  const fnGroup = document.getElementById('functions');
+  for (const name of Object.keys(T.functions)) {
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = NAMES[name] ?? name; b.dataset.fn = name;
+    b.setAttribute('aria-pressed', String(name === fn));
+    b.addEventListener('click', () => { location.hash = name; });
+    fnGroup.appendChild(b);
+  }
+  window.addEventListener('hashchange', () => {
+    const h = location.hash.slice(1); if (!T.functions[h]) return; fn = h;
+    for (const b of fnGroup.querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.fn === fn));
+    draw();
+  });
+  slider.addEventListener('input', draw);
+  const play = document.getElementById('play');
+  play.addEventListener('click', () => {
+    playing = !playing; play.textContent = playing ? 'Pause' : 'Play'; play.setAttribute('aria-pressed', String(playing));
+    if (playing && +slider.value >= 1000) slider.value = 0;
+    last = performance.now(); if (playing) requestAnimationFrame(step);
+  });
+  function step(t) {
+    if (!playing) return;
+    const dt = Math.min(100, t - last); last = t;
+    slider.value = Math.min(1000, +slider.value + dt * 0.06);
+    draw();
+    if (+slider.value >= 1000) { playing = false; play.textContent = 'Play'; play.setAttribute('aria-pressed', 'false'); return; }
+    requestAnimationFrame(step);
+  }
+  const rebuild = () => { buildMaps(); draw(); };
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', rebuild);
+  new MutationObserver(rebuild).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  new ResizeObserver(() => draw()).observe(panels);
+
+  document.getElementById('provenance').textContent = `Seed ${T.meta.seed} of each search, run by heuresis ${T.meta.heuresis} (The Science Infrastructures); budgets ${BUDGET} evaluations, ${T.meta.bo_budget} for Bayesian optimisation; every value a gap f − f*, to ${T.meta.digits} significant digits. The record: research/experiments/2026-11-05-search-on-a-landscape.`;
+  buildMaps(); draw();
+})();
+</script>
