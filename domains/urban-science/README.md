@@ -20,9 +20,9 @@ The general methods it needs are in the foundations, and the domain writes none 
 
 The domain also holds the **landscape**: a district as a cell complex whose events rewrite it, with what it carries and how it is read ([theory/landscape-dynamics.md](theory/landscape-dynamics.md), [ADR 0062](../../development/decisions/0062-landscapes-as-cellular-configurations.md)). Structure, use and meaning are joined in one process: walkers and warmth flowing between events; stores opening and shutting; a rule coming into force, carried out as a lane that rewrites the cells, and a meaning adopted that changes what may happen next. Its general mathematics went to the foundations: regular complexes, their rewriting, traces and Möbius inversion (morphe decision 0008); composition, lumpability, jump and piecewise-deterministic processes, elimination, Doi–Peliti operators, Hodge Laplacians and plane faces (physis decision 0018). A building as a complex of rooms is the architecture domain's.
 
-The cultural reading of streets and the analysis of human flow beyond counts are planned. They join as modules when their work begins. Buildings are a domain of their own, [architecture](../architecture/README.md), on which this domain will stand when a module needs them (ADR 0060 §2.8).
+The cultural reading of streets and the analysis of human flow beyond counts are planned. They join as modules when their work begins. Buildings are a domain of their own, [architecture](../architecture/README.md), on which this domain stands since [ADR 0067](../../development/decisions/0067-event-spacetime.md): a city's buildings and streets are one network of volumes and interfaces, and its events a 2-complex, the workbench's *Event Spacetime* ([the design](../../development/ideas/2026-11-04-event-based-gis-on-a-2-complex.md)).
 
-The Urban Building Workbench draws the domain ([applications/urban-building-workbench](../../applications/urban-building-workbench/README.md)), in its plug-ins *Street Oceanography* and *Landscape Dynamics*.
+The Urban Science Workbench draws the domain ([applications/urban-science-workbench](../../applications/urban-science-workbench/README.md)), in its plug-ins *Street Oceanography*, *Landscape Dynamics* and *Event Spacetime*.
 
 ## 2. Modules
 
@@ -35,6 +35,7 @@ The Urban Building Workbench draws the domain ([applications/urban-building-work
 | `flow` | The crowd as a kinematic wave on a street of its own blocks and crossings, signalled or not, under a rule that opens the carriageway, with a window kept second by second (a representation). Currents past a counting line: transport, net and residual current, flood and ebb, the entropy production of the measured edges, and the sign test of handedness. Person-time as Little's identity. Movement among places: transit times (phase-type) and circulation, which only the non-exact part of the rates drives (Theorem 6.3) | draft |
 | `classification` | The plane of compression and selectivity, and Clark and Evans's test of whether segments form groups (the field's first test, Claim 29.2) | draft |
 | `landscape` | A district as a regular cell complex from its walking network (blocks with a dead end left as holes), its schema and the transfer of state by extensive and intensive fibres; the lane as three rewrites (two refinements, then a split), closed and planned again; free edits — a street cut, a passage opened, two blocks joined — kept as a history whose order is a trace. The landscape running, from any hour and any state set, as a piecewise-deterministic process on the strata of its complex: walkers hopping each way in detailed balance, the blocks' warmth, stores, a rule in force, the rule carried out, a meaning adopted, with its record, causal order and registry of enabled events. The event skeleton composed from five parts: its law and irreversibility, what coarser descriptions forget (exactly, or within a bound and for how long), interventions' interactions, evidence. Resources carried and converted, and the lattice they conserve | draft |
+| `events` | The record of a city's events: couplings (volumes), primitives (interfaces between two of them) and events with their labels in time and what they touch, begin and end, checked against the design's axioms. Its event complex and refinement on morphe's worldline complexes, their cut at a date (the network of the moment) and their homology. A district's volumes and interfaces: its buildings (architecture's massing) with their party walls, its street and junction spaces with their cross-sections, and the frontages between buildings and streets, as one network (ADR 0067; the design, development/ideas/2026-11-04-event-based-gis-on-a-2-complex.md) | draft |
 | `culture` | The symbolic terrain: display, signage, description and its circulation (Street Oceanography §21) | planned |
 | `movement` | Human flow beyond counts: trajectories, origin–destination, the instrument of §20 | planned |
 
@@ -52,7 +53,11 @@ The Urban Building Workbench draws the domain ([applications/urban-building-work
 
 ## 4. Dependencies
 
-The foundations alone (`module.json`): calx, morphe, physis, tyche. The domain stands at height 0. Architecture (buildings), geography (places and maps) and economics (value) will be declared when a module needs them; with several of them beneath it, urban science becomes the bridge of the street and the city.
+The domain declares (`module.json`):
+- **Foundations:** calx, morphe, physis and tyche.
+- **Domains:** architecture, since ADR 0067. It is a bridge, at height 1.
+
+Geography (places and maps) and economics (value) will be declared when a module needs them.
 
 ## 5. Checks
 
@@ -62,7 +67,14 @@ The foundations alone (`module.json`): calx, morphe, physis, tyche. The domain s
 - its theorems: the chain rule and exchange for mixing; detailed balance, Schnakenberg's identity and the invariance of affinities under attraction for circulation; the edges' terms of the entropy production against physis's on a driven ring;
 - Monte Carlo: the catalytic yield against simulated visitors;
 - constructed records with known constants and verdicts: the paper's Figure 1, and a case it misreads; a street's tide predicted exactly, its high water, form and surge; a current meter's flood and ebb;
-- the landscape (62 checks): regularity and homology of every configuration, extensive quantities kept by every rewrite, the two orders of composition agreeing, detailed balance exactly where Kolmogorov's criterion says, lumpability and its discrepancy, Möbius interactions against independent stores, walkers kept by the running process, each way's hops differing by the net flow.
+- the landscape (62 checks): regularity and homology of every configuration, extensive quantities kept by every rewrite, the two orders of composition agreeing, detailed balance exactly where Kolmogorov's criterion says, lumpability and its discrepancy, Möbius interactions against independent stores, walkers kept by the running process, each way's hops differing by the net flow;
+- the events (26 checks), against complexes known by hand:
+  - the hinge of two buildings and their street, the theta-sphere and its prism;
+  - alterations and observations as refinements, and a regime at an interface cutting its lens;
+  - a building's birth with its interfaces, and the cut before and after it;
+  - faulty records refused;
+  - global ticks against the product of the network with time;
+  - a small district's volumes and interfaces, with the areas and normals of its walls.
 
 ## 6. Open Questions
 

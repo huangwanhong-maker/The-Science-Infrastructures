@@ -1,4 +1,4 @@
-// Checks of the Urban Building Workbench: its plug-ins' manifests (every layer's and tool's module present;
+// Checks of the Urban Science Workbench: its plug-ins' manifests (every layer's and tool's module present;
 // planned plug-ins with what they will hold), its areas and recipe, the syntax of every page module; and, when the engine of
 // Street Oceanography is built from the present sources, its answers: the paper's Figure 1 read right by the
 // amendment and wrongly by the paper in the fourth case; the catalytic pathway's coupling length against the
@@ -12,7 +12,7 @@
 // (refinements, then the split) undone and planned again, a day's run (walkers kept, each way's hops), the event
 // skeleton, the scales (harmonic flows as many as holes, memory keeping every walker) and a building's events.
 // The mathematics itself is checked in the foundations and in the urban-science domain.
-// Run from the repository root:  node applications/urban-building-workbench/tests/run-tests.mjs
+// Run from the repository root:  node applications/urban-science-workbench/tests/run-tests.mjs
 
 import { existsSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -22,7 +22,7 @@ import { spawnSync } from 'node:child_process';
 import { suite, ROOT } from '../../../development/tools/checks.mjs';
 
 const { assert, skip, done } = suite();
-const APP = resolve(ROOT, 'applications/urban-building-workbench');
+const APP = resolve(ROOT, 'applications/urban-science-workbench');
 
 // ---- plug-ins ---------------------------------------------------------------------------------------
 const plugins = readdirSync(join(APP, 'plugins')).filter((p) => existsSync(join(APP, 'plugins', p, 'plugin.json')));
@@ -71,7 +71,7 @@ for (const p of plugins) {
   let state = null;
   try { state = JSON.parse(status.stdout).find((s) => s.plugin === 'street-oceanography'); } catch { /* not built */ }
   if (!state || !state.current) {
-    skip('the engine of Street Oceanography is not built from the present sources (python applications/urban-building-workbench/engine.py build)');
+    skip('the engine of Street Oceanography is not built from the present sources (python applications/urban-science-workbench/engine.py build)');
   } else {
     const ask = (request) => {
       const r = spawnSync('python', [join(APP, 'engine.py'), 'ask', 'street-oceanography', JSON.stringify(request)],
@@ -158,13 +158,77 @@ for (const p of plugins) {
   }
 }
 
+// ---- the engine of Event Spacetime, when it is built ------------------------------------------------
+{
+  const status = spawnSync('python', [join(APP, 'engine.py'), 'status'], { cwd: ROOT, encoding: 'utf8' });
+  let state = null;
+  try { state = JSON.parse(status.stdout).find((s) => s.plugin === 'event-spacetime'); } catch { /* not built */ }
+  if (!state || !state.current) {
+    skip('the engine of Event Spacetime is not built from the present sources (python applications/urban-science-workbench/engine.py build event-spacetime)');
+  } else {
+    const ask = (request) => {
+      const r = spawnSync('python', [join(APP, 'engine.py'), 'ask', 'event-spacetime', JSON.stringify(request)],
+        { cwd: ROOT, encoding: 'utf8', maxBuffer: 1 << 28, env: { ...process.env, PYTHONIOENCODING: 'utf-8' } });
+      const answer = JSON.parse(r.stdout);
+      if (!answer.ok) throw new Error(answer.error);
+      return answer.result;
+    };
+    // One street between two junctions, two buildings side by side north of it and one south; a record of 2002–2024
+    // in which the third is built in 2010, the first refurbished in 2015, the street has an event in 2016 and every
+    // building is counted at the censuses of 2004 and 2012.
+    const junctions = [[-40, 0], [40, 0]];
+    const segments = [{ u: 0, v: 1, line: [[-40, 0], [40, 0]], kind: 'street', name: 'Main Street' }];
+    const buildings = [
+      { key: 'a', name: 'A', ring: [[-20, 5], [0, 5], [0, 25], [-20, 25]], base: 0, top: 12 },
+      { key: 'b', name: 'B', ring: [[0, 5], [20, 5], [20, 25], [0, 25]], base: 0, top: 18 },
+      { key: 'c', name: 'C', ring: [[-10, -25], [10, -25], [10, -6], [-10, -6]], base: 0, top: 9 },
+    ];
+    const table = (columns, rows) => ({ columns, rows });
+    const record = {
+      window: { from: '2002-01-01', to: '2025-01-01' }, sources: [{ id: 'a check' }],
+      properties: table(['id', 'building'], [['base:1', 'a'], ['base:2', 'b'], ['base:3', 'c']]),
+      censuses: table(['year', 'property'], [[2004, 'base:1'], [2004, 'base:2'], [2004, 'base:3'], [2012, 'base:1'], [2012, 'base:2'], [2012, 'base:3']]),
+      events: table(['id', 'type', 'kind', 'from', 'to', 'match', 'source', 'provenance', 'detail'], [
+        ['c built', 'birth', 'constructed', '2010-01-01', '2011-01-01', { property: 'base:3' }, 'a check', 'recorded', {}],
+        ['a refurbished', 'alteration', 'refurbished', '2015-01-01', '2016-01-01', { property: 'base:1' }, 'a check', 'recorded', {}],
+        ['a parade', 'regime', 'Public Event - Parade', '2016-03-05', '2016-03-06', { streets: ['Main Street'] }, 'a check', 'recorded', {}],
+        ['a closure', 'regime', 'closed', '2017-07-01', '2017-07-02', { streets: ['Main Street'] }, 'a check', 'recorded', { closure: true }],
+      ]),
+    };
+    const R = ask({ op: 'record', area: 'check', junctions, segments, buildings, record });
+    const byId = Object.fromEntries(R.couplings.map((c, i) => [c.id, i]));
+    assert('event spacetime: three buildings, a street space and two junction spaces; a party wall, three frontages, two cross-sections',
+      R.network.buildings === 3 && R.network.streets === 1 && R.network.junctions === 2 && R.network.partyWalls === 1 && R.network.frontages === 3 && R.network.crossSections === 2,
+      JSON.stringify(R.network));
+    const C = R.couplings[byId['building:c']];
+    assert('event spacetime: C begins at its construction in 2010, A and B stand from the window\'s start', C.life[0] === 55197 && R.couplings[byId['building:a']].life[0] === R.window.from);
+    const frontC = R.primitives.find((p) => p.type === 'frontage' && R.couplings[p.a].id === 'building:c');
+    assert('event spacetime: C\'s frontage begins with C', frontC && frontC.life[0] === C.life[0]);
+    const kinds = Object.keys(R.kinds).sort().join(', ');
+    assert('event spacetime: the events kept — the birth, the refurbishment, the parade and its end, the closure and its reopening, six censuses less the one before C stood',
+      R.kinds['birth/constructed'] === 1 && R.kinds['alteration/refurbished'] === 1 && R.kinds['regime/Public Event - Parade'] === 1 && R.kinds['regime/ended'] === 1
+        && R.kinds['regime/closed'] === 1 && R.kinds['regime/reopened'] === 1 && R.kinds['observation/census'] === 5 && R.dropped["a census before the building's construction"] === 1, kinds);
+    const parade = R.events.find((e) => e.kind === 'Public Event - Parade'), closure = R.events.find((e) => e.kind === 'closed');
+    assert('event spacetime: the parade is a state of the street space (it meets no interface); the closure meets the street\'s two cross-sections, its junctions attending',
+      parade.meets.length === 0 && parade.attend.length === 1 && closure.meets.length === 2 && closure.attend.length === 3);
+    const K = R.topology.K;
+    assert('event spacetime: the event complex valid, connected, its Euler characteristic V − E + F, its Betti numbers by elimination',
+      K.b0 === 1 && K.euler === K.vertices - K.edges + K.faces && K.b1 !== undefined && K.b2 !== undefined && K.b0 - K.b1 + K.b2 === K.euler, JSON.stringify(K));
+    const named = { area: 'check', junctions, segments, buildings, record };
+    const before = ask({ op: 'cut', t: 54000, ...named }), after = ask({ op: 'cut', t: 58000, ...named });
+    assert('event spacetime: the network of the moment in 2006 holds five volumes and five interfaces, in 2017 six and six',
+      before.couplings.length === 5 && before.primitives.length === 5 && after.couplings.length === 6 && after.primitives.length === 6,
+      `${before.couplings.length}/${before.primitives.length} → ${after.couplings.length}/${after.primitives.length}`);
+  }
+}
+
 // ---- the engine of Landscape Dynamics, when it is built ----------------------------------------------
 {
   const status = spawnSync('python', [join(APP, 'engine.py'), 'status'], { cwd: ROOT, encoding: 'utf8' });
   let state = null;
   try { state = JSON.parse(status.stdout).find((s) => s.plugin === 'landscape-dynamics'); } catch { /* not built */ }
   if (!state || !state.current) {
-    skip('the engine of Landscape Dynamics is not built from the present sources (python applications/urban-building-workbench/engine.py build landscape-dynamics)');
+    skip('the engine of Landscape Dynamics is not built from the present sources (python applications/urban-science-workbench/engine.py build landscape-dynamics)');
   } else {
     const ask = (request) => {
       const r = spawnSync('python', [join(APP, 'engine.py'), 'ask', 'landscape-dynamics', JSON.stringify(request)],

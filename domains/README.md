@@ -18,9 +18,9 @@ Let D be the set of domains, and let d → e mean that domain d may depend on do
 - **Works compose domains.** An application or a study uses a set S of domains, and so needs the order ideal ↓S = ⋃_{d∈S} ↓d. Two works may share domains freely: the domains are covered by the works, not partitioned among them.
 
 ```
-height 0   metrology · neuroscience · history · genomics · economics · robotics · urban-science ·
-           architecture · molecular-science
-height 1   geodesy · evolution · cell-biology
+height 0   metrology · neuroscience · history · genomics · economics · robotics · architecture ·
+           molecular-science
+height 1   geodesy · evolution · cell-biology · urban-science
 height 2   astronomy · geophysics · geography · oceanography · meteorology ·
            microbiology · physiology · developmental-biology
 height 3   tides · navigation · air-sea · planetary-science              (bridges)
@@ -40,12 +40,12 @@ height 5   ecology
 | [genomics](genomics/) | field | Genomes and their sequences: alphabets, formats and genetic codes; alignment as a semiring sum and its fast schedules; indexes and sketches; k-mers and assembly; mapping and variants; HMMs and annotation; multiple alignment; expression; simulation with its truth (ADR 0043) | — | draft |
 | [economics](economics/) | field | Value carried between positions and through time: transfer networks, their loop deficits and prices; the circulation of flows on a network with faces; production as a circular flow; the spacetime complex of a record of transactions; places and the faces of a map (ADR 0044); growth, the short run, and the partners and gravity of trade (ADR 0056) | — | draft |
 | [robotics](robotics/) | field | Systems that sense and act: vehicles on a sphere at two fidelities and the translation between them, following waypoints, surveys (a lawnmower, the least known place next), sensors' mounts and noise (ADR 0054) | — | draft |
-| [urban-science](urban-science/) | field | Streets as open systems, after the user's Street Oceanography: holdings and terrain, its dominance order and the departure from mixing; the effective terrain in time from declared hours; rhythm on the calendars' lattice; response to forcing; the affinity and catalysis of uses; kinematic streets, person-time, transit and circulation; the classification of segments (ADR 0060) | — | draft |
-| [architecture](architecture/) | field | Buildings: their form, plans and districts as cell complexes, the frontage at which a building meets its street, the rules that bound them, their environment (ADR 0060) | — | planned |
+| [architecture](architecture/) | field | Buildings: their form, plans and districts as cell complexes, the frontage at which a building meets its street, the rules that bound them, their environment (ADR 0060) | — | draft |
 | [molecular-science](molecular-science/) | field | Atoms and molecules: their graphs, shapes, energies and motions; proteins and nucleic acids in space; reactions between named molecules (ADR 0061) | — | planned |
 | [geodesy](geodesy/) | field | The figure of the Earth, its gravity field and rotation, reference systems; places, distances, directions | metrology | draft |
 | [evolution](evolution/) | field | Phylogeny (distances, trees, likelihood, parsimony, the bootstrap, dating), population genetics (the coalescent, Wright–Fisher, diversity, linkage, structure), selection (dN/dS, McDonald–Kreitman) (ADR 0043) | genomics | draft |
 | [cell-biology](cell-biology/) | field | The cell as a system: gene regulation, signalling and metabolism as networks, membranes and compartments, the cell cycle, the states of cells (ADR 0061) | genomics, molecular-science | planned |
+| [urban-science](urban-science/) | bridge | Streets as open systems, after the user's Street Oceanography: holdings and terrain, its dominance order and the departure from mixing; the effective terrain in time from declared hours; rhythm on the calendars' lattice; response to forcing; the affinity and catalysis of uses; kinematic streets, person-time, transit and circulation; the classification of segments (ADR 0060); a city's buildings and streets as one network of volumes and interfaces, and its events as a 2-complex (ADR 0067) | architecture | draft |
 | [astronomy](astronomy/) | field | Positional astronomy, ephemerides, the rotation of the bodies, galaxies; later astrophysics and cosmology | metrology, geodesy | draft |
 | [geophysics](geophysics/) | field | The solid Earth: plate motion, earthquake mechanisms, the crust, sections; later seismology, gravity and magnetism | geodesy | draft |
 | [geography](geography/) | field | All branches: physical geography, cartography and GIS, remote sensing, human geography | geodesy | draft |

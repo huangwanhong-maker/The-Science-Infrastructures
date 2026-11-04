@@ -1,6 +1,6 @@
-# Urban Building Workbench
+# Urban Science Workbench
 
-*A three-dimensional GIS of cities, with the analysis of streets and buildings on top, built of plug-ins.* Status: **draft** (2026-11-01). Activities: research, learning. [ADR 0060](../../development/decisions/0060-streets-as-open-systems.md), [ADR 0065](../../development/decisions/0065-new-york-in-the-workbench.md).
+*A three-dimensional GIS of cities, with the analysis of streets and buildings on top, built of plug-ins.* Status: **draft** (2026-11-04). Activities: research, learning. [ADR 0060](../../development/decisions/0060-streets-as-open-systems.md), [ADR 0065](../../development/decisions/0065-new-york-in-the-workbench.md), [ADR 0067](../../development/decisions/0067-event-spacetime.md). Named the Urban Building Workbench until the user renamed it (ADR 0067).
 
 ## 1. Purpose
 
@@ -25,11 +25,22 @@ The second plug-in, **Landscape Dynamics** ([ADR 0062](../../development/decisio
 - a building picked on the map filled with rooms, its heat through the day under the Sun;
 - the district's own frequencies, its flows round the holes, and what the streets remember of the shops.
 
+The third plug-in, **Event Spacetime** ([ADR 0067](../../development/decisions/0067-event-spacetime.md); its design, [development/ideas/2026-11-04-event-based-gis-on-a-2-complex.md](../../development/ideas/2026-11-04-event-based-gis-on-a-2-complex.md)), draws a district's record of real events as a 2-complex in spacetime. The district is the Hoddle Grid's middle, and the record runs from 2002 to 2024.
+- **The complex.**
+  - Its volumes rise as worldlines: buildings, street spaces and junction spaces.
+  - The interfaces between them stand as sheets between their worldlines, cut into lenses at the events that meet them: party walls, frontages, and the ends of streets.
+  - The events are vertices at their place and date: buildings built, refurbished or completed, places registered as heritage, street events under permits, and the censuses as ticks.
+- **Its two forms.** Seen as its refinement, each event is split into its volumes. Seen as the event complex, each event is one vertex, its worldlines bending into it.
+- **The moment.** A plane at the clock's date carries the network of what stood then.
+- **The record and its complex.** The analysis gives what the record holds and what it left out, and the cells and homology of both complexes.
+
+The city can be seen through, for this and every plug-in: the rail's slider lowers its opacity.
+
 ## 2. The Map
 
 | Part | What it draws | Source |
 |---|---|---|
-| Buildings | Extruded footprints with their holes, at their mapped height (from `height`, else levels × 3.2 m); paler where no height is mapped and a default stands. They can stand as built, lowered to a fifth of their height, or of glass, so that the streets show between towers | Melbourne: OpenStreetMap; New York: Valdrada's compiled city, the roof heights of NYC's Building Footprints (data library: `city-model.json`, a file an area) |
+| Buildings | Extruded footprints with their holes, at their mapped height (from `height`, else levels × 3.2 m); paler where no height is mapped and a default stands. They can stand as built, lowered to a fifth of their height, or of glass, so that the streets show between towers; and the whole city (buildings, ways, spaces, trees) can be seen through, its opacity lowered by the rail's slider, so that what a plug-in draws above or within it shows | Melbourne: OpenStreetMap; New York: Valdrada's compiled city, the roof heights of NYC's Building Footprints (data library: `city-model.json`, a file an area) |
 | Streets and ways | Ribbons at their mapped or estimated widths; pedestrian ways tinted | OpenStreetMap |
 | Parks, water, squares | Flat areas, with their holes (piers in the river) | OpenStreetMap; New York's water traced on Valdrada's ground |
 | Trees | A crown on its trunk, its breadth by the trunk's diameter (New York's) | Valdrada: NYC's street-tree census and NYC Parks' tree points |
@@ -43,6 +54,7 @@ Drag to pan, right-drag to turn and tilt, and wheel to zoom. Picking a building,
 |---|---|---|
 | [Street Oceanography](plugins/street-oceanography/README.md) | Six layers and eight analyses (§4) | draft |
 | [Landscape Dynamics](plugins/landscape-dynamics/README.md) | Four layers and four analyses: the district as a complex (its buildings among its cells), the landscape running, its spacetime, a building's rooms; the district's complex, freedom and dynamics; its events, exactly; scales and memory | draft |
+| [Event Spacetime](plugins/event-spacetime/README.md) | One layer and one analysis: the district's real events as a 2-complex in spacetime (volumes as worldlines, interfaces as sheets, events as vertices, the network of the moment at the clock's date); the record and its complex. The amplitudes and their modes are being written (the design, §8) | draft |
 | Human flow | Trajectories and origin–destination; what people carry at entry and departure; crowds beyond the kinematic wave | planned |
 | Architecture | Form, space and order; the frontage as an interface; plans and districts as cell complexes | planned |
 | Cultural analysis | Display and description; the record of manners (a survey at fixed positions, after Kon Wajirō) | planned |
@@ -83,7 +95,7 @@ The records:
 ## 5. Running It
 
 ```
-python applications/urban-building-workbench/serve.py --open
+python applications/urban-science-workbench/serve.py --open
 ```
 
 Open http://127.0.0.1:8970/. The data lamp runs the recipe (`recipe.json`):
@@ -96,7 +108,7 @@ The records take several minutes; they go to `data/cache/`, and none is committe
 The engine can be asked directly:
 
 ```
-python applications/urban-building-workbench/engine.py ask street-oceanography '{"op": "profiles"}'
+python applications/urban-science-workbench/engine.py ask street-oceanography '{"op": "profiles"}'
 ```
 
 An operation that lists sensors takes an area, Melbourne's when none is named: `'{"op": "tides", "area": "new-york"}'`.
@@ -110,7 +122,7 @@ An operation that lists sensors takes an area, Melbourne's when none is named: `
 
 ## 7. Checks
 
-`node applications/urban-building-workbench/tests/run-tests.mjs` checks:
+`node applications/urban-science-workbench/tests/run-tests.mjs` checks:
 - the manifests, the areas, the recipe and every page module's syntax;
 - when the engines are built, their answers (Landscape Dynamics on a grid district with a hole: cells, rewrites, a day's run, the skeleton, the scales, a building);
 - when the records are built, a sensor's week, rhythm and clock, a street's hours and mixing, every street's tide and a day of the sea (the counts within 15% of the tide on an ordinary Wednesday, each way summing to the total), the current meters and their handedness, a street's crowd second by second, and a visitor's plume.

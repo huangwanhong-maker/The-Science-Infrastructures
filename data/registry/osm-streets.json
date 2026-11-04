@@ -11,7 +11,7 @@
   "coverage": "Six streets: a residential street of Okusawa 6-chōme, Setagaya (way 48678505); Bourke Street Mall, Swanston Street in the Hoddle Grid, Lygon Street in Carlton, Errol Street in North Melbourne and Macaulay Road in Kensington (Melbourne). The bounding boxes hold the stretches the product keeps (data/products/street_records.py, STREETS).",
   "used_by": [
     "data/products/street_records.py",
-    "applications/urban-building-workbench"
+    "applications/urban-science-workbench"
   ],
   "requests": [
     {

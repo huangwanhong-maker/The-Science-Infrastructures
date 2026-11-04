@@ -15,12 +15,15 @@
 #   landscape       a district as a regular cell complex with its geometry, stores and schema, the lane through a
 #                   block as rewrites; the landscape running as a hybrid process on its strata, with its record,
 #                   causal order and registry of events; its event skeleton composed from five parts and solved
-#                   exactly; resources and what they conserve (ADR 0062).
+#                   exactly; resources and what they conserve (ADR 0062);
+#   events          the record of a city's events; its event complex and refinement on morphe's worldline
+#                   complexes, their cut at a date and their homology; a district's volumes and interfaces, its
+#                   buildings (architecture) and its street and junction spaces joined as one network (ADR 0067).
 #
-# The domain stands on the foundations alone (module.json): calx (signal, linalg, random), morphe (topology),
-# physis (continuum, statistical_mechanics, chemistry, discretisation) and tyche (time_series, regression,
-# spatial). Inside The Science Infrastructures they are the sibling foundations, added here when no larger
-# project has added them.
+# The domain stands on architecture and the foundations (module.json; a bridge since ADR 0067): calx (signal,
+# linalg, random), morphe (topology, formal), physis (continuum, statistical_mechanics, chemistry, discretisation,
+# computational_geometry) and tyche (time_series, regression, spatial). Inside The Science Infrastructures they are
+# the sibling domain and foundations, added here when no larger project has added them.
 
 cmake_minimum_required(VERSION 3.20)
 project(urban_science LANGUAGES CXX)
@@ -58,6 +61,10 @@ endif()
 if(NOT TARGET tyche::time_series)
   add_subdirectory(${SCIENCE_ROOT}/foundations/tyche ${CMAKE_CURRENT_BINARY_DIR}/tyche)
 endif()
+# The domain stands on architecture (module.json; ADR 0067): its buildings are volumes of the city's event spacetime.
+if(NOT TARGET architecture::space)
+  add_subdirectory(${SCIENCE_ROOT}/domains/architecture ${CMAKE_CURRENT_BINARY_DIR}/architecture)
+endif()
 if(URBAN_SCIENCE_CHECKS)
   enable_testing()
 endif()
@@ -81,3 +88,4 @@ urban_module(affinity LIBRARIES tyche::spatial tyche::time_series physis::statis
 urban_module(flow LIBRARIES urban::rhythm tyche::probability physis::continuum physis::statistical_mechanics physis::discretisation morphe::topology calx::linalg)
 urban_module(classification LIBRARIES tyche::spatial)
 urban_module(landscape LIBRARIES morphe::topology morphe::combinatorics morphe::formal physis::statistical_mechanics physis::dynamics physis::discretisation physis::computational_geometry physis::chemistry calx::linalg calx::random)
+urban_module(events LIBRARIES urban::landscape architecture::space morphe::topology physis::computational_geometry)

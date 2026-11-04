@@ -11,7 +11,7 @@
   "coverage": "Australia (AU), 2009 to 2026; the states as ISO 3166-2 subdivisions (Victoria AU-VIC). The rules are the library's, applied to past years as well, so that a holiday introduced later can appear in earlier years: the product checks Victoria's against the State's own dates where they are known; the United States (US), 2009 to 2026, the states as US-<code> (New York US-NY), for New York's streets: the federal holidays (global) and those whose counties name US-NY.",
   "used_by": [
     "data/products/street_records.py",
-    "applications/urban-building-workbench"
+    "applications/urban-science-workbench"
   ],
   "requests": [
     {

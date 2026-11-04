@@ -11,7 +11,7 @@
   "coverage": "Any place, 1940 to about two to five days before the present (ERA5T); the default place is Melbourne's CBD, whose nearest grid point is -37.7856, 144.9398 (19 m), about 3.6 km north-west; Lower Manhattan (profile new-york), for the Brooklyn Bridge's counter, 2017-09 to 2020-01, whose nearest grid point is 40.7381, -74.0425 (3 m), about 4.4 km north-west across the Hudson",
   "used_by": [
     "data/products/street_records.py",
-    "applications/urban-building-workbench"
+    "applications/urban-science-workbench"
   ],
   "requests": [
     {

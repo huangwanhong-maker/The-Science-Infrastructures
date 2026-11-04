@@ -1,0 +1,41 @@
+{
+  "id": "victorian-heritage-register",
+  "kind": "http",
+  "domain": "urban-science",
+  "title": "The Victorian Heritage Register: places registered under the Heritage Act, with the dates of their registration and its last amendment",
+  "provider": "Heritage Council of Victoria, the Victorian Heritage Database API v1 (https://api.heritagecouncil.vic.gov.au/v1), listed on DataVic by the Department of Transport and Planning",
+  "credit": "Victorian Heritage Database: Heritage Council of Victoria, CC BY 4.0",
+  "licence": "CC BY 4.0 (DataVic's record of the API, victorian-heritage-database-api, licence cc-by; checked 2026-11-04)",
+  "citation": "Heritage Council of Victoria, Victorian Heritage Database API v1, https://api.heritagecouncil.vic.gov.au/ ; https://discover.data.vic.gov.au/dataset/victorian-heritage-database-api",
+  "format": "HAL JSON. places.json: the search of places on the Victorian Heritage Register (heritage authority 1086) in a box (geo = lat1,lon1,lat2,lon2), one page of up to 1,000 (page_count, total_items; _embedded.places[] with id, name, latlon \"lat,lon\", vhr_number, location, heritage_authority_id, url, and a summary). The search gives no dates: each place's record, /v1/places/{id}, holds registered_on and registration_last_amended_on (texts such as \"October 9, 1974\"), status, vhr_number, latitude, longitude, addresses, heritage_act_categories, construction years, and descriptions, architects and images, which the product does not keep. fetch.py fetches the search; its follow rules cannot reach a list nested under _embedded, so the records are fetched by data/products/city_events.py from the ids of places.json, into places/<id>.json beside it, with their own provenance (places/retrieval.json), and only those not yet held.",
+  "coverage": "Victoria; the profile takes the Hoddle Grid's box, -37.8205 to -37.8075 S and 144.9535 to 144.9735 E (160 places on the register on 2026-11-04; about 5 MB with their records). Only the last amendment of a registration is given, not every amendment.",
+  "used_by": [
+    "data/products/city_events.py",
+    "applications/urban-science-workbench"
+  ],
+  "requests": [
+    {
+      "url": "https://api.heritagecouncil.vic.gov.au/v1/places?geo={south},{west},{north},{east}&aut=1086&rpp=1000",
+      "file": "places.json"
+    }
+  ],
+  "details": {
+    "url": "https://api.heritagecouncil.vic.gov.au/v1/places/{id}",
+    "file": "places/{id}.json",
+    "fetched_by": "data/products/city_events.py",
+    "description": "Each listed place's record, for its dates of registration and amendment"
+  },
+  "parameters": {
+    "south": {"type": "float", "default": -37.8205, "min": -39.2, "max": -34.0, "description": "southern edge of the box (degrees, WGS 84)"},
+    "west": {"type": "float", "default": 144.9535, "min": 140.9, "max": 150.0, "description": "western edge of the box (degrees, WGS 84)"},
+    "north": {"type": "float", "default": -37.8075, "min": -39.2, "max": -34.0, "description": "northern edge of the box (degrees, WGS 84)"},
+    "east": {"type": "float", "default": 144.9735, "min": 140.9, "max": 150.0, "description": "eastern edge of the box (degrees, WGS 84)"}
+  },
+  "profiles": {
+    "hoddle-grid": {
+      "description": "The places on the register in the Hoddle Grid (fetch again with --refresh for new registrations)",
+      "parameters": {}
+    }
+  },
+  "default_profile": "hoddle-grid"
+}

@@ -1,0 +1,35 @@
+{
+  "id": "melbourne-development-activity",
+  "kind": "http",
+  "domain": "urban-science",
+  "title": "City of Melbourne Development Activity Monitor: major developments recently completed, under construction, approved or applied for, with their floors, dwellings and floor space by use",
+  "provider": "City of Melbourne, Open Data Platform (Opendatasoft Explore API v2.1): dataset development-activity-monitor",
+  "credit": "Development Activity Monitor: City of Melbourne, CC BY 4.0",
+  "licence": "CC BY 4.0 (stated in the dataset's metadata, https://creativecommons.org/licenses/by/4.0/legalcode; checked 2026-11-04)",
+  "citation": "City of Melbourne, Development Activity Monitor, https://data.melbourne.vic.gov.au/explore/dataset/development-activity-monitor/ ; its field descriptions: DAM_-_Info_-_DAM_May_2016_Meta_Data_Info.pdf, attached to the dataset",
+  "format": "CSV separated by semicolons, with a byte-order mark; one row a development (since May 2016 a building: a podium with two towers is two rows). Fields: data_format (Pre May 16, Post May 16, Post Oct 2022 or Post Oct 22: the monitor's format at the time); development_key (an internal key, X followed by digits); status (COMPLETED, UNDER CONSTRUCTION, APPROVED, APPLIED; the attachment also names MOOTED and ABANDONED); year_completed (the year the building was completed, if it is: its construction management plan marked completed, rubbish collection requested for its dwellings, or its units settled); clue_small_area; clue_block (the CLUE block); street_address; property_id and property_id_2 to property_id_5 (CLUE property ids, primary first); floors_above; resi_dwellings, studio_dwe, one_bdrm_dwe, two_bdrm_dwe, three_bdrm_dwe; student_apartments, student_beds, student_accommodation_units; institutional_accom_beds; hotel_rooms, serviced_apartments, hotels_serviced_apartments, hostel_beds; childcare_places; office_flr, retail_flr, industrial_flr, storage_flr, education_flr, hospital_flr, recreation_flr, publicdispaly_flr (sic), community_flr (net lettable floor space, m2); car_spaces, bike_spaces; town_planning_application (an application id); longitude, latitude (WGS 84, the property's point) and geopoint. A development is monitored when it has 10 or more dwellings, student apartments or beds, beds, serviced apartments, hotel or hostel rooms or child-care places, or at least 500 m2 of lettable space of a use (some uses from December 2010 or August 2011).",
+  "coverage": "The municipality, developments completed since 2002 and those in progress (1,451 rows in all on 2026-11-04); the profile takes the Hoddle Grid's box, -37.8205 to -37.8075 S and 144.9535 to 144.9735 E (320 rows on 2026-11-04: 248 completed, 2002-2026), by the API's in_bbox on geopoint.",
+  "used_by": [
+    "data/products/city_events.py",
+    "applications/urban-science-workbench"
+  ],
+  "requests": [
+    {
+      "url": "https://data.melbourne.vic.gov.au/api/explore/v2.1/catalog/datasets/development-activity-monitor/exports/csv?where=in_bbox(geopoint,{south},{west},{north},{east})",
+      "file": "developments.csv"
+    }
+  ],
+  "parameters": {
+    "south": {"type": "float", "default": -37.8205, "min": -38.0, "max": -37.6, "description": "southern edge of the box (degrees, WGS 84)"},
+    "west": {"type": "float", "default": 144.9535, "min": 144.8, "max": 145.1, "description": "western edge of the box (degrees, WGS 84)"},
+    "north": {"type": "float", "default": -37.8075, "min": -38.0, "max": -37.6, "description": "northern edge of the box (degrees, WGS 84)"},
+    "east": {"type": "float", "default": 144.9735, "min": 144.8, "max": 145.1, "description": "eastern edge of the box (degrees, WGS 84)"}
+  },
+  "profiles": {
+    "hoddle-grid": {
+      "description": "The Hoddle Grid's developments, every status (about 70 kB; fetch again with --refresh after the City's update)",
+      "parameters": {}
+    }
+  },
+  "default_profile": "hoddle-grid"
+}

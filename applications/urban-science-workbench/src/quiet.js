@@ -1,6 +1,7 @@
-// The plug-in's small pieces of page: tabs, segmented keys, switches, a row of figures, swatches and folds, so that
-// each analysis shows one thing at a time, its numbers before its prose, and keeps its explanations folded away.
-// They are drawn with the workbench's h() and styled by its stylesheet (§7 of styles.css).
+// The workbench's small pieces of page, for every plug-in's analyses: tabs, segmented keys, switches, a row of
+// figures, swatches, folds, findings in brief, sliders and hints, so that each analysis shows one thing at a time, its
+// numbers before its prose, and keeps its explanations folded away. They are drawn with the workbench's h() and
+// styled by its stylesheet (§7 of styles.css, the ld- classes, after Landscape Dynamics, which first used them).
 
 // Tabs: a row of names, one panel shown. Returns { el, show(name) }; `remember` keeps the choice across openings,
 // and show() without a name shows the one remembered. `lazy` draws no panel until the first show(), for panels that

@@ -11,7 +11,7 @@
   "coverage": "The live record: 30 October 2024 to the end of the last month the City has processed (2026-10-29 when registered), 102 sensors, about 1.6 million rows (about 100 MB). Earlier hours are the archive melbourne-pedestrian-archive, whose rows end on 31 October 2022 although its name says 14 December 2022; the City publishes no hours from 1 November 2022 to 29 October 2024. 134 sensor locations, all marked active: sensors removed earlier are not listed (two sensors of the live record, 28 and 78, are placed by their rows' location).",
   "used_by": [
     "data/products/street_records.py",
-    "applications/urban-building-workbench"
+    "applications/urban-science-workbench"
   ],
   "requests": [
     {

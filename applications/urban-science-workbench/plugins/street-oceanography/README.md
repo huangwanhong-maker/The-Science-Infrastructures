@@ -1,6 +1,6 @@
 # Street Oceanography
 
-*Streets as open systems, on the map.* A plug-in of the [Urban Building Workbench](../../README.md). Status: **draft** (2026-10-31).
+*Streets as open systems, on the map.* A plug-in of the [Urban Science Workbench](../../README.md). Status: **draft** (2026-10-31).
 
 The analyses come from the user's working papers on street oceanography. The urban-science domain states them exactly, with their proofs ([theory/street-oceanography.md](../../../../domains/urban-science/theory/street-oceanography.md)). This plug-in draws them on the workbench's 3D map and beside it, in plain terms.
 

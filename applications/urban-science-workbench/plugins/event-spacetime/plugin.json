@@ -1,0 +1,30 @@
+{
+  "title": "Event Spacetime",
+  "summary": "A district's record of real events as a 2-complex: its volumes (buildings, street and junction spaces) rising as worldlines, the interfaces between them (party walls, frontages, the ends of streets) as sheets cut at the events that meet them, and the events themselves as vertices at their place and date, drawn above a city that can be seen through; a plane at the clock's date carries the network of the moment.",
+  "status": "draft",
+  "activity": "research",
+  "order": 3,
+  "warm": ["status"],
+  "layers": [
+    {
+      "id": "foam",
+      "group": "The record as a 2-complex",
+      "title": "the district's events in spacetime",
+      "module": "layers/foam.js",
+      "areas": ["melbourne"],
+      "default": false,
+      "about": "The district's buildings, streets and junctions as worldlines rising over the years of the record, the interfaces between them as sheets between their worldlines, cut where an event meets them; the events as beads at their place and date (built, refurbished, completed, registered, a street closed and opened), the censuses as ticks; a plane at the clock's date with the network of what stood then. Lower the city's opacity to see it through the towers."
+    }
+  ],
+  "tools": [
+    {
+      "id": "record",
+      "title": "The record and its complex",
+      "module": "tools/record.js",
+      "areas": ["melbourne"],
+      "about": "What the district's record holds and where it comes from; its event complex and refinement, their cells and homology; the network of the moment at the clock's date; how the spacetime is drawn (the scale of time, the refined complex or the events as single vertices, which cells); an event picked on the map, with what it touches."
+    }
+  ],
+  "engine": "engine/main.cpp",
+  "source": "The urban-science domain's events module (ADR 0067) and the design, development/ideas/2026-11-04-event-based-gis-on-a-2-complex.md"
+}

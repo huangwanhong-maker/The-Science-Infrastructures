@@ -12,7 +12,7 @@
   "used_by": [
     "data/products/street_records.py",
     "data/products/valdrada_city.py",
-    "applications/urban-building-workbench"
+    "applications/urban-science-workbench"
   ],
   "files": [
     {

@@ -1,4 +1,4 @@
-/* The Urban Building Workbench: a three-dimensional GIS of cities with analyses on top, built of plug-ins.
+/* The Urban Science Workbench: a three-dimensional GIS of cities with analyses on top, built of plug-ins.
    The map fills the page; layers and analyses sit at its left, an analysis opens in a drawer at its right,
    the clock at its foot. A gentle sea blue for choices, chosen by the user, and sand, the shore beside it, as
    its minor colour; misty paper and deep-sea ink by day, a deep-sea night (data-theme on <html>); serif type;
@@ -233,6 +233,8 @@ canvas.raster { width: 100%; image-rendering: pixelated; border-radius: 6px; dis
 .rail .keys.tight { margin: 2px 0 6px 6px; gap: 4px; }
 .rail .keys.tight .key { padding: 1px 8px; font-size: 0.82rem; }
 .rail .form-label { margin: 6px 0 0 6px; font-size: 0.8rem; }
+.rail .form-label.opacity { display: block; margin-bottom: 6px; }
+.rail .form-label.opacity input { display: block; width: calc(100% - 12px); margin: 3px 0 0; accent-color: var(--accent); }
 
 /* ---- §7 quiet pieces: tabs, segmented keys, switches, figures, swatches, folds ----------------------------------- */
 /* One thing at a time, numbers before prose, explanations folded away (used by Landscape Dynamics, ld-). */

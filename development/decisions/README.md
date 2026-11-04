@@ -72,12 +72,13 @@ Decisions that concern only one library are recorded in that library's own `deve
 | [0057](0057-a-project-of-serendip-commons-society.md) | A project of Serendip Commons Society: stewardship without ownership, and the record of contributors | Accepted |
 | [0058](0058-a-body-with-joints.md) | A body with joints: a rabbit on the Moon, and three methods of one motion | Accepted, provisionally |
 | [0059](0059-robots-in-their-environments.md) | Robots in their environments: what a world presumes of a place, what a body feels there, and the fields at a point | Accepted, provisionally (the rabbit, the fish and the dog written) |
-| [0060](0060-streets-as-open-systems.md) | Streets as open systems: street oceanography made exact, the urban-science domain and the Urban Building Workbench | Accepted, provisionally; amended by 0065 |
+| [0060](0060-streets-as-open-systems.md) | Streets as open systems: street oceanography made exact, the urban-science domain and the Urban Building Workbench | Accepted, provisionally; amended by 0065, 0067 |
 | [0061](0061-the-domains-of-life.md) | The domains of life: from the molecule to the ecosystem, placed in the order | Accepted, provisionally |
 | [0062](0062-landscapes-as-cellular-configurations.md) | Landscapes as cellular configurations: their events, their composition and their spacetime | Accepted, provisionally; amended by 0063 |
 | [0063](0063-the-district-as-a-complex-to-work-on.md) | The district as a complex to work on: its cells, buildings among them, the freedom on top and the dynamics | Accepted, provisionally; amended by 0065 |
 | [0064](0064-abnormal-genomes-their-description-and-expression.md) | Abnormal genomes: their description in the international notations (HGVS, ISCN), their detection, and expression read from sequence | Accepted, provisionally |
 | [0065](0065-new-york-in-the-workbench.md) | New York in the Urban Building Workbench: Lower Manhattan from Valdrada's compiled city, and the Brooklyn Bridge's counts | Accepted, provisionally |
+| [0067](0067-event-spacetime.md) | Event Spacetime: a city's events as a 2-complex, urban science as the bridge over architecture, and the Urban Science Workbench | Accepted, provisionally |
 | [0068](0068-the-economy-atlas-as-a-scholarly-instrument.md) | The Economy Atlas as a scholarly instrument: porcelain and gold, and figures for publication | Accepted, provisionally; amends 0046 and 0056 |
 
 ## 2. Template

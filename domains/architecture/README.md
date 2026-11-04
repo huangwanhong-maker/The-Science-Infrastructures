@@ -6,7 +6,7 @@
 
 A building is a thing in the world with models of its own. Its massing stands in the city's light and casts its shadows. Its plan is a complex of rooms, courts and passages, which a person reaches by paths and sees across. Its frontage is the interface through which a holding meets the street. Its form answers to rules: heights, setbacks, plot ratios. No other domain holds these.
 
-Urban science, the domain of streets and cities as open systems, will stand on this one when a module of its own needs buildings: frontages in the terrain of a street, heights in the shadows of a district. The Urban Building Workbench's plug-in *Architecture* draws it.
+Urban science, the domain of streets and cities as open systems, stands on this one ([ADR 0067](../../development/decisions/0067-event-spacetime.md)): its buildings and their shared walls are among the volumes and interfaces of a city's event spacetime. This domain depends on nothing but the foundations. The Urban Science Workbench's plug-in *Architecture* draws it.
 
 ## 2. Scope
 
@@ -30,7 +30,7 @@ The Sun's altitude and azimuth are given to `environment` by its caller (the wor
 
 ## 4. Used By
 
-The Urban Building Workbench: its plug-in *Landscape Dynamics* fills a building picked on the map with rooms and follows its heat through the day (the analysis "A building's rooms"); its plug-in *Architecture* is planned. Urban science, when it declares architecture.
+The Urban Science Workbench: its plug-in *Landscape Dynamics* fills a building picked on the map with rooms and follows its heat through the day (the analysis "A building's rooms"); its plug-in *Architecture* is planned. Urban science, when it declares architecture.
 
 ## 5. Open Questions
 

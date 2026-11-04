@@ -1,6 +1,6 @@
 # Landscape Dynamics
 
-*A district as cells, and what happens in it.* A plug-in of the [Urban Building Workbench](../../README.md). Status: **draft** (2026-10-31). [ADR 0062](../../../../development/decisions/0062-landscapes-as-cellular-configurations.md).
+*A district as cells, and what happens in it.* A plug-in of the [Urban Science Workbench](../../README.md). Status: **draft** (2026-10-31). [ADR 0062](../../../../development/decisions/0062-landscapes-as-cellular-configurations.md).
 
 A district is taken as a cell complex: in Melbourne the Hoddle Grid's middle (Elizabeth to Russell Street, Flinders to Lonsdale Street), in New York the Financial District's old streets about Wall Street, Stone Street and Hanover Square, irregular colonial blocks among towers (each area names its district in the workbench's `areas.json`, [ADR 0065](../../../../development/decisions/0065-new-york-in-the-workbench.md); opening another area forgets the district, its edits and its runs). Its cells are its junctions, the segments of its streets and lanes, the blocks they enclose, and its buildings, each a 3-cell sharing walls with its neighbours ([ADR 0063](../../../../development/decisions/0063-the-district-as-a-complex-to-work-on.md)). Its structure, its use and how it is read change one another in one process. The urban-science domain states the formalism exactly ([theory/landscape-dynamics.md](../../../../domains/urban-science/theory/landscape-dynamics.md)); this plug-in draws it on the map and beside it, in plain terms.
 

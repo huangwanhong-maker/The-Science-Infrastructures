@@ -1,6 +1,6 @@
 """Build the street records: Melbourne's hourly pedestrian counts with their weather and holidays, the
 uses of the premises about each sensor, and the holdings of chosen streets with their declared opening
-hours, for the Urban Building Workbench's street oceanography.
+hours, for the Urban Science Workbench's street oceanography.
 
 1. **Sensors and counts.** The City of Melbourne's Pedestrian Counting System, its archive (May 2009 to
    October 2022) and its live record (from 30 October 2024) joined by the sensor's id, each sensor a

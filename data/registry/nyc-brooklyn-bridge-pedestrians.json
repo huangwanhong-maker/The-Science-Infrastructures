@@ -11,7 +11,7 @@
   "coverage": "One counter at the Manhattan approach of the Brooklyn Bridge's promenade (40.708164, -73.999509), 2017-10-01 00:00 to 2019-12-31 23:00, 16,057 hours, with August to December 2018 missing; the dataset is historic and no longer updated (its rows last changed 2020-03-05).",
   "used_by": [
     "data/products/street_records.py",
-    "applications/urban-building-workbench"
+    "applications/urban-science-workbench"
   ],
   "requests": [
     {

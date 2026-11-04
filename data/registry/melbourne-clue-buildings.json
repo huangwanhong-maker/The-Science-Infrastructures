@@ -1,0 +1,35 @@
+{
+  "id": "melbourne-clue-buildings",
+  "kind": "http",
+  "domain": "urban-science",
+  "title": "City of Melbourne Census of Land Use and Employment (CLUE): building information (name, age, size, use, accessibility and bicycle facilities), every census year since 2002",
+  "provider": "City of Melbourne, Open Data Platform (Opendatasoft Explore API v2.1): dataset buildings-with-name-age-size-accessibility-and-bicycle-facilities",
+  "credit": "CLUE: City of Melbourne, CC BY 4.0",
+  "licence": "CC BY 4.0 (stated in the dataset's metadata, https://creativecommons.org/licenses/by/4.0/legalcode; checked 2026-11-04)",
+  "citation": "City of Melbourne, Census of Land Use and Employment (CLUE), Building information, https://data.melbourne.vic.gov.au/explore/dataset/buildings-with-name-age-size-accessibility-and-bicycle-facilities/ ; definitions: https://www.melbourne.vic.gov.au/clue",
+  "format": "CSV separated by semicolons, with a byte-order mark; one row a building (a property_id) and a census year. Fields, as the dataset's metadata defines them: census_year (the year in which the census's surveying was completed); block_id (the CLUE city block, bounded mostly by major roads; about 606 blocks in the municipality); property_id (the optional second tier of the property hierarchy, which identifies a building where several stand within one base property); base_property_id (the first tier: a land parcel, not a street or road, which may be the parent of building and occupancy properties; the identifier that persists across censuses); building_name; street_address; clue_small_area; construction_year and refurbished_year (years, empty where unknown); number_of_floors_above_ground; predominant_space_use (the building's predominant use of space, a text class such as Office, Retail - Shop, Residential Apartment); accessibility_type, accessibility_type_description and accessibility_rating (3 high, 2 moderate, 1 low, 0 not rated; collected for the City's own purposes); bicycle_spaces; has_showers (end-of-trip showers); longitude, latitude (WGS 84, the building's point) and location (the same as \"latitude, longitude\").",
+  "coverage": "The municipality of the City of Melbourne, census years 2002 to 2024 (305,557 rows in all, checked 2026-11-04); the profile takes the Hoddle Grid's box, -37.8205 to -37.8075 S and 144.9535 to 144.9735 E (35,138 rows over 1,524 base properties on 2026-11-04), by the API's in_bbox on location.",
+  "used_by": [
+    "data/products/city_events.py",
+    "applications/urban-science-workbench"
+  ],
+  "requests": [
+    {
+      "url": "https://data.melbourne.vic.gov.au/api/explore/v2.1/catalog/datasets/buildings-with-name-age-size-accessibility-and-bicycle-facilities/exports/csv?where=in_bbox(location,{south},{west},{north},{east})",
+      "file": "buildings.csv"
+    }
+  ],
+  "parameters": {
+    "south": {"type": "float", "default": -37.8205, "min": -38.0, "max": -37.6, "description": "southern edge of the box (degrees, WGS 84)"},
+    "west": {"type": "float", "default": 144.9535, "min": 144.8, "max": 145.1, "description": "western edge of the box (degrees, WGS 84)"},
+    "north": {"type": "float", "default": -37.8075, "min": -38.0, "max": -37.6, "description": "northern edge of the box (degrees, WGS 84)"},
+    "east": {"type": "float", "default": 144.9735, "min": 144.8, "max": 145.1, "description": "eastern edge of the box (degrees, WGS 84)"}
+  },
+  "profiles": {
+    "hoddle-grid": {
+      "description": "The Hoddle Grid, every census year (about 10 MB; fetch again with --refresh after the City adds a year)",
+      "parameters": {}
+    }
+  },
+  "default_profile": "hoddle-grid"
+}

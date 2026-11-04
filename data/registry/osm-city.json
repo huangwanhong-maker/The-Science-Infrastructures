@@ -11,7 +11,7 @@
   "coverage": "One box (south, west, north, east): melbourne -37.8260, 144.9260, -37.7910, 144.9790 (the Hoddle Grid, Southbank, Docklands' east, West and North Melbourne, Kensington, Carlton to Princes Street, East Melbourne: about 13,300 building ways and 17,600 highway ways when registered). New York (its buildings, trees and water are Valdrada's; here every way tagged highway and the open spaces): new-york 40.6995, -74.0195, 40.7190, -73.9930 in 2 x 2 tiles: the parks, gardens and playgrounds, green land, railway land, squares and pedestrian areas; not natural=water, waterway or basins, which would bring the whole of the Hudson's and the harbour's polygons.",
   "used_by": [
     "data/products/street_records.py",
-    "applications/urban-building-workbench"
+    "applications/urban-science-workbench"
   ],
   "requests": [
     {

@@ -1,8 +1,10 @@
 {
   "name": "urban-science",
-  "kind": "field",
+  "kind": "bridge",
   "status": "draft",
-  "depends": [],
+  "depends": [
+    "architecture"
+  ],
   "foundations": [
     "calx",
     "morphe",

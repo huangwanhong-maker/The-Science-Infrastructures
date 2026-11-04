@@ -1,4 +1,4 @@
-"""Serve the Urban Building Workbench on this computer.
+"""Serve the Urban Science Workbench on this computer.
 
 The page is served from this directory, with the repository's ``domains/``, ``foundations/`` and
 ``visualization/`` under the same paths and the data cache at ``/data/``. Its plug-ins live in
@@ -15,7 +15,7 @@ bound unless ``--host`` says otherwise; on a public address, building needs ``--
 
 Usage::
 
-    python applications/urban-building-workbench/serve.py [--host 127.0.0.1] [--port 8970] [--open]
+    python applications/urban-science-workbench/serve.py [--host 127.0.0.1] [--port 8970] [--open]
 
 then open http://127.0.0.1:8970/ in a browser.
 """
@@ -215,7 +215,7 @@ class Server(http.server.ThreadingHTTPServer):
 
 
 def main(argv: list[str]) -> int:
-    parser = argparse.ArgumentParser(description="Serve the Urban Building Workbench locally.")
+    parser = argparse.ArgumentParser(description="Serve the Urban Science Workbench locally.")
     parser.add_argument("--host", default="127.0.0.1", help="the address to bind; 0.0.0.0 for every interface")
     parser.add_argument("--port", type=int, default=8970)
     parser.add_argument("--open", action="store_true", help="open the page in the default browser")
@@ -227,11 +227,11 @@ def main(argv: list[str]) -> int:
     stale = [p["name"] for p in engine.plugins() if p["engine"] and not engine.status(p["name"])["current"]]
     if stale:
         print(f"Engines not built from the present sources ({', '.join(stale)}). Build them from the page, or run:\n"
-              "  python data/acquisition/recipe.py applications/urban-building-workbench/recipe.json", file=sys.stderr)
+              "  python data/acquisition/recipe.py applications/urban-science-workbench/recipe.json", file=sys.stderr)
     server = Server((args.host, args.port), Handler)
     threading.Thread(target=warm, daemon=True).start()
     url = f"http://127.0.0.1:{args.port}/"
-    print(f"Urban Building Workbench at {url if not public else url + ' and on ' + args.host}  (Ctrl+C to stop)", flush=True)
+    print(f"Urban Science Workbench at {url if not public else url + ' and on ' + args.host}  (Ctrl+C to stop)", flush=True)
     if args.open:
         webbrowser.open(url)
     try:

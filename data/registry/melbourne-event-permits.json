@@ -1,0 +1,30 @@
+{
+  "id": "melbourne-event-permits",
+  "kind": "http",
+  "domain": "urban-science",
+  "title": "City of Melbourne event permits 2014-2018: weddings, promotions, filming and public events, by date, category and place",
+  "provider": "City of Melbourne, Open Data Platform (Opendatasoft Explore API v2.1): dataset event-permits-2014-2018-including-film-shoots-photo-shoots-weddings-christmas-pa",
+  "credit": "Event permits: City of Melbourne, CC BY 4.0",
+  "licence": "CC BY 4.0 (stated in the dataset's metadata; checked 2026-11-04)",
+  "citation": "City of Melbourne, Event permits 2014-2018 including film shoots, photo shoots, weddings, Christmas parties, promotions, fun runs and public events, https://data.melbourne.vic.gov.au/explore/dataset/event-permits-2014-2018-including-film-shoots-photo-shoots-weddings-christmas-pa/",
+  "format": "CSV separated by semicolons, with a byte-order mark; one row a permit issued by the City's event booking system. Fields taken: event_start and event_end (civil dates, YYYY-MM-DD; a few ends are empty or before the start), category_1 (Wedding, Promotion, Filming - <kind>, Public Event - <kind>, Private Event; written by hand, with variants and misspellings), category_2 (rarely: Christmas Party, ...) and location (free text: the places booked, comma-separated, as the booking system names them: parks, squares, streets, 'Bourke St Mall - next to Tourism booth', 'Roads / Public Access Spaces'). The dataset's title, the activity's name, is not selected: private events and student films are named after people.",
+  "coverage": "The municipality, 31 December 2013 to 19 February 2018, 2,827 permits (276 name Bourke Street); the dataset was published in 2020 and is not updated.",
+  "used_by": [
+    "data/products/city_events.py",
+    "applications/urban-science-workbench"
+  ],
+  "requests": [
+    {
+      "url": "https://data.melbourne.vic.gov.au/api/explore/v2.1/catalog/datasets/event-permits-2014-2018-including-film-shoots-photo-shoots-weddings-christmas-pa/exports/csv?select=event_start,event_end,category_1,category_2,location",
+      "file": "permits.csv"
+    }
+  ],
+  "parameters": {},
+  "profiles": {
+    "all": {
+      "description": "Every permit, 2014-2018 (about 210 kB)",
+      "parameters": {}
+    }
+  },
+  "default_profile": "all"
+}

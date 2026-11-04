@@ -23,7 +23,7 @@ The code:
   - `affinity/`: co-location, catalysis and spacing;
   - `flow/`: kinematic waves, budgets, transit and circulation;
   - `classification/`: the plane of segments.
-- **The Urban Building Workbench** draws it, in its plug-in *Street Oceanography*.
+- **The Urban Science Workbench** draws it, in its plug-in *Street Oceanography*.
 
 §10 lists the amendments this note proposes to the paper.
 

@@ -1,4 +1,4 @@
-"""The engines of the Urban Building Workbench's plug-ins, built and kept running.
+"""The engines of the Urban Science Workbench's plug-ins, built and kept running.
 
 Each plug-in with C++ has ``plugins/<name>/engine/main.cpp``, header-only C++20 on the foundations
 (morphe, calx, physis, tyche), the urban-science domain and the API's JSON
@@ -16,9 +16,9 @@ library's products are (``--data``): the engine reads only the files under that 
 
 Usage::
 
-    python applications/urban-building-workbench/engine.py build [<plugin>] [--force]
-    python applications/urban-building-workbench/engine.py status
-    python applications/urban-building-workbench/engine.py ask <plugin> '<request json>'
+    python applications/urban-science-workbench/engine.py build [<plugin>] [--force]
+    python applications/urban-science-workbench/engine.py status
+    python applications/urban-science-workbench/engine.py ask <plugin> '<request json>'
 """
 
 from __future__ import annotations
@@ -156,7 +156,7 @@ def wsl_lock(kind: str, log=print, wait: float = 1800):
                 raise RuntimeError("WSL stayed busy; try again later")
             time.sleep(5)
     try:
-        (lock / "owner").write_text(f"urban-building-workbench build {time.strftime('%Y-%m-%dT%H:%M:%S%z')}", encoding="utf-8")
+        (lock / "owner").write_text(f"urban-science-workbench build {time.strftime('%Y-%m-%dT%H:%M:%S%z')}", encoding="utf-8")
         yield
     finally:
         shutil.rmtree(lock, ignore_errors=True)

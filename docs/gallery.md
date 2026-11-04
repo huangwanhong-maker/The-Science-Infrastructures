@@ -2,13 +2,13 @@
 
 *Status: draft, 2026-10-31.*
 
-These are screenshots of the infrastructure's applications, the three atlases taken on 22 October 2026 from their local servers with the data of that day, the Spiking Simulator and the Complex Atlas on 23 October, the History Complex and the Genome Workbench on 24 October, the Economy Atlas on 24 October and again on 4 November, Cosmopoiesis on 30 October, and the Urban Building Workbench on 31 October.
+These are screenshots of the infrastructure's applications, the three atlases taken on 22 October 2026 from their local servers with the data of that day, the Spiking Simulator and the Complex Atlas on 23 October, the History Complex and the Genome Workbench on 24 October, the Economy Atlas on 24 October and again on 4 November, Cosmopoiesis on 30 October, and the Urban Science Workbench on 31 October.
 
 - All are web applications without a build step.
 - Their science is the provisional JavaScript of the domains they draw on, tested against published references and closed-form answers in 422 checks, and the C++ of the foundations and of the metrology, geodesy, astronomy, geophysics, meteorology, navigation, neuroscience, history, genomics, evolution, economics, robotics, planetary-science and urban-science domains, checked the same way.
 - Each caption says what is shown, where the data come from, and how the picture is made.
 
-Click an image to see it at full size. To run the applications yourself, see the READMEs of the [Earth Atlas](../applications/earth-atlas/README.md), the [Celestial Atlas](../applications/celestial-atlas/README.md), the [Brain Atlas](../applications/brain-atlas/README.md), the [Spiking Simulator](../applications/spiking-simulator/README.md), the [Complex Atlas](../applications/complex-atlas/README.md), the [History Complex](../applications/history-complex/README.md) and the [Genome Workbench](../applications/genome-workbench/README.md), the [Economy Atlas](../applications/economy-atlas/README.md), [Cosmopoiesis](../applications/cosmopoiesis-lab/README.md) and the [Urban Building Workbench](../applications/urban-building-workbench/README.md).
+Click an image to see it at full size. To run the applications yourself, see the READMEs of the [Earth Atlas](../applications/earth-atlas/README.md), the [Celestial Atlas](../applications/celestial-atlas/README.md), the [Brain Atlas](../applications/brain-atlas/README.md), the [Spiking Simulator](../applications/spiking-simulator/README.md), the [Complex Atlas](../applications/complex-atlas/README.md), the [History Complex](../applications/history-complex/README.md) and the [Genome Workbench](../applications/genome-workbench/README.md), the [Economy Atlas](../applications/economy-atlas/README.md), [Cosmopoiesis](../applications/cosmopoiesis-lab/README.md) and the [Urban Science Workbench](../applications/urban-science-workbench/README.md).
 
 ## 1. The Earth Atlas
 
@@ -565,7 +565,7 @@ Three robots of the robotics domain, each a body with joints moved by three meth
 </tr>
 </table>
 
-## 10. The Urban Building Workbench
+## 10. The Urban Science Workbench
 
 A three-dimensional GIS of Melbourne's centre, its streets read as a sea, after the user's *Street Oceanography* ([ADR 0060](../development/decisions/0060-streets-as-open-systems.md)). OpenStreetMap's 15,038 buildings stand lowered to a fifth of their height, so that the streets show between them, lit by the Sun of the clock's instant in Melbourne's time. The pedestrian counts are the City of Melbourne's, each way at 92 of its sensors since October 2024. The urban-science domain's C++ computes every number, in the workbench's engine.
 
@@ -664,7 +664,7 @@ http://127.0.0.1:8790/#p=globe&c=-32,36,3.25&s=wind.10m@gfs-forecast:speed&f=win
 - `s`, `f`, `l` and `m`: the surface, the flow, the lines, and the model compared.
 - `t`: the instant, in UTC.
 
-The Urban Building Workbench's pictures, at 1500 × 950 pixels, were taken from its local server in the same way, the clock's date and hour, the layers and the view set by a script in the page.
+The Urban Science Workbench's pictures, at 1500 × 950 pixels, were taken from its local server in the same way, the clock's date and hour, the layers and the view set by a script in the page.
 
 The Spiking Simulator's pictures, at 1500 × 950 pixels, were taken in the same way, each from a link that opens an example, runs it and opens a view, for example `http://127.0.0.1:8830/#preset=brunel-si-fast&run=1&from=300&to=360`: `preset` names the example, `run=1` runs it, `tab` opens a view, `from` and `to` (in ms) the span of the activity shown, and `threads` the threads used. The runs are deterministic, so each picture comes back the same.
 

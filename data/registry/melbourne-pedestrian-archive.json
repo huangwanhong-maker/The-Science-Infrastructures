@@ -11,7 +11,7 @@
   "coverage": "1 May 2009 to 31 October 2022 (although the file's name says 14 December 2022), sensors 1-87, up to about 70 at a time; 42.7 MB zipped. Sensors removed before 2024 (such as 7 Birrarung Marr, 13 Flagstaff Station, 15 State Library) are here and in no locations dataset.",
   "used_by": [
     "data/products/street_records.py",
-    "applications/urban-building-workbench"
+    "applications/urban-science-workbench"
   ],
   "files": [
     {

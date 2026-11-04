@@ -1,4 +1,4 @@
-// The Urban Building Workbench's shell: a three-dimensional GIS of a city (the visualization layer's gis: the
+// The Urban Science Workbench's shell: a three-dimensional GIS of a city (the visualization layer's gis: the
 // local frame on WGS 84, extruded buildings, streets and spaces from the data library's city model, the Sun of
 // the chosen instant), a clock in the city's own time zone, and on top of it the plug-ins: each declares
 // layers (modules that draw on the map and answer for what is picked there) and tools (analyses that open in
@@ -18,7 +18,11 @@ import { addCity, legendOfCity, palette } from './city.js';
 
 const { h } = dom;
 const state = { plugins: [], setup: null, areas: [], area: null, model: null, gis: null, frame: null, clock: null, layers: new Map(), tool: null, selection: null,
-  selectListeners: [], disposers: [], buildingForm: (() => { try { return localStorage.getItem('urban-buildings') || 'low'; } catch { return 'low'; } })() };
+  selectListeners: [], disposers: [], buildingForm: (() => { try { return localStorage.getItem('urban-buildings') || 'low'; } catch { return 'low'; } })(),
+  // How much of the city is seen (1 solid, toward 0 a ghost), over its buildings, ways, spaces and trees, so that a
+  // model drawn above it (a foam in spacetime) can be seen through it; the buildings' form multiplies with it.
+  cityOpacity: (() => { try { const v = parseFloat(localStorage.getItem('urban-city-opacity')); return Number.isFinite(v) ? Math.min(1, Math.max(0.04, v)) : 1; } catch { return 1; } })() };
+const CITY_LAYERS = ['buildings', 'streets', 'spaces', 'trees'];
 
 function theme(set) {
   let t = set;
@@ -109,6 +113,7 @@ function context(plugin, extra = {}) {
     model: state.model, selection: state.selection, select,
     onSelect: (f) => { state.selectListeners.push(f); state.disposers.push(() => { state.selectListeners = state.selectListeners.filter((x) => x !== f); }); },
     openTool: (id, sel) => { if (sel) select(sel); openTool(plugin, plugin.tools.find((t) => t.id === id)); },
+    cityOpacity: () => state.cityOpacity, setCityOpacity: (v) => setCityOpacity(v),
     theme: document.documentElement.dataset.theme,
     base: `/plugins/${plugin.name}/`,
     onDispose: (f) => state.disposers.push(f),
@@ -160,6 +165,10 @@ function rail() {
   const formKeys = h('div', { class: 'keys tight' }, forms.map(([k, name]) => h('button', { class: `key${k === state.buildingForm ? ' on' : ''}`, onclick: () => setBuildingForm(k) }, name)));
   formKeys.dataset.role = 'building-form';
   r.append(h('div', { class: 'faint form-label' }, 'buildings'), formKeys);
+  const seen = h('input', { type: 'range', min: '0.04', max: '1', step: '0.02', value: String(state.cityOpacity), 'aria-label': 'the city seen through',
+    oninput: () => setCityOpacity(parseFloat(seen.value)) });
+  seen.dataset.role = 'city-opacity';
+  r.append(h('label', { class: 'faint form-label opacity', title: 'How solid the city is drawn: lower it to see what a plug-in draws above or within it' }, 'the city seen through', seen));
   for (const p of state.plugins.filter((x) => x.status !== 'planned')) {
     // A layer or a tool that names its areas is offered in them alone.
     const layers = (p.layers || []).filter((l) => inArea(l));
@@ -198,11 +207,34 @@ function setBuildingForm(form) {
   const l = state.gis && state.gis.layers.get('buildings');
   if (!l) return;
   l.object.scale.y = form === 'low' ? 0.2 : 1;
-  l.object.material.transparent = form === 'glass';
-  l.object.material.opacity = form === 'glass' ? 0.28 : 1;
-  l.object.material.depthWrite = form !== 'glass';
+  l.object.material.userData.formOpacity = form === 'glass' ? 0.28 : 1;
   l.object.castShadow = form !== 'glass';
-  l.object.material.needsUpdate = true;
+  applyOpacity();
+}
+
+function setCityOpacity(v) {
+  state.cityOpacity = Math.min(1, Math.max(0.04, Number.isFinite(v) ? v : 1));
+  try { localStorage.setItem('urban-city-opacity', String(state.cityOpacity)); } catch { /* private window */ }
+  for (const el of document.querySelectorAll('[data-role="city-opacity"]')) if (parseFloat(el.value) !== state.cityOpacity) el.value = String(state.cityOpacity);
+  applyOpacity();
+}
+
+// Each of the city's layers at its own opacity (the buildings' form, or the style it was drawn with) times the
+// city's; a layer drawn transparent stops writing depth, so that what lies within or above it shows.
+function applyOpacity() {
+  if (!state.gis) return;
+  for (const id of CITY_LAYERS) {
+    const l = state.gis.layers.get(id);
+    if (!l || !l.object || !l.object.material) continue;
+    const m = l.object.material;
+    if (m.userData.styleOpacity === undefined) m.userData.styleOpacity = m.opacity;
+    const own = id === 'buildings' && m.userData.formOpacity !== undefined ? m.userData.formOpacity : m.userData.styleOpacity;
+    const a = own * state.cityOpacity;
+    m.transparent = a < 1;
+    m.opacity = a;
+    m.depthWrite = a >= 0.999;
+    m.needsUpdate = true;
+  }
 }
 
 async function toggleLayer(plugin, layer, on) {
@@ -317,6 +349,7 @@ async function openArea(area) {
   if (model) {
     ext = addCity(state.gis, model, t);
     setBuildingForm(state.buildingForm);
+    applyOpacity();
     document.getElementById('legend').append(legendOfCity(dom, model, t));
   } else {
     mapEl.append(h('div', { class: 'empty-map' }, 'The city model is not built yet: the data lamp, above, runs the recipe that fetches it.'));

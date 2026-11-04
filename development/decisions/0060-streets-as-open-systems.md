@@ -1,6 +1,6 @@
 # 0060. Streets as Open Systems: Street Oceanography Made Exact, the Urban-Science Domain and the Urban Building Workbench
 
-- **Status:** Accepted, provisionally. The domain's name and the workbench's colour are provisional; the workbench's other plug-ins are planned. Amended by [ADR 0065](0065-new-york-in-the-workbench.md) (New York, a second area).
+- **Status:** Accepted, provisionally. The domain's name and the workbench's colour are provisional; the workbench's other plug-ins are planned. Amended by [ADR 0065](0065-new-york-in-the-workbench.md) (New York, a second area) and by [ADR 0067](0067-event-spacetime.md) (the workbench renamed the Urban Science Workbench; urban science the bridge over architecture).
 - **Date:** 2026-10-31
 - **Decided by:**
   - **The request.** The user asked Claude to "build the urban building workbench. And street oceanography lab as one part of it", from their papers on street oceanography. The workbench was to "utilize dynamical system formalism, especially fluid dynamics, chemical dynamics, etc to analyze street". It was also to equip general street design ("human flow analysis, architecture design, cultural analysis"), beginning "from what we have": "As street oceanography already a formalism, we begin from it."
