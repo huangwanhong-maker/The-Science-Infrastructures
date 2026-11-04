@@ -1,0 +1,73 @@
+kriging: 55 counters; l = 300 m, nugget 0.50, s2 = 1.185; leave-one-out RMSE 0.942 in ln(1 + count), R2 0.729, median weekly ratio 0.994
+elasticity within 25 m: 0.129 (se 0.144, t 0.89; 9240 rows, 55 counters)
+elasticity within 50 m: 0.145 (se 0.092, t 1.58; 9240 rows, 55 counters)
+elasticity within 100 m: 0.077 (se 0.073, t 1.05; 9240 rows, 55 counters)
+as built: V = 9385 A$/week, spending 599661, footfall 4729289 people-passings/week, spread 0.417 (70.0 h), mix 0.883, access 151.0 m, evening 0.147, weekend 0.280
+200 random plans: 2.78 ms each on 4 threads; value median -181129, best -133160 A$/week
+the same plans again, their distances cached: 0.18 ms each
+  GA         budget   400 seed 1: best -84123 A$/week, 400 evaluations, 1 s
+  GA from as built budget   400 seed 1: best 40927 A$/week, 400 evaluations, 1 s
+  CMA-ES     budget   400 seed 1: best -95319 A$/week, 400 evaluations, 5 s
+  MAP-Elites budget   400 seed 1: best -100963 A$/week, 400 evaluations, 1 s
+  NSGA-II    budget   400 seed 1: best -97114 A$/week, 400 evaluations, 1 s
+  random     budget   400 seed 1: best -121082 A$/week, 400 evaluations, 1 s
+  BO (REMBO) budget   400 seed 1: best -44743 A$/week, 400 evaluations, 92 s
+  GA         budget   400 seed 2: best -80542 A$/week, 400 evaluations, 1 s
+  GA from as built budget   400 seed 2: best 32311 A$/week, 400 evaluations, 0 s
+  CMA-ES     budget   400 seed 2: best -92179 A$/week, 400 evaluations, 5 s
+  MAP-Elites budget   400 seed 2: best -102904 A$/week, 400 evaluations, 1 s
+  NSGA-II    budget   400 seed 2: best -107503 A$/week, 400 evaluations, 1 s
+  random     budget   400 seed 2: best -133817 A$/week, 400 evaluations, 0 s
+  BO (REMBO) budget   400 seed 2: best -58868 A$/week, 400 evaluations, 77 s
+  GA         budget   400 seed 3: best -87390 A$/week, 400 evaluations, 0 s
+  GA from as built budget   400 seed 3: best 36462 A$/week, 400 evaluations, 0 s
+  CMA-ES     budget   400 seed 3: best -90205 A$/week, 400 evaluations, 5 s
+  MAP-Elites budget   400 seed 3: best -75955 A$/week, 400 evaluations, 0 s
+  NSGA-II    budget   400 seed 3: best -91026 A$/week, 400 evaluations, 0 s
+  random     budget   400 seed 3: best -121531 A$/week, 400 evaluations, 0 s
+  BO (REMBO) budget   400 seed 3: best -39712 A$/week, 400 evaluations, 118 s
+  GA         budget   400 seed 4: best -79234 A$/week, 400 evaluations, 0 s
+  GA from as built budget   400 seed 4: best 45305 A$/week, 400 evaluations, 0 s
+  CMA-ES     budget   400 seed 4: best -95974 A$/week, 400 evaluations, 6 s
+  MAP-Elites budget   400 seed 4: best -88864 A$/week, 400 evaluations, 0 s
+  NSGA-II    budget   400 seed 4: best -76091 A$/week, 400 evaluations, 0 s
+  random     budget   400 seed 4: best -134218 A$/week, 400 evaluations, 0 s
+  BO (REMBO) budget   400 seed 4: best -40239 A$/week, 400 evaluations, 123 s
+  GA         budget   400 seed 5: best -79306 A$/week, 400 evaluations, 0 s
+  GA from as built budget   400 seed 5: best 40525 A$/week, 400 evaluations, 0 s
+  CMA-ES     budget   400 seed 5: best -94277 A$/week, 400 evaluations, 5 s
+  MAP-Elites budget   400 seed 5: best -101673 A$/week, 400 evaluations, 0 s
+  NSGA-II    budget   400 seed 5: best -123517 A$/week, 400 evaluations, 0 s
+  random     budget   400 seed 5: best -118277 A$/week, 400 evaluations, 0 s
+  BO (REMBO) budget   400 seed 5: best -59045 A$/week, 400 evaluations, 95 s
+  GA         budget 20000 seed 1: best 127164 A$/week, 20000 evaluations, 4 s
+  GA from as built budget 20000 seed 1: best 181032 A$/week, 20000 evaluations, 5 s
+  CMA-ES     budget 20000 seed 1: best 151873 A$/week, 20000 evaluations, 231 s
+  MAP-Elites budget 20000 seed 1: best 59672 A$/week, 20000 evaluations, 4 s
+  NSGA-II    budget 20000 seed 1: best 77788 A$/week, 20000 evaluations, 4 s
+  random     budget 20000 seed 1: best -109083 A$/week, 20000 evaluations, 5 s
+  GA         budget 20000 seed 2: best 159959 A$/week, 20000 evaluations, 4 s
+  GA from as built budget 20000 seed 2: best 180039 A$/week, 20000 evaluations, 4 s
+  CMA-ES     budget 20000 seed 2: best 172473 A$/week, 20000 evaluations, 252 s
+  MAP-Elites budget 20000 seed 2: best 62915 A$/week, 20000 evaluations, 4 s
+  NSGA-II    budget 20000 seed 2: best 36758 A$/week, 20000 evaluations, 4 s
+  random     budget 20000 seed 2: best -107839 A$/week, 20000 evaluations, 5 s
+  GA         budget 20000 seed 3: best 143120 A$/week, 20000 evaluations, 4 s
+  GA from as built budget 20000 seed 3: best 188943 A$/week, 20000 evaluations, 4 s
+  CMA-ES     budget 20000 seed 3: best 159040 A$/week, 20000 evaluations, 258 s
+  MAP-Elites budget 20000 seed 3: best 76221 A$/week, 20000 evaluations, 4 s
+  NSGA-II    budget 20000 seed 3: best 43607 A$/week, 20000 evaluations, 6 s
+  random     budget 20000 seed 3: best -99313 A$/week, 20000 evaluations, 7 s
+  GA         budget 20000 seed 4: best 120464 A$/week, 20000 evaluations, 6 s
+  GA from as built budget 20000 seed 4: best 192275 A$/week, 20000 evaluations, 5 s
+  CMA-ES     budget 20000 seed 4: best 166854 A$/week, 20000 evaluations, 256 s
+  MAP-Elites budget 20000 seed 4: best 63563 A$/week, 20000 evaluations, 9 s
+  NSGA-II    budget 20000 seed 4: best 53033 A$/week, 20000 evaluations, 10 s
+  random     budget 20000 seed 4: best -110098 A$/week, 20000 evaluations, 9 s
+  GA         budget 20000 seed 5: best 156618 A$/week, 20000 evaluations, 9 s
+  GA from as built budget 20000 seed 5: best 187726 A$/week, 20000 evaluations, 7 s
+  CMA-ES     budget 20000 seed 5: best 160115 A$/week, 20000 evaluations, 253 s
+  MAP-Elites budget 20000 seed 5: best 67318 A$/week, 20000 evaluations, 4 s
+  NSGA-II    budget 20000 seed 5: best 62026 A$/week, 20000 evaluations, 4 s
+  random     budget 20000 seed 5: best -109774 A$/week, 20000 evaluations, 5 s
+done in 1944 s

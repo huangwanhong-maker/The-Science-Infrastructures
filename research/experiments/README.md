@@ -42,5 +42,9 @@ Each experiment is a directory `YYYY-MM-DD-slug/` holding:
 | 2026-11-05 | [The Genetic Algorithm as a Population](2026-11-05-the-genetic-algorithm-as-a-population/README.md) | A GA with fitness-proportional selection as a Wright–Fisher population: fixation, drift and balance |
 | 2026-11-05 | [Tuning an Image Pipeline](2026-11-05-tuning-an-image-pipeline/README.md) | Tuning eikon's vessel reconstruction on synthetic phantoms, and how tuned chains overfit |
 | 2026-11-05 | [Designing a District](2026-11-05-designing-a-district/README.md) | A district of Melbourne's Hoddle Grid redesigned under objectives from several domains |
+| 2026-11-05 | [A District's Economy: the Problem](2026-11-05-a-district-economy-the-problem/README.md) | One planning problem for three models of people: the ground floors, their hours and the links of a district, valued by the spending they capture |
+| 2026-11-05 | [A District's Economy without a Model](2026-11-05-a-district-economy-without-a-model/README.md) | What searches find when the people are interpolated from the counters and the evaluation is a black box, and where they are blind |
+| 2026-11-05 | [A District's Economy as a Flow](2026-11-05-a-district-economy-as-a-flow/README.md) | People as conserved streams on the network, with their circulation and tides, and what a search that uses the model's linearity buys |
+| 2026-11-05 | [A District's Economy as a Field Theory](2026-11-05-a-district-economy-as-a-field-theory/README.md) | People as a field with an action S on the district's space–time complex, solved in its modes, and what the action's locality buys a search |
 
 The first experiments are case studies of the search foundation heuresis ([ADR 0073](../../development/decisions/0073-the-search-foundation-heuresis.md)): what its algorithms do, how they compare, and what they find on real problems of the domains.

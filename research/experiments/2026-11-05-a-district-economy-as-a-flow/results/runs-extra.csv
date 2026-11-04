@@ -1,0 +1,11 @@
+algorithm,budget,seed,evaluations,seconds,best_value,links_made,link_sets_visited
+"GA from as built",400,1,400,0.08,153591,3,0
+"GA from as built",400,2,400,0.08,132557,2,0
+"GA from as built",400,3,400,0.08,145792,1,0
+"GA from as built",400,4,400,0.08,154925,4,0
+"GA from as built",400,5,400,0.08,162224,6,0
+"GA from as built",20000,1,20000,3.15,345256,2,0
+"GA from as built",20000,2,20000,2.53,358196,4,0
+"GA from as built",20000,3,20000,2.9,340144,3,0
+"GA from as built",20000,4,20000,2.51,360499,3,0
+"GA from as built",20000,5,20000,2.52,348741,3,0

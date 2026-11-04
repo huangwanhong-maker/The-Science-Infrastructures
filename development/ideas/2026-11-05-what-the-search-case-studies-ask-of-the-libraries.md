@@ -21,6 +21,10 @@ related: [heuresis (its decision 0005), calx, morphe, physis, tyche, eikon, the 
 | morphe | weighted shortest paths (Dijkstra), beside the breadth-first distances of `combinatorics` | the district's walking distances, written provisionally in the study (`walking.hpp`) |
 | morphe | the algebraic simplification of terms | programs found by symbolic regression ((a+a)π√(a/GM) for 2π√(a³/GM)) |
 | physis | registers of qubits, gates and measurement | a simulated device behind heuresis's Grover sampler, to be held to its exact emulation |
+| tyche | Gaussian conditioning of many outputs at once (a field observed over many hours), with a regression trend, on complex (Fourier) data | the district economy without a model, and as a field theory |
+| physis | a scalar field theory with weighted Hodge stars; a solver for least-action paths over a closed (periodic) time | the district economy as a field theory |
+| morphe | subdividing a complex's cells, carrying its chain complex along | the district economy as a field theory (segments of 224 m against a 65 m screening length) |
+| a foundation for flows of people | the logit over walks on a network (Bell; Akamatsu; Fosgerau), with absorbing destinations and low-rank updates for links | the district economy as a flow; urban science's `movement` is planned |
 | eikon | a cap on the threads of `grid::parallel_for` | a pipeline evaluated on heuresis's thread pool oversubscribes the machine |
 
 ## 2. The Domains
@@ -30,6 +34,8 @@ related: [heuresis (its decision 0005), calx, morphe, physis, tyche, eikon, the 
 - **urban-science `flow`:** `mixing_of` counts each holding once; mixing weighted by floor area needed physis directly.
 - **architecture `form` and `rules`** are planned; floor areas, height bounds and plot ratios were the study's own.
 - **neuroscience `snn`:** the response of one neuron to a constant current exists only in the tests, and `analysis` has no f–I curve.
+- **urban-science:** no interpolation of counts away from the counters; `city_network` takes a building's back on a service lane as a frontage; `attach_store` can move a frontage onto a new link; the district's network has six components (five isolated pieces of lane), and its segments (up to 224 m) are too coarse for a field.
+- **The district economy's shared problem:** maximising its value alone collapses the mix of uses into a retail monoculture, through retail-beside-retail catalysis (ln CLQ, clamped at 2) read as attraction. A saturating catalysis or a mix constraint would make the value alone a fairer target. This is the problem's assumption, not a finding about Melbourne.
 - **robotics:** the simulations' controller gains are now set through their configurations (done, 2026-11-05).
 
 ## 3. A Bug in the Urban Science Workbench

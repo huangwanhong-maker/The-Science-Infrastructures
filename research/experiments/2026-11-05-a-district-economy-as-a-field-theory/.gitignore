@@ -1,0 +1,4 @@
+# Extracts of OpenStreetMap (ODbL 1.0): the network's positions and polylines, the frontages' and counters' feet, for
+# drawing. field_theory writes them again from the shared problem's inputs; not committed, as the infrastructure commits
+# no dataset (CLAUDE.md §7, Licences).
+results/field-geometry.json

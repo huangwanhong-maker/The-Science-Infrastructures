@@ -1,0 +1,119 @@
+network: 369 junctions, 423 segments (11 of the 11 links; 404 on the largest component as built), 24 entrances, 16 counters inside the box
+floor: 2681743 m2 of work, 226279 m2 of homes on 241 junctions; attractors (CLUE 2024, outside the 61 parcels): retail 485, food 399, services 636, culture 61; W = 1301.5
+theta 0.005/m: spectral radius 1.111 with every link: the walk sums diverge; skipped
+theta 0.010/m: radius 0.983 (all links 0.985); gross R2 0.325, leave-one-counter-out -0.073; in ln(1 + count) 0.731, 0.652; net current R2 0.508, 0.012
+theta 0.015/m: radius 0.891 (all links 0.892); gross R2 0.710, leave-one-counter-out 0.506; in ln(1 + count) 0.837, 0.756; net current R2 0.550, 0.002
+theta 0.020/m: radius 0.821 (all links 0.821); gross R2 0.721, leave-one-counter-out 0.506; in ln(1 + count) 0.829, 0.725; net current R2 0.550, -0.007
+theta 0.030/m: radius 0.706 (all links 0.706); gross R2 0.720, leave-one-counter-out 0.484; in ln(1 + count) 0.808, 0.678; net current R2 0.561, -0.010
+theta 0.050/m: radius 0.588 (all links 0.588); gross R2 0.723, leave-one-counter-out 0.487; in ln(1 + count) 0.757, 0.608; net current R2 0.557, 0.023
+theta 0.080/m: radius 0.508 (all links 0.508); gross R2 0.723, leave-one-counter-out 0.497; in ln(1 + count) 0.632, 0.449; net current R2 0.556, 0.048
+modes: with the homes' leave-one-counter-out 0.506, without 0.529: left out
+chosen theta 0.020/m: gross R2 0.721, leave-one-counter-out 0.529; net current R2 0.549, leave-one-counter-out 0.088; 15 of 16 counters read each way
+  visits: 0.089 of the trips (set: 0.10); footpaths' handedness: 2 +0.00 4 +0.13 19 +0.07 20 -0.04 21 +0.02 41 +0.14 45 -0.12 47 -0.05 52 -0.08 53 +0.05 63 +0.00 67 -0.24 68 +0.08 72 -0.18 184 -0.08 185 +0.02
+  amplitude of arrive (work)  mean 0.05451, largest 0.4271, positive in 64 hours
+  amplitude of arrive (home)  mean 0, largest 0, positive in 0 hours
+  amplitude of leave (work)   mean 0.001201, largest 0.06779, positive in 5 hours
+  amplitude of leave (home)   mean 0, largest 0, positive in 0 hours
+  amplitude of through        mean 0.3364, largest 0.6288, positive in 168 hours
+  amplitude of local          mean 9249, largest 2.983e+04, positive in 142 hours
+  amplitude of visit          mean 1273, largest 5236, positive in 91 hours
+  without visits: R2 0.732, leave-one-counter-out 0.554
+  without local trips: R2 0.690, leave-one-counter-out 0.548
+  without through trips: R2 0.654, leave-one-counter-out 0.416
+  without homes: R2 0.721, leave-one-counter-out 0.529
+  widths all alike: R2 -0.463, leave-one-counter-out -0.679
+boundary: modelled over given weekly gross at the 24 entrances: median 0.95, quartiles 0.85 to 1.10
+responses of the passers for all 2048 sets of links: 107.6 s on 4 threads
+as built: V = 93372 A$/week, spending 735678, footfall 5429226 people-passings/week at the frontages, spread 0.419 (70.3 h), mix 0.883, access 149.4 m
+  GA                     budget   400 seed 1: best 17215 A$/week, 400 evaluations, 0.1 s
+  CMA-ES                 budget   400 seed 1: best -6660 A$/week, 400 evaluations, 5.0 s
+  random                 budget   400 seed 1: best -99333 A$/week, 400 evaluations, 0.1 s
+  GA, marginal kernels   budget   400 seed 1: best 186420 A$/week, 400 evaluations, 0.0 s
+  GA                     budget   400 seed 2: best -18006 A$/week, 400 evaluations, 0.1 s
+  CMA-ES                 budget   400 seed 2: best -52575 A$/week, 400 evaluations, 5.0 s
+  random                 budget   400 seed 2: best -80424 A$/week, 400 evaluations, 0.1 s
+  GA, marginal kernels   budget   400 seed 2: best 200294 A$/week, 400 evaluations, 0.0 s
+  GA                     budget   400 seed 3: best -11838 A$/week, 400 evaluations, 0.1 s
+  CMA-ES                 budget   400 seed 3: best -39176 A$/week, 400 evaluations, 5.0 s
+  random                 budget   400 seed 3: best -78472 A$/week, 400 evaluations, 0.1 s
+  GA, marginal kernels   budget   400 seed 3: best 217286 A$/week, 400 evaluations, 0.0 s
+  GA                     budget   400 seed 4: best 10617 A$/week, 400 evaluations, 0.1 s
+  CMA-ES                 budget   400 seed 4: best 8705 A$/week, 400 evaluations, 4.9 s
+  random                 budget   400 seed 4: best -92063 A$/week, 400 evaluations, 0.1 s
+  GA, marginal kernels   budget   400 seed 4: best 207397 A$/week, 400 evaluations, 0.0 s
+  GA                     budget   400 seed 5: best 3957 A$/week, 400 evaluations, 0.1 s
+  CMA-ES                 budget   400 seed 5: best 10296 A$/week, 400 evaluations, 5.0 s
+  random                 budget   400 seed 5: best -94610 A$/week, 400 evaluations, 0.1 s
+  GA, marginal kernels   budget   400 seed 5: best 264213 A$/week, 400 evaluations, 0.0 s
+  BR                     budget   400 seed 1: best 449059 A$/week, 398 evaluations, 0.0 s
+  BR                     budget   400 seed 2: best 454758 A$/week, 398 evaluations, 0.0 s
+  BR                     budget   400 seed 3: best 455664 A$/week, 398 evaluations, 0.0 s
+  BR                     budget   400 seed 4: best 425834 A$/week, 398 evaluations, 0.0 s
+  BR                     budget   400 seed 5: best 456901 A$/week, 398 evaluations, 0.0 s
+  BR + (1+1) EA          budget   400 seed 1: best 459401 A$/week, 398 evaluations, 0.0 s
+  BR + (1+1) EA          budget   400 seed 2: best 438692 A$/week, 398 evaluations, 0.0 s
+  BR + (1+1) EA          budget   400 seed 3: best 447883 A$/week, 398 evaluations, 0.0 s
+  BR + (1+1) EA          budget   400 seed 4: best 452080 A$/week, 398 evaluations, 0.0 s
+  BR + (1+1) EA          budget   400 seed 5: best 431939 A$/week, 398 evaluations, 0.0 s
+  GA                     budget 20000 seed 1: best 363465 A$/week, 20000 evaluations, 2.5 s
+  CMA-ES                 budget 20000 seed 1: best 388743 A$/week, 20000 evaluations, 251.8 s
+  random                 budget 20000 seed 1: best -60773 A$/week, 20000 evaluations, 3.2 s
+  GA, marginal kernels   budget 20000 seed 1: best 447242 A$/week, 20000 evaluations, 3.0 s
+  GA                     budget 20000 seed 2: best 340469 A$/week, 20000 evaluations, 3.2 s
+  CMA-ES                 budget 20000 seed 2: best 384276 A$/week, 20000 evaluations, 262.1 s
+  random                 budget 20000 seed 2: best -45040 A$/week, 20000 evaluations, 2.8 s
+  GA, marginal kernels   budget 20000 seed 2: best 447834 A$/week, 20000 evaluations, 3.0 s
+  GA                     budget 20000 seed 3: best 384983 A$/week, 20000 evaluations, 2.7 s
+  CMA-ES                 budget 20000 seed 3: best 419898 A$/week, 20000 evaluations, 239.5 s
+  random                 budget 20000 seed 3: best -47352 A$/week, 20000 evaluations, 2.6 s
+  GA, marginal kernels   budget 20000 seed 3: best 452368 A$/week, 20000 evaluations, 3.3 s
+  GA                     budget 20000 seed 4: best 379126 A$/week, 20000 evaluations, 2.5 s
+  CMA-ES                 budget 20000 seed 4: best 364519 A$/week, 20000 evaluations, 235.5 s
+  random                 budget 20000 seed 4: best -54782 A$/week, 20000 evaluations, 2.7 s
+  GA, marginal kernels   budget 20000 seed 4: best 443840 A$/week, 20000 evaluations, 2.6 s
+  GA                     budget 20000 seed 5: best 348374 A$/week, 20000 evaluations, 2.6 s
+  CMA-ES                 budget 20000 seed 5: best 408262 A$/week, 20000 evaluations, 229.7 s
+  random                 budget 20000 seed 5: best -48830 A$/week, 20000 evaluations, 2.7 s
+  GA, marginal kernels   budget 20000 seed 5: best 452406 A$/week, 20000 evaluations, 2.9 s
+  BR                     budget 20000 seed 1: best 490616 A$/week, 11744 evaluations, 1.5 s
+  BR                     budget 20000 seed 2: best 479043 A$/week, 12111 evaluations, 1.5 s
+  BR                     budget 20000 seed 3: best 487996 A$/week, 12478 evaluations, 1.6 s
+  BR                     budget 20000 seed 4: best 457294 A$/week, 13579 evaluations, 1.6 s
+  BR                     budget 20000 seed 5: best 487996 A$/week, 12478 evaluations, 1.0 s
+  BR + (1+1) EA          budget 20000 seed 1: best 490320 A$/week, 19999 evaluations, 2.4 s
+  BR + (1+1) EA          budget 20000 seed 2: best 463577 A$/week, 19999 evaluations, 2.4 s
+  BR + (1+1) EA          budget 20000 seed 3: best 479043 A$/week, 19999 evaluations, 2.3 s
+  BR + (1+1) EA          budget 20000 seed 4: best 479043 A$/week, 19999 evaluations, 2.4 s
+  BR + (1+1) EA          budget 20000 seed 5: best 455667 A$/week, 19999 evaluations, 1.6 s
+BR + (1+1) EA          budget 20000: mean 473530 ± 13792 A$/week (best 490320)
+BR + (1+1) EA          budget   400: mean 445999 ± 10854 A$/week (best 459401)
+BR                     budget 20000: mean 480589 ± 13741 A$/week (best 490616)
+BR                     budget   400: mean 448443 ± 12991 A$/week (best 456901)
+CMA-ES                 budget 20000: mean 393140 ± 21574 A$/week (best 419898)
+CMA-ES                 budget   400: mean -15882 ± 28565 A$/week (best 10296)
+GA, marginal kernels   budget 20000: mean 448738 ± 3663 A$/week (best 452406)
+GA, marginal kernels   budget   400: mean 215122 ± 29657 A$/week (best 264213)
+GA                     budget 20000: mean 363284 ± 19136 A$/week (best 384983)
+GA                     budget   400: mean 389 ± 14902 A$/week (best 17215)
+random                 budget 20000: mean -51356 ± 6378 A$/week (best -45040)
+random                 budget   400: mean -88981 ± 9111 A$/week (best -78472)
+best plan: BR seed 1, V = 490616 A$/week; best black-box plan: CMA-ES seed 3, V = 419898
+flows on every segment for 3 plans: 1425 s since the start
+as built: V = 93372; circulation of the net flow, mean over the hours: driven 0.391, round the blocks 0.589, round the holes 0.020; of the week's mean flow 0.969, 0.015, 0.016
+best: V = 490616; circulation of the net flow, mean over the hours: driven 0.391, round the blocks 0.582, round the holes 0.027; of the week's mean flow 0.970, 0.016, 0.014
+best black box: V = 419898; circulation of the net flow, mean over the hours: driven 0.391, round the blocks 0.582, round the holes 0.028; of the week's mean flow 0.970, 0.016, 0.014
+link  0 (lane carried through, Ramsden Place to Collins Street): 88277 walkers a week on it; frontages gain 107555 and lose 131025 passings; V as built + link -3109; from the best plan flipped -2195
+link  1 (lane carried through, a lane to Regent Place): 28764 walkers a week on it; frontages gain 24344 and lose 34428 passings; V as built + link +263; from the best plan flipped -2347
+link  2 (lane carried through, Rainbow Alley to Bourke Street): 10697 walkers a week on it; frontages gain 6524 and lose 28606 passings; V as built + link -3749; from the best plan flipped -3414
+link  3 (lane carried through, Athenaeum Place to Collins Street): 13750 walkers a week on it; frontages gain 23312 and lose 34387 passings; V as built + link -1614; from the best plan flipped -1437
+link  4 (lane carried through, Baptist Place to Collins Street): 51220 walkers a week on it; frontages gain 96706 and lose 149919 passings; V as built + link -2678; from the best plan flipped -9186
+link  5 (lane carried through, a lane to Athenaeum Place): 8373 walkers a week on it; frontages gain 2287 and lose 23208 passings; V as built + link -1786; from the best plan flipped -2359
+link  6 (lane carried through, Portland Lane to Russell Place): 13482 walkers a week on it; frontages gain 21181 and lose 24954 passings; V as built + link -1709; from the best plan flipped -3533
+link  7 (lane carried through, Donaldson Lane to Russell Place): 12302 walkers a week on it; frontages gain 14355 and lose 21048 passings; V as built + link -1559; from the best plan flipped -3396
+link  8 (passage, Rainbow Alley to Little Collins Street): 18814 walkers a week on it; frontages gain 7768 and lose 26083 passings; V as built + link -1970; from the best plan flipped -2180
+link  9 (passage, Russell Street to Portland Lane): 28717 walkers a week on it; frontages gain 17517 and lose 19326 passings; V as built + link -927; from the best plan flipped -431
+link 10 (passage, Russell Place to Royal Lane): 31007 walkers a week on it; frontages gain 33573 and lose 16541 passings; V as built + link -91; from the best plan flipped -2165
+as built: catalysis adds 65053 A$/week; 18 same-kind pairs on one segment, 114 positively catalysing pairs within reach, 31 of 54 party walls between trading frontages (10 of one kind)
+best: catalysis adds 352664 A$/week; 74 same-kind pairs on one segment, 122 positively catalysing pairs within reach, 26 of 54 party walls between trading frontages (25 of one kind)
+best black box: catalysis adds 315741 A$/week; 50 same-kind pairs on one segment, 90 positively catalysing pairs within reach, 21 of 54 party walls between trading frontages (21 of one kind)
+done in 1466 s
