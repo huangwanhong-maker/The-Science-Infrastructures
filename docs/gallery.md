@@ -586,7 +586,7 @@ A three-dimensional GIS of Melbourne's centre, its streets read as a sea, after 
 
 ## 11. The Body Atlas
 
-*The Body Atlas is now Fabrica ([ADR 0070](../development/decisions/0070-structures-reconstructed-from-images.md)); these are its Body, Sections and Tours modes. Its reconstructions are in §12. In these pictures the genital system is hidden, at the user's wish for the gallery; Fabrica shows the whole body when asked.*
+*The Body Atlas is now Fabrica, with a second body, a woman's from the Human Reference Atlas ([ADR 0072](../development/decisions/0072-a-womans-body.md)) ([ADR 0070](../development/decisions/0070-structures-reconstructed-from-images.md)); these are its Body, Sections and Tours modes. Its reconstructions are in §12. In these pictures the genital system is hidden, at the user's wish for the gallery; Fabrica shows the whole body when asked.*
 
 The whole body of BodyParts3D's adult man, 2,234 parts named by the Foundational Model of Anatomy, through the anatomy domain ([ADR 0066](../development/decisions/0066-the-anatomy-domain-and-the-body-atlas.md)). Every measure on a card is the domain's: the topology of the part's mesh by morphe, the solid it bounds by physis. Every cut is the domain's section of the meshes, drawn in the conventions of imaging. Silver white by day, silver on graphite by night, at the user's choice; rose gold marks what is chosen.
 
@@ -606,6 +606,14 @@ The whole body of BodyParts3D's adult man, 2,234 parts named by the Foundational
 <tr>
 <td width="50%" valign="top"><a href="../assets/gallery/body-07-heart-night.jpg"><img src="../assets/gallery/body-07-heart-night.jpg" alt="By night: the heart isolated, the rest of the body a faint ghost, its card beside"></a><br><b>The heart, by night</b>: Silver on graphite: the heart's 83 parts isolated, the rest of the body drawn as a faint ghost. Its card gives its Latin name, what it does, its supply and drainage, its level (T7) and its measures.</td>
 <td width="50%"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/body-08-woman.jpg"><img src="../assets/gallery/body-08-woman.jpg" alt="A woman's body by her organs from the front: the brain, lungs and heart, the digestive organs, the pelvis and the bones and muscles of the thighs"></a><br><b>A woman's body</b>: The Human Reference Atlas's woman, modelled from the Visible Human Female, chosen at the key beside the modes: her brain, lungs, heart, liver, stomach and intestines, kidneys, her pelvis, femora and knees with the rectus femoris. The Atlas has not modelled her skull, ribs, arms or feet. As in all these pictures, the genital system (for her, with the breasts) and here the skin are hidden; Fabrica shows them when asked.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/body-09-woman-section-l2.jpg"><img src="../assets/gallery/body-09-woman-section-l2.jpg" alt="A transverse section of the woman's body at the second lumbar vertebra as a plate: the liver, pancreas, kidneys and splenic vessels named"></a><br><b>Her section at L2</b>: Her levels are read from her own vertebrae; she has six lumbar vertebrae, as the Visible Human Female's column was modelled. The plate names the liver and gallbladder, the pancreas's head, body and tail, the kidneys' capsules, cortices and pyramids, the splenic artery and vein and the hepatic portal vein, by the Atlas's UBERON labels.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/body-10-woman-heart-night.jpg"><img src="../assets/gallery/body-10-woman-heart-night.jpg" alt="By night, the woman's heart isolated, the rest of her body a faint ghost, its card with level, side, measures and the vessels it touches"></a><br><b>Her heart, by night</b>: Her heart isolated, the rest of her a ghost. The card gives what the domain measures of it as of any part: at T8, 52 mm left of the midline, its fourteen parts' surface of 1,358 cm², and the vessels and lung segments it touches.</td>
+<td width="50%" valign="top"></td>
 </tr>
 </table>
 
@@ -689,6 +697,7 @@ The screenshots are the infrastructure's, under its MIT licence, except the thre
 | Hourly weather | Open-Meteo, from ERA5 and the IFS | CC BY 4.0 |
 | Public holidays | Nager.Date | Free for private and non-profit use; cited |
 | The human body | BodyParts3D 4.0 (Mitsuhashi et al. 2009), © The Database Center for Life Science; names from the Foundational Model of Anatomy | CC BY 4.0 |
+| A woman's body | The Human Reference Atlas (HuBMAP), 3D Reference Organ Set for United, Female v1.8, modelled from the Visible Human Female | CC BY 4.0 |
 | Abdominal CT and its vessels' labels | The Medical Segmentation Decathlon, Task 08 (Antonelli et al. 2022; Memorial Sloan Kettering Cancer Center), cases 172 and 324 | CC BY-SA 4.0 |
 
 ## 14. Making the Screenshots

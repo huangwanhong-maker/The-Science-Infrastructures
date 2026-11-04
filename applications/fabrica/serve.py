@@ -5,7 +5,7 @@ The page is served from this directory, with the repository's ``domains/``, ``fo
 running here and answers the page's questions of the anatomy domain:
 
     GET  /api/status                     whether the product and the engine are ready
-    GET  /api/catalogue                  every part measured, the trees, what touches what, the levels;
+    GET  /api/catalogue[?body=…]         every part of a body measured, the trees, what touches what, the levels;
                                          computed once (about 20 s) and kept in data/cache/fabrica/
     POST /api/section | part | profile   {…}: one request to the engine
     POST /api/cases | reconstruct | slice  {…}: vessels reconstructed from images (ADR 0070)
@@ -52,7 +52,10 @@ TYPES = {
     ".svg": "image/svg+xml",
     ".gz": "application/gzip",
 }
-PRODUCT = ROOT / "data" / "cache" / "products" / "body-bp3d.json"
+PRODUCTS = ROOT / "data" / "cache" / "products"
+PRODUCT = PRODUCTS / "body-bp3d.json"
+# The bodies: BodyParts3D's man (the default) and the Human Reference Atlas's woman, when her product is built.
+BODIES = ("body-bp3d", "body-hra-f")
 KEPT = ROOT / "data" / "cache" / "fabrica"
 
 sys.path.insert(0, str(APP))
@@ -74,17 +77,18 @@ def recipe_job():
     return RECIPE
 
 
-def catalogue_key() -> str | None:
-    """The catalogue depends on the engine's sources and the product's build."""
+def catalogue_key(body: str = "body-bp3d") -> str | None:
+    """A body's catalogue depends on the engine's sources and its product's build."""
     state = engine.status()
-    if not state["current"] or not PRODUCT.exists():
+    product = PRODUCTS / f"{body}.json"
+    if body not in BODIES or not state["current"] or not product.exists():
         return None
-    built = json.loads(PRODUCT.read_text(encoding="utf-8")).get("built_at", "")
-    return hashlib.sha256(f"{state['sources']}|{built}".encode()).hexdigest()[:16]
+    built = json.loads(product.read_text(encoding="utf-8")).get("built_at", "")
+    return body + "-" + hashlib.sha256(f"{state['sources']}|{built}".encode()).hexdigest()[:16]
 
 
-def catalogue_text() -> str:
-    key = catalogue_key()
+def catalogue_text(body: str = "body-bp3d") -> str:
+    key = catalogue_key(body)
     if key is None:
         raise RuntimeError("the product or the engine is not ready: run the recipe")
     with LOCK:
@@ -94,13 +98,13 @@ def catalogue_text() -> str:
         if path.exists():
             CATALOGUE[key] = path.read_text(encoding="utf-8")
             return CATALOGUE[key]
-    answer = WORKER.ask({"op": "catalogue"})
+    answer = WORKER.ask({"op": "catalogue", "body": body})
     if not answer.get("ok"):
         raise RuntimeError(str(answer.get("error", "the engine failed")))
     text = json.dumps(answer["result"], ensure_ascii=False, separators=(",", ":"))
     with LOCK:
         KEPT.mkdir(parents=True, exist_ok=True)
-        for old in KEPT.glob("catalogue-*.json"):
+        for old in KEPT.glob(f"catalogue-{body}-*.json"):
             old.unlink(missing_ok=True)
         (KEPT / f"catalogue-{key}.json").write_text(text, encoding="utf-8")
         CATALOGUE[key] = text
@@ -129,10 +133,13 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self) -> None:
         url = urllib.parse.urlparse(self.path)
         if url.path == "/api/status":
-            return self.reply_json({"product": PRODUCT.exists(), "engine": engine.status(), "catalogue": catalogue_key() is not None}, 200)
+            bodies = [b for b in BODIES if (PRODUCTS / f"{b}.json").exists()]
+            return self.reply_json({"product": PRODUCT.exists(), "engine": engine.status(), "catalogue": catalogue_key() is not None,
+                                    "bodies": bodies}, 200)
         if url.path == "/api/catalogue":
+            body = urllib.parse.parse_qs(url.query).get("body", ["body-bp3d"])[0]
             try:
-                return self.reply_text(catalogue_text(), 200)
+                return self.reply_text(catalogue_text(body), 200)
             except RuntimeError as error:
                 return self.reply_json({"message": str(error)}, 503)
         if url.path == "/setup":

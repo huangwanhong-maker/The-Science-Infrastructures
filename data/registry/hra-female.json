@@ -1,0 +1,30 @@
+{
+  "id": "hra-female",
+  "domain": "anatomy",
+  "title": "The Human Reference Atlas's female body: the 3D Reference Organ Set for United, Female (v1.8), every organ of the Visible Human Female placed in one frame, 799 anatomical structures with their UBERON identifiers",
+  "provider": "The Human BioMolecular Atlas Program (HuBMAP) and the Cellular Senescence Network, Human Reference Atlas, Cyberinfrastructure for Network Science Center, Indiana University; 3D reference organs modelled from the Visible Human Female (National Library of Medicine) by K. Browne, H. Schlehlein and colleagues",
+  "credit": "Female body: the Human Reference Atlas, 3D Reference Organ Set for United, Female v1.8 (HuBMAP), CC BY 4.0",
+  "files": [
+    {
+      "url": "https://cdn.humanatlas.io/digital-objects/ref-organ/united-female/v1.8/assets/3d-vh-f-united.glb",
+      "file": "3d-vh-f-united.glb",
+      "sha256": "aaa5639ba7d03974ec5711b5facab4e5b3a2f5369d17a437aec416609a123c0a",
+      "size": 319466620
+    },
+    {
+      "url": "https://cdn.humanatlas.io/digital-objects/ref-organ/united-female/v1.8/graph.json",
+      "file": "graph.json",
+      "sha256": "6964642a11ec6ca9d738ea689894c2dc3f6d815cc3e78e121ad9a71a0f8c2669",
+      "size": 3072241
+    }
+  ],
+  "format": "A binary glTF 2.0 file (GLB) whose scene nodes are the anatomical structures, grouped by system layers and named VH_F_<structure> (the graph's file_subpath), each a mesh of positions, normals and triangles; and a JSON graph (schema ref-organ) giving for each structure its UBERON identifier (representation_of), its label, its dimensions in millimetres and the placement of the united model (a rotation of −90° about x and a translation in millimetres into the Atlas's reference frame).",
+  "coverage": "One adult woman (the Visible Human Female), 911 meshes in ten system layers: the skin and the breasts; the brain (the Allen Institute's), the spinal cord and the eyes with their muscles; the heart, the aorta and 110 named arteries and veins; the lungs, larynx, trachea and bronchi; the digestive organs; the kidneys, ureters and bladder; the uterus, cervix, vagina, ovaries, fallopian tubes and placenta; the spleen, thymus and a lymph node; the vertebral column (C1 to L6: she has six lumbar vertebrae), sternum, sacrum, coccyx and pelvis, and the bones, ligaments and cartilages of both knees with the rectus femoris. Not the skull, ribs, arms or feet, nor most muscles, which the Atlas has not modelled.",
+  "licence": "CC BY 4.0 (the graph's metadata, and the Human Reference Atlas's terms). Attribute as \"Human Reference Atlas, HuBMAP, CC BY 4.0\". The data are fetched into data/cache and never committed.",
+  "citation": "Börner, K., Teichmann, S. A., Quardokus, E. M., et al. (2021), Anatomical structures, cell types and biomarkers of the Human Reference Atlas, Nature Cell Biology 23, 1117–1128, doi:10.1038/s41556-021-00788-6. Bueckle, A., Qing, C., Luley, S., Kumar, Y., Pandey, N. and Börner, K. (2023), The HRA Organ Gallery affords immersive superpowers for building and exploring the Human Reference Atlas with virtual reality, Frontiers in Bioinformatics 3, 1162723.",
+  "used_by": [
+    "data/products/body_female.py",
+    "domains/anatomy",
+    "applications/fabrica"
+  ]
+}

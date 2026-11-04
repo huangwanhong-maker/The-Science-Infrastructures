@@ -4,12 +4,17 @@
 //   is-a relation one tree under "anatomical entity", the part-of relation one tree under "human body".
 // - Every rule of the systems' table names a concept of the release, and every element falls under a rule:
 //   no part of the body is left without a system. Named parts fall where anatomy puts them.
+// - The woman of the Human Reference Atlas, when her product is built: her counts, one part-of tree, a system for
+//   every element by the Atlas's layers and names, her height, and her organs on their sides in LPS.
 // - BodyParts3D's trees are spanning trees of FMA's relations: for every compound, the elements whose
 //   concepts lie below it in the tree are among those its table lists. The lists go beyond the tree where
 //   FMA's part-of graph gives a concept other parents (the body wall's muscles, also parts of their regions),
 //   and in is-a where an element without a concept of its own is listed under two incomparable compounds.
 
 #include <algorithm>
+#include <array>
+#include <cmath>
+#include <cstdio>
 #include <filesystem>
 #include <map>
 #include <set>
@@ -23,6 +28,52 @@
 using calx::verification::Suite;
 namespace ab = anatomy::body;
 namespace ap = anatomy::parts;
+
+// The woman of the Human Reference Atlas (body-hra-f; data/products/body_female.py), when built.
+void female(Suite& s, const std::filesystem::path& dir) {
+  if (!std::filesystem::exists(dir / "body-hra-f-elements.tsv")) {
+    s.skip("the female body: the product is not built (python data/acquisition/fetch.py hra-female; python data/products/body_female.py)");
+    return;
+  }
+  const auto B = ab::read_body(dir, "body-hra-f");
+  const auto& A = B.atlas;
+  std::size_t triangles = 0;
+  for (const auto& e : B.elements) triangles += e.triangles;
+  s.require("the woman of the Human Reference Atlas, v1.8: 911 elements, 7,060,019 triangles", B.elements.size() == 911 && triangles == 7060019,
+            std::to_string(B.elements.size()) + " elements, " + std::to_string(triangles) + " triangles");
+  const auto rp = A.partof.roots();
+  s.require("her part-of tree is one tree under the united model, read by the Atlas's rules", rp.size() == 1 && A.concepts[rp[0]].id == "VH_F" && ap::is_reference_atlas(A));
+  std::map<std::string, std::size_t> count;
+  std::size_t without = 0;
+  for (std::size_t e = 0; e < B.elements.size(); e++) {
+    const auto k = ap::system_of_element(A, e);
+    if (k == ap::none) without++;
+    else count[std::string(ap::SYSTEMS[k].key)]++;
+  }
+  std::string tally;
+  for (const auto& sys : ap::SYSTEMS) tally += std::string(sys.key) + " " + std::to_string(count[std::string(sys.key)]) + ", ";
+  std::printf("      the woman: %s\n", tally.c_str());
+  s.require("every element of hers has a system", without == 0, std::to_string(without) + " without");
+  s.require("her vessels told apart by name: 55 arteries and 55 veins, the heart's chambers and valves the heart",
+            count["arteries"] == 55 && count["veins"] == 55 && count["heart"] == 14);
+  // an organ's centre: the middle of the box of the elements below its node
+  const auto centre = [&](const std::string& id) {
+    const std::size_t c = A.find(id);
+    std::array<double, 3> lo{INFINITY, INFINITY, INFINITY}, hi{-INFINITY, -INFINITY, -INFINITY};
+    for (const auto& e : B.elements)
+      if (c != ap::none && A.forest(ap::Relation::partof).below(e.concept_, c))
+        for (int a = 0; a < 3; a++) lo[a] = std::min(lo[a], e.lower[a]), hi[a] = std::max(hi[a], e.upper[a]);
+    return std::array<double, 3>{(lo[0] + hi[0]) / 2, (lo[1] + hi[1]) / 2, (lo[2] + hi[2]) / 2};
+  };
+  std::printf("      spleen x %.0f mm, liver x %.0f mm, kidneys y %.0f mm against the liver's %.0f mm\n", centre("VH_F_spleen")[0], centre("VH_F_liver")[0],
+              centre("VH_F_kidney")[1], centre("VH_F_liver")[1]);
+  double height = 0;
+  for (const auto& e : B.elements)
+    if (e.id == "VH_F_skin") height = e.upper[2] - e.lower[2];
+  s.check("her height, soles to crown, the Atlas's 1,657.8 mm", height - 1657.8, 0.5, "mm");
+  s.require("in LPS: the spleen on her left (+x), the liver on her right, the kidneys behind the liver (+y)",
+            centre("VH_F_spleen")[0] > 0 && centre("VH_F_liver")[0] < 0 && centre("VH_F_kidney")[1] > centre("VH_F_liver")[1]);
+}
 
 int main() {
   Suite s;
@@ -95,5 +146,6 @@ int main() {
       std::printf("      %s: %zu of %zu compounds' lists are the tree's closure exactly\n", label, equal, given.size());
     }
   }
+  female(s, dir);
   return s.done();
 }

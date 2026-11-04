@@ -7,6 +7,15 @@
 // zc centres the body's height. Seen from +z, the default view, the subject faces the viewer, the subject's
 // left on the viewer's right. The two maps below are the only places the frames meet.
 
+// The body shown: BodyParts3D's man (body-bp3d, the default) or the Human Reference Atlas's woman (body-hra-f),
+// chosen by the address's ?body= and carried in every request to the engine.
+export const BODIES = { 'body-bp3d': 'Man', 'body-hra-f': 'Woman' };
+export const BODY = (() => {
+  const b = typeof location === 'undefined' ? null : new URLSearchParams(location.search).get('body');  // none outside a page
+  return BODIES[b] ? b : 'body-bp3d';
+})();
+export const FEMALE = BODY === 'body-hra-f';
+
 export let ZC = 0;
 export function setCentre(zc) { ZC = zc; }
 export const lpsToWorld = (p) => [p[0], p[2] - ZC, -p[1]];
@@ -23,14 +32,14 @@ async function json(url) {
 }
 
 export const loadStatus = () => json('/api/status');
-export const loadProduct = () => json('/data/products/body-bp3d.json');
-export const loadCatalogue = () => json('/api/catalogue');
+export const loadProduct = () => json(`/data/products/${BODY}.json`);
+export const loadCatalogue = () => json(`/api/catalogue?body=${BODY}`);
 export async function loadKnowledge() {
   try { return await json('/domains/anatomy/knowledge/structures.json'); } catch (_) { return { entries: {}, references: {} }; }
 }
 
 export async function ask(op, body) {
-  const r = await fetch(`/api/${op}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  const r = await fetch(`/api/${op}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ body: BODY, ...body }) });
   const out = await r.json();
   if (!r.ok) throw new Error(out.message || `${op} failed`);
   return out;

@@ -102,6 +102,8 @@ button, input { font: inherit; color: inherit; }
 .found li.on, .found li:hover { background: var(--rose-soft); }
 
 /* ---- the layout ---------------------------------------------------------------------------------------- */
+.bodies { margin-left: 12px; }
+.bodies button { font: inherit; font-size: 14px; }
 .layout { display: grid; height: calc(100vh - 52px); grid-template-columns: 262px minmax(0, 1fr) 352px; }
 .layout.mode-sections { grid-template-columns: 262px minmax(0, 0.55fr) minmax(0, 1.45fr) 330px; }
 /* Reconstruct (ADR 0070): the rail's cases, the vessels in the round, the slices, the card's measures. */

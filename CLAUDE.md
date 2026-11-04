@@ -33,7 +33,7 @@ This is an integrative programme to learn, use and research all domains of scien
 - **Anatomy** is the domain of the structures of the body ([ADR 0066](development/decisions/0066-the-anatomy-domain-and-the-body-atlas.md)), founded at the user's request with the Body Atlas, ahead of its place in tier 4. It is a field at height 0 on the foundations alone, C++ from the start:
   - the anatomical frames: LPS of DICOM and BodyParts3D, RAS of NIfTI, the radiological and neurological displays;
   - FMA's concepts in their is-a and part-of trees, and the seventeen systems of the body by an ordered table;
-  - BodyParts3D's adult man, read from the data library;
+  - BodyParts3D's adult man, read from the data library; and the Human Reference Atlas's woman (CC BY 4.0), her systems by the Atlas's layers ([ADR 0072](development/decisions/0072-a-womans-body.md));
   - each part's topology, solid, principal axes and extents, compounds, and the parts that touch;
   - the body cut in the planes of imaging, at its vertebral levels;
   - a seed knowledge base of fifty entries.
@@ -315,7 +315,7 @@ A domain directory contains:
 
 - Record decisions that shape structure, conventions or tooling in `development/decisions/NNNN-slug.md`, using the template in the index.
 - Never rewrite a record. A new record supersedes or amends it, and the old record's status is updated to point to the new one. Paths in old records are as they were written; ADR 0026 maps them to the present.
-- Records accepted so far: 0001–0071. Records 0001–0024 were written in the first laboratory, which the infrastructure absorbed; 0025 founded this repository.
+- Records accepted so far: 0001–0072. Records 0001–0024 were written in the first laboratory, which the infrastructure absorbed; 0025 founded this repository.
 
 ### 6.4 Release Notes
 

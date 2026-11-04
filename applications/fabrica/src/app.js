@@ -5,7 +5,7 @@
 import * as THREE from 'three';
 
 import { renderCard, renderProfile } from './card.js';
-import { ask, decodeElement, loadCatalogue, loadKnowledge, loadPacks, loadProduct, loadStatus, setCentre } from './data.js';
+import { BODY, FEMALE, ask, decodeElement, loadCatalogue, loadKnowledge, loadPacks, loadProduct, loadStatus, setCentre } from './data.js';
 import { SYSTEM_STYLE } from './palette.js';
 import { attachPlateControls, describeSection, renderPlate } from './plate.js';
 import { TOURS } from './tours.js';
@@ -562,6 +562,20 @@ function wire() {
     tree.setRelation(b.dataset.relation);
   });
   for (const b of document.querySelectorAll('.modes .key')) b.addEventListener('click', () => setMode(b.dataset.mode));
+  // whose body: the page reloads with the other, keeping the mode
+  for (const b of document.querySelectorAll('#bodies button')) {
+    b.classList.toggle('on', b.dataset.body === BODY);
+    b.addEventListener('click', () => {
+      if (b.dataset.body === BODY) return;
+      const u = new URL(location.href);
+      if (b.dataset.body === 'body-bp3d') u.searchParams.delete('body'); else u.searchParams.set('body', b.dataset.body);
+      u.hash = `m=${state.mode === 'tours' ? 'body' : state.mode}`;
+      location.href = u.toString();
+    });
+  }
+  if (FEMALE) $('credit-text').textContent = 'Anatomy: the Human Reference Atlas (HuBMAP), 3D Reference Organ Set for United, Female v1.8, CC BY 4.0, modelled from the Visible Human Female. Names: UBERON, as the Atlas gives them.';
+  // the tours walk BodyParts3D's man by FMA's concepts
+  if (FEMALE) document.querySelector('[data-mode=tours]').hidden = true;
   attachReconstruct();
   $('theme').addEventListener('click', () => setTheme(document.documentElement.dataset.theme === 'night' ? 'day' : 'night'));
 

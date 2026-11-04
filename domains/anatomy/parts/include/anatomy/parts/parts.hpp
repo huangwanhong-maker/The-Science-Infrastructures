@@ -296,8 +296,63 @@ inline std::size_t system_of_concept(const Atlas& A, std::size_t c) {
   return none;
 }
 
+// The Human Reference Atlas's bodies (the woman of its United, Female set; data/products/body_female.py) name their
+// structures by UBERON and give no is-a tree: their concepts are the model's nodes, grouped by system layers
+// (VH_F_circulatory_system, ...). Their systems are read from the layer an element lies in by part-of, and, where
+// a layer holds more than one of the seventeen systems, from the element's name: in the circulatory layer veins
+// and arteries by their names, the rest the heart; in the integumentary layer the breasts' parts (mammary gland,
+// nipple, areola, lactiferous ducts and sinuses, the breast's suspensory ligaments), accessory organs of
+// reproduction, with the genital system, the rest the skin. The ordered table: the first rule that holds.
+struct LayerRule {
+  std::string_view system;
+  std::string_view layer;          // a concept (a node of the model) above the element by part-of
+  std::string_view name_contains;  // empty: any name
+};
+
+inline constexpr LayerRule HRA_SYSTEM_RULES[] = {
+    {"eye", "VH_F_eyes", ""},
+    {"brain", "VH_F_nervous_system", ""},
+    {"genital", "VH_F_integumentary_system", "mammary"},
+    {"genital", "VH_F_integumentary_system", "nipple"},
+    {"genital", "VH_F_integumentary_system", "areola"},
+    {"genital", "VH_F_integumentary_system", "lactiferous"},
+    {"genital", "VH_F_integumentary_system", "breast"},
+    {"skin", "VH_F_integumentary_system", ""},
+    {"muscles", "VH_F_muscular_system", ""},
+    {"genital", "VH_F_reproductive_system", ""},
+    {"digestive", "VH_F_digestive_system", ""},
+    {"urinary", "VH_F_urinary_system", ""},
+    {"veins", "VH_F_circulatory_system", "vein"},
+    {"veins", "VH_F_circulatory_system", "vena"},
+    {"veins", "VH_F_circulatory_system", "venous"},
+    {"veins", "VH_F_circulatory_system", "sinus"},
+    {"arteries", "VH_F_circulatory_system", "arter"},
+    {"arteries", "VH_F_circulatory_system", "aorta"},
+    {"arteries", "VH_F_circulatory_system", "trunk"},
+    {"heart", "VH_F_circulatory_system", ""},
+    {"respiratory", "VH_F_respiratory_system", ""},
+    {"lymphoid", "VH_F_lymphatic_system", ""},
+    {"skeleton", "VH_F_skeletal_system", ""},
+};
+
+// Whether an atlas is one of the Human Reference Atlas's (its root node VH_F, or VH_M for a man).
+inline bool is_reference_atlas(const Atlas& A) { return A.find("VH_F") != none || A.find("VH_M") != none; }
+
+inline std::size_t system_of_reference_element(const Atlas& A, std::size_t e) {
+  const std::size_t c = A.element_concept[e];
+  const std::string& name = A.concepts[c].name;
+  for (const auto& r : HRA_SYSTEM_RULES) {
+    const std::size_t k = A.find(r.layer);
+    if (k == none || !A.forest(Relation::partof).below(c, k)) continue;
+    if (!r.name_contains.empty() && name.find(r.name_contains) == std::string::npos) continue;
+    return system_index(r.system);
+  }
+  return none;
+}
+
 // The system of an element: the first rule under which it lies, by its concept or its listed compounds.
 inline std::size_t system_of_element(const Atlas& A, std::size_t e) {
+  if (is_reference_atlas(A)) return system_of_reference_element(A, e);
   for (const auto& r : SYSTEM_RULES) {
     const std::size_t k = A.find(r.concept_id);
     if (k != none && A.element_below(e, k, r.relation)) return system_index(r.system);

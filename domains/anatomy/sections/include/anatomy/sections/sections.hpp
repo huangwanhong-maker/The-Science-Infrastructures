@@ -25,6 +25,7 @@
 #include <vector>
 
 #include <anatomy/frames/frames.hpp>
+#include <anatomy/parts/parts.hpp>
 #include <physis/computational_geometry/surfaces.hpp>
 
 namespace anatomy::sections {
@@ -95,6 +96,44 @@ inline constexpr std::array<Vertebra, 25> VERTEBRAE{{
     {"L3", "FMA13074", "third lumbar vertebra"}, {"L4", "FMA13075", "fourth lumbar vertebra"},
     {"L5", "FMA13076", "fifth lumbar vertebra"}, {"S", "FMA16202", "sacrum"},
 }};
+
+// The Human Reference Atlas's woman (body-hra-f): her vertebrae by the model's nodes. She has six lumbar
+// vertebrae, L1 to L6, as the Visible Human Female's column was modelled (a lumbar sixth, a variant found in a
+// few per cent of people), so her levels below L5 are her own.
+inline constexpr std::array<Vertebra, 26> REFERENCE_VERTEBRAE{{
+    {"C1", "VH_F_cervical_vertebra_1", "cervical vertebra 1"},
+    {"C2", "VH_F_cervical_vertebra_2", "cervical vertebra 2"},
+    {"C3", "VH_F_cervical_vertebra_3", "cervical vertebra 3"},
+    {"C4", "VH_F_cervical_vertebra_4", "cervical vertebra 4"},
+    {"C5", "VH_F_cervical_vertebra_5", "cervical vertebra 5"},
+    {"C6", "VH_F_cervical_vertebra_6", "cervical vertebra 6"},
+    {"C7", "VH_F_cervical_vertebra_7", "cervical vertebra 7"},
+    {"T1", "VH_F_thoracic_vertebra_1", "thoracic vertebra 1"},
+    {"T2", "VH_F_thoracic_vertebra_2", "thoracic vertebra 2"},
+    {"T3", "VH_F_thoracic_vertebra_3", "thoracic vertebra 3"},
+    {"T4", "VH_F_thoracic_vertebra_4", "thoracic vertebra 4"},
+    {"T5", "VH_F_thoracic_vertebra_5", "thoracic vertebra 5"},
+    {"T6", "VH_F_thoracic_vertebra_6", "thoracic vertebra 6"},
+    {"T7", "VH_F_thoracic_vertebra_7", "thoracic vertebra 7"},
+    {"T8", "VH_F_thoracic_vertebra_8", "thoracic vertebra 8"},
+    {"T9", "VH_F_thoracic_vertebra_9", "thoracic vertebra 9"},
+    {"T10", "VH_F_thoracic_vertebra_10", "thoracic vertebra 10"},
+    {"T11", "VH_F_thoracic_vertebra_11", "thoracic vertebra 11"},
+    {"T12", "VH_F_thoracic_vertebra_12", "thoracic vertebra 12"},
+    {"L1", "VH_F_lumbar_vertebra_1", "lumbar vertebra 1"},
+    {"L2", "VH_F_lumbar_vertebra_2", "lumbar vertebra 2"},
+    {"L3", "VH_F_lumbar_vertebra_3", "lumbar vertebra 3"},
+    {"L4", "VH_F_lumbar_vertebra_4", "lumbar vertebra 4"},
+    {"L5", "VH_F_lumbar_vertebra_5", "lumbar vertebra 5"},
+    {"L6", "VH_F_lumbar_vertebra_6", "lumbar vertebra 6"},
+    {"S", "VH_F_sacrum", "sacrum"},
+}};
+
+// The vertebrae an atlas names: FMA's for BodyParts3D's man, the model's nodes for the Atlas's woman.
+inline std::vector<Vertebra> vertebrae_for(const parts::Atlas& A) {
+  if (parts::is_reference_atlas(A)) return {REFERENCE_VERTEBRAE.begin(), REFERENCE_VERTEBRAE.end()};
+  return {VERTEBRAE.begin(), VERTEBRAE.end()};
+}
 
 struct Level {
   std::string label;

@@ -18,6 +18,8 @@
 //       elements bound solids, its volume is null and the volume of those that do is given apart.
 //   {"op": "profile", "element": 812, "axis": "long", "samples": 120}
 //   {"op": "cases"} | {"op": "reconstruct", "case": …} | {"op": "slice", "case": …, "k": …}   (reconstruct.hpp)
+// Every request may name its body: "body": "body-bp3d" (BodyParts3D's man, the default) or "body-hra-f" (the
+// Human Reference Atlas's woman); each is read and measured when first asked for.
 //       the part's cross-sectional area along its long principal axis (or "superior"), and the diameter of
 //       the circle of that area: the calibre of a vessel along its course.
 //
@@ -60,6 +62,7 @@ constexpr double touch_distance = 1.5;  // mm
 
 struct State {
   std::filesystem::path data;
+  std::string name = "body-bp3d";  // the body's product: BodyParts3D's man, or the Atlas's woman (body-hra-f)
   bool loaded = false;
   ab::Body body;
   std::vector<cg::TriangleSurface> welded;  // per element
@@ -76,7 +79,7 @@ Json vec(const std::array<double, 3>& v, double (*round)(double) = r1) { return 
 
 void load(State& S) {
   if (S.loaded) return;
-  S.body = ab::read_body(S.data);
+  S.body = ab::read_body(S.data, S.name);
   const std::size_t n = S.body.elements.size();
   S.welded.resize(n);
   S.measures.resize(n);
@@ -95,7 +98,7 @@ void load(State& S) {
     });
   for (auto& t : pool) t.join();
   for (std::size_t e = 0; e < n; e++) S.system[e] = ap::system_of_element(S.body.atlas, e);
-  for (const auto& v : as::VERTEBRAE) {
+  for (const auto& v : as::vertebrae_for(S.body.atlas)) {
     const std::size_t c = S.body.atlas.find(v.fma);
     for (std::size_t e = 0; e < n; e++)
       if (S.body.elements[e].concept_ == c && S.body.elements[e].duplicate_of == ap::none) {
@@ -323,6 +326,9 @@ Json profile(State& S, const Json& q) {
   return out;
 }
 
+// The bodies the engine knows, by their products' names.
+const std::set<std::string> BODIES{"body-bp3d", "body-hra-f"};
+
 Json answer(State& S, const Json& q) {
   const std::string op = q["op"].text();
   if (op == "catalogue") return catalogue(S);
@@ -339,7 +345,8 @@ Json answer(State& S, const Json& q) {
 }  // namespace
 
 int main(int argc, char** argv) {
-  State S;
+  std::map<std::string, State> bodies;  // each body loaded when first asked for
+  State& S = bodies["body-bp3d"];
   S.data = "data/cache/products";
   bool serve = false, once = false;
   for (int i = 1; i < argc; i++) {
@@ -368,7 +375,13 @@ int main(int argc, char** argv) {
     if (line.empty()) continue;
     Json reply;
     try {
-      reply = Json::object({{"ok", true}, {"result", answer(S, Json::parse(line))}});
+      const Json q = Json::parse(line);
+      const std::string body = q["body"].text("body-bp3d");
+      if (!BODIES.count(body)) throw std::invalid_argument("no body " + body);
+      State& B = bodies[body];
+      if (B.data.empty()) B.data = S.data, B.name = body;
+      // the reconstructions are the same whatever body is shown
+      reply = Json::object({{"ok", true}, {"result", answer(q["op"].text() == "cases" || q["op"].text() == "reconstruct" || q["op"].text() == "slice" ? S : B, q)}});
     } catch (const std::exception& e) {
       reply = Json::object({{"ok", false}, {"error", e.what()}});
     }

@@ -78,12 +78,13 @@ Decisions that concern only one library are recorded in that library's own `deve
 | [0063](0063-the-district-as-a-complex-to-work-on.md) | The district as a complex to work on: its cells, buildings among them, the freedom on top and the dynamics | Accepted, provisionally; amended by 0065 |
 | [0064](0064-abnormal-genomes-their-description-and-expression.md) | Abnormal genomes: their description in the international notations (HGVS, ISCN), their detection, and expression read from sequence | Accepted, provisionally |
 | [0065](0065-new-york-in-the-workbench.md) | New York in the Urban Building Workbench: Lower Manhattan from Valdrada's compiled city, and the Brooklyn Bridge's counts | Accepted, provisionally |
-| [0066](0066-the-anatomy-domain-and-the-body-atlas.md) | The anatomy domain and the Body Atlas: the whole body by its parts, measured, and cut in the planes of imaging | Accepted, provisionally; amended by 0070 |
+| [0066](0066-the-anatomy-domain-and-the-body-atlas.md) | The anatomy domain and the Body Atlas: the whole body by its parts, measured, and cut in the planes of imaging | Accepted, provisionally; amended by 0070 and 0072 |
 | [0067](0067-event-spacetime.md) | Event Spacetime: a city's events as a 2-complex, urban science as the bridge over architecture, and the Urban Science Workbench | Accepted, provisionally |
 | [0068](0068-the-economy-atlas-as-a-scholarly-instrument.md) | The Economy Atlas as a scholarly instrument: porcelain and gold, and figures for publication | Accepted, provisionally; amends 0046 and 0056; amended by 0069 |
 | [0069](0069-names-of-places-and-a-2d-gis.md) | The names of places, areas in dispute, and a 2D GIS: a naming policy for every product and map, and maps of the sphere in the visualization layer | Accepted, provisionally; amends 0014, 0044, 0046 and 0068 |
-| [0070](0070-structures-reconstructed-from-images.md) | Structures reconstructed from images: eikon (a foundation for images), the medical-imaging domain, vascular trees, physiology founded, and the Body Atlas renamed Fabrica; vessels first | Accepted, provisionally; amends 0035, 0061 and 0066 |
+| [0070](0070-structures-reconstructed-from-images.md) | Structures reconstructed from images: eikon (a foundation for images), the medical-imaging domain, vascular trees, physiology founded, and the Body Atlas renamed Fabrica; vessels first | Accepted, provisionally; amends 0035, 0061 and 0066; amended by 0072 |
 | [0071](0071-agents-and-decisions-for-urban-planning.md) | Agents and decisions for urban planning: POMDPs in tyche, agent-based models in nomos, the maintenance of surfaces | Accepted, provisionally |
+| [0072](0072-a-womans-body.md) | A woman's body, from the Human Reference Atlas: a second body for the anatomy domain and Fabrica, and pictures without sensitive parts | Accepted, provisionally; amends 0066 and 0070 |
 
 ## 2. Template
 

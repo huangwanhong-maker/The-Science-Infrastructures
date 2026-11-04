@@ -8,6 +8,7 @@ Fabrica shows the whole human body in the round, every part of it clickable for 
 
 ## 1. Concepts
 
+- **Two bodies.** BodyParts3D's adult man, and the Human Reference Atlas's woman (CC BY 4.0, [ADR 0072](../../development/decisions/0072-a-womans-body.md)), chosen at the key beside the modes. Her 911 parts are the Visible Human Female's organs, vessels, trunk skeleton and knees, named by UBERON and browsed by the Atlas's layers; the Atlas has not modelled her skull, ribs, arms or feet. The tours walk the man.
 - **One body, its parts and its systems.**
   - **Parts.** Every mesh is a part, a concept of FMA. The parts are browsed by FMA's part-of tree (the human body, its systems and regions) or by its is-a tree (kinds: bone organ, artery, muscle organ).
   - **Systems.** The domain sorts every part into one of seventeen systems by an ordered table of rules, tissue kinds before organ systems. So the vessels of the lung are vessels, and the larynx's cartilages respiratory.

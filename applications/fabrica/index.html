@@ -47,6 +47,9 @@
       <span class="name">Fabrica</span>
       <span class="sub">the body, its structures reconstructed from images</span>
     </a>
+    <span class="seg bodies" id="bodies" title="Whose body: BodyParts3D's man, or the Human Reference Atlas's woman">
+      <button data-body="body-bp3d">Man</button><button data-body="body-hra-f">Woman</button>
+    </span>
     <nav class="modes" aria-label="Modes">
       <button data-mode="body" class="key on">Body</button>
       <button data-mode="sections" class="key">Sections</button>
@@ -149,7 +152,7 @@
       <div class="card-empty" id="card-empty">
         <p class="lead">Choose a part of the body.</p>
         <p>Click it in the round or in a section, find it by name above, or open it in the parts on the left. Double-click flies to it.</p>
-        <p class="credit">Anatomy: BodyParts3D, © The Database Center for Life Science, CC BY 4.0. Names: the Foundational Model of Anatomy.</p>
+        <p class="credit" id="credit-text">Anatomy: BodyParts3D, © The Database Center for Life Science, CC BY 4.0. Names: the Foundational Model of Anatomy.</p>
       </div>
       <div class="card-body" id="card-body" hidden></div>
       <div class="card-body recon-only" id="recon-card"></div>

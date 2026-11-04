@@ -55,12 +55,10 @@ export function renderPlate(svg, section, ctx) {
     svg.appendChild(t);
     return;
   }
-  // Fitted to the largest loop of the section (the trunk's outline in a transverse section, the arms left at
-  // the edges), then zoomed and moved as the reader asks (ctx.view).
-  let frame = null, frameArea = 0;
-  for (const p of section.pieces) for (const l of p.loops) { const a = ringArea(l); if (a > frameArea) { frameArea = a; frame = l; } }
+  // Fitted to every piece of the section (the trunk's outline when the skin is shown; the organs when it is
+  // hidden, where the largest loop alone would be one organ), then zoomed and moved as the reader asks (ctx.view).
   let lo = [Infinity, Infinity], hi = [-Infinity, -Infinity];
-  for (const l of frame ? [frame] : section.pieces.flatMap((p) => [...p.loops, ...p.chains])) for (let k = 0; k < l.length; k += 2) {
+  for (const l of section.pieces.flatMap((p) => [...p.loops, ...p.chains])) for (let k = 0; k < l.length; k += 2) {
     lo = [Math.min(lo[0], l[k]), Math.min(lo[1], l[k + 1])];
     hi = [Math.max(hi[0], l[k]), Math.max(hi[1], l[k + 1])];
   }
