@@ -248,9 +248,9 @@ The applications run in the browser, as ES modules without a build step. They im
 
 ## 8. Working with the Foundations
 
-- **Submodules.** `foundations/` holds the libraries as git submodules, each pinned to an exact commit; `domains/neuroscience` is a submodule too.
+- **Submodules.** `foundations/` holds the libraries as git submodules, each pinned to an exact commit; `domains/neuroscience` and `applications/cosmopoiesis-lab` are submodules too.
 - **Editing a foundation.** Edit it in place under `foundations/<name>`, commit there, then commit the updated pointer here. The same for a domain that is a submodule.
-- **Commit order.** Commit in dependency order: calx and morphe first, then physis, then the domain submodules, then this repository.
+- **Commit order.** Commit in dependency order: calx and morphe first, then physis, then the domain submodules, then Cosmopoiesis, then this repository.
 - **Local rules.** Each foundation's CLAUDE.md governs work inside it.
 - **Links between repositories.** Use absolute GitHub URLs.
 - **Provenance.** Every result records the commit of each foundation it used.

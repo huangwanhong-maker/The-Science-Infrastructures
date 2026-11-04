@@ -13,3 +13,6 @@
 [submodule "tyche"]
 	path = foundations/tyche
 	url = https://github.com/huangwanhong-maker/tyche.git
+[submodule "cosmopoiesis-lab"]
+	path = applications/cosmopoiesis-lab
+	url = https://github.com/huangwanhong-maker/Cosmopoiesis-Lab.git
