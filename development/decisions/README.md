@@ -78,6 +78,7 @@ Decisions that concern only one library are recorded in that library's own `deve
 | [0063](0063-the-district-as-a-complex-to-work-on.md) | The district as a complex to work on: its cells, buildings among them, the freedom on top and the dynamics | Accepted, provisionally; amended by 0065 |
 | [0064](0064-abnormal-genomes-their-description-and-expression.md) | Abnormal genomes: their description in the international notations (HGVS, ISCN), their detection, and expression read from sequence | Accepted, provisionally |
 | [0065](0065-new-york-in-the-workbench.md) | New York in the Urban Building Workbench: Lower Manhattan from Valdrada's compiled city, and the Brooklyn Bridge's counts | Accepted, provisionally |
+| [0066](0066-the-anatomy-domain-and-the-body-atlas.md) | The anatomy domain and the Body Atlas: the whole body by its parts, measured, and cut in the planes of imaging | Accepted, provisionally |
 | [0067](0067-event-spacetime.md) | Event Spacetime: a city's events as a 2-complex, urban science as the bridge over architecture, and the Urban Science Workbench | Accepted, provisionally |
 | [0068](0068-the-economy-atlas-as-a-scholarly-instrument.md) | The Economy Atlas as a scholarly instrument: porcelain and gold, and figures for publication | Accepted, provisionally; amends 0046 and 0056 |
 

@@ -35,6 +35,7 @@ Every application says which of the three activities it serves:
 | [Economy Atlas](economy-atlas/) | research, learning, use | economics (its C++ engine), the foundations calx, morphe and physis, the geography domain's projections in the page; one's own data; plug-ins in Python and C++ through the API's `science.networks` | draft |
 | [Chemistry Workbench](chemistry-workbench/) | research, learning | plug-ins; the first, Symmetry and generation, on the foundations morphe (graph rewriting) and physis (point groups, stranded field theories, reaction kinetics), with its C++ engine kept alive | draft |
 | [Urban Science Workbench](urban-science-workbench/) | research, learning | plug-ins; the first, Street Oceanography, on the urban-science domain and the foundations (calx's multitaper and bispectra, tyche's harmonic analysis and co-location, physis's kinematic waves, master equations and reaction–diffusion), reading Melbourne's counts, land use and weather and OpenStreetMap's declared hours; human flow, architecture and cultural analysis planned (ADR 0060) | draft |
+| [Body Atlas](body-atlas/) | learning, use | anatomy (frames, parts and systems, measures, sections, knowledge), on morphe and physis through its C++ engine kept alive; BodyParts3D's whole body by system, cards, cuts, a plate in the conventions of imaging, tours (ADR 0066) | draft |
 | Orbital sandbox | learning | astronomy | planned |
 | Ephemeris calculator | use | metrology, astronomy | planned |
 | Map projections | learning | geography | planned |

@@ -1,0 +1,385 @@
+{
+  "about": "What is known of the parts of the body, keyed by the FMA concept that BodyParts3D draws. A part without an entry of its own takes the entry of its nearest is-a ancestor that has one (a left kidney the kidney's, a branch of the great saphenous vein the great saphenous vein's), and the Body Atlas says whence it came. Latin names after Terminologia Anatomica, 2nd ed. (FIPAT 2019).",
+  "status": "seed",
+  "note": "Drafted by a language model from the standard references below and not yet checked line by line against them. The domain's checks hold only its form: every key an FMA concept of the release, every field a sentence, every reference cited.",
+  "references": {
+    "gray": "Standring, S. (ed.) (2020), Gray's Anatomy: The Anatomical Basis of Clinical Practice, 42nd ed., Elsevier.",
+    "moore": "Moore, K. L., Dalley, A. F. and Agur, A. M. R. (2018), Clinically Oriented Anatomy, 8th ed., Wolters Kluwer.",
+    "ta2": "Federative International Programme for Anatomical Terminology (2019), Terminologia Anatomica, 2nd ed., FIPAT.",
+    "caggiati": "Caggiati, A., Bergan, J. J., Gloviczki, P., Jantet, G., Wendell-Smith, C. P. and Partsch, H. (2002), Nomenclature of the veins of the lower limbs: an international interdisciplinary consensus statement, Journal of Vascular Surgery 36, 416–422.",
+    "couinaud": "Couinaud, C. (1957), Le foie: études anatomiques et chirurgicales, Masson, Paris."
+  },
+  "entries": {
+    "FMA7088": {
+      "name": "heart", "latin": "Cor",
+      "summary": "A muscular pump of four chambers in the middle mediastinum, two thirds of it to the left of the median plane, its apex near the fifth left intercostal space in the midclavicular line.",
+      "function": "The right heart drives the venous blood through the lungs and the left heart drives the oxygenated blood through the body, about five litres a minute at rest.",
+      "supply": "The right and left coronary arteries, the first branches of the aorta, from its sinuses just above the aortic valve.",
+      "drainage": "Mostly by the coronary sinus into the right atrium; the anterior cardiac veins and the smallest cardiac veins open into the chambers directly.",
+      "innervation": "The cardiac plexus: sympathetic fibres from the cervical and upper thoracic ganglia quicken it, the vagus nerves slow it.",
+      "clinical": "The occlusion of a coronary artery infarcts the muscle it supplies; the territory lost follows the artery.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA49893": {
+      "name": "coronary artery", "latin": "Arteria coronaria",
+      "summary": "The two coronary arteries leave the aortic sinuses and run in the grooves between the chambers, crowning the heart.",
+      "function": "The right supplies the right atrium and ventricle and, in most people, the sinoatrial and atrioventricular nodes and the back of the septum; the left divides into the anterior interventricular and circumflex branches, which supply most of the left ventricle and the front of the septum.",
+      "clinical": "Their branches are functional end arteries: a sudden occlusion leaves little collateral flow. The great saphenous vein and the internal thoracic artery are the grafts that bypass them.",
+      "refs": ["gray", "moore"]
+    },
+    "FMA4706": {
+      "name": "coronary sinus", "latin": "Sinus coronarius",
+      "summary": "The wide venous channel in the posterior part of the groove between the left atrium and ventricle.",
+      "function": "It gathers the great, middle and small cardiac veins and opens into the right atrium between the opening of the inferior vena cava and the tricuspid valve.",
+      "clinical": "Its opening is a route for leads that pace the left ventricle.",
+      "refs": ["gray", "moore"]
+    },
+    "FMA7235": {
+      "name": "mitral valve", "latin": "Valva atrioventricularis sinistra",
+      "summary": "The valve of two cusps, anterior and posterior, between the left atrium and the left ventricle.",
+      "function": "It closes as the ventricle contracts; the chordae tendineae, held by the papillary muscles, keep its cusps from turning back into the atrium.",
+      "clinical": "It may narrow (stenosis, classically after rheumatic fever) or leak (regurgitation), as when a papillary muscle ruptures after an infarct.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA9466": {
+      "name": "cavity of left ventricle",
+      "summary": "The blood held by the left ventricle. BodyParts3D models the cavity as a solid of its own, so its volume here is the blood the ventricle holds at the one instant the model shows.",
+      "function": "In a resting adult it holds about 120 mL when filled and ejects about 70 mL with each beat, an ejection fraction of 55 to 70 %.",
+      "clinical": "Its volumes through the cycle, measured by echocardiography or MRI, are the first measures of the heart's pumping.",
+      "refs": ["gray"]
+    },
+    "FMA3734": {
+      "name": "aorta", "latin": "Aorta",
+      "summary": "The trunk of the systemic arteries: it rises from the left ventricle, arches over the root of the left lung, descends through the thorax and the diaphragm, and divides at the fourth lumbar vertebra into the common iliac arteries.",
+      "function": "An elastic conduit that stores part of each beat's blood in its wall and returns it in diastole, smoothing the flow (the Windkessel).",
+      "clinical": "It may dilate (an aneurysm, most often of the abdominal aorta below the renal arteries) or split within its wall (a dissection).",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA3768": {
+      "name": "arch of aorta", "latin": "Arcus aortae",
+      "summary": "The aorta's arch begins and ends at the level of the sternal angle (the disc between the fourth and fifth thoracic vertebrae), passing back and to the left over the left main bronchus.",
+      "function": "From its upper side arise the brachiocephalic trunk, the left common carotid and the left subclavian arteries; the ligamentum arteriosum ties it to the pulmonary trunk.",
+      "clinical": "The left recurrent laryngeal nerve hooks beneath it, so that an aneurysm of the arch may hoarsen the voice.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA3789": {
+      "name": "abdominal aorta", "latin": "Pars abdominalis aortae",
+      "summary": "The aorta from the aortic hiatus of the diaphragm (the twelfth thoracic vertebra) to its division at the fourth lumbar vertebra, on the left of the inferior vena cava.",
+      "function": "Its unpaired branches feed the gut, the coeliac trunk at T12, the superior mesenteric artery at L1 and the inferior mesenteric at L3; its paired branches the kidneys, adrenals and gonads.",
+      "clinical": "An abdominal aortic aneurysm may be felt as a pulsating mass above the navel and is screened for by ultrasound.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA8612": {
+      "name": "pulmonary trunk", "latin": "Truncus pulmonalis",
+      "summary": "The artery leaving the right ventricle, which divides beneath the aortic arch into the right and left pulmonary arteries.",
+      "function": "It carries the venous blood of the whole body to the lungs.",
+      "clinical": "A clot carried from the leg's deep veins may lodge at its division (a saddle embolus).",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA4720": {
+      "name": "superior vena cava", "latin": "Vena cava superior",
+      "summary": "The vein formed behind the first right costal cartilage by the two brachiocephalic veins, descending to the right atrium at the level of the third costal cartilage. It has no valves.",
+      "function": "It returns the blood of the head, the neck, the upper limbs and the wall of the thorax, and receives the azygos vein just before it enters the pericardium.",
+      "clinical": "When it is obstructed, most often by a tumour of the lung, the face and arms swell and the blood finds its way to the inferior vena cava through the azygos system and the veins of the chest wall.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA10951": {
+      "name": "inferior vena cava", "latin": "Vena cava inferior",
+      "summary": "The largest vein of the body, formed at the fifth lumbar vertebra by the two common iliac veins, ascending to the right of the aorta, in a groove at the back of the liver, and through the central tendon of the diaphragm at the eighth thoracic vertebra into the right atrium.",
+      "function": "It returns the blood of the lower limbs, the pelvis and the abdomen: it receives the lumbar, right gonadal, renal, right suprarenal, inferior phrenic and hepatic veins, the last bringing the blood of the gut through the liver.",
+      "clinical": "Lying on the back late in pregnancy, the uterus may compress it and lower the blood pressure; a filter may be placed in it to catch clots from the leg's deep veins.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA14333": {
+      "name": "common iliac vein", "latin": "Vena iliaca communis",
+      "summary": "The vein formed in front of the sacroiliac joint by the external and internal iliac veins; the two join at the fifth lumbar vertebra, right of the midline, as the inferior vena cava.",
+      "function": "It returns the blood of the lower limb and the pelvis.",
+      "clinical": "The left is longer and passes behind the right common iliac artery, which may press it against the fifth lumbar vertebra (May–Thurner syndrome), a cause of deep vein thrombosis of the left leg.",
+      "refs": ["gray", "moore"]
+    },
+    "FMA18883": {
+      "name": "external iliac vein", "latin": "Vena iliaca externa",
+      "summary": "The continuation of the femoral vein behind the inguinal ligament, running along the brim of the pelvis medial to its artery to join the internal iliac vein.",
+      "function": "It carries the whole venous return of the lower limb.",
+      "refs": ["gray", "moore"]
+    },
+    "FMA21185": {
+      "name": "femoral vein", "latin": "Vena femoralis",
+      "summary": "The deep vein of the thigh: it continues the popliteal vein at the adductor hiatus, ascends in the adductor canal and the femoral triangle, medial to the femoral artery in the femoral sheath, and becomes the external iliac vein behind the inguinal ligament.",
+      "function": "It receives the deep femoral vein and, at the saphenous opening, the great saphenous vein.",
+      "clinical": "The old name 'superficial femoral vein' misled: it is a deep vein, and a clot in it is a deep vein thrombosis, as the consensus on the veins' names insists. It is entered for central lines just medial to the femoral pulse.",
+      "refs": ["gray", "moore", "caggiati"]
+    },
+    "FMA44327": {
+      "name": "popliteal vein", "latin": "Vena poplitea",
+      "summary": "The vein formed at the lower border of the popliteus by the anterior and posterior tibial veins, ascending through the popliteal fossa superficial to its artery.",
+      "function": "It receives the small saphenous vein and becomes the femoral vein at the adductor hiatus.",
+      "clinical": "Its valves and the muscle pump of the calf below it drive the blood upward against gravity; their failure leaves the leg's veins under pressure.",
+      "refs": ["gray", "moore", "caggiati"]
+    },
+    "FMA44332": {
+      "name": "posterior tibial vein", "latin": "Vena tibialis posterior",
+      "summary": "The paired deep veins accompanying the posterior tibial artery, behind the medial malleolus and up the back of the leg.",
+      "function": "With the veins of the soleus and gastrocnemius they make the calf's muscle pump: the contracting muscles squeeze them, and their valves let the blood go only toward the heart.",
+      "clinical": "Deep vein thrombosis most often begins in the calf's veins, where the blood is slowest.",
+      "refs": ["gray", "caggiati"]
+    },
+    "FMA21376": {
+      "name": "great saphenous vein", "latin": "Vena saphena magna",
+      "summary": "The longest vein of the body: it begins at the medial end of the dorsal venous arch of the foot, passes in front of the medial malleolus, ascends on the medial side of the leg and thigh, and joins the femoral vein at the saphenous opening, about 3 to 4 cm below and lateral to the pubic tubercle.",
+      "function": "The main superficial vein of the lower limb; perforating veins carry its blood through the deep fascia to the deep veins, and ten to twenty valves keep it flowing upward.",
+      "innervation": "The saphenous nerve runs beside it in the leg.",
+      "clinical": "Its valves fail most often at the saphenofemoral junction, giving varicose veins. It is the commonest graft for bypassing the coronary arteries, and in front of the medial malleolus it can always be found for a venous cutdown.",
+      "refs": ["gray", "moore", "caggiati"]
+    },
+    "FMA44333": {
+      "name": "small saphenous vein", "latin": "Vena saphena parva",
+      "summary": "The superficial vein of the back of the leg: from the lateral end of the dorsal venous arch, behind the lateral malleolus and up the middle of the calf, it enters the popliteal fossa to join the popliteal vein, where it does so varying from person to person.",
+      "function": "It drains the lateral foot and the back of the leg.",
+      "innervation": "The sural nerve accompanies it.",
+      "clinical": "Its junction with the popliteal vein is the second commonest site of the valvular failure behind varicose veins.",
+      "refs": ["gray", "moore", "caggiati"]
+    },
+    "FMA4724": {
+      "name": "internal jugular vein", "latin": "Vena jugularis interna",
+      "summary": "The vein that continues the sigmoid sinus at the jugular foramen, descends in the carotid sheath lateral to the carotid arteries, and joins the subclavian vein behind the sternal end of the clavicle.",
+      "function": "It drains the brain, through the dural venous sinuses, and the face and neck.",
+      "clinical": "The right internal jugular vein is a common route for central venous lines; the height of its pulsation in the neck reads the pressure in the right atrium.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA4725": {
+      "name": "subclavian vein", "latin": "Vena subclavia",
+      "summary": "The continuation of the axillary vein at the outer border of the first rib, passing in front of the anterior scalene muscle (its artery passes behind) to join the internal jugular vein.",
+      "function": "It returns the blood of the upper limb and receives the external jugular vein; at its junction on the left the thoracic duct returns the lymph.",
+      "clinical": "It is a route for central lines, and may thrombose where it is pinched between the clavicle and the first rib in the arms of those who lift overhead.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA4723": {
+      "name": "brachiocephalic vein", "latin": "Vena brachiocephalica",
+      "summary": "The vein formed behind each sternoclavicular joint by the internal jugular and subclavian veins; the left, about 6 cm long, crosses behind the manubrium to meet the right, about 2.5 cm, as the superior vena cava.",
+      "function": "It returns the blood of the head, neck and upper limb of its side.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA13324": {
+      "name": "cephalic vein", "latin": "Vena cephalica",
+      "summary": "The superficial vein of the lateral side of the upper limb, from the radial side of the hand's dorsal venous network up the forearm and arm and in the groove between deltoid and pectoralis major, to the axillary vein.",
+      "clinical": "A favoured vein for cannulas, and the vein through which pacemaker leads are often passed.",
+      "refs": ["gray", "moore"]
+    },
+    "FMA22908": {
+      "name": "basilic vein", "latin": "Vena basilica",
+      "summary": "The superficial vein of the medial side of the upper limb, which pierces the deep fascia in the middle of the arm and joins the brachial veins as the axillary vein.",
+      "clinical": "Peripherally inserted central catheters are commonly passed through it.",
+      "refs": ["gray", "moore"]
+    },
+    "FMA22963": {
+      "name": "median cubital vein", "latin": "Vena mediana cubiti",
+      "summary": "The vein joining the cephalic to the basilic vein across the front of the elbow, separated from the brachial artery and the median nerve by the bicipital aponeurosis.",
+      "clinical": "The usual site for drawing blood.",
+      "refs": ["gray", "moore"]
+    },
+    "FMA14334": {
+      "name": "renal vein", "latin": "Vena renalis",
+      "summary": "The vein leaving the kidney's hilum in front of the renal artery for the inferior vena cava; the left is about three times as long as the right and crosses in front of the aorta just below the superior mesenteric artery.",
+      "function": "The left also receives the left gonadal and left suprarenal veins.",
+      "clinical": "The left may be pressed between the superior mesenteric artery and the aorta (the nutcracker syndrome).",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA14337": {
+      "name": "hepatic vein", "latin": "Vena hepatica",
+      "summary": "Usually three, right, middle and left, running between the liver's segments and opening into the inferior vena cava just below the diaphragm.",
+      "function": "They return the blood that reached the liver by the portal vein and the hepatic artery; their planes divide the liver into Couinaud's sectors.",
+      "clinical": "Their obstruction is the Budd–Chiari syndrome.",
+      "refs": ["gray", "couinaud"]
+    },
+    "FMA50735": {
+      "name": "hepatic portal vein", "latin": "Vena portae hepatis",
+      "summary": "The vein formed behind the neck of the pancreas by the superior mesenteric and splenic veins, ascending in the free edge of the lesser omentum behind the bile duct and the hepatic artery to divide at the porta hepatis.",
+      "function": "It brings the blood of the gut, spleen and pancreas to the liver, about three quarters of the liver's blood, before it reaches the heart.",
+      "clinical": "When the liver scars, the pressure in it rises and the blood bypasses the liver where portal and systemic veins meet: at the lower oesophagus (varices that may bleed), round the navel and in the rectum.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA4838": {
+      "name": "azygos vein", "latin": "Vena azygos",
+      "summary": "The vein ascending on the right of the vertebral bodies from the abdomen through the aortic hiatus, arching over the root of the right lung at the fourth thoracic vertebra into the superior vena cava.",
+      "function": "It drains the right posterior intercostal veins and, through the hemiazygos veins, the left; it joins the territories of the two venae cavae.",
+      "clinical": "When either vena cava is obstructed, the azygos system carries the blood round the block.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA66643": {
+      "name": "pulmonary vein", "latin": "Vena pulmonalis",
+      "summary": "Usually four, two from each lung, opening into the back of the left atrium.",
+      "function": "They carry the oxygenated blood from the lungs to the left heart, the only veins of the adult that do.",
+      "clinical": "Atrial fibrillation is often triggered from the sleeves of heart muscle at their openings, which ablation isolates.",
+      "refs": ["gray", "moore"]
+    },
+    "FMA3939": {
+      "name": "common carotid artery", "latin": "Arteria carotis communis",
+      "summary": "The artery of the neck, the right from the brachiocephalic trunk and the left from the aortic arch, ascending in the carotid sheath to divide at the upper border of the thyroid cartilage into the internal and external carotid arteries.",
+      "function": "Its division bears the carotid sinus, which senses the blood pressure, and the carotid body, which senses the blood's oxygen.",
+      "clinical": "Atheroma at its division is a common source of the emboli that cause strokes.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA70248": {
+      "name": "femoral artery", "latin": "Arteria femoralis",
+      "summary": "The continuation of the external iliac artery behind the inguinal ligament, halfway between the anterior superior iliac spine and the pubic symphysis, through the femoral triangle and the adductor canal to the adductor hiatus, where it becomes the popliteal artery.",
+      "function": "It supplies the lower limb, the thigh through its deep branch.",
+      "clinical": "Its pulse is felt in the groin, and catheters for angiography usually enter it there.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA7203": {
+      "name": "kidney", "latin": "Ren",
+      "summary": "A bean-shaped organ on the posterior abdominal wall behind the peritoneum, from the twelfth thoracic to the third lumbar vertebra, the right a little lower beneath the liver; about 11 × 6 × 3 cm, its hilum at the level of the first lumbar vertebra.",
+      "function": "It filters about 180 litres of plasma a day, keeps the body's water, salts and acid in balance, and makes renin, erythropoietin and the active form of vitamin D.",
+      "supply": "The renal artery, whose segmental branches are end arteries.",
+      "drainage": "The renal vein, to the inferior vena cava.",
+      "innervation": "The renal plexus, sympathetic fibres from the tenth thoracic to the first lumbar segments.",
+      "clinical": "A stone passing down the ureter gives pain from the loin to the groin; a transplanted kidney is placed in the iliac fossa.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA9704": {
+      "name": "ureter", "latin": "Ureter",
+      "summary": "A muscular tube about 25 cm long carrying urine from the kidney's pelvis down the psoas, across the pelvic brim at the division of the common iliac artery, to the bladder.",
+      "clinical": "Stones lodge where it is narrowest: where it leaves the renal pelvis, where it crosses the pelvic brim, and where it passes through the bladder's wall.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA15900": {
+      "name": "urinary bladder", "latin": "Vesica urinaria",
+      "summary": "The muscular reservoir of urine behind the pubic symphysis, holding about half a litre.",
+      "innervation": "Its detrusor muscle contracts under the pelvic splanchnic nerves (S2 to S4).",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA7197": {
+      "name": "liver", "latin": "Hepar",
+      "summary": "The largest gland, about 1.5 kg, under the right dome of the diaphragm. BodyParts3D draws it as Couinaud's segments with their vessels: each segment has its own branches of the portal vein, hepatic artery and bile duct, and the hepatic veins run between them.",
+      "function": "It stores and releases glucose, makes the plasma proteins and bile, and breaks down drugs and toxins.",
+      "supply": "Twofold: the portal vein, about three quarters, and the hepatic artery.",
+      "drainage": "The hepatic veins, into the inferior vena cava.",
+      "clinical": "Because each segment is supplied apart, a surgeon may remove one along its boundaries.",
+      "refs": ["gray", "couinaud", "ta2"]
+    },
+    "FMA7148": {
+      "name": "stomach", "latin": "Gaster",
+      "summary": "The J-shaped dilation of the gut between the oesophagus, at the cardia near the eleventh thoracic vertebra, and the duodenum, at the pylorus on the transpyloric plane.",
+      "supply": "The branches of the coeliac trunk: the gastric, gastro-omental and short gastric arteries.",
+      "drainage": "Its veins drain to the portal vein.",
+      "innervation": "The vagus nerves drive its secretion and movement.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA7131": {
+      "name": "oesophagus", "latin": "Oesophagus",
+      "summary": "A muscular tube about 25 cm long from the pharynx at the sixth cervical vertebra to the stomach, passing through the diaphragm at the tenth thoracic vertebra.",
+      "function": "It carries food by waves of contraction, and is narrowest where it begins, where the aortic arch and the left main bronchus cross it, and at the diaphragm.",
+      "clinical": "At its lower end portal and systemic veins meet; in portal hypertension they swell into varices that may bleed.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA7198": {
+      "name": "pancreas", "latin": "Pancreas",
+      "summary": "A gland lying behind the peritoneum across the posterior abdominal wall at the first and second lumbar vertebrae, from the curve of the duodenum to the spleen.",
+      "function": "Exocrine, its enzymes pass to the duodenum; endocrine, its islets make insulin and glucagon.",
+      "clinical": "The superior mesenteric vessels pass behind its neck, where the portal vein forms; a tumour of its head may block the bile duct and cause jaundice.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA7196": {
+      "name": "spleen", "latin": "Splen",
+      "summary": "The largest lymphoid organ, in the left upper abdomen beneath the ninth to eleventh ribs.",
+      "function": "It filters the blood, removing old red cells, and mounts immune responses to what the blood carries.",
+      "supply": "The splenic artery, from the coeliac trunk.",
+      "drainage": "The splenic vein, to the portal vein.",
+      "clinical": "It ruptures easily when the lower left ribs are struck.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA7394": {
+      "name": "trachea", "latin": "Trachea",
+      "summary": "The windpipe, from the cricoid cartilage at the sixth cervical vertebra to its division into the main bronchi at the level of the sternal angle, held open by C-shaped rings of cartilage closed behind by the trachealis muscle.",
+      "clinical": "The right main bronchus is wider, shorter and more vertical than the left, so that inhaled objects most often lodge in it.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA13295": {
+      "name": "diaphragm", "latin": "Diaphragma",
+      "summary": "The dome of muscle and tendon between the thorax and the abdomen.",
+      "function": "The chief muscle of breathing in. The inferior vena cava passes through it at the eighth thoracic vertebra, the oesophagus at the tenth and the aorta behind it at the twelfth.",
+      "innervation": "The phrenic nerves, from the third to fifth cervical segments.",
+      "clinical": "Irritation beneath it is felt as pain at the tip of the shoulder, which shares the fourth cervical segment.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA9611": {
+      "name": "femur", "latin": "Femur",
+      "summary": "The longest and strongest bone: its head meets the acetabulum, its neck stands at about 125° to the shaft, and its condyles bear on the tibia at the knee.",
+      "supply": "Its head is fed mainly by the retinacular branches of the medial circumflex femoral artery, running up the neck.",
+      "clinical": "A fracture of the neck within the joint's capsule may tear those branches and leave the head to die.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA13303": {
+      "name": "humerus", "latin": "Humerus",
+      "summary": "The bone of the arm, from the shoulder to the elbow.",
+      "clinical": "Three nerves lie on it and are injured with its fractures: the axillary nerve at its surgical neck, the radial nerve in its groove on the shaft, and the ulnar nerve behind the medial epicondyle.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA7485": {
+      "name": "sternum", "latin": "Sternum",
+      "summary": "The breastbone: the manubrium, the body and the xiphoid process.",
+      "function": "The joint between manubrium and body, the sternal angle, is felt as a ridge at the second costal cartilage and marks the level of the disc between the fourth and fifth thoracic vertebrae, where the aortic arch begins and ends and the trachea divides.",
+      "clinical": "Its red marrow can be sampled through the thin bone in front.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA7574": {
+      "name": "rib", "latin": "Costa",
+      "summary": "Twelve pairs: the first seven join the sternum by their own cartilages, the next three by the cartilage above, and the last two are free.",
+      "clinical": "The intercostal vein, artery and nerve run in a groove under each rib's lower border, so that a needle into the chest passes just above a rib.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA9914": {
+      "name": "vertebra", "latin": "Vertebra",
+      "summary": "A body in front and an arch behind, enclosing the vertebral foramen; seven cervical, twelve thoracic and five lumbar vertebrae above the sacrum.",
+      "function": "The column bears the trunk's weight, moves it, and protects the spinal cord. Its levels name the planes of the body's sections, as the Body Atlas names them.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA16202": {
+      "name": "sacrum", "latin": "Os sacrum",
+      "summary": "Five fused vertebrae forming the back of the pelvis, meeting the hip bones at the sacroiliac joints.",
+      "function": "It carries the weight of the trunk to the pelvis and the legs.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA50801": {
+      "name": "brain", "latin": "Encephalon",
+      "summary": "The cerebrum, the cerebellum and the brainstem, about 1.4 kg; the Brain Atlas shows its parts in detail.",
+      "supply": "The internal carotid and vertebral arteries, joined beneath it in the arterial circle.",
+      "drainage": "The dural venous sinuses, to the internal jugular veins.",
+      "refs": ["gray", "ta2"]
+    },
+    "FMA7647": {
+      "name": "spinal cord", "latin": "Medulla spinalis",
+      "summary": "The cord of the central nervous system in the vertebral canal, from the foramen magnum to about the first or second lumbar vertebra in the adult; the roots below it form the cauda equina.",
+      "clinical": "A lumbar puncture is made below its end, between the third and fourth or the fourth and fifth lumbar vertebrae.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA22314": {
+      "name": "gluteus maximus", "latin": "Musculus gluteus maximus",
+      "summary": "The largest muscle of the body, from the back of the ilium, sacrum and coccyx to the femur and the iliotibial tract.",
+      "function": "It extends and laterally rotates the hip, most of all in rising from a seat and climbing.",
+      "innervation": "The inferior gluteal nerve (L5, S1, S2).",
+      "clinical": "Injections are given in the upper outer quadrant of the buttock, away from the sciatic nerve.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA22353": {
+      "name": "sartorius", "latin": "Musculus sartorius",
+      "summary": "The longest muscle, a strap from the anterior superior iliac spine across the thigh to the medial side of the tibia.",
+      "function": "It flexes, abducts and laterally rotates the hip and flexes the knee, and roofs the adductor canal in which the femoral vessels run.",
+      "innervation": "The femoral nerve.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA18060": {
+      "name": "psoas major", "latin": "Musculus psoas major",
+      "summary": "The muscle from the twelfth thoracic and the lumbar vertebrae to the lesser trochanter of the femur, joined by the iliacus as the iliopsoas.",
+      "function": "The chief flexor of the hip. The lumbar plexus forms within it, and the kidney lies against it.",
+      "refs": ["gray", "moore", "ta2"]
+    },
+    "FMA7163": {
+      "name": "skin", "latin": "Cutis",
+      "summary": "The body's covering, its largest organ, about 1.5 to 2 m² in an adult.",
+      "function": "It protects, keeps water in, holds the body's temperature by its blood and sweat, and senses touch, pain and temperature.",
+      "refs": ["gray", "ta2"]
+    }
+  }
+}

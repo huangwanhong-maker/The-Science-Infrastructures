@@ -1,0 +1,2239 @@
+# BodyParts3D 4.0: each element's volume in cm³ as published in its OBJ file's header.
+# Source: isa_BP3D_4.0_obj_99.zip (sha256 40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e), from https://dbarchive.biosciencedbc.jp/data/bodyparts3d/20130619/;
+# read 2026-11-04 by domains/anatomy/tests/make_bp3d_fixtures.py.
+# BodyParts3D, © The Database Center for Life Science, licensed under CC Attribution 4.0 International.
+id	volume_cm3	name
+FJ1252	21.758500	Gingiva of upper jaw
+FJ1253	22.658700	Gingiva of lower jaw
+FJ1254	1.278100	Left lower first secondary molar tooth
+FJ1255	0.698400	Left lower first secondary premolar tooth
+FJ1256	1.150000	Left lower second secondary molar tooth
+FJ1257	0.606700	Left lower second secondary premolar tooth
+FJ1258	0.387000	Left lower central secondary incisor tooth
+FJ1259	0.423400	Left lower lateral secondary incisor tooth
+FJ1260	0.608600	Left lower secondary canine tooth
+FJ1261	1.410000	Left upper first secondary molar tooth
+FJ1262	0.812700	Left upper first secondary premolar tooth
+FJ1263	1.066000	Left upper second secondary molar tooth
+FJ1264	0.777700	Left upper second secondary premolar tooth
+FJ1265	0.649700	Left upper central secondary incisor tooth
+FJ1266	0.674200	Left upper lateral secondary incisor tooth
+FJ1267	0.720400	Left upper secondary canine tooth
+FJ1268	1.278300	Right lower first secondary molar tooth
+FJ1269	0.699500	Right lower first secondary premolar tooth
+FJ1270	1.148700	Right lower second secondary molar tooth
+FJ1271	0.606900	Right lower second secondary premolar tooth
+FJ1272	0.387900	Right lower central secondary incisor tooth
+FJ1273	0.424200	Right lower lateral secondary incisor tooth
+FJ1274	0.608800	Right lower secondary canine tooth
+FJ1275	1.066000	Right upper second secondary molar tooth
+FJ1276	1.408900	Right upper first secondary molar tooth
+FJ1277	0.813100	Right upper first secondary premolar tooth
+FJ1278	0.777500	Right upper second secondary premolar tooth
+FJ1279	0.650300	Right upper central secondary incisor tooth
+FJ1280	0.664400	Right upper lateral secondary incisor tooth
+FJ1281	0.719800	Right upper secondary canine tooth
+FJ1282	0.209000	Anterior chamber of left eyeball
+FJ1283	0.003900	Left anterior ethmoidal nerve
+FJ1284	0.192400	Check ligament of left lateral rectus
+FJ1285	1.397100	Left choroid
+FJ1286	0.400100	Left choroid
+FJ1287	0.052800	Left corona ciliaris
+FJ1288	0.010500	Left ciliary ganglion
+FJ1289	0.165500	Left cornea
+FJ1290	0.040400	Left frontal nerve
+FJ1291	0.027200	Left common tendinous ring
+FJ1292	0.196300	Check ligament of left medial rectus
+FJ1293	0.035000	Inferior branch of left oculomotor nerve
+FJ1294	0.326400	Left inferior oblique
+FJ1295	0.625700	Left inferior rectus
+FJ1296	0.003200	Left infratrochlear nerve
+FJ1297	0.148200	Left iris
+FJ1298	0.002200	Left lacrimal canaliculus
+FJ1299	0.458900	Left lacrimal gland
+FJ1300	0.039000	Left lacrimal nerve
+FJ1301	0.004200	Left lacrimal lake
+FJ1302	0.102800	Left nasolacrimal duct
+FJ1304	0.518500	Left lateral rectus
+FJ1305	0.259300	Left lens
+FJ1306	0.786700	Left levator palpebrae superioris
+FJ1308	0.448700	Left medial rectus
+FJ1309	0.111600	Left lacrimal sac
+FJ1310	0.031100	Left nasociliary nerve
+FJ1311	0.002000	Communicating branch of left nasociliary nerve with left ciliary ganglion
+FJ1312	0.077200	Left ophthalmic nerve
+FJ1313	0.630500	Left optic nerve
+FJ1315	0.003300	Left posterior ethmoidal nerve
+FJ1316	0.774500	Optic part of left retina
+FJ1317	2.105800	Left sclera
+FJ1318	0.003600	Left long ciliary nerve
+FJ1319	0.008600	Short ciliary nerve
+FJ1320	0.147300	Suspensory ligament of left lens
+FJ1321	0.013100	Superior branch of left oculomotor nerve
+FJ1322	0.518100	Left superior oblique
+FJ1323	0.496500	Left superior rectus
+FJ1324	0.164000	Tarsal plate of left upper eyelid
+FJ1325	0.066800	Left supra-orbital nerve
+FJ1326	0.053200	Left supratrochlear nerve
+FJ1328	0.115200	Tarsal plate of left lower eyelid
+FJ1329	0.009900	Trochlea of left superior oblique
+FJ1330	0.059400	Left trochlear nerve
+FJ1331	4.050500	Left vitreous body
+FJ1332	0.209000	Anterior chamber of right eyeball
+FJ1333	0.003900	Right anterior ethmoidal nerve
+FJ1334	0.192600	Check ligament of right lateral rectus
+FJ1335	0.196000	Check ligament of right medial rectus
+FJ1336	0.400000	Right choroid
+FJ1337	1.396500	Right choroid
+FJ1338	0.054500	Right corona ciliaris
+FJ1339	0.010900	Right ciliary ganglion
+FJ1340	0.165400	Right cornea
+FJ1341	0.040500	Right frontal nerve
+FJ1342	0.027200	Right common tendinous ring
+FJ1343	0.270100	Tendon of right levator palpebrae superioris
+FJ1344	0.035700	Inferior branch of right oculomotor nerve
+FJ1345	0.327100	Right inferior oblique
+FJ1346	0.626600	Right inferior rectus
+FJ1347	0.003300	Right infratrochlear nerve
+FJ1348	0.148100	Right iris
+FJ1349	0.002200	Right lacrimal canaliculus
+FJ1350	0.460300	Right lacrimal gland
+FJ1351	0.039100	Right lacrimal nerve
+FJ1352	0.004200	Right lacrimal lake
+FJ1353	0.104000	Right nasolacrimal duct
+FJ1355	0.518500	Right lateral rectus
+FJ1356	0.259300	Right lens
+FJ1357	0.785500	Right levator palpebrae superioris
+FJ1359	0.447900	Right medial rectus
+FJ1360	0.111600	Right lacrimal sac
+FJ1361	0.031100	Right nasociliary nerve
+FJ1362	0.002100	Communicating branch of right nasociliary nerve with right ciliary ganglion
+FJ1363	0.077300	Right ophthalmic nerve
+FJ1364	0.631000	Right optic nerve
+FJ1366	0.003200	Right posterior ethmoidal nerve
+FJ1367	0.774300	Optic part of right retina
+FJ1368	2.105100	Right sclera
+FJ1369	0.004000	Right long ciliary nerve
+FJ1370	0.008800	Short ciliary nerve
+FJ1371	0.147800	Suspensory ligament of right lens
+FJ1372	0.013200	Superior branch of right oculomotor nerve
+FJ1373	0.518400	Right superior oblique
+FJ1374	0.497100	Right superior rectus
+FJ1375	0.164000	Tarsal plate of right upper eyelid
+FJ1376	0.066800	Right supra-orbital nerve
+FJ1377	0.053200	Right supratrochlear nerve
+FJ1379	0.115100	Tarsal plate of right lower eyelid
+FJ1380	0.009800	Trochlea of right superior oblique
+FJ1381	0.059500	Right trochlear nerve
+FJ1382	4.049600	Right vitreous body
+FJ1383	1.020900	First lumbrical of right foot
+FJ1383M	0.859900	First lumbrical of left foot
+FJ1384	0.422100	First plantar interosseous of right foot
+FJ1384M	0.463800	First plantar interosseous of left foot
+FJ1385	0.700600	Second lumbrical of right foot
+FJ1385M	0.612800	Second lumbrical of left foot
+FJ1386	0.435800	Second plantar interosseous of right foot
+FJ1386M	0.436200	Second plantar interosseous of left foot
+FJ1387	0.759300	Third lumbrical of right foot
+FJ1387M	0.704500	Third lumbrical of left foot
+FJ1388	0.336900	Third plantar interosseous of right foot
+FJ1388M	0.339700	Third plantar interosseous of left foot
+FJ1389	0.660000	Fourth lumbrical of right foot
+FJ1389M	0.586200	Fourth lumbrical of left foot
+FJ1390	4.311700	Abductor digiti minimi of right foot
+FJ1390M	4.108500	Abductor digiti minimi of left foot
+FJ1391	1.217300	Flexor digiti minimi brevis of right foot
+FJ1391M	1.182500	Flexor digiti minimi brevis of left foot
+FJ1392	10.753800	Interosseous membrane of right leg
+FJ1392M	10.671100	Interosseous membrane of left leg
+FJ1393	4.993300	Lateral head of right flexor hallucis brevis
+FJ1393M	4.975800	Lateral head of left flexor hallucis brevis
+FJ1394	215.759900	Lateral head of right gastrocnemius
+FJ1394M	214.311200	Lateral head of left gastrocnemius
+FJ1395	475.540100	Long head of right biceps femoris
+FJ1395M	473.754100	Long head of left biceps femoris
+FJ1396	2.323100	Medial head of right flexor hallucis brevis
+FJ1396M	2.358200	Medial head of left flexor hallucis brevis
+FJ1397	308.777000	Medial head of right gastrocnemius
+FJ1397M	306.789100	Medial head of left gastrocnemius
+FJ1398	4.619300	Oblique head of right adductor hallucis
+FJ1398M	4.582800	Oblique head of left adductor hallucis
+FJ1399	0.394900	Opponens digiti minimi of right foot
+FJ1399M	0.464400	Opponens digiti minimi of left foot
+FJ1400	8.806000	Right abductor hallucis
+FJ1400M	8.902500	Left abductor hallucis
+FJ1401	49.629200	Right adductor brevis
+FJ1401M	49.099000	Left adductor brevis
+FJ1402	142.602000	Right adductor longus
+FJ1402M	141.886400	Left adductor longus
+FJ1403	484.529700	Right adductor magnus
+FJ1403M	481.264400	Left adductor magnus
+FJ1404	15.230600	Right adductor minimus
+FJ1404M	14.999800	Left adductor minimus
+FJ1405	21.772700	Right calcaneal tendon
+FJ1405M	21.570900	Left calcaneal tendon
+FJ1406	39.305800	Right extensor digitorum longus
+FJ1406M	38.838900	Left extensor digitorum longus
+FJ1407	3.843900	Right extensor hallucis brevis
+FJ1407M	3.775500	Left extensor hallucis brevis
+FJ1408	7.342400	Right extensor hallucis longus
+FJ1408M	7.251900	Left extensor hallucis longus
+FJ1409	12.714700	Right fibularis brevis
+FJ1409M	12.346700	Left fibularis brevis
+FJ1410	62.359700	Right fibularis longus
+FJ1410M	62.119700	Left fibularis longus
+FJ1411	1.660100	Right fibularis tertius
+FJ1411M	1.473900	Left fibularis tertius
+FJ1412	4.255300	Right flexor accessorius
+FJ1412M	4.143000	Left flexor accessorius
+FJ1413	14.619800	Right flexor digitorum brevis
+FJ1413M	14.442700	Left flexor digitorum brevis
+FJ1414	44.111100	Right flexor digitorum longus
+FJ1414M	43.526200	Left flexor digitorum longus
+FJ1415	54.695100	Right flexor hallucis longus
+FJ1415M	53.849400	Left flexor hallucis longus
+FJ1416	4.162200	Right gemellus inferior
+FJ1416M	3.654200	Left gemellus inferior
+FJ1417	4.572600	Right gemellus superior
+FJ1417M	3.290700	Left gemellus superior
+FJ1418	363.878800	Right gluteus maximus
+FJ1418M	355.153100	Left gluteus maximus
+FJ1419	211.230100	Right gluteus medius
+FJ1419M	210.182000	Left gluteus medius
+FJ1420	116.696400	Right gluteus minimus
+FJ1420M	116.089800	Left gluteus minimus
+FJ1421	110.138100	Right gracilis
+FJ1421M	109.425500	Left gracilis
+FJ1422	122.588200	Right iliacus
+FJ1422M	121.248800	Left iliacus
+FJ1423	76.167300	Right iliotibial tract
+FJ1423M	75.796200	Left iliotibial tract
+FJ1424	3.810600	Right long plantar ligament
+FJ1424M	3.666700	Left long plantar ligament
+FJ1425	17.752700	Right obturator externus
+FJ1425M	18.257600	Left obturator externus
+FJ1426	17.151000	Right obturator internus
+FJ1426M	16.840400	Left obturator internus
+FJ1427	55.326800	Right pectineus
+FJ1427M	54.554700	Left pectineus
+FJ1428	29.233400	Right piriformis
+FJ1428M	29.193300	Left piriformis
+FJ1429	32.849000	Right plantaris
+FJ1429M	32.450400	Left plantaris
+FJ1430	26.871500	Right popliteus
+FJ1430M	26.510900	Left popliteus
+FJ1431	173.682800	Right psoas major
+FJ1431M	172.927500	Left psoas major
+FJ1432	12.921000	Right quadratus femoris
+FJ1432M	12.780900	Left quadratus femoris
+FJ1433	347.628400	Right rectus femoris
+FJ1433M	345.603000	Left rectus femoris
+FJ1434	70.234300	Right sartorius
+FJ1434M	69.011400	Left sartorius
+FJ1435	321.338200	Right semimembranosus
+FJ1435M	320.128000	Left semimembranosus
+FJ1436	132.760100	Right semitendinosus
+FJ1436M	131.482300	Left semitendinosus
+FJ1437	320.471100	Right soleus
+FJ1437M	317.828000	Left soleus
+FJ1438	49.324500	Right tensor fasciae latae
+FJ1438M	48.313400	Left tensor fasciae latae
+FJ1439	112.299800	Right tibialis anterior
+FJ1439M	110.911100	Left tibialis anterior
+FJ1440	50.415300	Right tibialis posterior
+FJ1440M	49.884000	Left tibialis posterior
+FJ1441	252.219200	Right vastus intermedius
+FJ1441M	251.331100	Left vastus intermedius
+FJ1442	502.851400	Right vastus lateralis
+FJ1442M	500.318200	Left vastus lateralis
+FJ1443	279.080800	Right vastus medialis
+FJ1443M	277.266800	Left vastus medialis
+FJ1444	68.601300	Short head of right biceps femoris
+FJ1444M	67.822100	Short head of left biceps femoris
+FJ1445	0.921000	Transverse head of right adductor hallucis
+FJ1445M	0.937500	Transverse head of left adductor hallucis
+FJ1446	25.104600	Abdominal part of right pectoralis major
+FJ1446M	25.044700	Abdominal part of left pectoralis major
+FJ1447	47.231200	Clavicular part of right pectoralis major
+FJ1447M	47.130300	Clavicular part of left pectoralis major
+FJ1448	60.104000	Linea alba
+FJ1449M	3.590900	Left coccygeus
+FJ1450	0.413800	
+FJ1450M	0.403300	External anal sphincter
+FJ1451	80.884000	
+FJ1451M	80.673700	External intercostal muscle
+FJ1452	263.571400	Right external oblique
+FJ1452M	263.629300	Left external oblique
+FJ1453M	7.086100	Left iliococcygeus
+FJ1454	63.890500	
+FJ1454M	64.008300	Innermost intercostal muscle
+FJ1455	65.323100	
+FJ1455M	64.638900	Internal intercostal muscle
+FJ1456	37.231600	Right pectoralis minor
+FJ1456M	37.123600	Left pectoralis minor
+FJ1457M	5.691700	Left pubococcygeus
+FJ1458M	5.546200	Left puborectalis
+FJ1459	142.232700	Right serratus anterior
+FJ1459M	141.972500	Left serratus anterior
+FJ1460	3.060100	Right subclavius
+FJ1460M	3.051700	Left subclavius
+FJ1461	11.284800	Right transversus thoracis
+FJ1461M	12.171800	Left transversus thoracis
+FJ1462	5.847600	Set of right levatores costarum breves
+FJ1462M	5.598600	Set of left levatores costarum breves
+FJ1463	14.306100	Set of right levatores costarum longi
+FJ1463M	14.127300	Set of left levatores costarum longi
+FJ1464	397.108000	Sternocostal part of right pectoralis major
+FJ1464M	394.925300	Sternocostal part of left pectoralis major
+FJ1465	0.773200	
+FJ1465M	0.766300	Tendinous arch of levator ani
+FJ1466	1.776600	Abductor digiti minimi of right hand
+FJ1466M	1.792300	Abductor digiti minimi of left hand
+FJ1467	93.168700	Acromial part of right deltoid
+FJ1467M	91.031100	Acromial part of left deltoid
+FJ1468	54.990700	Clavicular part of right deltoid
+FJ1468M	54.335400	Clavicular part of left deltoid
+FJ1469	0.848700	Left flexor pollicis brevis
+FJ1469M	1.148600	Right flexor pollicis brevis
+FJ1470	0.646800	Flexor digiti minimi brevis of right hand
+FJ1470M	0.683500	Flexor digiti minimi brevis of left hand
+FJ1471	1.132500	Flexor retinaculum of right wrist
+FJ1471M	0.905000	Flexor retinaculum of left wrist
+FJ1472	10.283400	Right extensor carpi ulnaris
+FJ1472M	10.650500	Left extensor carpi ulnaris
+FJ1473	26.051200	Humeral head of right flexor carpi ulnaris
+FJ1473M	25.732300	Humeral head of left flexor carpi ulnaris
+FJ1474	12.143700	Humeral head of right pronator teres
+FJ1474M	12.201900	Humeral head of left pronator teres
+FJ1475	47.666500	Right flexor digitorum superficialis
+FJ1475M	47.971500	Left flexor digitorum superficialis
+FJ1476	4.019400	Interosseous membrane of right forearm
+FJ1476M	4.164500	Interosseous membrane of left forearm
+FJ1477	129.892600	Lateral head of right triceps brachii
+FJ1477M	129.969200	Lateral head of left triceps brachii
+FJ1478	95.455100	Long head of right biceps brachii
+FJ1478M	94.044600	Long head of left biceps brachii
+FJ1479	133.246800	Long head of right triceps brachii
+FJ1479M	132.287500	Long head of left triceps brachii
+FJ1480	64.146400	Medial head of right triceps brachii
+FJ1480M	62.903300	Medial head of left triceps brachii
+FJ1481	1.186900	Oblique head of right adductor pollicis
+FJ1481M	1.094800	Oblique head of left adductor pollicis
+FJ1482	0.979100	Opponens digiti minimi of right hand
+FJ1482M	1.123300	Opponens digiti minimi of left hand
+FJ1483	1.824800	Right abductor pollicis brevis
+FJ1483M	2.138600	Left abductor pollicis brevis
+FJ1484	15.936300	Right abductor pollicis longus
+FJ1484M	16.254300	Left abductor pollicis longus
+FJ1485	7.464800	Right anconeus
+FJ1485M	7.781400	Left anconeus
+FJ1486	76.712300	Right brachialis
+FJ1486M	76.390600	Left brachialis
+FJ1487	79.095000	Right brachioradialis
+FJ1487M	78.833800	Left brachioradialis
+FJ1488	21.054300	Right coracobrachialis
+FJ1488M	20.318100	Left coracobrachialis
+FJ1489	19.773000	Right extensor carpi radialis brevis
+FJ1489M	20.015500	Left extensor carpi radialis brevis
+FJ1490	25.281200	Right extensor carpi radialis longus
+FJ1490M	24.625500	Left extensor carpi radialis longus
+FJ1491	6.711700	Right extensor digiti minimi
+FJ1491M	7.807400	Left extensor digiti minimi
+FJ1492	29.117700	Right extensor digitorum
+FJ1492M	29.841500	Left extensor digitorum
+FJ1493	3.019400	Right extensor indicis
+FJ1493M	3.300600	Left extensor indicis
+FJ1494	3.670700	Right extensor pollicis brevis
+FJ1494M	2.683300	Left extensor pollicis brevis
+FJ1495	4.991900	Right extensor pollicis longus
+FJ1495M	5.045400	Left extensor pollicis longus
+FJ1496	21.962100	Right flexor carpi radialis
+FJ1496M	20.986200	Left flexor carpi radialis
+FJ1497	53.968700	Right flexor digitorum profundus
+FJ1497M	53.481900	Left flexor digitorum profundus
+FJ1498	5.449900	Right flexor pollicis longus
+FJ1498M	5.837500	Left flexor pollicis longus
+FJ1499	16.766000	Right flexor digitorum superficialis
+FJ1499M	16.210700	Left flexor digitorum superficialis
+FJ1500	106.279700	Right infraspinatus muscle
+FJ1500M	104.399500	Left infraspinatus muscle
+FJ1501	2.017900	Right opponens pollicis
+FJ1501M	2.204900	Left opponens pollicis
+FJ1502	15.744600	Right palmaris longus
+FJ1502M	16.884200	Left palmaris longus
+FJ1503	6.553500	Right pronator quadratus
+FJ1503M	6.562400	Left pronator quadratus
+FJ1504	46.490000	Right subscapularis
+FJ1504M	45.915300	Left subscapularis
+FJ1505	11.295200	Right supinator
+FJ1505M	11.218000	Left supinator
+FJ1506	33.649000	Right supraspinatus
+FJ1506M	33.304900	Left supraspinatus
+FJ1507	37.439700	Right teres major
+FJ1507M	36.274000	Left teres major
+FJ1508	32.779700	Right teres minor
+FJ1508M	32.182400	Left teres minor
+FJ1509	4.069200	Set of dorsal interossei of right hand
+FJ1509M	3.981000	Set of dorsal interossei of left hand
+FJ1510	2.310600	Set of lumbricals of right hand
+FJ1510M	2.459100	Set of lumbricals of left hand
+FJ1511	0.847800	Set of palmar interossei of right hand
+FJ1511M	0.886600	Set of palmar interossei of left hand
+FJ1512	74.005900	Short head of right biceps brachii
+FJ1512M	69.689500	Short head of left biceps brachii
+FJ1513	170.269400	Spinal part of right deltoid
+FJ1513M	173.236000	Spinal part of left deltoid
+FJ1514	0.960800	Superficial head of right flexor pollicis brevis
+FJ1514M	0.736300	Superficial head of left flexor pollicis brevis
+FJ1515	3.035400	Transverse head of right adductor pollicis
+FJ1515M	3.064200	Transverse head of left adductor pollicis
+FJ1516	4.936700	Ulnar head of right pronator teres
+FJ1516M	5.562500	Ulnar head of left pronator teres
+FJ1517	6.331300	Right extensor carpi ulnaris
+FJ1517M	6.794000	Left extensor carpi ulnaris
+FJ1518	20.323000	Ulnar head of right flexor carpi ulnaris
+FJ1518M	20.119600	Ulnar head of left flexor carpi ulnaris
+FJ1520	139.745800	Ascending part of right trapezius
+FJ1520M	139.452000	Ascending part of left trapezius
+FJ1521	78.025000	Descending part of right trapezius
+FJ1521M	76.905600	Descending part of left trapezius
+FJ1522	3.625400	Right lumbar rotator
+FJ1522M	5.343800	Left lumbar rotator
+FJ1524	2.485500	Right cervical rotator
+FJ1524M	1.298300	Left cervical rotator
+FJ1525	8.784700	
+FJ1525M	8.853400	Thoracic rotator
+FJ1526	6.629600	Right iliocostalis cervicis
+FJ1526M	6.703400	Left iliocostalis cervicis
+FJ1527	52.187500	Right iliocostalis lumborum
+FJ1527M	52.101400	Left iliocostalis lumborum
+FJ1528	25.495400	Right iliocostalis thoracis
+FJ1528M	25.289900	Left iliocostalis thoracis
+FJ1532	12.967100	Right levator scapulae
+FJ1532M	12.996100	Left levator scapulae
+FJ1533	3.500700	Right longissimus capitis
+FJ1533M	3.381100	Left longissimus capitis
+FJ1534	5.401800	Right longissimus cervicis
+FJ1534M	5.379600	Left longissimus cervicis
+FJ1535	112.474000	Right longissimus thoracis
+FJ1535M	112.083800	Left longissimus thoracis
+FJ1536	20.436500	Right rhomboid major
+FJ1536M	20.355300	Left rhomboid major
+FJ1537	5.318500	Right rhomboid minor
+FJ1537M	5.352500	Left rhomboid minor
+FJ1538	7.168600	Right semispinalis capitis
+FJ1538M	7.470800	Left semispinalis capitis
+FJ1539	5.785100	Right semispinalis cervicis
+FJ1539M	5.747500	Left semispinalis cervicis
+FJ1540	14.528600	Right semispinalis thoracis
+FJ1540M	14.183900	Left semispinalis thoracis
+FJ1541	57.918700	Right serratus posterior inferior
+FJ1541M	57.537300	Left serratus posterior inferior
+FJ1542	20.026200	Right serratus posterior superior
+FJ1542M	19.839000	Left serratus posterior superior
+FJ1543	1.250700	
+FJ1543M	1.220400	Spinalis
+FJ1544	7.948600	Right spinalis thoracis
+FJ1544M	7.845400	Left spinalis thoracis
+FJ1545	26.042200	Right splenius capitis
+FJ1545M	25.935800	Left splenius capitis
+FJ1546	11.603100	Right splenius cervicis
+FJ1546M	11.525500	Left splenius cervicis
+FJ1547	3.999400	
+FJ1547M	3.953400	Lateral lumbar intertransversarius
+FJ1548	2.384100	
+FJ1548M	2.279100	Medial lumbar intertransversarius
+FJ1549	0.796100	
+FJ1549M	0.857900	Set of anterior cervical intertransversarii
+FJ1550	0.564400	
+FJ1550M	0.567900	Set of interspinales lumborum
+FJ1551	0.333400	Right interspinalis thoracis
+FJ1551M	0.339800	Left interspinalis thoracis
+FJ1552	0.568300	
+FJ1552M	0.589100	Set of interspinales cervicis
+FJ1553	0.609300	
+FJ1553M	0.614600	Set of posterior cervical intertransversarii
+FJ1554	43.983200	Transverse part of right trapezius
+FJ1554M	43.399400	Transverse part of left trapezius
+FJ1555	0.595000	Left digastric
+FJ1556	0.598800	Right digastric
+FJ1557	2.049400	Inferior oblique part of left longus colli
+FJ1558	39.923100	Left platysma
+FJ1559	0.583200	Left geniohyoid
+FJ1560	0.036600	Left digastric
+FJ1561	4.751300	Left longus capitis
+FJ1562	1.851600	Left mylohyoid
+FJ1563	2.593000	Left obliquus capitis inferior
+FJ1564	1.278600	Left obliquus capitis superior
+FJ1565	4.915800	Left omohyoid
+FJ1566	0.684000	Left rectus capitis anterior
+FJ1567	4.663700	Left rectus capitis posterior major
+FJ1568	1.529000	Left rectus capitis posterior minor
+FJ1569	0.592900	Left rectus capitis lateralis
+FJ1570	2.817800	Left scalenus anterior
+FJ1571	4.885500	Left scalenus medius
+FJ1572	2.646100	Left scalenus posterior
+FJ1573	47.056700	Left sternocleidomastoid
+FJ1574	5.016300	Left sternohyoid
+FJ1575	4.769900	Left sternothyroid
+FJ1576	0.794700	Left stylohyoid
+FJ1577	0.782800	Left thyrohyoid
+FJ1578	2.457800	Left digastric
+FJ1579	2.461600	Right digastric
+FJ1580	0.583300	Right geniohyoid
+FJ1581	0.038000	Right intermediate tendon
+FJ1582	4.738000	Right longus capitis
+FJ1583	1.860100	Right mylohyoid
+FJ1584	2.555200	Right obliquus capitis inferior
+FJ1585	1.261000	Right obliquus capitis superior
+FJ1586	4.937700	Right omohyoid
+FJ1587	40.305600	Right platysma
+FJ1588	0.666100	Right rectus capitis anterior
+FJ1589	4.660500	Right rectus capitis posterior major
+FJ1590	1.555400	Right rectus capitis posterior minor
+FJ1591	0.532200	Right rectus capitis lateralis
+FJ1592	2.818500	Right scalenus anterior
+FJ1593	4.888500	Right scalenus medius
+FJ1594	2.645900	Right scalenus posterior
+FJ1595	47.058300	Right sternocleidomastoid
+FJ1596	5.013000	Right sternohyoid
+FJ1597	4.763100	Right sternothyroid
+FJ1598	0.800100	Right stylohyoid
+FJ1599	0.781700	Right thyrohyoid
+FJ1600	1.952900	Superior oblique part of left longus colli
+FJ1601	2.487600	Vertical intermediate part of left longus colli
+FJ1654	0.138600	Right anterior cerebral artery
+FJ1654M	0.132500	Left anterior cerebral artery
+FJ1655	0.007900	Anterior communicating artery
+FJ1656	0.071300	
+FJ1656M	0.032400	Anterior inferior cerebellar artery
+FJ1657	0.057100	Right anterior spinal artery
+FJ1657M	0.038700	Left anterior spinal artery
+FJ1658	0.040600	Right anterior choroidal artery
+FJ1658M	0.038700	Left anterior choroidal artery
+FJ1659	0.152200	Right anterior temporal artery
+FJ1659M	0.249800	Left anterior temporal artery
+FJ1660	0.070400	Insular part of right middle cerebral artery
+FJ1660M	0.069800	Insular part of left middle cerebral artery
+FJ1661	0.053000	Anterior temporal branch of right lateral occipital artery
+FJ1661M	0.058000	Anterior temporal branch of left lateral occipital artery
+FJ1662	0.053700	Anterolateral central branch of right middle cerebral artery
+FJ1662M	0.205200	Anterolateral central branch of left middle cerebral artery
+FJ1663	0.016800	Anterolateral central branch of right middle cerebral artery
+FJ1663M	0.413900	Anterolateral central branch of left middle cerebral artery
+FJ1664	0.164800	
+FJ1664M	0.163300	Artery of central sulcus
+FJ1665	0.112400	
+FJ1665M	0.110900	Artery of central sulcus
+FJ1666	0.099700	Artery of right postcentral sulcus
+FJ1666M	0.098700	Artery of left postcentral sulcus
+FJ1667	0.051500	Right anterior parietal artery
+FJ1667M	0.050700	Left anterior parietal artery
+FJ1668	0.111500	Artery of right precentral sulcus
+FJ1668M	0.110300	Artery of left precentral sulcus
+FJ1669	0.041300	Artery of right precentral sulcus
+FJ1669M	0.040500	Artery of left precentral sulcus
+FJ1670	0.021000	Artery of right precentral sulcus
+FJ1670M	0.020500	Artery of left precentral sulcus
+FJ1671	0.025700	Precuneal branch of right pericallosal artery
+FJ1671M	0.013900	Precuneal branch of left pericallosal artery
+FJ1672	0.161000	Basilar artery
+FJ1673	0.040000	Branch of right middle cerebral artery to right angular gyrus
+FJ1673M	0.039300	Branch of left middle cerebral artery to left angular gyrus
+FJ1674	0.008600	Branch of right anterior choroidal artery to posterior limb of right internal capsule
+FJ1674M	0.010800	Branch of left anterior choroidal artery to posterior limb of left internal capsule
+FJ1675	0.080800	Right thalamogeniculate artery
+FJ1675M	0.105800	Left thalamogeniculate artery
+FJ1676	0.193600	Right callosomarginal artery
+FJ1676M	0.186500	Left callosomarginal artery
+FJ1677	0.006600	Right splenial artery
+FJ1677M	0.006400	Left splenial artery
+FJ1678	0.036900	Right splenial artery
+FJ1678M	0.036100	Left splenial artery
+FJ1679	0.004100	Hypothalamic branch of right posterior communicating artery
+FJ1679M	0.022200	Hypothalamic branch of left posterior communicating artery
+FJ1680	0.039300	Middle temporal branch of right lateral occipital artery
+FJ1680M	0.019900	Middle temporal branch of left lateral occipital artery
+FJ1681	0.029000	Intermediomedial branch of right callosomarginal artery
+FJ1681M	0.024600	Intermediomedial branch of left callosomarginal artery
+FJ1682	1.129400	Right internal carotid artery
+FJ1682M	1.107000	Left internal carotid artery
+FJ1683	0.086200	Lateral branch of right superior cerebellar artery
+FJ1683M	0.115900	Lateral branch of left superior cerebellar artery
+FJ1684	0.020400	Lateral branch of right pontine artery
+FJ1684M	0.227800	Lateral branch of left pontine artery
+FJ1685	0.114100	Right lateral frontobasal artery
+FJ1685M	0.112500	Left lateral frontobasal artery
+FJ1686	0.018500	Right lateral frontobasal artery
+FJ1686M	0.018100	Left lateral frontobasal artery
+FJ1687	0.067300	Right lateral occipital artery
+FJ1687M	0.072400	Left lateral occipital artery
+FJ1688	0.052600	Medial branch of right superior cerebellar artery
+FJ1688M	0.166400	Medial branch of left superior cerebellar artery
+FJ1689	0.008200	Medial branch of right pontine artery
+FJ1689M	0.120500	Medial branch of left pontine artery
+FJ1690	0.108000	Right medial frontobasal artery
+FJ1690M	0.055400	Left medial frontobasal artery
+FJ1691	0.064400	Right medial occipital artery
+FJ1691M	0.100600	Left medial occipital artery
+FJ1692	0.224200	Sphenoid part of right middle cerebral artery
+FJ1692M	0.220200	Sphenoid part of left middle cerebral artery
+FJ1693	0.102800	Middle temporal branch of right middle cerebral artery
+FJ1693M	0.059600	Middle temporal branch of left middle cerebral artery
+FJ1694	0.285600	Insular part of right middle cerebral artery
+FJ1694M	0.283800	Insular part of left middle cerebral artery
+FJ1695	0.109800	Right ophthalmic artery
+FJ1695M	0.109100	Left ophthalmic artery
+FJ1696	0.043600	Paracentral branch of right callosomarginal artery
+FJ1696M	0.037800	Paracentral branch of left callosomarginal artery
+FJ1697	0.004100	Paracentral branch of right callosomarginal artery
+FJ1697M	0.037300	Paracentral branch of left callosomarginal artery
+FJ1698	0.010200	Paracentral branch of right callosomarginal artery
+FJ1698M	0.003900	Paracentral branch of left callosomarginal artery
+FJ1699	0.126600	Right pericallosal artery
+FJ1699M	0.200100	Left pericallosal artery
+FJ1700	0.007900	Right posterior inferior cerebellar artery
+FJ1700M	0.069300	Left posterior inferior cerebellar artery
+FJ1701	0.002800	Right posterior inferior cerebellar artery
+FJ1701M	0.012500	Left posterior inferior cerebellar artery
+FJ1702	0.003500	Right posterior inferior cerebellar artery
+FJ1702M	0.158600	Left posterior inferior cerebellar artery
+FJ1703	0.002600	Right posterior inferior cerebellar artery
+FJ1703M	0.010000	Left posterior inferior cerebellar artery
+FJ1704	0.006300	Right posterior inferior cerebellar artery
+FJ1704M	0.063200	Left posterior inferior cerebellar artery
+FJ1705	0.011000	Right posterior inferior cerebellar artery
+FJ1705M	0.011500	Left posterior inferior cerebellar artery
+FJ1706	0.010800	Right posterior inferior cerebellar artery
+FJ1706M	0.054900	Left posterior inferior cerebellar artery
+FJ1707	0.001300	Right posterior inferior cerebellar artery
+FJ1707M	0.000300	Left posterior inferior cerebellar artery
+FJ1708	0.000500	Right posterior inferior cerebellar artery
+FJ1708M	0.001500	Left posterior inferior cerebellar artery
+FJ1709	0.002200	Right posterior inferior cerebellar artery
+FJ1709M	0.022700	Left posterior inferior cerebellar artery
+FJ1710	0.001500	Right posterior inferior cerebellar artery
+FJ1710M	0.002000	Left posterior inferior cerebellar artery
+FJ1711	0.022400	Right posterior inferior cerebellar artery
+FJ1711M	0.009400	Left posterior inferior cerebellar artery
+FJ1712	0.044300	Right polar temporal artery
+FJ1712M	0.195900	Left polar temporal artery
+FJ1713	0.023700	Right posterior communicating artery
+FJ1713M	0.022800	Left posterior communicating artery
+FJ1714	0.103300	Postcommunicating part of right posterior cerebral artery
+FJ1714M	0.100200	Postcommunicating part of left posterior cerebral artery
+FJ1715	0.055600	Right posterior inferior cerebellar artery
+FJ1715M	0.046400	Left posterior inferior cerebellar artery
+FJ1716	0.292300	Right posterior parietal artery
+FJ1716M	0.290100	Left posterior parietal artery
+FJ1717	0.100900	Posterior temporal branch of right middle cerebral artery
+FJ1717M	0.099900	Posterior temporal branch of left middle cerebral artery
+FJ1718	0.078300	Trunk of inferior terminal branch of right middle cerebral artery
+FJ1718M	0.058300	Trunk of inferior terminal branch of left middle cerebral artery
+FJ1719	0.038100	
+FJ1719M	0.059100	Set of posterior temporal branches of lateral occipital artery
+FJ1720	0.009900	Right thalamoperforating artery
+FJ1720M	0.064900	Left thalamoperforating artery
+FJ1721	0.003500	Posteromedial central branch of right posterior cerebral artery
+FJ1721M	0.013600	Posteromedial central branch of left posterior cerebral artery
+FJ1722	0.108700	Posteromedial branch of right callosomarginal artery
+FJ1722M	0.049800	Posteromedial branch of left callosomarginal artery
+FJ1723	0.035500	Precommunicating part of right posterior cerebral artery
+FJ1723M	0.034300	Precommunicating part of left posterior cerebral artery
+FJ1724	0.211100	Right prefrontal artery
+FJ1724M	0.209400	Left prefrontal artery
+FJ1725	0.841800	Right vertebral artery
+FJ1725M	0.343600	Left vertebral artery
+FJ1726	0.092100	Right superior cerebellar artery
+FJ1726M	0.165700	Left superior cerebellar artery
+FJ1727	0.017800	Right posterior medial choroidal artery
+FJ1727M	0.056000	Left posterior medial choroidal artery
+FJ1728	0.044200	Superior vermian branch of medial branch of right superior cerebellar artery
+FJ1728M	0.097700	Superior vermian branch of medial branch of left superior cerebellar artery
+FJ1729	0.337300	Temporo-occipital branch of right middle cerebral artery
+FJ1729M	0.324200	Temporo-occipital branch of left middle cerebral artery
+FJ1730	2.325800	Third ventricle
+FJ1731	2.524000	Fourth ventricle
+FJ1732	23.819500	Left angular gyrus
+FJ1733	23.997000	Right angular gyrus
+FJ1734	0.085500	Anterior commissure
+FJ1735	0.206900	Brachium of left superior colliculus
+FJ1736	0.206000	Brachium of right superior colliculus
+FJ1737	0.078300	Central canal of spinal cord
+FJ1738	0.071200	Cerebral aqueduct
+FJ1739	15.309800	Left cingulate gyrus
+FJ1740	15.473900	Right cingulate gyrus
+FJ1741	1.046700	Commissure of fornix of forebrain
+FJ1742	25.520300	Corpus callosum
+FJ1743	0.025600	Habenula
+FJ1744	22.250500	Left inferior frontal gyrus
+FJ1745	22.303700	Right inferior frontal gyrus
+FJ1746	20.203200	Left inferior temporal gyrus
+FJ1747	20.543100	Right inferior temporal gyrus
+FJ1748	11.245800	Left insula
+FJ1749	11.231800	Right insula
+FJ1750	8.241500	Left internal capsule
+FJ1751	8.240100	Right internal capsule
+FJ1752	0.124800	Interventricular foramen
+FJ1753	1.514400	Left amygdala
+FJ1754	7.347600	Left caudate nucleus
+FJ1755	1.342900	Choroid plexus of cerebral hemisphere
+FJ1756	1.214600	Left fornix of forebrain
+FJ1757	2.528900	Left globus pallidus
+FJ1758	174.094000	White matter of left cerebral hemisphere
+FJ1759	2.174900	Left hippocampus
+FJ1760	0.827500	Hypothalamus
+FJ1761	0.173700	Brachium of left inferior colliculus
+FJ1762	0.195100	Left inferior colliculus
+FJ1763	0.001700	Interpeduncular fossa
+FJ1764	0.041600	Lamina terminalis
+FJ1766	0.181200	Left lateral geniculate body
+FJ1767	13.193000	Left lateral ventricle
+FJ1768	0.047500	Mammillary body
+FJ1769	5.264600	Medulla oblongata
+FJ1770	4.159600	Midbrain
+FJ1771	0.298300	Optic chiasm
+FJ1772	0.732500	Left optic nerve
+FJ1773	0.783600	Left optic tract
+FJ1774	2.204800	Peduncle of midbrain
+FJ1775	11.026100	Pons
+FJ1776	5.937800	Left putamen
+FJ1777	0.102200	Left stria medullaris of thalamus
+FJ1778	0.518800	Left stria terminalis
+FJ1779	0.134200	Left superior colliculus
+FJ1780	0.074400	Tuber cinereum
+FJ1781	58.885900	Cerebellum
+FJ1782	8.754100	Left thalamus
+FJ1783	9.460300	Left fusiform gyrus
+FJ1784	9.450400	Right fusiform gyrus
+FJ1785	3.604000	Left parahippocampal gyrus
+FJ1786	3.665300	Right parahippocampal gyrus
+FJ1787	21.006800	Left middle frontal gyrus
+FJ1788	21.182300	Right middle frontal gyrus
+FJ1789	21.367900	Left middle temporal gyrus
+FJ1790	21.116800	Right middle temporal gyrus
+FJ1791	36.888600	Left occipital lobe
+FJ1792	36.600900	Right occipital lobe
+FJ1793	15.723600	Orbital gyrus
+FJ1794	15.759800	Orbital gyrus
+FJ1795	0.208400	Pineal body
+FJ1796	0.621400	Pituitary gland
+FJ1797	25.471600	Left postcentral gyrus
+FJ1798	25.261100	Right postcentral gyrus
+FJ1799	0.089400	Posterior commissure
+FJ1800	23.856000	Left precentral gyrus
+FJ1801	23.829700	Right precentral gyrus
+FJ1802	7.346500	Right caudate nucleus
+FJ1803	1.339800	Choroid plexus of cerebral hemisphere
+FJ1804	1.210600	Right fornix of forebrain
+FJ1805	2.526800	Right globus pallidus
+FJ1806	174.000800	White matter of right cerebral hemisphere
+FJ1807	2.154500	Right hippocampus
+FJ1808	0.828000	Hypothalamus
+FJ1809	0.175200	Brachium of right inferior colliculus
+FJ1810	0.204000	Right inferior colliculus
+FJ1811	0.001900	Interpeduncular fossa
+FJ1812	0.041600	Lamina terminalis
+FJ1813	0.191300	Right lateral geniculate body
+FJ1814	13.189100	Right lateral ventricle
+FJ1815	0.048000	Mammillary body
+FJ1816	0.123700	Right medial geniculate body
+FJ1816M	0.117800	Left medial geniculate body
+FJ1817	4.162000	Midbrain
+FJ1818	0.298900	Optic chiasm
+FJ1819	0.732100	Right optic nerve
+FJ1820	0.783200	Right optic tract
+FJ1821	2.204200	Peduncle of midbrain
+FJ1822	11.017300	Pons
+FJ1823	5.935600	Right putamen
+FJ1824	0.101100	Right stria medullaris of thalamus
+FJ1825	0.515600	Stria terminalis
+FJ1826	0.135000	Right superior colliculus
+FJ1827	8.632100	Right thalamus
+FJ1828	0.074500	Tuber cinereum
+FJ1829	1.515700	Right amygdala
+FJ1830	58.873900	Cerebellum
+FJ1831	5.269100	Medulla oblongata
+FJ1832	1.171300	Septum of telencephalon
+FJ1833	44.783900	Left superior frontal gyrus
+FJ1834	44.724000	Right superior frontal gyrus
+FJ1835	32.805900	Left superior parietal lobule
+FJ1836	32.778900	Right superior parietal lobule
+FJ1837	10.264600	Anterior part of left superior temporal gyrus
+FJ1838	10.121000	Anterior part of right superior temporal gyrus
+FJ1839	16.182100	Posterior part of left superior temporal gyrus
+FJ1840	16.146800	Posterior part of right superior temporal gyrus
+FJ1841	16.663100	Left supramarginal gyrus
+FJ1842	16.820500	Right supramarginal gyrus
+FJ1843	3.466300	Tentorium cerebelli
+FJ1844	0.208700	Basilar artery
+FJ1846	1.479000	Celiac artery
+FJ1853	1.996600	Hepatic portal vein
+FJ1858	279.796900	Hepatovenous segment IX
+FJ1867	0.260300	Tributary of middle hepatic vein
+FJ1874	0.009800	Left lobe branch of left hepatic artery
+FJ1883	0.106900	Caudate lobe tributary of left hepatic biliary tree
+FJ1893	0.145000	Left portal vein
+FJ1895	64.629500	Pancreas
+FJ1896	0.265800	Pancreatic duct
+FJ1913	0.384200	Right portal vein
+FJ1914	0.033600	Caudate lobe branch of right portal vein
+FJ1916	0.024000	Caudate lobe branch of right hepatic artery
+FJ1924	0.066700	Right lobe branch of right hepatic artery
+FJ1928	3.091700	Superior mesenteric artery
+FJ1931	38.422900	Descending thoracic aorta
+FJ1932	38.868600	Abdominal aorta
+FJ1933	0.096800	Bronchial artery
+FJ1934	0.047400	Esophageal artery
+FJ1935	0.035100	Right superior intercostal artery
+FJ1936	0.611200	Right superior epigastric artery
+FJ1937	1.456500	Right internal thoracic artery
+FJ1938	0.524600	Right lateral thoracic artery
+FJ1939	0.373300	Right first posterior intercostal artery
+FJ1950	0.704200	Right second posterior intercostal artery
+FJ1961	9.639100	Posterior intercostal arteries
+FJ1967	0.287400	Right subcostal artery
+FJ1969	0.570400	Right musculophrenic artery
+FJ1970	0.036200	Left superior intercostal artery
+FJ1971	0.611900	Left superior epigastric artery
+FJ1972	1.473700	Left internal thoracic artery
+FJ1973	0.372200	Left first posterior intercostal artery
+FJ1974	0.700300	Left second posterior intercostal artery
+FJ1975	8.824800	Posterior intercostal arteries
+FJ1976	0.523000	Left lateral thoracic artery
+FJ1977	0.234500	Left subcostal artery
+FJ1979	0.569700	Left musculophrenic artery
+FJ1981	1.617000	Accessory hemiazygos vein
+FJ1985	9.442300	Set of anterior intercostal veins
+FJ1986	0.187200	Left superior intercostal vein
+FJ1987	0.157100	Left subcostal vein
+FJ1988	0.993500	Left musculophrenic vein
+FJ1991	0.260000	Right superior intercostal vein
+FJ1993	1.224800	Right internal thoracic vein
+FJ1994	9.780100	Set of anterior intercostal veins
+FJ1995	0.219000	Right subcostal vein
+FJ1996	1.024500	Right musculophrenic vein
+FJ2011	3.031300	Superior mesenteric artery
+FJ2013	1.479000	Celiac artery
+FJ2025	0.615200	Marginal colic artery
+FJ2034	0.219000	Ileal branch of inferior branch of ileocolic artery
+FJ2038	2.565900	Right renal artery
+FJ2041	0.406000	Right anterior segmental artery
+FJ2042	0.271600	Superior segmental branch of right renal artery
+FJ2043	0.380300	Inferior segmental branch of right renal artery
+FJ2044	0.360300	Right anterior segmental artery
+FJ2045	0.588300	Posterior segmental branch of right renal artery
+FJ2046	2.288900	Left renal artery
+FJ2049	0.369300	Inferior segmental branch of left renal artery
+FJ2052	0.260700	Superior segmental branch of left renal artery
+FJ2053	0.158200	Posterior segmental branch of left renal artery
+FJ2054	0.583200	Posterior segmental branch of left renal artery
+FJ2055	0.786900	Right dorsalis pedis artery
+FJ2056	0.337800	Deep dorsal vein of penis
+FJ2057	3.869200	Descending branch of right lateral circumflex femoral artery
+FJ2058	0.063000	Distal perforating artery
+FJ2059	0.341800	Dorsal venous arch of left foot
+FJ2060	0.064300	Dorsal venous arch of left foot
+FJ2061	0.341600	Dorsal venous arch of right foot
+FJ2062	0.066600	Dorsal venous arch of right foot
+FJ2063	3.865300	Descending branch of left lateral circumflex femoral artery
+FJ2064	0.061900	Distal perforating artery
+FJ2065	9.296500	Left anterior tibial artery
+FJ2066	0.998000	Left anterior tibial recurrent artery
+FJ2067	0.276000	Left arcuate artery
+FJ2068	0.062500	Left deep plantar artery
+FJ2069	2.361400	Left descending genicular artery
+FJ2072	0.590600	Dorsal digital artery of foot
+FJ2073	0.786400	Left dorsalis pedis artery
+FJ2074	33.052200	Left femoral artery
+FJ2076	0.495200	Left inferior lateral genicular artery
+FJ2077	0.545400	Left inferior medial genicular artery
+FJ2078	0.109600	Left lateral circumflex femoral artery
+FJ2079	0.131400	Left lateral plantar artery
+FJ2080	0.573400	Left lateral superior genicular artery
+FJ2081	0.372300	Left lateral tarsal artery
+FJ2082	0.115900	Left medial plantar artery
+FJ2083	0.279600	Left medial superior genicular artery
+FJ2084	0.532900	Left middle genicular artery
+FJ2085	0.173300	Left plantar arch
+FJ2086	12.217600	Left popliteal artery
+FJ2087	5.049200	Left posterior tibial artery
+FJ2089	0.125600	Left superficial medial plantar artery
+FJ2090	0.712300	Set of perforating arteries
+FJ2091	1.613600	Set of calcaneal branches of posterior tibial artery
+FJ2092	0.115900	Set of common plantar digital arteries
+FJ2093	4.699500	Set of dorsal digital arteries
+FJ2094	5.944200	Set of perforating arteries
+FJ2095	0.115300	Set of plantar digital arteries proper
+FJ2096	0.318300	Plantar metatarsal artery
+FJ2097	0.445100	Left anterior tibial vein
+FJ2099	6.265800	Left deep femoral vein
+FJ2100	0.164300	Set of perforating veins
+FJ2102	29.223200	Left femoral vein
+FJ2103	9.459800	Left great saphenous vein
+FJ2107	0.415900	Left genicular vein
+FJ2108	0.365800	Left genicular vein
+FJ2113	0.130800	Tributary of plantar venous arch
+FJ2115	0.116200	Tributary of plantar venous arch
+FJ2117	9.397100	Left popliteal vein
+FJ2118	5.192700	Left posterior tibial vein
+FJ2119	0.210000	Set of perforating veins
+FJ2120	0.836200	Set of plantar digital veins
+FJ2121	5.483500	Left small saphenous vein
+FJ2122	1.900500	Left superficial epigastric vein
+FJ2124	0.611200	Left genicular vein
+FJ2125	0.292100	Left genicular vein
+FJ2127	0.710400	Set of perforating arteries
+FJ2128	0.173800	Plantar venous arch of left foot
+FJ2129	0.173800	Plantar venous arch of right foot
+FJ2130	9.299800	Right anterior tibial artery
+FJ2131	0.999800	Right anterior tibial recurrent artery
+FJ2132	0.444500	Right anterior tibial vein
+FJ2133	0.276200	Right arcuate artery
+FJ2135	6.268300	Right deep femoral vein
+FJ2136	0.063700	Right deep plantar artery
+FJ2137	2.362600	Right descending genicular artery
+FJ2138	0.164800	Set of perforating veins
+FJ2141	0.587700	Dorsal digital artery of foot
+FJ2143	32.932500	Right femoral artery
+FJ2144	29.257100	Right femoral vein
+FJ2145	9.461500	Right great saphenous vein
+FJ2150	0.495300	Right inferior lateral genicular artery
+FJ2151	0.416200	Right genicular vein
+FJ2152	0.546700	Right inferior medial genicular artery
+FJ2153	0.366100	Right genicular vein
+FJ2158	0.110600	Right lateral circumflex femoral artery
+FJ2159	0.131500	Right lateral plantar artery
+FJ2160	0.131400	Tributary of plantar venous arch
+FJ2162	0.573400	Right lateral superior genicular artery
+FJ2163	0.373300	Right lateral tarsal artery
+FJ2164	0.116500	Right medial plantar artery
+FJ2165	0.116800	Tributary of plantar venous arch
+FJ2166	0.280300	Right medial superior genicular artery
+FJ2167	0.532900	Right middle genicular artery
+FJ2169	0.173900	Right plantar arch
+FJ2170	12.219200	Right popliteal artery
+FJ2171	9.396100	Right popliteal vein
+FJ2172	5.051000	Right posterior tibial artery
+FJ2173	5.194600	Right posterior tibial vein
+FJ2174	0.209400	Set of perforating veins
+FJ2175	0.836600	Set of plantar digital veins
+FJ2176	5.483700	Right small saphenous vein
+FJ2178	1.902200	Right superficial epigastric vein
+FJ2179	0.125800	Right superficial medial plantar artery
+FJ2181	0.611200	Right genicular vein
+FJ2182	0.292300	Right genicular vein
+FJ2183	6.200900	Left anterior tibial vein
+FJ2184	0.040500	Left fibular vein
+FJ2185	0.335700	Set of dorsal digital veins
+FJ2186	0.593100	Dorsal metacarpal vein
+FJ2187	3.627200	Left fibular vein
+FJ2188	1.761900	Left lateral circumflex femoral vein
+FJ2189	0.109900	Left medial circumflex femoral vein
+FJ2190	0.716100	Right fibular vein
+FJ2191	0.434400	Plantar metatarsal vein
+FJ2192	0.718000	Set of perforating veins
+FJ2193	6.201600	Right anterior tibial vein
+FJ2194	0.043300	Right fibular vein
+FJ2195	1.615200	Set of calcaneal branches of posterior tibial artery
+FJ2196	0.115600	Set of common plantar digital arteries
+FJ2197	4.700700	Set of dorsal digital arteries
+FJ2198	0.333500	Set of dorsal digital veins
+FJ2199	0.593400	Dorsal metacarpal vein
+FJ2200	3.628100	Right fibular vein
+FJ2201	1.767700	Right lateral circumflex femoral vein
+FJ2202	0.110500	Right medial circumflex femoral vein
+FJ2203	5.943600	Set of perforating arteries
+FJ2204	0.113100	Set of plantar digital arteries proper
+FJ2205	0.711900	Set of plantar digital arteries proper
+FJ2206	0.319300	Plantar metatarsal artery
+FJ2207	0.434200	Plantar metatarsal vein
+FJ2208	0.202900	Superficial dorsal vein of penis
+FJ2209	0.045600	Right inferior thyroid artery
+FJ2210	0.044100	Left inferior thyroid artery
+FJ2211	0.183500	Acromial branch of left thoraco-acromial artery
+FJ2212	0.765800	Left anterior circumflex humeral artery
+FJ2213	0.709000	Left anterior circumflex humeral vein
+FJ2214	0.272500	Left anterior interosseous artery
+FJ2215	0.181600	Left inferior ulnar collateral artery
+FJ2216	3.796400	Left axillary artery
+FJ2217	4.484200	Left axillary vein
+FJ2218	7.130400	Left basilic vein
+FJ2219	6.365900	Left brachial artery
+FJ2220	7.983400	Left cephalic vein
+FJ2221	0.099500	Left circumflex scapular artery
+FJ2222	0.111200	Left circumflex scapular vein
+FJ2223	0.082300	Left common interosseous artery
+FJ2224	0.037800	Left costocervical trunk
+FJ2225	0.646000	Left deep brachial artery
+FJ2226	0.114100	Left deep cervical artery
+FJ2227	0.335500	Left deep palmar arch
+FJ2228	1.055400	Dorsal venous network of left hand
+FJ2229	0.224200	Left deep palmar venous arch
+FJ2230	0.107700	Deltoid branch of left thoraco-acromial artery
+FJ2231	0.035800	Dorsal carpal branch of left radial artery
+FJ2232	0.538600	Left dorsal scapular artery
+FJ2233	0.642600	Left lateral thoracic vein
+FJ2234	1.084600	Left median antebrachial vein
+FJ2235	0.703600	Left median cubital vein
+FJ2236	0.076700	Left dorsal carpal branch of ulnar artery
+FJ2237	0.184100	Left palmar metacarpal artery
+FJ2238	0.068300	Left palmar metacarpal vein
+FJ2239	0.126800	Left posterior circumflex humeral artery
+FJ2240	0.137200	Left posterior circumflex humeral artery
+FJ2241	0.019000	Left posterior ulnar recurrent artery
+FJ2242	1.995600	Left radial artery
+FJ2243	0.649000	Left radial recurrent artery
+FJ2244	1.164800	Left radial vein
+FJ2245	0.231800	Left recurrent interosseous artery
+FJ2246	0.223200	Left subscapular artery
+FJ2247	0.133300	Left subscapular vein
+FJ2248	0.558000	Left superficial palmar arterial arch
+FJ2249	0.281900	Left superficial palmar venous arch
+FJ2250	0.232600	Left suprascapular vein
+FJ2251	0.175500	Left suprascapular artery
+FJ2252	0.143900	Trunk of left thoraco-acromial artery
+FJ2253	0.451800	Left thoracodorsal artery
+FJ2254	0.300800	Left thoracodorsal vein
+FJ2255	0.013700	Left thyrocervical trunk
+FJ2256	0.049300	Left superficial cervical artery
+FJ2257	0.052400	Left transverse cervical artery
+FJ2258	1.864400	Left ulnar artery
+FJ2259	0.063600	Left anterior ulnar recurrent artery
+FJ2260	1.590700	Left ulnar vein
+FJ2261	0.329100	Radial collateral branch of left deep brachial artery
+FJ2262	0.328900	Radial collateral branch of right deep brachial artery
+FJ2263	0.183800	Acromial branch of right thoraco-acromial artery
+FJ2264	0.766800	Right anterior circumflex humeral artery
+FJ2265	0.710500	Right anterior circumflex humeral vein
+FJ2266	0.273000	Right anterior interosseous artery
+FJ2267	0.181900	Right inferior ulnar collateral artery
+FJ2268	3.797400	Right axillary artery
+FJ2269	4.490500	Right axillary vein
+FJ2270	7.131300	Right basilic vein
+FJ2271	6.362600	Right brachial artery
+FJ2272	7.984700	Right cephalic vein
+FJ2273	0.100200	Right circumflex scapular artery
+FJ2274	0.111600	Right circumflex scapular vein
+FJ2275	0.082900	Right common interosseous artery
+FJ2276	0.037900	Right costocervical trunk
+FJ2277	0.645400	Right deep brachial artery
+FJ2278	0.114400	Right deep cervical artery
+FJ2279	0.335300	Right deep palmar arch
+FJ2280	1.055100	Dorsal venous network of right hand
+FJ2281	0.225700	Right deep palmar venous arch
+FJ2282	0.108100	Deltoid branch of right thoraco-acromial artery
+FJ2283	0.036100	Dorsal carpal branch of right radial artery
+FJ2284	0.540800	Right dorsal scapular artery
+FJ2285	0.643900	Right lateral thoracic vein
+FJ2286	1.085800	Right median antebrachial vein
+FJ2287	0.703600	Right median cubital vein
+FJ2288	0.077600	Right dorsal carpal branch of ulnar artery
+FJ2289	0.184100	Right palmar metacarpal artery
+FJ2290	0.068400	Right palmar metacarpal vein
+FJ2291	0.126400	Right posterior circumflex humeral artery
+FJ2292	0.144900	Right posterior circumflex humeral artery
+FJ2293	0.018500	Right posterior ulnar recurrent artery
+FJ2294	1.994800	Right radial artery
+FJ2295	0.649500	Right radial recurrent artery
+FJ2296	1.165500	Right radial vein
+FJ2297	0.231700	Right recurrent interosseous artery
+FJ2298	0.223400	Right subscapular artery
+FJ2299	0.133600	Right subscapular vein
+FJ2300	0.558300	Right superficial palmar arterial arch
+FJ2301	0.283900	Right superficial palmar venous arch
+FJ2302	0.233700	Right suprascapular vein
+FJ2303	0.175300	Right suprascapular artery
+FJ2304	0.144400	Trunk of right thoraco-acromial artery
+FJ2305	0.452400	Right thoracodorsal artery
+FJ2306	0.301400	Right thoracodorsal vein
+FJ2307	0.013900	Right thyrocervical trunk
+FJ2308	0.050300	Right superficial cervical artery
+FJ2309	0.051700	Right transverse cervical artery
+FJ2310	1.864200	Right ulnar artery
+FJ2311	0.064000	Right anterior ulnar recurrent artery
+FJ2312	1.591100	Right ulnar vein
+FJ2313	4.975900	Left medial brachial vein
+FJ2314	0.087000	Left arteria radialis indicis
+FJ2315	0.053500	Left first common palmar digital artery
+FJ2316	0.049400	Left second common palmar digital artery
+FJ2317	0.047800	Left third common palmar digital artery
+FJ2318	0.657500	Set of dorsal digital arteries
+FJ2319	0.236000	Proper palmar digital vein of left little finger
+FJ2320	0.102600	Left palmar metacarpal vein
+FJ2321	0.075400	Proper palmar digital vein of left little finger
+FJ2322	0.037700	Common palmar digital vein
+FJ2323	0.059400	Left palmar metacarpal vein
+FJ2324	0.034800	Proper palmar digital vein of left index finger
+FJ2325	0.068900	Proper palmar digital vein of left index finger
+FJ2326	0.062800	Proper palmar digital vein of left middle finger
+FJ2327	0.059200	Proper palmar digital vein of left ring finger
+FJ2328	0.060800	Proper palmar digital vein of left ring finger
+FJ2329	0.042900	Proper palmar digital vein of left little finger
+FJ2330	0.808700	Pectoral branch of left thoraco-acromial artery
+FJ2331	0.414500	Middle collateral branch of left deep brachial artery
+FJ2332	0.060200	Left arteria radialis indicis
+FJ2333	0.065600	Medial proper palmar digital artery of left index finger
+FJ2334	0.070100	Lateral proper palmar digital artery of left middle finger
+FJ2335	0.061500	Lateral proper palmar digital artery of left ring finger
+FJ2336	0.052500	Lateral proper palmar digital artery of left little finger
+FJ2337	0.078500	Left fourth common palmar digital artery
+FJ2338	0.088600	Left arteria princeps pollicis
+FJ2339	0.063600	Left arteria princeps pollicis
+FJ2340	0.068900	Proper palmar digital vein of left middle finger
+FJ2341	4.973500	Right medial brachial vein
+FJ2342	0.087600	Right arteria radialis indicis
+FJ2343	0.053200	Right first common palmar digital artery
+FJ2344	0.050200	Right second common palmar digital artery
+FJ2345	0.048500	Right third common palmar digital artery
+FJ2346	0.664100	Set of dorsal digital arteries
+FJ2347	0.667500	Set of dorsal metacarpal arteries
+FJ2348	0.666700	Set of dorsal metacarpal arteries
+FJ2349	0.237800	Proper palmar digital vein of right little finger
+FJ2350	0.103600	Right palmar metacarpal vein
+FJ2351	0.076000	Proper palmar digital vein of right little finger
+FJ2352	0.037900	Common palmar digital vein
+FJ2353	0.059900	Right palmar metacarpal vein
+FJ2354	0.035400	Proper palmar digital vein of right index finger
+FJ2355	0.068800	Proper palmar digital vein of right index finger
+FJ2356	0.063500	Proper palmar digital vein of right middle finger
+FJ2357	0.069100	Proper palmar digital vein of right middle finger
+FJ2358	0.059300	Proper palmar digital vein of right ring finger
+FJ2359	0.061100	Proper palmar digital vein of right ring finger
+FJ2360	0.044900	Proper palmar digital vein of right little finger
+FJ2361	0.809200	Pectoral branch of right thoraco-acromial artery
+FJ2362	0.414500	Middle collateral branch of right deep brachial artery
+FJ2363	0.060600	Right arteria radialis indicis
+FJ2364	0.066200	Medial proper palmar digital artery of right index finger
+FJ2365	0.070900	Lateral proper palmar digital artery of right middle finger
+FJ2366	0.062100	Lateral proper palmar digital artery of right ring finger
+FJ2367	0.070600	Medial proper palmar digital artery of right middle finger
+FJ2368	0.052600	Lateral proper palmar digital artery of right little finger
+FJ2369	0.064900	Medial proper palmar digital artery of right ring finger
+FJ2370	0.079200	Right fourth common palmar digital artery
+FJ2371	0.089300	Right arteria princeps pollicis
+FJ2372	0.064100	Right arteria princeps pollicis
+FJ2373	0.224000	Right superior ulnar collateral artery
+FJ2374	0.223500	Left superior ulnar collateral artery
+FJ2386	0.024000	Caudate lobe branch of right hepatic artery
+FJ2394	0.066700	Right lobe branch of right hepatic artery
+FJ2404	9.021700	Left portal vein
+FJ2405	3.561900	Right portal vein
+FJ2409	235.223900	Hepatovenous segment VII
+FJ2414	3.581000	Middle hepatic vein
+FJ2415	2.252900	Left hepatic vein
+FJ2416	4.104900	Right hepatic vein
+FJ2417	0.731300	Left anterior cusp of pulmonary valve
+FJ2418	5.468400	Anterolateral head of lateral papillary muscle of left ventricle
+FJ2419	3.024400	Anterior papillary muscle of right ventricle
+FJ2420	1.271500	Anterior leaflet of mitral valve
+FJ2421	1.577900	Anterior leaflet of tricuspid valve
+FJ2422	97.045500	Cavity of left ventricle
+FJ2423	116.344000	Cavity of right ventricle
+FJ2424	84.265100	Cavity of right atrium
+FJ2425	51.364700	Cavity of left atrium
+FJ2426	0.703900	Left posterior cusp of aortic valve
+FJ2427	0.651100	Posterior cusp of pulmonary valve
+FJ2428	160.498400	Wall of ventricle
+FJ2429	5.068100	Lateral papillary muscle of left ventricle
+FJ2430	2.270800	Posterior papillary muscle of right ventricle
+FJ2431	0.990300	Right posterior cusp of aortic valve
+FJ2432	1.128000	Posterior leaflet of mitral valve
+FJ2433	0.718000	Posterior leaflet of tricuspid valve
+FJ2434	0.979700	Right anterior cusp of pulmonary valve
+FJ2435	0.689600	Anterior cusp of aortic valve
+FJ2436	0.566800	Septal leaflet of tricuspid valve
+FJ2437	1.989000	Septal papillary muscle of right ventricle
+FJ2438	40.493400	Wall of left atrium
+FJ2439	27.661700	Wall of right atrium
+FJ2440	1.452800	Cricoid cartilage
+FJ2441	5.972300	Inferior lingular bronchial tree
+FJ2442	3.022500	Left medial basal segmental bronchial tree
+FJ2443	1.621800	Left anterior segmental bronchial tree
+FJ2444	2.518200	Left apical segmental bronchial tree
+FJ2445	2.557200	Left lateral basal segmental bronchial tree
+FJ2446	3.321400	Left posterior basal segmental bronchial tree
+FJ2447	1.014700	Left posterior segmental bronchial tree
+FJ2448	1.890300	Left superior segmental bronchial tree
+FJ2449	4.251900	Lateral segmental bronchial tree
+FJ2450	14.751700	Left main bronchus
+FJ2451	2.112000	Medial segmental bronchial tree
+FJ2452	2.198700	Right anterior basal segmental bronchial tree
+FJ2453	1.475500	Right anterior segmental bronchial tree
+FJ2454	1.551100	Right apical segmental bronchial tree
+FJ2455	2.592900	Right lateral basal segmental bronchial tree
+FJ2456	0.368900	Right medial basal segmental bronchial tree
+FJ2457	2.870200	Right posterior basal segmental bronchial tree
+FJ2458	2.100900	Right posterior segmental bronchial tree
+FJ2459	2.093400	Right superior segmental bronchial tree
+FJ2460	0.794600	Left apical segmental bronchial tree
+FJ2461	0.307800	Left apical segmental bronchial tree
+FJ2462	0.129100	Left apical segmental bronchial tree
+FJ2463	0.042500	Left apical segmental bronchial tree
+FJ2464	0.020300	Left apical segmental bronchial tree
+FJ2465	0.179400	Left posterior segmental bronchial tree
+FJ2466	0.091100	Left posterior segmental bronchial tree
+FJ2467	1.755200	Left anterior segmental bronchial tree
+FJ2468	0.221800	Left anterior segmental bronchial tree
+FJ2469	0.354900	Left anterior segmental bronchial tree
+FJ2470	0.164200	Right posterior basal segmental bronchial tree
+FJ2471	0.027700	Left anterior segmental bronchial tree
+FJ2472	0.148200	Left anterior segmental bronchial tree
+FJ2473	0.257000	Left anterior segmental bronchial tree
+FJ2474	0.056700	Left anterior segmental bronchial tree
+FJ2475	0.624600	Inferior lingular bronchial tree
+FJ2476	0.367400	Superior lingular bronchial tree
+FJ2477	0.057900	Superior lingular bronchial tree
+FJ2478	0.015500	Superior lingular bronchial tree
+FJ2479	0.672200	Left superior segmental bronchial tree
+FJ2480	0.201200	Left superior segmental bronchial tree
+FJ2481	0.065400	Right posterior basal segmental bronchial tree
+FJ2482	0.231400	Left superior segmental bronchial tree
+FJ2483	0.126000	Left superior segmental bronchial tree
+FJ2484	0.262600	Left superior segmental bronchial tree
+FJ2485	0.067300	Left superior segmental bronchial tree
+FJ2486	0.035200	Right posterior basal segmental bronchial tree
+FJ2487	0.359200	Right posterior basal segmental bronchial tree
+FJ2488	0.130600	Right medial basal segmental bronchial tree
+FJ2489	0.120900	Right posterior basal segmental bronchial tree
+FJ2490	0.129000	Right lateral basal segmental bronchial tree
+FJ2491	0.444900	Right lateral basal segmental bronchial tree
+FJ2492	0.059500	Right lateral basal segmental bronchial tree
+FJ2493	0.394000	Right anterior basal segmental bronchial tree
+FJ2494	0.053700	Right anterior basal segmental bronchial tree
+FJ2495	0.250800	Right superior segmental bronchial tree
+FJ2496	1.146300	Right superior segmental bronchial tree
+FJ2497	0.065400	Right superior segmental bronchial tree
+FJ2498	0.162500	Right superior segmental bronchial tree
+FJ2499	0.428300	Right superior segmental bronchial tree
+FJ2500	0.056300	Right superior segmental bronchial tree
+FJ2501	0.105000	Right superior segmental bronchial tree
+FJ2502	0.064900	Right superior segmental bronchial tree
+FJ2503	0.200400	Lateral segmental bronchial tree
+FJ2504	0.863300	Lateral segmental bronchial tree
+FJ2505	0.105300	Lateral segmental bronchial tree
+FJ2506	1.001100	Medial segmental bronchial tree
+FJ2507	0.465300	Medial segmental bronchial tree
+FJ2508	0.217800	Medial segmental bronchial tree
+FJ2509	0.779600	Right anterior segmental bronchial tree
+FJ2510	0.215900	Right anterior segmental bronchial tree
+FJ2511	0.050300	Right anterior segmental bronchial tree
+FJ2512	0.062800	Right anterior segmental bronchial tree
+FJ2513	0.192400	Right anterior segmental bronchial tree
+FJ2514	0.144100	Right anterior segmental bronchial tree
+FJ2515	0.763100	Right posterior segmental bronchial tree
+FJ2516	0.223700	Right posterior segmental bronchial tree
+FJ2517	0.056800	Right posterior segmental bronchial tree
+FJ2518	0.029800	Right posterior segmental bronchial tree
+FJ2519	0.035400	Right posterior segmental bronchial tree
+FJ2520	0.623200	Right apical segmental bronchial tree
+FJ2521	0.128400	Right apical segmental bronchial tree
+FJ2522	0.270900	Right apical segmental bronchial tree
+FJ2523	0.029300	Right apical segmental bronchial tree
+FJ2524	0.045000	Right apical segmental bronchial tree
+FJ2525	0.026400	Right apical segmental bronchial tree
+FJ2526	0.019500	Right apical segmental bronchial tree
+FJ2527	0.586400	Left posterior basal segmental bronchial tree
+FJ2528	0.841700	Left posterior basal segmental bronchial tree
+FJ2529	0.125000	Left posterior basal segmental bronchial tree
+FJ2530	0.198600	Left posterior basal segmental bronchial tree
+FJ2531	0.009800	Left posterior basal segmental bronchial tree
+FJ2532	0.799500	Left lateral basal segmental bronchial tree
+FJ2533	0.260300	Left lateral basal segmental bronchial tree
+FJ2534	0.038200	Left lateral basal segmental bronchial tree
+FJ2535	1.168000	Left anterior basal segmental bronchial tree
+FJ2536	0.829700	Left anterior basal segmental bronchial tree
+FJ2537	0.215600	Left medial basal segmental bronchial tree
+FJ2538	0.378500	Left anterior basal segmental bronchial tree
+FJ2539	16.011300	Right main bronchus proper
+FJ2540	1.626900	Superior lingular bronchial tree
+FJ2541	25.606700	Trachea
+FJ2542	3.583700	Left coccygeus
+FJ2543	0.409300	External anal sphincter
+FJ2544	7.094400	Left iliococcygeus
+FJ2545	5.714900	Left pubococcygeus
+FJ2546	5.542000	Left puborectalis
+FJ2547	3.602700	Right coccygeus
+FJ2548	0.403300	External anal sphincter
+FJ2549	7.096000	Right iliococcygeus
+FJ2550	5.755600	Right pubococcygeus
+FJ2551	5.092600	Right puborectalis
+FJ2552	0.744200	Tendinous arch of levator ani
+FJ2553	0.847500	Tendinous arch of levator ani
+FJ2554	1.052000	Right major alar cartilage
+FJ2555	1.093000	Left major alar cartilage
+FJ2556	0.635900	Left lateral nasal cartilage
+FJ2557	1.405600	Septal nasal cartilage
+FJ2558	0.607200	Right lateral nasal cartilage
+FJ2561	111.977600	Spleen
+FJ2562	0.816100	Splenic artery
+FJ2563	37.173400	Esophagus
+FJ2564	562.790500	Stomach
+FJ2565	4.478400	Appendix
+FJ2566	252.087900	Ascending colon
+FJ2567	456.115200	Descending colon
+FJ2568	7.260200	Taenia libera
+FJ2569	6.832600	Taenia mesocolica
+FJ2570	6.911600	Taenia omentalis
+FJ2571	153.448800	Rectum
+FJ2572	237.153200	Transverse colon
+FJ2573	69.576900	Duodenum
+FJ2574	18.371300	Proximal part of ileum
+FJ2575	15.494600	Proximal part of ileum
+FJ2576	7.406000	Middle part of ileum
+FJ2577	16.652000	Middle part of ileum
+FJ2578	17.177600	Middle part of ileum
+FJ2579	15.651000	Middle part of ileum
+FJ2580	17.082400	Middle part of ileum
+FJ2581	10.585100	Middle part of ileum
+FJ2582	11.645100	Middle part of ileum
+FJ2583	11.253000	Middle part of ileum
+FJ2584	9.600500	Middle part of ileum
+FJ2585	8.771500	Proximal part of ileum
+FJ2586	15.279400	Middle part of ileum
+FJ2587	13.091700	Distal part of ileum
+FJ2588	14.604400	Distal part of ileum
+FJ2589	19.316400	Distal part of ileum
+FJ2590	10.220500	Distal part of ileum
+FJ2591	12.669800	Distal part of ileum
+FJ2592	12.347500	Distal part of ileum
+FJ2593	8.697700	Distal part of ileum
+FJ2594	6.968300	Distal part of ileum
+FJ2595	9.847000	Distal part of ileum
+FJ2596	9.279000	Proximal part of ileum
+FJ2597	11.207300	Distal part of ileum
+FJ2598	10.840500	Distal part of ileum
+FJ2599	10.741200	Ileocecal junction
+FJ2600	12.319800	Proximal part of ileum
+FJ2601	11.601100	Proximal part of ileum
+FJ2602	10.153000	Proximal part of ileum
+FJ2603	9.825400	Proximal part of ileum
+FJ2604	8.283400	Proximal part of ileum
+FJ2605	16.634000	Proximal part of ileum
+FJ2606	13.213500	Proximal part of jejunum
+FJ2607	14.161600	Middle part of jejunum
+FJ2608	16.480700	Middle part of jejunum
+FJ2609	11.938200	Middle part of jejunum
+FJ2610	23.092600	Middle part of jejunum
+FJ2611	16.930200	Distal part of jejunum
+FJ2612	17.785300	Distal part of jejunum
+FJ2613	12.364300	Distal part of jejunum
+FJ2614	13.548000	Distal part of jejunum
+FJ2615	10.870200	Distal part of jejunum
+FJ2616	28.526300	Distal part of jejunum
+FJ2617	6.248400	Proximal part of jejunum
+FJ2618	15.023800	Distal part of jejunum
+FJ2619	16.398900	Distal part of jejunum
+FJ2620	13.333400	Distal part of jejunum
+FJ2621	34.674200	Distal part of jejunum
+FJ2622	6.437300	Proximal part of jejunum
+FJ2623	26.805100	Proximal part of jejunum
+FJ2624	8.407300	Proximal part of jejunum
+FJ2625	9.705700	Proximal part of jejunum
+FJ2626	22.265800	Proximal part of jejunum
+FJ2627	11.577400	Proximal part of jejunum
+FJ2628	17.736800	Middle part of jejunum
+FJ2629	63.811700	Parenchyma of pancreas
+FJ2630	0.244700	Pancreatic duct tree
+FJ2631	0.684800	Trunk of anterior interventricular branch of left coronary artery
+FJ2632	0.010000	First right anterior branch of anterior interventricular branch of left coronary artery
+FJ2633	0.028200	Diagonal branch of anterior descending branch of left coronary artery
+FJ2634	0.000500	Diagonal branch of anterior descending branch of left coronary artery
+FJ2635	0.060000	Diagonal branch of anterior descending branch of left coronary artery
+FJ2636	0.011900	Diagonal branch of anterior descending branch of left coronary artery
+FJ2637	0.017900	Diagonal branch of anterior descending branch of left coronary artery
+FJ2638	0.001100	Diagonal branch of anterior descending branch of left coronary artery
+FJ2639	0.024000	Diagonal branch of anterior descending branch of left coronary artery
+FJ2640	0.009000	Diagonal branch of anterior descending branch of left coronary artery
+FJ2641	0.017400	Third right anterior branch of anterior interventricular branch of left coronary artery
+FJ2642	0.109400	Diagonal branch of anterior descending branch of left coronary artery
+FJ2643	0.080800	Conus branch of anterior interventricular branch of left coronary artery
+FJ2644	0.005300	Conus branch of anterior interventricular branch of left coronary artery
+FJ2645	0.053000	First right anterior branch of anterior interventricular branch of left coronary artery
+FJ2646	0.063800	Second right anterior branch of anterior interventricular branch of left coronary artery
+FJ2647	0.006700	Third right anterior branch of anterior interventricular branch of left coronary artery
+FJ2648	0.011800	Diagonal branch of anterior descending branch of left coronary artery
+FJ2649	0.246500	Circumflex branch of left coronary artery
+FJ2650	0.007800	Circumflex branch of left coronary artery
+FJ2651	0.035100	Circumflex branch of left coronary artery
+FJ2652	0.012700	Circumflex branch of left coronary artery
+FJ2653	0.003200	Circumflex branch of left coronary artery
+FJ2654	0.087200	Circumflex branch of left coronary artery
+FJ2655	1.304900	Coronary sinus
+FJ2656	0.541100	Great cardiac vein
+FJ2657	0.025100	Anterior interventricular vein
+FJ2658	0.026600	Anterior interventricular vein
+FJ2659	0.045300	Anterior interventricular vein
+FJ2660	0.008800	Anterior interventricular vein
+FJ2661	0.013000	Anterior interventricular vein
+FJ2662	0.043200	Anterior interventricular vein
+FJ2663	0.018300	Anterior interventricular vein
+FJ2664	0.034600	Anterior interventricular vein
+FJ2665	0.191000	Anterior interventricular vein
+FJ2667	0.046300	Marginal branch of right coronary artery
+FJ2668	0.023100	Marginal branch of right coronary artery
+FJ2670	0.017200	Right conus artery
+FJ2671	0.044700	First anterior ventricular branch of right coronary artery
+FJ2672	0.054300	Marginal branch of right coronary artery
+FJ2673	0.025000	First anterior ventricular branch of right coronary artery
+FJ2674	0.018000	Marginal branch of right coronary artery
+FJ2675	0.020900	Marginal branch of right coronary artery
+FJ2676	0.008000	Right conus artery
+FJ2677	0.005200	First anterior ventricular branch of right coronary artery
+FJ2678	0.301600	Middle cardiac vein
+FJ2679	0.004800	Middle cardiac vein
+FJ2680	0.006400	Middle cardiac vein
+FJ2681	0.010200	Middle cardiac vein
+FJ2682	0.007800	Middle cardiac vein
+FJ2683	0.001000	Middle cardiac vein
+FJ2684	0.051300	Middle cardiac vein
+FJ2685	0.005300	Middle cardiac vein
+FJ2686	0.006000	Middle cardiac vein
+FJ2687	0.043800	Middle cardiac vein
+FJ2688	0.016200	Middle cardiac vein
+FJ2689	0.007200	Middle cardiac vein
+FJ2690	0.066100	Middle cardiac vein
+FJ2691	0.006300	Middle cardiac vein
+FJ2692	0.119200	Posterior interventricular branch of right coronary artery
+FJ2693	0.075400	Posterior interventricular branch of right coronary artery
+FJ2694	0.005000	Posterior interventricular branch of right coronary artery
+FJ2695	0.006300	Posterior interventricular branch of right coronary artery
+FJ2696	0.142600	Posterior interventricular branch of right coronary artery
+FJ2697	0.010500	Posterior interventricular branch of right coronary artery
+FJ2698	0.003900	Posterior interventricular branch of right coronary artery
+FJ2699	0.026100	Posterior interventricular branch of right coronary artery
+FJ2700	0.003300	Posterior interventricular branch of right coronary artery
+FJ2701	0.465500	Posterior vein of left ventricle
+FJ2702	0.006800	Posterior vein of left ventricle
+FJ2703	0.110700	Left marginal vein
+FJ2704	0.010800	Left marginal vein
+FJ2705	0.003200	Left marginal vein
+FJ2706	0.033000	Posterior vein of left ventricle
+FJ2707	0.016500	Posterior vein of left ventricle
+FJ2708	0.012100	Posterior vein of left ventricle
+FJ2709	0.008000	Posterior vein of left ventricle
+FJ2710	0.003500	Posterior vein of left ventricle
+FJ2711	0.002900	Posterior vein of left ventricle
+FJ2712	0.011000	Posterior vein of left ventricle
+FJ2713	0.006600	Posterior vein of left ventricle
+FJ2714	0.177000	First posterior ventricular branch of right coronary artery
+FJ2715	0.003000	First posterior ventricular branch of right coronary artery
+FJ2716	0.000400	First posterior ventricular branch of right coronary artery
+FJ2717	0.013300	First posterior ventricular branch of right coronary artery
+FJ2718	0.012500	First posterior ventricular branch of right coronary artery
+FJ2719	0.020400	First posterior ventricular branch of right coronary artery
+FJ2720	0.007100	First posterior ventricular branch of right coronary artery
+FJ2721	0.024900	First posterior ventricular branch of right coronary artery
+FJ2722	0.024500	First posterior ventricular branch of right coronary artery
+FJ2723	0.849400	Trunk of right coronary artery
+FJ2724	0.105500	Small cardiac vein
+FJ2725	0.032800	Anterior cardiac vein
+FJ2727	0.053800	Right marginal vein
+FJ2728	0.011900	Right marginal vein
+FJ2729	0.025200	Right marginal vein
+FJ2730	0.018400	Anterior cardiac vein
+FJ2731	0.181000	Small cardiac vein
+FJ2732	0.012300	Septal branch of anterior interventricular artery
+FJ2733	0.017100	Septal branch of anterior interventricular artery
+FJ2734	0.019900	Septal branch of anterior interventricular artery
+FJ2735	0.014700	First septal branch of right posterior interventricular artery
+FJ2736	0.033000	Second septal branch of right posterior interventricular artery
+FJ2737	0.115000	Trunk of left coronary artery
+FJ2738	4.990800	Left genioglossus
+FJ2739	0.537300	Left hyoglossus
+FJ2740	3.154900	Left inferior pharyngeal constrictor
+FJ2741	0.498800	Left levator veli palatini
+FJ2742	2.491700	Right middle pharyngeal constrictor
+FJ2743	2.781200	Left palatopharyngeus
+FJ2744	0.063200	Left pterygomandibular raphe
+FJ2745	0.222800	Left salpingopharyngeus
+FJ2746	1.068700	Left stylopharyngeus
+FJ2747	4.278700	Left superior pharyngeal constrictor
+FJ2748	0.549300	Left tensor veli palatini
+FJ2749	0.700500	Pharyngeal raphe
+FJ2750	4.844500	Right genioglossus
+FJ2751	0.550100	Right hyoglossus
+FJ2752	3.176400	Right inferior pharyngeal constrictor
+FJ2753	0.593700	Right levator veli palatini
+FJ2754	2.494100	Left middle pharyngeal constrictor
+FJ2755	2.781200	Right palatopharyngeus
+FJ2756	0.061500	Right pterygomandibular raphe
+FJ2757	0.224000	Right salpingopharyngeus
+FJ2758	1.166200	Right stylopharyngeus
+FJ2759	4.299800	Right superior pharyngeal constrictor
+FJ2760	0.550000	Right tensor veli palatini
+FJ2761	34.440700	Tongue
+FJ2762	0.122800	Uvular muscle
+FJ2763	0.205500	Left stylohyoid ligament
+FJ2764	0.202100	Right stylohyoid ligament
+FJ2765	0.596000	Left sublingual gland
+FJ2766	1.675400	Left submandibular gland
+FJ2767	0.348900	Right sublingual gland
+FJ2768	1.700400	Right submandibular gland
+FJ2769	1.452800	Cricoid cartilage
+FJ2770	0.272200	Epiglottis
+FJ2771	0.066000	Hyo-epiglottic ligament
+FJ2772	1.653800	Hyoid bone
+FJ2773	0.004900	Left cuneiform cartilage
+FJ2774	0.033400	Left aryepiglotticus
+FJ2775	0.068900	Left arytenoid cartilage
+FJ2776	0.001400	Left corniculate cartilage
+FJ2777	0.077000	Left conus elasticus
+FJ2778	0.031800	Left lateral crico-arytenoid
+FJ2779	0.049800	Left lateral thyrohyoid ligament
+FJ2780	0.015900	Left oblique arytenoid
+FJ2781	0.108400	Oblique part of left cricothyroid
+FJ2782	0.159500	Left posterior crico-arytenoid
+FJ2783	0.038200	Straight part of left cricothyroid
+FJ2784	0.153400	Left thyro-arytenoid
+FJ2785	0.238600	Left thyro-arytenoid
+FJ2786	0.290600	Left thyrohyoid membrane
+FJ2787	0.016400	Left vocal ligament
+FJ2788	0.012900	Left vocalis
+FJ2789	0.047900	Median cricothyroid ligament
+FJ2790	0.161900	Median thyrohyoid ligament
+FJ2791	0.032600	Right aryepiglotticus
+FJ2792	0.069700	Right arytenoid cartilage
+FJ2793	0.001000	Right corniculate cartilage
+FJ2794	0.072500	Right conus elasticus
+FJ2795	0.004900	Right cuneiform cartilage
+FJ2796	0.029700	Right lateral crico-arytenoid
+FJ2797	0.049700	Right lateral thyrohyoid ligament
+FJ2798	0.021500	Right oblique arytenoid
+FJ2799	0.088900	Oblique part of right cricothyroid
+FJ2800	0.159600	Right posterior crico-arytenoid
+FJ2801	0.043500	Straight part of right cricothyroid
+FJ2802	0.147500	Right thyro-arytenoid
+FJ2803	0.197800	Right thyro-arytenoid
+FJ2804	0.291100	Right thyrohyoid membrane
+FJ2805	0.003900	Right vocal ligament
+FJ2806	0.005100	Right vocalis
+FJ2807	0.014900	Thyro-epiglottic ligament
+FJ2808	3.434400	Thyroid cartilage
+FJ2809	0.040700	Transverse arytenoid
+FJ2810	3443.308100	Skin
+FJ2811	20.207000	External ear
+FJ2812	0.457900	Eyebrow
+FJ2813	394.961100	Hair of head
+FJ2814	0.494200	Lip
+FJ2815	15.226600	Pubic hair
+FJ2816	34.927600	Caudate lobe of liver
+FJ2817	16.713800	Gallbladder
+FJ2818	113.549400	Hepatovenous segment II
+FJ2819	101.115400	Hepatovenous segment III
+FJ2820	228.614400	Hepatovenous segment IV
+FJ2821	113.993700	Hepatovenous segment V
+FJ2822	212.435300	Hepatovenous segment VI
+FJ2823	283.761900	Hepatovenous segment VIII
+FJ2824	346.790600	Hepatovenous segment VIII
+FJ2881	3.521300	Left posterior basal segmental artery
+FJ2882	0.091800	Left lateral basal segmental artery
+FJ2883	5.439500	Left anterior basal segmental artery
+FJ2884	1.991400	Left medial basal segmental artery
+FJ2885	0.604300	Left medial basal segmental artery
+FJ2886	0.207200	Left anterior basal segmental artery
+FJ2887	0.116100	Left anterior basal segmental artery
+FJ2888	0.895100	Left superior segmental artery
+FJ2889	0.040700	Left superior segmental artery
+FJ2890	0.122800	Left superior segmental artery
+FJ2891	0.479100	Left superior segmental artery
+FJ2892	0.123000	Left posterior basal segmental artery
+FJ2893	0.077100	Left superior segmental artery
+FJ2894	0.440000	Left superior segmental artery
+FJ2895	0.158700	Left superior segmental artery
+FJ2896	4.042100	Inferior lingular artery
+FJ2897	0.588800	Inferior lingular artery
+FJ2898	1.784100	Superior lingular artery
+FJ2899	0.047400	Superior lingular artery
+FJ2900	0.137000	Superior lingular artery
+FJ2901	0.042300	Superior lingular artery
+FJ2902	0.980100	Left anterior segmental artery
+FJ2903	0.740200	Left posterior basal segmental artery
+FJ2904	0.116200	Left anterior segmental artery
+FJ2905	0.027800	Left anterior segmental artery
+FJ2906	1.637300	Left anterior segmental artery
+FJ2907	0.144300	Left anterior segmental artery
+FJ2908	1.213800	Left anterior segmental artery
+FJ2909	0.085800	Left anterior segmental artery
+FJ2910	0.164800	Left anterior segmental artery
+FJ2911	1.106700	Left posterior segmental artery
+FJ2912	0.013200	Left posterior segmental artery
+FJ2913	0.075900	Left posterior segmental artery
+FJ2914	0.066300	Left posterior basal segmental artery
+FJ2915	1.332100	Left apical segmental artery
+FJ2916	0.501600	Left apical segmental artery
+FJ2917	0.083000	Left apical segmental artery
+FJ2918	0.065700	Left apical segmental artery
+FJ2919	0.736200	Left posterior basal segmental artery
+FJ2920	0.196200	Left posterior basal segmental artery
+FJ2921	3.270500	Left lateral basal segmental artery
+FJ2922	0.814100	Left lateral basal segmental artery
+FJ2923	0.175900	Left lateral basal segmental artery
+FJ2924	33.609800	Left pulmonary artery
+FJ2925	1.240100	Left superior pulmonary vein
+FJ2926	0.275200	Left posterior segmental vein
+FJ2927	0.600000	Left posterior segmental vein
+FJ2928	0.573000	Left posterior segmental vein
+FJ2929	0.022000	Left posterior segmental vein
+FJ2930	0.772900	Left anterior segmental vein
+FJ2931	0.250900	Left anterior segmental vein
+FJ2932	0.056000	Left anterior segmental vein
+FJ2933	1.892300	Left superior pulmonary vein
+FJ2934	0.588700	Inferior lingular vein
+FJ2935	0.119900	Inferior lingular vein
+FJ2936	1.492100	Left apical segmental vein
+FJ2937	1.217500	Superior lingular vein
+FJ2938	0.103100	Superior lingular vein
+FJ2939	1.084500	Left posterior segmental vein
+FJ2940	0.018200	Left posterior segmental vein
+FJ2941	0.052900	Left posterior segmental vein
+FJ2942	0.014200	Left posterior segmental vein
+FJ2943	0.133400	Left posterior segmental vein
+FJ2944	0.558200	Left inferior pulmonary vein
+FJ2945	0.510900	Left posterior basal segmental vein
+FJ2946	0.077400	Left posterior basal segmental vein
+FJ2947	0.097500	Left apical segmental vein
+FJ2948	0.096700	Left posterior basal segmental vein
+FJ2949	0.074900	Left posterior basal segmental vein
+FJ2950	0.705500	Left inferior pulmonary vein
+FJ2951	1.172700	Left lateral basal segmental vein
+FJ2952	0.107000	Left lateral basal segmental vein
+FJ2953	0.937000	Left lateral basal segmental vein
+FJ2954	0.109500	Left lateral basal segmental vein
+FJ2955	1.551800	Left inferior pulmonary vein
+FJ2956	0.911700	Left anterior basal segmental vein
+FJ2957	0.950000	Left anterior basal segmental vein
+FJ2958	0.209400	Left apical segmental vein
+FJ2959	0.718000	Left anterior basal segmental vein
+FJ2960	0.370800	Left anterior basal segmental vein
+FJ2961	0.217000	Left apical segmental vein
+FJ2962	0.068400	Left apical segmental vein
+FJ2963	0.012800	Left apical segmental vein
+FJ2964	0.014500	Left apical segmental vein
+FJ2965	0.028200	Left posterior segmental vein
+FJ2966	19.350300	Pulmonary trunk
+FJ2967	1.340500	Apical part of right apical segmental artery
+FJ2968	0.071600	Apical part of right posterior segmental artery
+FJ2969	0.035000	Apical part of right posterior segmental artery
+FJ2970	0.846600	Posterior part of right posterior segmental artery
+FJ2971	0.133100	Posterior part of right posterior segmental artery
+FJ2972	0.025800	Posterior part of right posterior segmental artery
+FJ2973	8.743200	Right upper lobar artery
+FJ2974	1.289700	Posterior branch of right anterior segmental artery
+FJ2975	0.570100	Anterior branch of right anterior segmental artery
+FJ2976	0.041800	Anterior branch of right anterior segmental artery
+FJ2977	0.114400	Anterior branch of right anterior segmental artery
+FJ2978	0.684300	Anterior part of right apical segmental artery
+FJ2979	0.122900	Anterior branch of right anterior segmental artery
+FJ2980	0.103100	Posterior branch of right anterior segmental artery
+FJ2981	0.071900	Posterior branch of right anterior segmental artery
+FJ2982	1.276900	Anterior branch of lateral segmental artery
+FJ2983	0.580400	Posterior branch of lateral segmental artery
+FJ2984	0.091200	Posterior branch of lateral segmental artery
+FJ2985	0.041300	Anterior branch of lateral segmental artery
+FJ2986	0.848700	Superior branch of medial segmental artery
+FJ2987	0.087000	Inferior branch of medial segmental artery
+FJ2988	0.566400	Inferior branch of medial segmental artery
+FJ2989	0.066700	Anterior part of right apical segmental artery
+FJ2990	2.278800	Superior branch of medial segmental artery
+FJ2991	1.553000	Lateral branch of right superior segmental artery
+FJ2992	0.107300	Lateral branch of right superior segmental artery
+FJ2993	0.036900	Lateral branch of right superior segmental artery
+FJ2994	0.208900	Medial branch of right superior segmental artery
+FJ2995	0.080500	Medial branch of right superior segmental artery
+FJ2996	0.033800	Medial branch of right superior segmental artery
+FJ2997	0.850200	Superior branch of right superior segmental artery
+FJ2998	0.047600	Superior branch of right superior segmental artery
+FJ2999	0.167500	Superior branch of right superior segmental artery
+FJ3000	0.021900	Anterior part of right apical segmental artery
+FJ3001	1.391800	Lateral branch of right anterior basal segmental artery
+FJ3002	0.333900	Basal branch of right anterior basal segmental artery
+FJ3003	0.044000	Basal branch of right anterior basal segmental artery
+FJ3004	0.048300	Lateral branch of right lateral basal segmental artery
+FJ3005	1.253800	Lateral branch of right lateral basal segmental artery
+FJ3006	0.312000	Lateral branch of right lateral basal segmental artery
+FJ3007	0.066200	Lateral branch of right lateral basal segmental artery
+FJ3008	4.204000	Mediobasal branch of right posterior basal segmental artery
+FJ3009	0.239300	Accessory subsuperior branch of right posterior basal segmental artery
+FJ3010	0.174900	Accessory subsuperior branch of right posterior basal segmental artery
+FJ3011	0.014300	Anterior part of right apical segmental artery
+FJ3012	0.041100	Mediobasal branch of right posterior basal segmental artery
+FJ3013	0.309500	Laterobasal branch of right posterior basal segmental artery
+FJ3014	0.104800	Laterobasal branch of right posterior basal segmental artery
+FJ3015	0.064900	Apical part of right apical segmental artery
+FJ3016	0.177700	Apical part of right apical segmental artery
+FJ3017	0.021500	Apical part of right apical segmental artery
+FJ3018	1.174300	Apical part of right posterior segmental artery
+FJ3019	35.016400	Right pulmonary artery
+FJ3020	1.485500	Right superior pulmonary vein
+FJ3021	0.228400	Inferior part of right anterior segmental vein
+FJ3022	0.338900	Right posterior segmental vein
+FJ3023	0.341700	Right posterior segmental vein
+FJ3024	0.034000	Right posterior segmental vein
+FJ3025	0.089000	Right posterior segmental vein
+FJ3026	0.084100	Right posterior segmental vein
+FJ3027	0.213900	Superior part of right anterior segmental vein
+FJ3028	0.204700	Right anterior segmental vein
+FJ3029	0.051000	Right anterior segmental vein
+FJ3030	1.570900	Superior part of medial segmental vein
+FJ3031	0.806100	Trunk of right apical segmental vein
+FJ3032	1.484000	Inferior part of medial segmental vein
+FJ3033	0.155700	Inferior part of medial segmental vein
+FJ3034	1.195300	Anterior part of lateral segmental vein
+FJ3035	0.388100	Anterior part of lateral segmental vein
+FJ3036	0.118400	Anterior part of lateral segmental vein
+FJ3037	1.076000	Posterior part of lateral segmental vein
+FJ3038	0.430500	Posterior part of lateral segmental vein
+FJ3039	0.084100	Posterior part of lateral segmental vein
+FJ3040	1.776200	Right inferior pulmonary vein
+FJ3041	1.687800	Right posterior basal segmental vein
+FJ3042	0.184000	Anterior part of right apical segmental vein
+FJ3043	0.414300	Right posterior basal segmental vein
+FJ3044	0.081400	Right posterior basal segmental vein
+FJ3045	0.003900	Right posterior basal segmental vein
+FJ3046	0.079100	Right posterior basal segmental vein
+FJ3047	0.217300	Right posterior basal segmental vein
+FJ3048	0.056900	Right posterior basal segmental vein
+FJ3049	0.336900	Right anterior basal segmental vein
+FJ3050	1.679300	Right superior segmental vein
+FJ3051	0.539700	Right superior segmental vein
+FJ3052	0.027200	Right superior segmental vein
+FJ3053	0.082300	Anterior part of right apical segmental vein
+FJ3054	0.089800	Right medial basal segmental vein
+FJ3055	0.126200	Right medial basal segmental vein
+FJ3056	0.229000	Right anterior basal segmental vein
+FJ3057	0.115300	Right posterior basal segmental vein
+FJ3058	0.081600	Right posterior basal segmental vein
+FJ3059	0.887800	Right lateral basal segmental vein
+FJ3060	0.458700	Right lateral basal segmental vein
+FJ3061	0.069500	Right lateral basal segmental vein
+FJ3062	0.162400	Right lateral basal segmental vein
+FJ3063	0.100700	Right superior segmental vein
+FJ3064	0.469300	Apical part of right apical segmental vein
+FJ3065	0.130200	Right superior segmental vein
+FJ3066	0.003000	Right superior segmental vein
+FJ3067	0.062200	Apical part of right apical segmental vein
+FJ3068	0.024600	Apical part of right apical segmental vein
+FJ3069	0.972900	Right posterior segmental vein
+FJ3070	0.745300	Right posterior segmental vein
+FJ3071	0.249800	Anterior superior tributary of right hepatic biliary tree
+FJ3072	0.009200	Anterior inferior tributary of right hepatic biliary tree
+FJ3073	0.973600	Anterior superior segmental branch of right portal vein
+FJ3074	0.341900	Anterior inferior segmental branch of right portal vein
+FJ3075	0.025200	Anterior inferior segmental hepatic artery
+FJ3076	0.421500	Anterior superior segmental hepatic artery
+FJ3077	0.110100	Caudate lobe branch of left hepatic artery
+FJ3078	0.359000	Common hepatic artery
+FJ3079	2.040200	Common hepatic duct
+FJ3080	0.043200	Cystic duct
+FJ3081	0.449400	Hepatic artery proper
+FJ3082	1.992200	Pre-hepatic portal vein
+FJ3083	3.008700	Anterior inferior segmental tributary of middle hepatic vein
+FJ3084	1.153900	Medial inferior segmental tributary of middle hepatic vein
+FJ3085	0.095500	Medial inferior segmental tributary of middle hepatic vein
+FJ3086	0.166400	Anterior inferior segmental tributary of middle hepatic vein
+FJ3088	0.147500	Lateral superior tributary of left hepatic biliary tree
+FJ3089	0.140500	Lateral inferior tributary of left hepatic biliary tree
+FJ3090	0.034200	Lateral superior tributary of left hepatic biliary tree
+FJ3091	0.215000	Lateral superior segmental hepatic artery
+FJ3092	0.080600	Lateral inferior segmental hepatic artery
+FJ3093	0.057200	Lateral superior segmental hepatic artery
+FJ3094	0.154800	Left duct of caudate lobe of liver
+FJ3095	0.392200	Trunk of left hepatic artery
+FJ3096	0.539400	Left hepatic duct
+FJ3097	0.990600	Lateral inferior segmental tributary of left hepatic vein
+FJ3098	0.098900	Lateral superior segmental tributary of left hepatic vein
+FJ3099	0.034800	Lateral inferior segmental tributary of left hepatic vein
+FJ3100	0.021100	Lateral inferior segmental tributary of left hepatic vein
+FJ3101	0.178000	Medial superior segmental tributary of left hepatic vein
+FJ3102	1.446700	Trunk of left portal vein
+FJ3103	0.067700	Medial inferior tributary of left hepatic biliary tree
+FJ3104	0.007500	Medial superior tributary of left hepatic biliary tree
+FJ3105	0.026700	Medial superior tributary of left hepatic biliary tree
+FJ3106	0.190300	Medial inferior segmental hepatic artery
+FJ3107	0.050100	Medial superior segmental hepatic artery
+FJ3108	0.386200	Posterior inferior tributary of right hepatic biliary tree
+FJ3109	0.147000	Posterior superior tributary of right hepatic biliary tree
+FJ3110	0.146000	Posterior superior tributary of right hepatic biliary tree
+FJ3111	0.425100	Posterior inferior segmental branch of right portal vein
+FJ3112	0.139100	Posterior superior segmental branch of right portal vein
+FJ3113	0.258000	Posterior superior segmental branch of right portal vein
+FJ3114	0.156700	Posterior inferior segmental hepatic artery
+FJ3115	0.233800	Posterior superior segmental hepatic artery
+FJ3116	0.113400	Posterior superior segmental hepatic artery
+FJ3117	0.127600	Trunk of right hepatic artery
+FJ3118	2.096200	Posterior inferior segmental tributary of right hepatic vein
+FJ3119	0.552100	Posterior superior segmental tributary of right hepatic vein
+FJ3120	0.262000	Posterior inferior segmental tributary of right hepatic vein
+FJ3121	0.680300	Anterior superior segmental tributary of right hepatic vein
+FJ3122	0.308800	Trunk of right portal vein
+FJ3123	0.128200	Right hepatic duct
+FJ3124	0.122000	Caudate lobe branch of left portal vein
+FJ3125	0.495400	Lateral inferior segmental branch of left portal vein
+FJ3126	0.544000	Lateral superior segmental branch of left portal vein
+FJ3127	0.183800	Medial superior segmental branch of left portal vein
+FJ3128	0.350800	Medial inferior segmental branch of left portal vein
+FJ3129	9.889400	Left adrenal gland
+FJ3130	5.624200	Right adrenal gland
+FJ3131	320.548300	Diaphragm
+FJ3132	38.612100	Corpus cavernosum of penis
+FJ3133	17.546200	Corpus spongiosum of penis
+FJ3134	6.252300	Glans penis
+FJ3135	4.874000	Left deferent duct
+FJ3136	1.178700	Left epididymis
+FJ3137	1.882500	Left seminal vesicle
+FJ3138	6.415000	Left testis
+FJ3139	11.332900	Prostate
+FJ3140	3.845200	Right deferent duct
+FJ3141	1.005400	Right epididymis
+FJ3142	6.485100	Right testis
+FJ3143	1.942500	Right seminal vesicle
+FJ3144	16.596600	Left ureter
+FJ3145	103.210200	Left kidney
+FJ3146	15.001400	Right ureter
+FJ3147	106.123700	Right kidney
+FJ3148	0.352400	Urethra
+FJ3149	73.136200	Urinary bladder
+FJ3150	5.988000	Left lobe of thymus
+FJ3151	6.574100	Right lobe of thymus
+FJ3152	315.024500	Right hip bone
+FJ3153	2.433600	Xiphoid process
+FJ3154	36.282000	Tenth thoracic vertebra
+FJ3155	37.441600	Eleventh thoracic vertebra
+FJ3156	38.460500	Twelfth thoracic vertebra
+FJ3157	41.158200	First lumbar vertebra
+FJ3158	15.106900	First thoracic vertebra
+FJ3159	43.496800	Second lumbar vertebra
+FJ3160	17.523800	Second thoracic vertebra
+FJ3161	9.121000	Third cervical vertebra
+FJ3162	47.306900	Third lumbar vertebra
+FJ3163	18.627300	Third thoracic vertebra
+FJ3164	8.504100	Fourth cervical vertebra
+FJ3165	46.278900	Fourth lumbar vertebra
+FJ3166	18.994200	Fourth thoracic vertebra
+FJ3167	9.863000	Fifth cervical vertebra
+FJ3168	52.019400	Fifth lumbar vertebra
+FJ3169	21.311900	Fifth thoracic vertebra
+FJ3170	10.012200	Sixth cervical vertebra
+FJ3171	23.549300	Sixth thoracic vertebra
+FJ3172	12.720000	Seventh cervical vertebra
+FJ3173	27.727100	Seventh thoracic vertebra
+FJ3174	27.770600	Eighth thoracic vertebra
+FJ3175	31.977700	Ninth thoracic vertebra
+FJ3176	9.865700	Atlas
+FJ3177	12.090600	Axis
+FJ3178	56.372900	Body of sternum
+FJ3179	0.294400	Distal phalanx of left second toe
+FJ3180	0.182500	Distal phalanx of left third toe
+FJ3181	0.202100	Distal phalanx of left fourth toe
+FJ3182	1.742200	Distal phalanx of left big toe
+FJ3183	0.366600	Distal phalanx of left index finger
+FJ3184	0.219500	Distal phalanx of left little finger
+FJ3185	0.132000	Distal phalanx of left little toe
+FJ3186	0.353500	Distal phalanx of left middle finger
+FJ3187	0.222900	Distal phalanx of left ring finger
+FJ3188	0.717800	Distal phalanx of left thumb
+FJ3189	0.286800	Distal phalanx of right second toe
+FJ3190	0.186000	Distal phalanx of right third toe
+FJ3191	0.204300	Distal phalanx of right fourth toe
+FJ3192	1.706200	Distal phalanx of right big toe
+FJ3193	0.372200	Distal phalanx of right index finger
+FJ3194	0.214800	Distal phalanx of right little finger
+FJ3195	0.124600	Distal phalanx of right little toe
+FJ3196	0.277400	Distal phalanx of right middle finger
+FJ3197	0.217900	Distal phalanx of right ring finger
+FJ3198	0.742400	Distal phalanx of right thumb
+FJ3199	16.479600	Ethmoid
+FJ3200	95.573200	Frontal bone
+FJ3201	1.653800	Hyoid bone
+FJ3202	1.656600	Intervertebral disk of axis
+FJ3203	3.581900	Intervertebral disk of fourth thoracic vertebra
+FJ3204	4.032100	Intervertebral disk of fifth thoracic vertebra
+FJ3205	6.030100	Intervertebral disk of sixth thoracic vertebra
+FJ3206	6.148600	Intervertebral disk of seventh thoracic vertebra
+FJ3207	6.076700	Intervertebral disk of eighth thoracic vertebra
+FJ3208	6.986100	Intervertebral disk of ninth thoracic vertebra
+FJ3209	6.723500	Intervertebral disk of tenth thoracic vertebra
+FJ3210	7.071000	Intervertebral disk of eleventh thoracic vertebra
+FJ3211	8.121800	Intervertebral disk
+FJ3212	8.012900	Intervertebral disk of first lumbar vertebra
+FJ3213	1.456000	Intervertebral disk of third cervical vertebra
+FJ3214	9.377600	Intervertebral disk of second lumbar vertebra
+FJ3215	7.896600	Intervertebral disk of third lumbar vertebra
+FJ3216	11.749800	Intervertebral disk of fourth lumbar vertebra
+FJ3217	16.166800	Intervertebral disk of fifth lumbar vertebra
+FJ3218	1.555100	Intervertebral disk of fourth cervical vertebra
+FJ3219	1.547000	Intervertebral disk of fifth cervical vertebra
+FJ3220	1.616200	Intervertebral disk of sixth cervical vertebra
+FJ3221	2.302700	Intervertebral disk of seventh cervical vertebra
+FJ3222	2.047000	Intervertebral disk of first thoracic vertebra
+FJ3223	2.480400	Intervertebral disk of second thoracic vertebra
+FJ3224	3.207300	Intervertebral disk of third thoracic vertebra
+FJ3225	17.028600	Left tenth rib
+FJ3226	11.306700	Left eleventh rib
+FJ3227	6.403100	Left twelfth rib
+FJ3228	6.072200	Left first rib
+FJ3229	14.273800	Left second rib
+FJ3230	17.906100	Left third rib
+FJ3231	24.814400	Left fourth rib
+FJ3232	29.952000	Left fifth rib
+FJ3233	31.315400	Left sixth rib
+FJ3234	31.862300	Left seventh rib
+FJ3235	24.026100	Left eighth rib
+FJ3236	21.006500	Left ninth rib
+FJ3237	26.812500	Left clavicle
+FJ3239	3.520900	Left first costal cartilage
+FJ3240	4.185600	Left first metacarpal bone
+FJ3241	13.278100	Left first metatarsal bone
+FJ3242	3.559700	Left second costal cartilage
+FJ3243	5.769900	Left second metacarpal bone
+FJ3244	5.439800	Left second metatarsal bone
+FJ3245	3.378100	Left third costal cartilage
+FJ3246	5.551300	Left third metacarpal bone
+FJ3247	5.412800	Left third metatarsal bone
+FJ3248	4.087700	Left fourth costal cartilage
+FJ3249	3.609600	Left fourth metacarpal bone
+FJ3250	5.218900	Left fourth metatarsal bone
+FJ3251	7.430300	Left fifth costal cartilage
+FJ3252	3.372800	Left fifth metacarpal bone
+FJ3253	7.570200	Left fifth metatarsal bone
+FJ3254	10.656400	Left sixth costal cartilage
+FJ3255	17.559100	Left seventh costal cartilage
+FJ3256	52.781900	Left calcaneus
+FJ3257	2.259300	Left capitate
+FJ3258	11.392100	Left cuboid bone
+FJ3259	496.933900	Left femur
+FJ3260	54.970600	Left fibula
+FJ3261	1.793800	Left hamate
+FJ3262	154.501400	Left humerus
+FJ3263	1.002300	Left inferior nasal concha
+FJ3264	2.740100	Left intermediate cuneiform bone
+FJ3265	1.072500	Left lacrimal bone
+FJ3266	0.138600	Sesamoid bone of left foot
+FJ3267	4.421800	Left lateral cuneiform bone
+FJ3268	1.204500	Left lunate
+FJ3269	24.764500	Left maxilla
+FJ3270	0.336800	Sesamoid bone of left foot
+FJ3271	7.935400	Left medial cuneiform bone
+FJ3272	0.843900	Left nasal bone
+FJ3273	4.329500	Left palatine bone
+FJ3274	79.438000	Left parietal bone
+FJ3275	11.220200	Left patella
+FJ3276	0.442500	Left pisiform
+FJ3277	48.970200	Left radius
+FJ3278	1.591200	Left scaphoid
+FJ3279	73.174500	Left scapula
+FJ3280	29.110400	Left talus
+FJ3281	36.857600	Left temporal bone
+FJ3282	295.045200	Left tibia
+FJ3283	1.488400	Left trapezium
+FJ3284	0.808600	Left trapezoid
+FJ3285	0.993600	Left triquetral
+FJ3286	44.228800	Left ulna
+FJ3287	5.669500	Left zygomatic bone
+FJ3288	309.880300	Left hip bone
+FJ3289	52.404100	Mandible
+FJ3290	35.917600	Manubrium
+FJ3291	0.998000	Middle phalanx of left ring finger
+FJ3292	0.965000	Middle phalanx of right ring finger
+FJ3293	0.458300	Middle phalanx of left second toe
+FJ3294	0.396400	Middle phalanx of left third toe
+FJ3295	0.331000	Middle phalanx of left fourth toe
+FJ3296	0.827600	Middle phalanx of left index finger
+FJ3297	0.549700	Middle phalanx of left little finger
+FJ3298	0.168100	Middle phalanx of left little toe
+FJ3299	1.142700	Middle phalanx of left middle finger
+FJ3300	0.474200	Middle phalanx of right second toe
+FJ3301	0.405100	Middle phalanx of right third toe
+FJ3302	0.341200	Middle phalanx of right fourth toe
+FJ3303	0.840300	Middle phalanx of right index finger
+FJ3304	0.598500	Middle phalanx of right little finger
+FJ3305	0.171400	Middle phalanx of right little toe
+FJ3306	1.170000	Middle phalanx of right middle finger
+FJ3307	7.497900	Navicular bone of left foot
+FJ3308	7.501300	Navicular bone of right foot
+FJ3309	84.870600	Occipital bone
+FJ3310	4.229400	Proximal phalanx of right big toe
+FJ3311	0.992400	Proximal phalanx of left third toe
+FJ3312	0.867000	Proximal phalanx of left fourth toe
+FJ3313	2.056200	Proximal phalanx of left index finger
+FJ3314	1.501000	Proximal phalanx of left little finger
+FJ3315	0.950300	Proximal phalanx of left little toe
+FJ3316	3.062000	Proximal phalanx of left middle finger
+FJ3317	2.285200	Proximal phalanx of left ring finger
+FJ3318	1.782700	Proximal phalanx of left thumb
+FJ3319	1.177600	Proximal phalanx of right second toe
+FJ3320	0.994400	Proximal phalanx of right third toe
+FJ3321	0.894100	Proximal phalanx of right fourth toe
+FJ3322	2.443800	Proximal phalanx of right index finger
+FJ3323	1.483000	Proximal phalanx of right little finger
+FJ3324	0.989900	Proximal phalanx of right little toe
+FJ3325	3.058400	Proximal phalanx of right middle finger
+FJ3326	2.279900	Proximal phalanx of right ring finger
+FJ3327	1.808600	Proximal phalanx of right thumb
+FJ3328	1.196200	Proximal phalanx of left second toe
+FJ3329	4.166100	Proximal phalanx of left big toe
+FJ3330	17.008700	Right tenth rib
+FJ3331	11.295700	Right eleventh rib
+FJ3332	6.412700	Right twelfth rib
+FJ3333	3.584900	Right first costal cartilage
+FJ3334	6.081000	Right first rib
+FJ3335	3.551000	Right second costal cartilage
+FJ3336	14.283700	Right second rib
+FJ3337	3.411700	Right third costal cartilage
+FJ3338	17.895900	Right third rib
+FJ3339	4.093600	Right fourth costal cartilage
+FJ3340	24.775200	Right fourth rib
+FJ3341	7.406900	Right fifth costal cartilage
+FJ3342	29.954600	Right fifth rib
+FJ3343	10.657500	Right sixth costal cartilage
+FJ3344	31.267300	Right sixth rib
+FJ3345	17.604000	Right seventh costal cartilage
+FJ3346	31.870400	Right seventh rib
+FJ3347	24.026100	Right eighth rib
+FJ3348	21.002400	Right ninth rib
+FJ3349	39.001400	Right radius
+FJ3350	4.094000	Right first metacarpal bone
+FJ3351	13.302400	Right first metatarsal bone
+FJ3352	5.836500	Right second metacarpal bone
+FJ3353	5.478200	Right second metatarsal bone
+FJ3354	5.515300	Right third metacarpal bone
+FJ3355	5.425000	Right third metatarsal bone
+FJ3356	3.585400	Right fourth metacarpal bone
+FJ3357	5.298500	Right fourth metatarsal bone
+FJ3358	3.327500	Right fifth metacarpal bone
+FJ3359	7.500900	Right fifth metatarsal bone
+FJ3360	52.738300	Right calcaneus
+FJ3361	2.343400	Right capitate
+FJ3362	26.841400	Right clavicle
+FJ3364	11.538400	Right cuboid bone
+FJ3365	496.751200	Right femur
+FJ3366	54.922100	Right fibula
+FJ3367	1.852900	Right hamate
+FJ3368	154.546200	Right humerus
+FJ3369	0.880300	Right inferior nasal concha
+FJ3370	2.703700	Right intermediate cuneiform bone
+FJ3371	0.957900	Right lacrimal bone
+FJ3372	0.145400	Sesamoid bone of right foot
+FJ3373	4.352000	Right lateral cuneiform bone
+FJ3374	1.198200	Right lunate
+FJ3375	23.347600	Right maxilla
+FJ3376	0.314900	Sesamoid bone of right foot
+FJ3377	7.987600	Right medial cuneiform bone
+FJ3378	0.737800	Right nasal bone
+FJ3379	4.352200	Right palatine bone
+FJ3380	77.908300	Right parietal bone
+FJ3381	11.165300	Right patella
+FJ3382	0.444200	Right pisiform
+FJ3383	1.598700	Right scaphoid
+FJ3384	73.119600	Right scapula
+FJ3385	29.148900	Right talus
+FJ3386	37.259900	Right temporal bone
+FJ3387	296.322800	Right tibia
+FJ3388	1.509000	Right trapezium
+FJ3389	0.775000	Right trapezoid
+FJ3390	0.949300	Right triquetral
+FJ3391	36.667900	Right ulna
+FJ3392	5.638600	Right zygomatic bone
+FJ3393	179.221000	Sacrum
+FJ3394	47.225300	Sphenoid bone
+FJ3395	2.354200	Vomer
+FJ3396	45.019900	Mesentery of small intestine
+FJ3397	2.983200	Mesoappendix
+FJ3398	47.732100	Transverse mesocolon
+FJ3399	0.596000	Ascending branch of left colic artery
+FJ3400	0.199500	Left colic vein
+FJ3401	0.182600	Anterior inferior pancreaticoduodenal artery
+FJ3406	0.013000	Anterior cecal artery
+FJ3409	0.288300	Anterior superior pancreaticoduodenal artery
+FJ3410	0.025500	Appendicular artery
+FJ3411	35.902400	Arch of aorta
+FJ3413	21.157800	Ascending aorta
+FJ3414	0.727100	Ascending branch of inferior branch of ileocolic artery
+FJ3415	0.379400	Ileocolic vein
+FJ3416	6.877000	Azygos vein
+FJ3417	4.696300	Brachiocephalic artery
+FJ3418	0.099500	Bronchial branch of arch of aorta
+FJ3419	0.069900	Caudal pancreatic artery
+FJ3420	0.001100	Splenic artery
+FJ3421	1.439200	Celiac trunk
+FJ3426	0.320900	Left superficial dorsal vein of penis
+FJ3427	88.067600	Descending aorta
+FJ3428	0.235700	Descending branch of left colic artery
+FJ3429	0.246900	Left colic vein
+FJ3430	0.074200	Dorsal pancreatic artery
+FJ3431	0.171500	Set of oesophageal branches of thoracic aorta
+FJ3432	0.072700	Trunk of gastroduodenal artery
+FJ3433	0.004700	Great pancreatic artery
+FJ3434	0.672000	Hemiazygos vein
+FJ3437	0.206900	Ileal artery
+FJ3438	0.213100	Ileal vein
+FJ3439	0.363200	Ileocolic artery
+FJ3440	0.289900	Ileocolic vein
+FJ3441	33.591100	Inferior vena cava
+FJ3442	0.818900	Inferior mesenteric artery
+FJ3443	1.138800	Inferior mesenteric vein
+FJ3444	0.036200	Inferior pancreatic artery
+FJ3446	0.075300	Inferior pancreaticoduodenal artery
+FJ3447	0.699300	Inferior phrenic vein
+FJ3448	0.286000	Inferior phrenic vein
+FJ3449	0.536100	Inferior phrenic vein
+FJ3450	0.182000	Inferior phrenic vein
+FJ3451	0.117800	Inferior phrenic vein
+FJ3452	0.028900	Inferior phrenic vein
+FJ3458	0.299800	Anterior division of left renal artery
+FJ3459	0.040600	Anterior division of left renal artery
+FJ3460	0.013500	Anterior division of left renal artery
+FJ3461	0.112400	Anterior division of left renal artery
+FJ3462	0.254600	Anterior division of left renal artery
+FJ3463	0.450500	Anterior division of left renal artery
+FJ3464	6.295900	Left common iliac artery
+FJ3465	9.644600	Left common iliac vein
+FJ3466	9.178900	Left external iliac artery
+FJ3467	0.595200	Left inferior suprarenal artery
+FJ3468	1.181700	Left internal iliac artery
+FJ3469	1.855700	Left internal iliac vein
+FJ3470	0.515800	Left internal iliac vein
+FJ3471	0.606500	Left internal iliac vein
+FJ3472	0.416100	Left middle suprarenal artery
+FJ3473	0.174300	Posterior division of left renal artery
+FJ3474	0.016100	Posterior division of left renal artery
+FJ3475	0.200200	Posterior division of left renal artery
+FJ3476	2.203200	Trunk of left renal artery
+FJ3477	2.938700	Left renal vein
+FJ3478	0.791600	Left renal vein
+FJ3479	4.691600	Left subclavian artery
+FJ3480	0.204300	Left suprarenal vein
+FJ3481	0.105800	Ureteric segment of left renal artery
+FJ3482	10.173800	Left brachiocephalic vein
+FJ3483	2.835000	Left common carotid artery
+FJ3484	12.571900	Left external iliac vein
+FJ3485	2.525600	Left internal jugular vein
+FJ3486	2.823700	Left subclavian vein
+FJ3493	3.595500	Left ascending lumbar vein
+FJ3494	0.178100	Left colic artery
+FJ3495	0.036500	Left colic vein
+FJ3496	0.299500	Left dorsal artery of penis
+FJ3497	0.060300	Left dorsal artery of penis
+FJ3499	0.650800	Left gastric artery
+FJ3500	0.274600	Left gastric vein
+FJ3501	0.217600	Left gastro-epiploic artery
+FJ3502	0.386400	Left gastroepiploic vein
+FJ3510	1.100000	Left iliolumbar vein
+FJ3511	0.617700	Left inferior epigastric artery
+FJ3512	0.611800	Left inferior epigastric vein
+FJ3513	1.724900	Left inferior gluteal vein
+FJ3514	1.234300	Left inferior phrenic artery
+FJ3515	0.387300	Left inferior phrenic artery
+FJ3516	0.211900	Left inferior phrenic artery
+FJ3517	1.514600	Left inferior phrenic artery
+FJ3518	0.328800	Left inferior phrenic artery
+FJ3519	0.027100	Left inferior phrenic artery
+FJ3520	0.103800	Left inferior phrenic artery
+FJ3522	1.200900	Left external iliac vein
+FJ3523	0.455800	Left external iliac vein
+FJ3524	0.659300	Left external iliac vein
+FJ3525	0.653000	Left internal pudendal vein
+FJ3526	0.277500	Left lateral sacral vein
+FJ3527	0.525900	Left obturator vein
+FJ3529	1.564900	Left superficial epigastric artery
+FJ3530	1.741000	Left superior epigastric vein
+FJ3531	0.977500	Left superior gluteal vein
+FJ3532	1.124400	Left testicular artery
+FJ3533	1.171800	Left testicular vein
+FJ3534	0.605500	Marginal artery of colon
+FJ3541	0.259200	Median sacral vein
+FJ3542	2.088700	Middle colic artery
+FJ3543	1.171200	Middle colic vein
+FJ3544	0.051500	Splenic artery
+FJ3545	0.060200	Pancreaticoduodenal vein
+FJ3546	0.043600	Posterior inferior pancreaticoduodenal artery
+FJ3553	0.158500	Posterior cecal artery
+FJ3557	0.265600	Posterior superior pancreaticoduodenal artery
+FJ3558	0.154000	Anterior division of right renal artery
+FJ3559	0.132800	Anterior division of right renal artery
+FJ3560	0.099400	Anterior division of right renal artery
+FJ3561	0.072000	Anterior division of right renal artery
+FJ3562	0.052400	Anterior division of right renal artery
+FJ3563	0.075100	Anterior division of right renal artery
+FJ3564	2.125900	Right common carotid artery
+FJ3565	4.898900	Right common iliac artery
+FJ3566	7.907900	Right common iliac vein
+FJ3567	8.407900	Right external iliac artery
+FJ3568	14.276200	Right external iliac vein
+FJ3569	1.001200	Right internal iliac artery
+FJ3570	2.192000	Right internal iliac vein
+FJ3571	0.847400	Right internal iliac vein
+FJ3572	0.711900	Right internal iliac vein
+FJ3573	0.022000	Posterior division of right renal artery
+FJ3574	0.033400	Posterior division of right renal artery
+FJ3575	0.358800	Posterior division of right renal artery
+FJ3576	2.541900	Trunk of right renal artery
+FJ3577	1.011100	Right renal vein
+FJ3578	0.488000	Right renal vein
+FJ3579	2.817600	Right subclavian artery
+FJ3580	0.167000	Right suprarenal vein
+FJ3581	0.037200	Ureteric segment of right renal artery
+FJ3582	0.007400	Ureteric segment of right renal artery
+FJ3583	7.111700	Right brachiocephalic vein
+FJ3584	0.106300	Right inferior suprarenal artery
+FJ3585	1.712400	Right internal jugular vein
+FJ3586	0.302300	Right middle suprarenal artery
+FJ3587	2.458800	Right subclavian vein
+FJ3589	0.812600	Right ascending lumbar vein
+FJ3590	0.689000	Right colic artery
+FJ3591	0.935500	Right colic vein
+FJ3592	0.302600	Right dorsal artery of penis
+FJ3593	0.070200	Right dorsal artery of penis
+FJ3594	0.226000	Right gastric artery
+FJ3595	0.173900	Right gastric vein
+FJ3596	0.440500	Right gastro-epiploic artery
+FJ3597	1.105500	Right gastroepiploic vein
+FJ3603	1.077300	Right iliolumbar vein
+FJ3604	0.621700	Right inferior epigastric artery
+FJ3605	0.646300	Right inferior epigastric vein
+FJ3606	1.717400	Right inferior gluteal vein
+FJ3607	1.056600	Right internal iliac vein
+FJ3608	0.413000	Right internal iliac vein
+FJ3609	0.661300	Right internal iliac vein
+FJ3610	0.650200	Right internal pudendal vein
+FJ3611	0.277200	Right lateral sacral vein
+FJ3612	0.486200	Right obturator vein
+FJ3614	1.856100	Right superficial epigastric artery
+FJ3615	1.951800	Right superior epigastric vein
+FJ3616	0.698400	Right superior gluteal vein
+FJ3617	1.101300	Right testicular artery
+FJ3618	1.032500	Right testicular vein
+FJ3619	2.132000	Right inferior phrenic artery
+FJ3620	0.560800	Right inferior phrenic artery
+FJ3621	0.901800	Right inferior phrenic artery
+FJ3622	0.121500	Right inferior phrenic artery
+FJ3623	0.500200	Right inferior phrenic artery
+FJ3624	0.249900	Right inferior phrenic artery
+FJ3625	0.008800	Right inferior phrenic artery
+FJ3626	0.006200	Right inferior phrenic artery
+FJ3631	0.410700	Lumbar vein
+FJ3632	0.729600	Lumbar artery
+FJ3635	0.371200	Lumbar vein
+FJ3636	0.768300	Lumbar artery
+FJ3637	0.155300	Right superficial dorsal vein of penis
+FJ3638	0.593800	Sigmoid artery
+FJ3639	1.584100	Sigmoid vein
+FJ3640	1.269400	Splenic artery
+FJ3641	0.925900	Splenic vein
+FJ3644	3.007800	Trunk of superior mesenteric artery
+FJ3645	12.250800	Superior vena cava
+FJ3646	0.055200	Pancreaticoduodenal vein
+FJ3647	2.553500	Superior mesenteric vein
+FJ3648	0.280600	Superior phrenic vein
+FJ3649	0.178000	Superior phrenic vein
+FJ3650	0.239300	Superior phrenic vein
+FJ3651	0.138100	Superior phrenic vein
+FJ3652	0.063700	Superior phrenic vein
+FJ3653	0.053500	Superior phrenic vein
+FJ3654	0.051100	Superior phrenic vein
+FJ3655	0.135000	Pancreaticoduodenal vein
+FJ3656	0.027100	Superior rectal artery
+FJ3657	0.600700	Superior rectal vein
+FJ3658	0.455600	Ascending lumbar vein
+FJ3659	31.433800	Inferior vena cava

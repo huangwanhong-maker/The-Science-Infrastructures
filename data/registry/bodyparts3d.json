@@ -1,0 +1,60 @@
+{
+  "id": "bodyparts3d",
+  "domain": "anatomy",
+  "title": "BodyParts3D 4.0: the whole body of an adult man as 2,234 polygon meshes of its parts, each the representation of a concept of the Foundational Model of Anatomy, with FMA's is-a and part-of trees over them and the parts that compose each compound concept",
+  "provider": "The Database Center for Life Science (DBCLS), Research Organization of Information and Systems, Japan: N. Mitsuhashi, K. Fujieda, T. Tamura, S. Kawamoto, T. Takagi and K. Okubo; release 4.0 of 2013-05-16, archived 2013-06-19",
+  "credit": "Anatomy: BodyParts3D, © The Database Center for Life Science, CC BY 4.0",
+  "files": [
+    {
+      "url": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/20130619/isa_BP3D_4.0_obj_99.zip",
+      "file": "isa_BP3D_4.0_obj_99.zip",
+      "size": 142903898,
+      "sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e"
+    },
+    {
+      "url": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/20130619/isa_parts_list_e.txt",
+      "file": "isa_parts_list_e.txt",
+      "size": 128086,
+      "sha256": "ab7796deedd49205e77f3609a1cb8c53e2bbee14ecb5c9a6ca05227469780513"
+    },
+    {
+      "url": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/20130619/partof_parts_list_e.txt",
+      "file": "partof_parts_list_e.txt",
+      "size": 59351,
+      "sha256": "9224080557053e6f1322f1e13ab27f0ecde0db19bb3b505f0631afad230eeebd"
+    },
+    {
+      "url": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/20130619/isa_inclusion_relation_list.txt",
+      "file": "isa_inclusion_relation_list.txt",
+      "size": 207664,
+      "sha256": "26e7d818e03a8c909fe09c561f38d0d513423c87681f9450a803bc38f5b07564"
+    },
+    {
+      "url": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/20130619/partof_inclusion_relation_list.txt",
+      "file": "partof_inclusion_relation_list.txt",
+      "size": 91241,
+      "sha256": "1b40738270931e3c1d955ce34e0fce0d8d10d8c5ad543463e40b4b4c0243007c"
+    },
+    {
+      "url": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/20130619/isa_element_parts.txt",
+      "file": "isa_element_parts.txt",
+      "size": 1142159,
+      "sha256": "a3de74423f943b0d724ae8f59b3a817f87c423a544f8db98113b1980817cbeaf"
+    },
+    {
+      "url": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/20130619/partof_element_parts.txt",
+      "file": "partof_element_parts.txt",
+      "size": 651179,
+      "sha256": "3f5f6df1028eb122b30de77c711597b6bb8e5541658e5985859fd228adbf88ea"
+    }
+  ],
+  "format": "A zip of 2,234 Wavefront OBJ files (FJnnnn.obj; FJnnnnM a part mirrored to the other side), each one element: vertices (v), vertex normals (vn) and triangles (f v//vn), with a header naming the FMA concept, its English name, its bounds in mm and its volume in cm³ as the database computed it. Coordinates in millimetres in the database's frame, which is the LPS patient frame of DICOM: +x the subject's left, +y posterior, +z superior, the body's midline near x = 0, the soles near z = 0 and every part at z > 0. Tab-separated tables: the concepts of each tree (FMA id, representation id, English name); the inclusion relations (parent id and name, child id and name), each a tree; and the elements that compose each compound concept (concept id, name, element file id). The meshes are those of the is-a tree, which holds every element; the part-of tree's 1,258 elements are among them.",
+  "coverage": "The whole body of one adult man in the anatomical position: skin and hair; the skeleton with its cartilages, ligaments and joints; 432 muscles and their parts; the heart with its valves and cavities; 639 arteries and 395 veins of the systemic, pulmonary and portal circulations; the brain, spinal cord and nerves; the eyes; the respiratory, digestive, urinary, genital, endocrine and lymphoid organs. Not the female body; no lymph nodes or lymphatic vessels; the liver and lungs as segments with their vessels rather than as whole organs.",
+  "licence": "CC BY 4.0 since 2025-02-25 (README_e.html §3 of the database, updated that day); the files' own headers still carry the earlier notice, CC BY-SA 2.1 Japan. Attribute as \"BodyParts3D, © The Database Center for Life Science licensed under CC Attribution 4.0 International\".",
+  "citation": "Mitsuhashi, N., Fujieda, K., Tamura, T., Kawamoto, S., Takagi, T. and Okubo, K. (2009), BodyParts3D: 3D structure database for anatomical concepts, Nucleic Acids Research 37 (Database issue), D782–D785, doi:10.1093/nar/gkn613. Rosse, C. and Mejino, J. L. V. (2003), A reference ontology for biomedical informatics: the Foundational Model of Anatomy, Journal of Biomedical Informatics 36, 478–500, doi:10.1016/j.jbi.2003.11.007.",
+  "used_by": [
+    "data/products/body_anatomy.py",
+    "domains/anatomy",
+    "applications/body-atlas"
+  ]
+}

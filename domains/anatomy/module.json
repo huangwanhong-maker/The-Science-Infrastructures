@@ -1,0 +1,11 @@
+{
+  "name": "anatomy",
+  "kind": "field",
+  "status": "draft",
+  "depends": [],
+  "foundations": [
+    "calx",
+    "morphe",
+    "physis"
+  ]
+}

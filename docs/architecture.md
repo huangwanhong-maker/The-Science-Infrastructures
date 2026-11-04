@@ -76,7 +76,7 @@ Domains      height 5   ecology
                         microbiology · physiology · developmental-biology
              height 1   geodesy · evolution · cell-biology · urban-science
              height 0   metrology · neuroscience (a submodule) · history · genomics · economics ·
-                        robotics · architecture · molecular-science
+                        robotics · architecture · molecular-science · anatomy
                     │ use
 Foundations  physis           units · symmetry · geometry · dynamics · quantum · discretisation ·
 (foundations/,                spacetime · field theory · gauge · quantum gravity · mechanics ·

@@ -2,13 +2,13 @@
 
 *Status: draft, 2026-10-31.*
 
-These are screenshots of the infrastructure's applications, the three atlases taken on 22 October 2026 from their local servers with the data of that day, the Spiking Simulator and the Complex Atlas on 23 October, the History Complex and the Genome Workbench on 24 October, the Economy Atlas on 24 October and again on 4 November, Cosmopoiesis on 30 October, and the Urban Science Workbench on 31 October.
+These are screenshots of the infrastructure's applications, the three atlases taken on 22 October 2026 from their local servers with the data of that day, the Spiking Simulator and the Complex Atlas on 23 October, the History Complex and the Genome Workbench on 24 October, the Economy Atlas on 24 October and again on 4 November, Cosmopoiesis on 30 October, the Urban Science Workbench on 31 October, and the Body Atlas on 4 November.
 
 - All are web applications without a build step.
-- Their science is the provisional JavaScript of the domains they draw on, tested against published references and closed-form answers in 422 checks, and the C++ of the foundations and of the metrology, geodesy, astronomy, geophysics, meteorology, navigation, neuroscience, history, genomics, evolution, economics, robotics, planetary-science and urban-science domains, checked the same way.
+- Their science is the provisional JavaScript of the domains they draw on, tested against published references and closed-form answers in 422 checks, and the C++ of the foundations and of the metrology, geodesy, astronomy, geophysics, meteorology, navigation, neuroscience, history, genomics, evolution, economics, robotics, planetary-science, urban-science and anatomy domains, checked the same way.
 - Each caption says what is shown, where the data come from, and how the picture is made.
 
-Click an image to see it at full size. To run the applications yourself, see the READMEs of the [Earth Atlas](../applications/earth-atlas/README.md), the [Celestial Atlas](../applications/celestial-atlas/README.md), the [Brain Atlas](../applications/brain-atlas/README.md), the [Spiking Simulator](../applications/spiking-simulator/README.md), the [Complex Atlas](../applications/complex-atlas/README.md), the [History Complex](../applications/history-complex/README.md) and the [Genome Workbench](../applications/genome-workbench/README.md), the [Economy Atlas](../applications/economy-atlas/README.md), [Cosmopoiesis](../applications/cosmopoiesis-lab/README.md) and the [Urban Science Workbench](../applications/urban-science-workbench/README.md).
+Click an image to see it at full size. To run the applications yourself, see the READMEs of the [Earth Atlas](../applications/earth-atlas/README.md), the [Celestial Atlas](../applications/celestial-atlas/README.md), the [Brain Atlas](../applications/brain-atlas/README.md), the [Spiking Simulator](../applications/spiking-simulator/README.md), the [Complex Atlas](../applications/complex-atlas/README.md), the [History Complex](../applications/history-complex/README.md) and the [Genome Workbench](../applications/genome-workbench/README.md), the [Economy Atlas](../applications/economy-atlas/README.md), [Cosmopoiesis](../applications/cosmopoiesis-lab/README.md), the [Urban Science Workbench](../applications/urban-science-workbench/README.md) and the [Body Atlas](../applications/body-atlas/README.md).
 
 ## 1. The Earth Atlas
 
@@ -584,7 +584,30 @@ A three-dimensional GIS of Melbourne's centre, its streets read as a sea, after 
 </tr>
 </table>
 
-## 11. Credits
+## 11. The Body Atlas
+
+The whole body of BodyParts3D's adult man, 2,234 parts named by the Foundational Model of Anatomy, through the anatomy domain ([ADR 0066](../development/decisions/0066-the-anatomy-domain-and-the-body-atlas.md)). Every measure on a card is the domain's: the topology of the part's mesh by morphe, the solid it bounds by physis. Every cut is the domain's section of the meshes, drawn in the conventions of imaging. Silver white by day, silver on graphite by night, at the user's choice; rose gold marks what is chosen.
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/body-01-the-body.jpg"><img src="../assets/gallery/body-01-the-body.jpg" alt="The whole body from the front, the skin as glass over the skeleton, the vessels and the organs"></a><br><b>The body as it opens</b>: BodyParts3D's adult man from the front, his left on the right, the skin drawn as glass over the skeleton, the heart and vessels, the brain, the nerves and the organs; the muscles and fascia are hidden at first so that the interior is seen. Each of the seventeen systems on the left is shown, drawn as glass or hidden.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/body-02-kidneys.jpg"><img src="../assets/gallery/body-02-kidneys.jpg" alt="The kidneys between the aorta and the inferior vena cava, the left kidney chosen and its card beside"></a><br><b>The kidneys and their vessels</b>: The gut hidden, the left kidney chosen: lit in rose gold, its renal artery and vein running to the aorta and the inferior vena cava between the kidneys, the spleen and the adrenal glands beside them. Its card says what is known of the kidney (inherited, since the left kidney has no entry of its own), that its centre lies at L1, 63 mm left of the midline, and that the mesh bounds 103.7 cm³ against the database's 103.2.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/body-03-coronal-cut.jpg"><img src="../assets/gallery/body-03-coronal-cut.jpg" alt="A coronal cut through the body's middle, its face drawn from the engine's section: the kidneys, the liver, the heart and the colon cut open"></a><br><b>A coronal cut</b>: The body cut through its middle by a coronal plane, the front half removed: the faces of the cut kidneys, liver, heart, colon and vertebrae are the anatomy domain's section of each mesh, drawn exactly where the meshes are clipped.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/body-04-section-t10.jpg"><img src="../assets/gallery/body-04-section-t10.jpg" alt="A transverse section at the tenth thoracic vertebra as a plate, seen from below as in CT, its parts named on leader lines"></a><br><b>A section at T10</b>: The Sections mode: the body cut at the tenth thoracic vertebra (read from the model's own vertebrae) and drawn as a plate, seen from the feet as a CT scan is, the subject's left on the right. The liver's segments, the inferior vena cava (chosen, on the left of the image) and the aorta beside the vertebra; the larger pieces named in the margins.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/body-05-midsagittal.jpg"><img src="../assets/gallery/body-05-midsagittal.jpg" alt="The midsagittal section of the whole body as a plate: the brain, the spinal column, the heart, the gut and the pelvic organs"></a><br><b>The midsagittal plate</b>: The whole body cut on its midline and seen from the left, anterior on the image's left: the brain and cerebellum, the tongue and trachea, the vertebral column from the atlas to the sacrum, the heart and its cavities, the liver, the gut and the bladder. 313 parts are cut; the cut body stands beside the plate in the round.</td>
+<td width="50%" valign="top"><a href="../assets/gallery/body-06-saphenous-calibre.jpg"><img src="../assets/gallery/body-06-saphenous-calibre.jpg" alt="The veins alone, the right great saphenous vein chosen, its card with its calibre along its length"></a><br><b>The great saphenous vein</b>: The veins alone, the right great saphenous vein chosen: 822 mm long, one closed surface of genus 0, 9.46 cm³ as the database gives it. Its calibre along its length, the diameter of a circle of each cross-section's area, widens from about 3 mm at the ankle to about 5 mm at the groin; it touches the dorsal venous arch of the foot and the femoral vein at the saphenofemoral junction.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/body-07-heart-night.jpg"><img src="../assets/gallery/body-07-heart-night.jpg" alt="By night: the heart isolated, the rest of the body a faint ghost, its card beside"></a><br><b>The heart, by night</b>: Silver on graphite: the heart's 83 parts isolated, the rest of the body drawn as a faint ghost. Its card gives its Latin name, what it does, its supply and drainage, its level (T7) and its measures.</td>
+<td width="50%"></td>
+</tr>
+</table>
+
+## 12. Credits
 
 The screenshots are the infrastructure's, under its MIT licence, except the three that show Pangu-Weather's forecasts (§1.3: earth-15, earth-16 and earth-17). Those are shared under CC BY-NC-SA 4.0, the licence of the model's parameters: for learning and research, not for commercial use. The data in all of them keep their own licences.
 
@@ -648,8 +671,9 @@ The screenshots are the infrastructure's, under its MIT licence, except the thre
 | Buildings, streets and spaces of a city | OpenStreetMap contributors, through Overpass | ODbL 1.0 |
 | Hourly weather | Open-Meteo, from ERA5 and the IFS | CC BY 4.0 |
 | Public holidays | Nager.Date | Free for private and non-profit use; cited |
+| The human body | BodyParts3D 4.0 (Mitsuhashi et al. 2009), © The Database Center for Life Science; names from the Foundational Model of Anatomy | CC BY 4.0 |
 
-## 12. Making the Screenshots
+## 13. Making the Screenshots
 
 The screenshots were taken with headless Chrome at 1600 × 1000 pixels, driven over the DevTools protocol, and saved as JPEG.
 
@@ -663,6 +687,8 @@ http://127.0.0.1:8790/#p=globe&c=-32,36,3.25&s=wind.10m@gfs-forecast:speed&f=win
 - `c`: the longitude, latitude and distance of the view.
 - `s`, `f`, `l` and `m`: the surface, the flow, the lines, and the model compared.
 - `t`: the instant, in UTC.
+
+The Body Atlas's pictures, at 1680 × 1000 pixels scaled to 1500 wide, were taken from its local server in the same way, each from a link that keeps the mode, the part chosen, the systems, the cut and the view, for example `http://127.0.0.1:8990/#m=sections&sec=sagittal:0:r` or `#m=body&p=FMA7205&v=430,330,1150,40,250,40`, and a key pressed by a script where a picture needed it (the coronal cut, the calibre, the isolation).
 
 The Urban Science Workbench's pictures, at 1500 × 950 pixels, were taken from its local server in the same way, the clock's date and hour, the layers and the view set by a script in the page.
 

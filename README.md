@@ -95,6 +95,18 @@ An integrative infrastructure for learning, using and researching all domains of
 </p>
 <p align="center"><i>The Urban Science Workbench: Melbourne in three dimensions, its streets read as a sea from the city's pedestrian counts: the tide each street's walkers rise and fall to, and its surge on a holiday; walkers each way at their true numbers; the waves of a crowd at the crossings of Swanston Street; and the city's tides and currents read together.</i></p>
 
+<p align="center">
+<a href="docs/gallery.md"><img src="assets/gallery/body-01-the-body.jpg" width="32%" alt="The whole body from the front, the skin as glass over the skeleton, the vessels and the organs, in the Body Atlas"></a>
+<a href="docs/gallery.md"><img src="assets/gallery/body-03-coronal-cut.jpg" width="32%" alt="A coronal cut through the body's middle, the kidneys, liver, heart and colon cut open, in the Body Atlas"></a>
+<a href="docs/gallery.md"><img src="assets/gallery/body-07-heart-night.jpg" width="32%" alt="By night, the heart isolated and the body a faint ghost, in the Body Atlas"></a>
+</p>
+<p align="center">
+<a href="docs/gallery.md"><img src="assets/gallery/body-02-kidneys.jpg" width="32%" alt="The kidneys between the aorta and the inferior vena cava, the left kidney chosen with its card, in the Body Atlas"></a>
+<a href="docs/gallery.md"><img src="assets/gallery/body-05-midsagittal.jpg" width="32%" alt="The midsagittal section of the whole body as a plate, its parts named, in the Body Atlas"></a>
+<a href="docs/gallery.md"><img src="assets/gallery/body-06-saphenous-calibre.jpg" width="32%" alt="The great saphenous vein chosen, with its calibre along its length, in the Body Atlas"></a>
+</p>
+<p align="center"><i>The Body Atlas: the whole body of an adult man, every part named by the Foundational Model of Anatomy and measured by the anatomy domain, by system, cut in the planes of imaging and drawn as anatomical plates; a card for each part with what is known of it, where it lies, what it touches, and for a vessel its calibre along its course.</i></p>
+
 ## Quick Start
 
 **Online, with nothing to install.** The three atlases run on our online server; the Spiking Simulator, the Complex Atlas, the History Complex, the Genome Workbench and the Economy Atlas do not:
@@ -113,6 +125,8 @@ An integrative infrastructure for learning, using and researching all domains of
 - **Economy Atlas:** not run on our online server either — the world's trade split into exchange, drive and circulation on a map, currencies held and exchanged as a spacetime whose curvature is the departure from a price system, production as a circular flow, and the loop deficits of transfer networks, computed by a C++ engine on the economics domain, on the library's data or your own, with plug-ins in Python and C++ and a toolbox of 27 tools of quantitative economics (regression, panels, instruments, time series, inequality, index numbers, the gravity of trade, growth, games and voting); it runs on your own computer: see [the Economy Atlas on your computer](#the-economy-atlas-on-your-computer).
 
 - **Chemistry Workbench:** not run on our online server either — a workbench of plug-ins for chemistry, the first of which executes and verifies a manuscript on chemical structure generation through symmetry breaking: graph grammars of molecules, point groups and character tables, autocatalytic selection as an exact Markov chain, and a group field theory's Feynman complexes; it runs on your own computer with g++: `python applications/chemistry-workbench/serve.py --open` builds its engine from the page and opens http://127.0.0.1:8950/.
+
+- **Body Atlas:** not run on our online server either — the whole body of an adult man in the round, by system, every part with its card and measures, cut in the planes of imaging; `python applications/body-atlas/serve.py --open` after its recipe.
 
 - **Urban Science Workbench:** not run on our online server either — a three-dimensional GIS of cities (OpenStreetMap's buildings at their heights, streets, parks and water, lit by the real Sun at any hour in the city's own time) with the analysis of streets on top, Melbourne's streets read as a sea: the tide of their walkers rising and falling with the clock, its surge on a date, the currents of walkers each way at their true numbers, the waves of a crowd at the crossings of Swanston Street, shops open or closed by their declared hours, the rhythm of a street on the calendars, its response to rain and holidays, the mix of its uses, two stores picked on the map solved as a pathway in space and time, and crowds as kinematic waves; it runs on your own computer with g++: `python applications/urban-science-workbench/serve.py --open` builds its engine and fetches the records from the page and opens http://127.0.0.1:8970/.
 
@@ -288,7 +302,7 @@ height 2   astronomy · geophysics · geography · oceanography · meteorology �
            microbiology · physiology · developmental-biology
 height 1   geodesy · evolution · cell-biology · urban-science
 height 0   metrology · neuroscience · history · genomics · economics · robotics · architecture ·
-           molecular-science
+           molecular-science · anatomy
            ─────────────────────────────── foundations: physis ─► calx, morphe
 ```
 
@@ -334,7 +348,7 @@ A priority such as 1.3 is the third place in tier 1. Within a tier, a domain com
 
 ### 4.4 The Domains
 
-Fifty-seven domains: seventeen built, and nine more placed in the order as planned, each with a directory of its own. A name links to the domain's directory where it exists; the others are placed in the order only when their work begins.
+Fifty-seven domains: eighteen built, and nine more placed in the order as planned, each with a directory of its own. A name links to the domain's directory where it exists; the others are placed in the order only when their work begins.
 
 **The Earth and the sky.**
 
@@ -385,7 +399,7 @@ Fifty-seven domains: seventeen built, and nine more placed in the order as plann
 |---|---|---|---|---|
 | drug-discovery | bridge | genomics, molecular-science | Evidence joining targets and compounds, molecular properties, pharmacological models | 1.7 |
 | epidemiology | field | demography | Disease in populations, its causes and its spread; public health | 3.10 |
-| anatomy | field | — | The structures of the body, as images and as models | 4 |
+| [anatomy](domains/anatomy/) | field | — | The structures of the body, as models and as images: the anatomical frames and the planes of imaging, FMA's parts and the systems of the body, the measures and sections of BodyParts3D's body; medical imaging and vessels planned ([ADR 0066](development/decisions/0066-the-anatomy-domain-and-the-body-atlas.md)) | built |
 | clinical-medicine | bridge | anatomy, physiology, drug-discovery, epidemiology | Diagnosis and treatment, under uncertainty | 4 |
 
 **Mind and language.**
@@ -489,7 +503,7 @@ height 2   astronomy · geophysics · geography · oceanography · meteorology �
            microbiology⁴ · physiology⁴ · developmental-biology⁴
 height 1   geodesy · evolution · drug-discovery¹ · chemistry³ · cell-biology³ · epidemiology³ · urban-science
 height 0   metrology · neuroscience · history · genomics · economics · robotics · architecture ·
-           linguistics¹ · molecular-science¹ · demography³
+           anatomy · linguistics¹ · molecular-science¹ · demography³
 ```
 
 *Rationale.*
@@ -539,6 +553,8 @@ height 0   metrology · neuroscience · history · genomics · economics · robo
 
 - The [Urban Science Workbench](applications/urban-science-workbench/README.md) is a three-dimensional GIS of cities with analyses on top, built of plug-ins ([ADR 0060](development/decisions/0060-streets-as-open-systems.md)). A city stands in an exact local frame on WGS 84: OpenStreetMap's buildings at their mapped heights, its ways at their widths, its parks and water, lit by the Sun of the chosen instant in the city's own time zone. Its first plug-in, *Street Oceanography*, on the urban-science domain, reads streets as open systems. On the map, Melbourne's streets as a sea: each sensor's street a channel of water standing to the tide the calendars predict, rising and falling with the clock, or to the day's count against it (its surge); walkers each way at their true numbers in real time, keeping left, with the net current as an arrow; the crowd on Swanston Street as a kinematic wave, second by second, queuing at red; shops standing tall while open, and businesses by use. Beside it: the tides and currents of the whole city (when its high water comes, the commuters' flood and ebb, the walkers' entropy production bounded below by the measured edges, which way they keep); the rhythm of a street against red noise with its lines read on the calendars, and whose clock it keeps at each change of daylight saving; its response to rain and holidays beside every other street's; the mix of its uses and the scale of its heterogeneity; the hours of its shops and who they draw; two stores picked on the map solved as a pathway with a coupling length and a coupling window; circulation that only a drive round the blocks sustains; and kinds of streets. Human flow, architecture and cultural analysis are planned.
 
+- The [Body Atlas](applications/body-atlas/README.md) shows the whole body of an adult man, BodyParts3D's 2,234 parts named by the Foundational Model of Anatomy, through the anatomy domain ([ADR 0066](development/decisions/0066-the-anatomy-domain-and-the-body-atlas.md)). Its seventeen systems are shown, drawn as glass or hidden. Every part has a card: what is known of it, its vertebral level, its measures against the database's, what it touches, its place in FMA's trees and, for a vessel, its calibre along its course. A cut by any cardinal plane shows its face; the Sections mode draws the cut as a plate in the conventions of imaging; four tours follow the body in layers, the heart and the great vessels, the venous return from the foot, and the trunk in sections.
+
 The three atlases run online on the project's server, the [Celestial Atlas](http://173.212.213.207:9200/), the [Earth Atlas](http://173.212.213.207:9201/) and the [Brain Atlas](http://173.212.213.207:9202/), and on your own computer in a few lines (Quick Start, above). The [index of applications](applications/README.md) lists those planned.
 
 ## 6. Organisation of the Repository
@@ -549,7 +565,7 @@ The three atlases run online on the project's server, the [Celestial Atlas](http
 ├── domains/         metrology · geodesy · astronomy · geophysics · geography · oceanography ·
 │                    meteorology · tides · navigation · air-sea · climate · neuroscience (submodule) ·
 │                    history · genomics · evolution · economics · planetary-science · robotics ·
-│                    urban-science · architecture (planned) · the domains of life, planned:
+│                    urban-science · architecture · anatomy · the domains of life, planned:
 │                    molecular-science · cell-biology · microbiology · physiology ·
 │                    developmental-biology · ecology
 ├── data/            registry · acquisition · formats · products · terrain tiles · requests on demand
@@ -559,7 +575,7 @@ The three atlases run online on the project's server, the [Celestial Atlas](http
 │                    plug-ins, over fields and over networks of places
 ├── applications/    celestial-atlas · earth-atlas · brain-atlas · spiking-simulator · complex-atlas ·
 │                    history-complex · genome-workbench · economy-atlas · cosmopoiesis-lab (submodule) ·
-│                    chemistry-workbench · urban-science-workbench
+│                    chemistry-workbench · urban-science-workbench · body-atlas
 ├── research/        questions · experiments · papers
 ├── notebooks/       exploration and teaching
 ├── docs/            architecture · gallery
