@@ -22,3 +22,6 @@
 [submodule "eikon"]
 	path = foundations/eikon
 	url = https://github.com/huangwanhong-maker/eikon.git
+[submodule "heuresis"]
+	path = foundations/heuresis
+	url = https://github.com/huangwanhong-maker/heuresis.git

@@ -20,6 +20,7 @@ The sciences share their mathematics, so it is written once, below the domains, 
         │
         ▼
    nomos                            the social methods: measurement · econometrics · games · social choice
+   heuresis (beside nomos)          search: evolutionary computation · search distributions · many objectives · diversity
         │
         ▼
    tyche                            chance: probability · statistics · learning
@@ -42,6 +43,7 @@ Each level may use every level beneath it, and none above.
 | tyche (inference) | `tyche` | Probability, stochastic processes, statistics, inference, learning | calx, morphe, physis | designed here (§6); probability, description, regression and time series written (ADR 0048), and since then spatial statistics, spectra, change points, testing and learning |
 | nomos (social methods) | `nomos` | Measurement, surveys, econometrics, games, social choice, agent-based models | tyche, morphe, calx | measurement, index numbers, games, matching, choice and econometrics written (ADR 0056, §7) |
 | eikon (images) | `eikon` | Images and what is recovered from them: grids, scale space, features, segmentation, distances, skeletons, surfaces, registration, fusion | calx, morphe, physis | grid, phantoms, filters, features, segmentation, distance, skeleton, surfaces, registration, fusion written (ADR 0070, §7a) |
+| heuresis (search) | `heuresis` | Search and optimisation over spaces too large to enumerate: evolutionary computation, evolution strategies, swarms, annealing, search distributions and their samplers (quantum search among them), many objectives, quality-diversity, programs, islands, surrogates, landscapes | calx, morphe, physis, tyche | eighteen modules written (ADR 0073, §7b) |
 
 *Remark.* inference depends on physis because data assimilation and the uncertainty of models need dynamical systems; physis never depends on inference. A stochastic differential equation is therefore a system of physis (`dynamics`), integrated by calx (`integrators`), whose statistics are inference's (`processes`).
 
@@ -142,6 +144,10 @@ Measurement (psychometrics, item response theory, indices), surveys, econometric
 
 Image processing and analysis (MSC 68U10; 94A08 in part): images on oriented grids, Gaussian scale space and the features it reveals (tubes, blobs, sheets), segmentation, distance transforms and fronts (fast marching), digital topology and thinning, level-set surfaces, registration by mutual information and by points, the fusion of segmentations, and measures of agreement that see topology. It stands on calx (linear algebra, the closed-form 3 × 3 eigenproblem, optimisation), morphe (the multigraph of a skeleton, Betti numbers) and physis (triangle surfaces and the solids they bound). It is a library of its own because image analysis is a body of methods with its own literature, used by every science with images, and names no object in nature; the medical-imaging domain was its first user ([ADR 0070](../development/decisions/0070-structures-reconstructed-from-images.md); eikon's decisions 0002 and 0003).
 
+## 7b. Search (heuresis)
+
+Global, stochastic and black-box search (MSC 68W50 evolutionary algorithms, 90C59 approximation methods and heuristics, 90C29 multi-objective programming, 90C27 combinatorial optimisation in part, 68T20 problem solving and search, 81P68 in part): populations that vary and select, search distributions moved by their information-geometric flow, archives of diverse solutions, Pareto fronts and their hypervolumes, annealing and tempering, programs as typed terms and as derivations of grammars, island and cellular models, Gaussian-process surrogates, the analysis of landscapes and of runs. An algorithm is a pure state machine that asks for evaluations and is told them; it never calls its objective, so its evaluations may run on threads, machines or devices, and its draws are keyed by what they are for. A quantum device enters as a sampler of a law, with an exact classical emulation of that law as its reference. It stands on calx (streams, linear algebra, local minimisers, threads), morphe (grammars), physis (dimensions, which type programs) and tyche (Gaussian conditioning, the statistics of runs). It is a library of its own because search names no object in nature, serves every domain, and needs more than calx's floating-point arrays ([ADR 0073](../development/decisions/0073-the-search-foundation-heuresis.md); heuresis's decisions 0002–0004 and its theory note).
+
 ## 8. Coverage: the Mathematics Subject Classification
 
 Every class of the Mathematics Subject Classification 2020 (zbMATH Open and Mathematical Reviews) and its home. A class may be split between homes by its exact and numerical sides; a class of applications lives in the domains, which use the foundations.
@@ -188,7 +194,7 @@ Every class of the Mathematics Subject Classification 2020 (zbMATH Open and Math
 | 60 | Probability theory and stochastic processes | inference `probability`, `processes`; calx `random` (sampling) |
 | 62 | Statistics | inference (all its modules but `learning`) |
 | 65 | Numerical analysis | calx `numerics` (all modules); physis `discretisation` (65M, 65N) |
-| 68 | Computer science | calx `compute` (algorithms, parallel computation); morphe `formal`, `logic` (languages, semantics, complexity); inference `learning` (68T) |
+| 68 | Computer science | calx `compute` (algorithms, parallel computation); morphe `formal`, `logic` (languages, semantics, complexity); inference `learning` (68T); heuresis (68W50 evolutionary algorithms, 68T20 search) |
 | 70 | Mechanics of particles and systems | physis `mechanics` |
 | 74 | Mechanics of deformable solids | physis `continuum` |
 | 76 | Fluid mechanics | physis `continuum` |
@@ -198,7 +204,7 @@ Every class of the Mathematics Subject Classification 2020 (zbMATH Open and Math
 | 82 | Statistical mechanics, structure of matter | physis `statistical_mechanics`, `thermodynamics` |
 | 83 | Relativity and gravitational theory | physis `spacetime`, `gravitation`; `quantum_gravity` (83C45) |
 | 85, 86 | Astronomy and astrophysics; geophysics | the domains (astronomy; geophysics, oceanography, meteorology) |
-| 90 | Operations research, mathematical programming | calx `optimisation`; morphe `combinatorics`; inference `processes` (queues) |
+| 90 | Operations research, mathematical programming | calx `optimisation`; morphe `combinatorics`; inference `processes` (queues); heuresis (90C59 heuristics, 90C29 many objectives) |
 | 91 | Game theory, economics, social and behavioural sciences | the social methods (§7); the social-science domains |
 | 92 | Biology and other natural sciences | the domains (neuroscience, the life sciences, chemistry) |
 | 93 | Systems theory; control | physis `control`, `dynamics`; inference `assimilation` (filtering) |
@@ -212,7 +218,7 @@ Every class of the Mathematics Subject Classification 2020 (zbMATH Open and Math
 - **Groups** are morphe's when finite or presented, physis's when they are Lie groups acting on space.
 - **Graphs** are morphe's as structures (`combinatorics`), calx's as sparse matrices (`linalg`), and inference's as random models (`processes`). A network of neurons is stored by rows, simulated, and analysed as a graph.
 - **Randomness** is sampled by calx (`random`), described and inferred by inference.
-- **Optimisation** is calx's when continuous, morphe's when combinatorial and exact, physis's when it is the control of a dynamical system, inference's when it is the fitting of a model.
+- **Optimisation** is calx's when continuous and local, morphe's when combinatorial and exact, heuresis's when global, stochastic or black-box over any representation, physis's when it is the control of a dynamical system, inference's when it is the fitting of a model. heuresis calls calx's local minimisers for memetic refinement and tyche's Gaussian conditioning for its surrogates (ADR 0073).
 - **Signals** are filtered and transformed by calx (`signal`, `transforms`) and estimated by inference (`time_series`).
 - **Quantum neurons** meet the classical machinery exactly: an open quantum system's density matrix (or a qubit's Bloch vector) flows linearly under the GKSL equation, so `physis/quantum` hands `physis/dynamics` a linear system whose propagator `calx/linalg` exponentiates; a quantum-jump unravelling fires at a hazard, as an escape-noise neuron does; Ising-like networks are `statistical_mechanics`' spin models with Glauber or Lindblad dynamics. The neuroscience domain's spiking networks have the first, a two-level emitter along exact quantum trajectories, and plan more (its survey of 2026-10-23).
 - **Complexes and fields** meet in physis: a scalar field is a 0-cochain on a morphe complex; a lattice gauge field a function from its 1-cells to a group of `symmetry`, whose holonomy around a 2-cell is the product along that cell's attaching word; the Feynman graphs of a group field theory are morphe's coloured graphs, whose bicoloured cycles bound the 2-cells of the dual 2-skeleton on which their amplitudes are BF or spin-foam state sums; a discrete spacetime is a simplicial complex with edge lengths (Regge) or a partial order (causal sets). The exact side (homology, fundamental groups, counting homomorphisms) is morphe's; the numerical side (Monte Carlo, recoupling in floating point, curvature) physis's (ADR 0039).
