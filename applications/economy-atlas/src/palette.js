@@ -1,5 +1,7 @@
-// The atlas's colours, read from the theme's tokens (styles.css) when drawing, so that the map follows
-// day and night; outside a page (in the checks) the day's values. Every data colour was validated
+// The data's colours, read from the theme's data tokens (styles.css) when drawing, so that the map
+// follows day and night; outside a page (in the checks) the day's values. They are kept apart from
+// the interface's colours (ADR 0068): the interface's gold marks what is chosen, the ramps' gold
+// what is large. Every data colour was validated
 // for colour vision deficiencies on its surface (the dataviz method: OKLab ΔE ≥ 8 between neighbours
 // under protanopia and deuteranopia):
 //   diverging, for a polarity: sky blue (value sent out) through a neutral to rose (drawn in);
@@ -7,8 +9,8 @@
 //   the parts of a flow: indigo (driven), rose (local, round the triangles), gold (global, round the holes).
 
 const DAY = {
-  sends: '#4A86C5', draws: '#E0607E', neutral: '#F4EFE5', driven: '#5B63B0', local: '#E0607E', global: '#C39A2E',
-  reciprocal: '#F0DFAE', magnitude: '#A8701A', gold: '#DDB65A', 'gold-ink': '#8A6A1C', rose: '#E0607E', ink: '#3A3128', paper: '#FFFDF7',
+  sends: '#4A86C5', draws: '#E0607E', neutral: '#F1F0EA', driven: '#5B63B0', local: '#E0607E', global: '#C39A2E',
+  reciprocal: '#EFE0B4', magnitude: '#A8701A', 'ramp-gold': '#DDB65A', rose: '#E0607E',
 };
 
 let cache = null;
@@ -55,7 +57,7 @@ export function diverging(t) {
 // lightness falls throughout, so that the map stays light where the values are middling.
 export function sequential(t) {
   const u = Math.pow(Math.max(0, Math.min(1, Number.isFinite(t) ? t : 0)), 0.8);
-  return css(u < 0.5 ? mix(rgb(token('neutral')), rgb(token('gold')), 2 * u) : mix(rgb(token('gold')), rgb(token('magnitude')), 2 * u - 1));
+  return css(u < 0.5 ? mix(rgb(token('neutral')), rgb(token('ramp-gold')), 2 * u) : mix(rgb(token('ramp-gold')), rgb(token('magnitude')), 2 * u - 1));
 }
 
 export const rampCss = (kind = 'diverging') => kind === 'sequential'

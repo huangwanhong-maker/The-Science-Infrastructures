@@ -34,8 +34,8 @@ for (const t of TABLES) {
     t.table.z.length === n && t.table.z.every((r) => r.length === n) && t.table.final_demand.length === n);
 }
 assert("colours: the diverging ramp runs from sky blue through the neutral to rose (the day's, outside a page)",
-  diverging(-1) === 'rgb(74, 134, 197)' && diverging(1) === 'rgb(224, 96, 126)' && diverging(0) === 'rgb(244, 239, 229)', `${diverging(-1)} ${diverging(0)} ${diverging(1)}`);
-assert('colours: the sequential ramp runs from the neutral through gold to deep amber', sequential(0) === 'rgb(244, 239, 229)' && sequential(Math.pow(0.5, 1.25)) === 'rgb(221, 182, 90)'
+  diverging(-1) === 'rgb(74, 134, 197)' && diverging(1) === 'rgb(224, 96, 126)' && diverging(0) === 'rgb(241, 240, 234)', `${diverging(-1)} ${diverging(0)} ${diverging(1)}`);
+assert('colours: the sequential ramp runs from the neutral through gold to deep amber', sequential(0) === 'rgb(241, 240, 234)' && sequential(Math.pow(0.5, 1.25)) === 'rgb(221, 182, 90)'
   && sequential(1) === 'rgb(168, 112, 26)', `${sequential(0)} ${sequential(Math.pow(0.5, 1.25))} ${sequential(1)}`);
 assert('colours: the series cycles', seriesColour(0) === seriesColour(20) && seriesColour(-1) === seriesColour(19));
 

@@ -1,6 +1,6 @@
 # The Economy Atlas
 
-*Status: draft.* An application of the economics domain ([ADR 0044](../../development/decisions/0044-value-in-space-and-time.md), [ADR 0046](../../development/decisions/0046-the-economy-atlas-data-and-plugins.md), [ADR 0056](../../development/decisions/0056-nomos-and-a-toolbox-of-quantitative-economics.md)). It draws value carried between places and through time:
+*Status: draft.* An application of the economics domain ([ADR 0044](../../development/decisions/0044-value-in-space-and-time.md), [ADR 0046](../../development/decisions/0046-the-economy-atlas-data-and-plugins.md), [ADR 0056](../../development/decisions/0056-nomos-and-a-toolbox-of-quantitative-economics.md), [ADR 0068](../../development/decisions/0068-the-economy-atlas-as-a-scholarly-instrument.md)). It draws value carried between places and through time:
 
 - the world's trade on a map, or flows of one's own between any places, split into exchange, drive and circulation;
 - currencies held and exchanged as a spacetime complex, whose curvature is the departure from a price system;
@@ -20,7 +20,8 @@ Everything shown is computed by the domain's C++ on the foundations. Plug-ins in
   - Arcs are the largest net flows, their driven or circulating parts, or a plug-in's arcs. Each wears the colour of its largest part: indigo driven, rose round the triangles, gold round the holes.
   - The map zooms (the wheel, the buttons) and pans (dragging), and fits a regional dataset. Places without a country of their own are circles. The pointer brings a card for a place or an arc. A place is found by its name or code, or clicked: its card gives its flows, attraction and largest net flows, each with the share of it driven and circulating, and its trade over the years beside the indicator the map is coloured by.
   - A strip of years beneath the map gives every year's shares of the net flows' energy; a click, or ← and →, chooses the year, and **play** goes through them, each year's decomposition fetched while the one before is shown.
-  - The year's places and net flows are saved as CSV, and the map as SVG with its styles.
+  - The dock and the inspector fold away (‹ controls, inspector ›), and the map takes the room. Its instruments name the projection, the longitude and latitude under the pointer and the zoom; each legend ends with its source, year, unit and projection.
+  - The year's places and net flows are saved as CSV, and the map as a figure composed for publication: a title and a line of what is drawn, the map as shown with its arcs solid and headed, the legend, and a line of source, projection, date and link; as SVG with Source Serif 4 written into it, or as PNG at 3600 pixels wide.
 - **The toolbox.** Quantitative economics on tables (§2.4): the library's (economies by year with their trade and the World Bank's indicators; currencies by month), one's own, or one pasted. Each tool is a form built from its declaration, run by the engine on the foundations' methods, and answered in figures, tables, charts and, for values by economy, a layer of the map.
 - **Spacetime.** Currencies held month by month at their policy rates and exchanged with a base at the month's rate, as the spacetime complex of the theory note, §5. The library's record holds twenty currencies against the euro: the ECB's rates, the BIS's policy rates, and for the euro the ECB's deposit facility rate. A record of one's own uses its own base.
   - A sheet shows every lens's curvature, the base's excess return over a currency in a month, the departure from uncovered interest parity.
@@ -36,7 +37,7 @@ Everything shown is computed by the domain's C++ on the foundations. Plug-ins in
   - retention round directed cycles;
   - the circulation of flows and their pairing with the transports.
 
-The page is a ledger in gold: weak light gold on a light ivory by day, with rose red as its minor colour and a clear sky blue for what is sent; deep ink by night, when chosen (the button at the top right). Its data's colours are validated for colour vision deficiencies on both (ADR 0046, §2.1; lightened by ADR 0048).
+The page is a scholarly instrument in porcelain and gold (ADR 0068): porcelain surfaces and graphite ink, a champagne gold only for what is chosen or in focus, rose red as its minor colour; graphite by night, when chosen (the button at the top right). Its data's colours are kept apart from the interface's and validated for colour vision deficiencies on both themes (ADR 0046, §2.1; ADR 0056, §2.5). Source Serif 4 throughout, with tabular figures; 3 px corners and hairlines.
 
 ## 2. Running
 
@@ -51,7 +52,7 @@ The page is at http://127.0.0.1:8910/. It offers to run the recipe itself when s
 
 ### 2.1 Links
 
-The address holds the view and what it shows, so that a picture can be linked and taken again:
+The address holds the view and what it shows, and on the map follows every change, so that a view, or a figure, can be linked and drawn again:
 
 - `#map&year=2010&arcs=driven&economy=CHN`:
   - `year`;
@@ -232,7 +233,7 @@ Answers for a year or a span are kept in `data/cache/economy-atlas/answers/`, ke
 | `src/toolbox.js`, `src/tools.js`, `src/charts.js` | The toolbox's view, its catalogue of tools, and its charts |
 | `plugins/` | The plug-ins, with their README and three examples |
 | `examples/` | Invented data to try the formats |
-| `src/map.js` | The map: places, arcs, eddies and the plug-ins' layers on Equal Earth; zoom, the card under the pointer, the strip of years |
+| `src/map.js` | The map: places, arcs, eddies and the plug-ins' layers on Equal Earth; zoom, the card under the pointer, the strip of years; its instruments, the address it keeps, and its figures |
 | `src/plugins.js`, `src/data.js`, `src/state.js` | The plug-ins' forms and runs, the dialog for one's own data, what the views share |
 | `src/spacetime.js` | The currencies' sheet of lenses and their cumulative curvature |
 | `src/production.js`, `src/circuits.js`, `src/presets.js` | The editable table and network, and their examples |

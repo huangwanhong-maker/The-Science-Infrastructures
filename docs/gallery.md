@@ -435,10 +435,10 @@ Genomes drawn and computed with, through the application's C++ engine on the gen
 
 ## 8. The Economy Atlas
 
-Value carried between places and through time, through the application's C++ engine on the economics domain ([ADR 0044](../development/decisions/0044-value-in-space-and-time.md), [ADR 0046](../development/decisions/0046-the-economy-atlas-data-and-plugins.md), [the theory note](../domains/economics/theory/value-in-space-and-time.md)), and its toolbox of quantitative economics on the foundations tyche and nomos ([ADR 0056](../development/decisions/0056-nomos-and-a-toolbox-of-quantitative-economics.md)), in its ledger of light gold by day and by night.
+Value carried between places and through time, through the application's C++ engine on the economics domain ([ADR 0044](../development/decisions/0044-value-in-space-and-time.md), [ADR 0046](../development/decisions/0046-the-economy-atlas-data-and-plugins.md), [the theory note](../domains/economics/theory/value-in-space-and-time.md)), and its toolbox of quantitative economics on the foundations tyche and nomos ([ADR 0056](../development/decisions/0056-nomos-and-a-toolbox-of-quantitative-economics.md)), in porcelain and gold ([ADR 0068](../development/decisions/0068-the-economy-atlas-as-a-scholarly-instrument.md)), by day and by night.
 
 - The trade is the OECD's Balanced International Merchandise Trade Statistics, adjusted for re-exports; the exchange rates and the euro's deposit facility rate are the ECB's, and the other policy rates the BIS's. The towns of the tenth picture, and their flows, are invented. The indicators of the last are the World Bank's World Development Indicators.
-- Every number in the captions is the engine's own, or a plug-in's, computed on 24 October 2026 on the development machine; the toolbox's, on 4 November 2026, when the pictures were taken again in the lighter palette.
+- Every number in the captions is the engine's own, or a plug-in's, computed on 24 October 2026 on the development machine; the toolbox's, on 4 November 2026, when the pictures were taken again in the instrument's palette.
 - Nothing is sampled: each picture comes back the same from its link.
 
 <table>

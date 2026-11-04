@@ -102,7 +102,7 @@ function panel() {
   const box = document.getElementById('st-panel');
   clear(box);
   const K = A.curvature;
-  put(box, 
+  put(box,
     el('h2', { text: 'Currencies in spacetime' }),
     el('p', { class: 'lede', text: `${A.currencies.length} currencies, ${A.months[0]} to ${A.months.at(-1)}: each held from month to month at its policy rate and exchanged with ${base(A).name} at the month's rate. A month's lens is a loop: ${base(A).holding} held and exchanged, against exchanged and held.` }),
     el('dl', {},
@@ -116,7 +116,7 @@ function panel() {
   const rows = [...A.stats].sort((a, b) => a.mean - b.mean);
   put(box, el('div', { class: 'section' }, el('div', { class: 'heading' }, el('span', { text: `${base(A).name} against each currency` })),
     el('table', {}, el('thead', {}, el('tr', {}, el('th', { text: 'currency' }), el('th', { class: 'num', text: 'a year' }), el('th', { class: 'num', text: 'volatility' }), el('th', { class: 'num', text: 'ratio' }))),
-      el('tbody', {}, rows.map((s) => el('tr', { class: 'pick', style: state.selected === s.currency ? 'background: var(--gold-wash)' : '', onclick: () => select(s.currency) },
+      el('tbody', {}, rows.map((s) => el('tr', { class: 'pick', style: state.selected === s.currency ? 'background: var(--accent-wash)' : '', onclick: () => select(s.currency) },
         el('td', { text: `${A.currencies[s.currency]}` }), el('td', { class: 'num', text: `${signed(100 * s.mean, 1)}%` }),
         el('td', { class: 'num', text: `${(100 * s.volatility).toFixed(1)}%` }), el('td', { class: 'num', text: fixed(s.volatility > 0 ? s.mean / s.volatility : 0, 2) })))))),
     el('p', { class: 'note', text: `A negative mean: holding the currency, at its higher rate, beat holding ${base(A).holding} even after its exchange rate moved: the carry that interest parity says should vanish.` }));

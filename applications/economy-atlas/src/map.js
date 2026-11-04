@@ -14,7 +14,9 @@
 // own colour it, the others are circles. Arcs are the largest net flows, their driven or circulating
 // parts, or a plug-in's arcs; small circular arrows on the triangles are the eddies of local
 // circulation. The strip beneath gives every year's shares and plays through them; the map zooms and
-// pans, finds a place, and gives its numbers and its drawing away as files.
+// pans, finds a place, and gives its numbers away as files and itself as a figure composed for
+// publication. Its instruments name the projection and the place under the pointer; its side panels
+// fold away; its address keeps what it shows, so that a view can be linked and drawn again.
 
 import * as api from './api.js';
 import { el, svg, clear, put, fill, money, quantity, percent, signed, shareBar, download, csv } from './dom.js';
@@ -23,7 +25,7 @@ import { diverging, sequential, rampCss, PART, onTheme } from './palette.js';
 import { shared, on, dataset } from './state.js';
 import { datasetChooser } from './data.js';
 import { pluginsSection } from './plugins.js';
-import { equalEarth, extent, outline } from '/domains/geography/js/projections.js';
+import { equalEarth, extent, outline, inverse } from '/domains/geography/js/projections.js';
 
 const COUNTRIES = '/data/natural-earth-50m/ne_50m_admin_0_countries.geojson';
 const SCALE = 300;   // plane units to SVG units
@@ -191,7 +193,7 @@ function indicator(name, code, year) {
 }
 
 // An economy's years in the table: its trade and, when the map is coloured by one, that indicator.
-function history(code) {
+function placeYears(code) {
   const T = state.indicators;
   if (!T) return null;
   const rows = [];
@@ -231,7 +233,8 @@ function legend(C) {
   const key = (colour, text, dash) => el('div', { class: 'key' }, svg('svg', { width: 28, height: 10 },
     svg('path', { d: 'M1 5H27', stroke: colour, 'stroke-width': 2.4, 'stroke-linecap': 'round', 'stroke-dasharray': dash || null })), text);
   const L = layer(shared.arcs);
-  fill(box, 
+  const src = sourceLine();
+  fill(box,
     el('div', { class: 'title', text: C.title }),
     el('div', { class: 'ramp', style: { background: rampCss(C.kind) } }),
     el('div', { class: 'ends' }, el('span', { text: C.ends[0] }), el('span', { text: C.ends[1] })),
@@ -240,7 +243,17 @@ function legend(C) {
       key(PART.local, 'mostly circulating round the triangles of neighbours'),
       key(PART.global, 'mostly circulating round holes, through distant links'),
       state.opts.eddies ? key(PART.local, 'eddies round the triangles', '2 3') : null],
+    el('div', { class: 'source', text: src }),
   );
+}
+
+// What the map shows, in a line: the flows, their year and unit, and the projection.
+function sourceLine() {
+  const A = state.answer;
+  const d = dataset(shared.flows);
+  const what = shared.flows === 'library:trade' ? 'Trade in goods: OECD BIMTS' : d?.title || 'Flows of one’s own';
+  const unit = shared.flows === 'library:trade' ? 'millions of US$' : A?.unit || '';
+  return `${what}${A?.year ? `, ${A.year}` : ''}${unit ? ` · ${unit}` : ''} · Equal Earth`;
 }
 
 function buildBase() {
@@ -288,6 +301,24 @@ function draw() {
     path.classList.toggle('selected', e !== null && state.selected === i);
   }
   drawOver(C);
+  keepAddress();
+}
+
+// The address keeps what the map shows (ADR 0068): a link draws the same view again.
+function keepAddress() {
+  if (document.querySelector('.view[data-view="map"]').hidden) return;
+  const A = state.answer;
+  const q = [];
+  if (shared.flows !== 'library:trade') q.push(['dataset', shared.flows]);
+  if (state.year !== null && state.year !== undefined) q.push(['year', state.year]);
+  if (shared.colour !== 'attraction' && (MEASURES[shared.colour] || shared.colour.startsWith('wb:'))) q.push(['colour', shared.colour]);
+  if (['driven', 'circulating', 'none'].includes(shared.arcs)) q.push(['arcs', shared.arcs]);
+  if (state.opts.shown !== 150) q.push(['shown', state.opts.shown]);
+  for (const k of ['faces', 'labels', 'flowing']) if (!state.opts[k]) q.push([k, 0]);
+  if (A && state.selected !== null) q.push(['economy', A.economies[state.selected].iso3]);
+  // Only what would break the address is encoded, so that a link reads as it is (colour=wb:gini).
+  const hash = `#map${q.map(([k, v]) => `&${k}=${String(v).replace(/[&#=%\s]/g, encodeURIComponent)}`).join('')}`;
+  if (location.hash !== hash) window.history.replaceState(null, '', hash);
 }
 
 // What lies over the countries, drawn again when the view zooms (its sizes are kept on the screen).
@@ -399,6 +430,7 @@ function zoomTo(k, px, py) {
   v.k = k2;
   if (k2 === 1) { v.x = 0; v.y = 0; }
   applyView();
+  readout(null);
   clearTimeout(settle);
   settle = setTimeout(() => drawOver(), 140);
 }
@@ -430,6 +462,49 @@ function svgPoint(host, event) {
   return p.matrixTransform(host.getScreenCTM().inverse());
 }
 
+// The panels fold away, so that the map takes the room; the choice is kept in this browser.
+function panes() {
+  const layout = document.querySelector('.map-layout');
+  const stage = document.querySelector('.map-stage');
+  const remembered = (k) => { try { return localStorage.getItem(`economy-atlas-${k}`) === 'closed'; } catch { return false; } };
+  const set = (k, closed) => {
+    layout.classList.toggle(`${k}-closed`, closed);
+    try { localStorage.setItem(`economy-atlas-${k}`, closed ? 'closed' : 'open'); } catch { /* for this visit only */ }
+    render();
+    drawOver();
+  };
+  const button = (k, open, shut) => el('button', { 'data-pane': k, onclick: () => set(k, !layout.classList.contains(`${k}-closed`)) });
+  const dockB = button('dock'), panelB = button('panel');
+  const render = () => {
+    dockB.textContent = layout.classList.contains('dock-closed') ? '› controls' : '‹ controls';
+    dockB.title = layout.classList.contains('dock-closed') ? 'Show the controls' : 'Hide the controls';
+    panelB.textContent = layout.classList.contains('panel-closed') ? 'inspector ‹' : 'inspector ›';
+    panelB.title = layout.classList.contains('panel-closed') ? 'Show the inspector' : 'Hide the inspector';
+  };
+  layout.classList.toggle('dock-closed', remembered('dock'));
+  layout.classList.toggle('panel-closed', remembered('panel'));
+  render();
+  put(stage, el('div', { class: 'panes' }, dockB, panelB), el('div', { class: 'readout', id: 'readout', 'aria-live': 'off' }));
+}
+
+// The projection, the place under the pointer and the zoom.
+function readout(e) {
+  const box = document.getElementById('readout');
+  if (!box) return;
+  const host = document.getElementById('map');
+  let where = '';
+  if (e) {
+    const p = svgPoint(host, e);
+    const x = (p.x - state.view.x) / state.view.k / SCALE, y = -(p.y - state.view.y) / state.view.k / SCALE;
+    const ll = inverse(equalEarth, x, y);
+    if (ll) {
+      const [lon, lat] = ll;
+      where = ` · ${Math.abs(lat).toFixed(1)}° ${lat >= 0 ? 'N' : 'S'}, ${Math.abs(lon).toFixed(1)}° ${lon >= 0 ? 'E' : 'W'}`;
+    }
+  }
+  fill(box, el('b', { text: 'Equal Earth' }), `${where} · ×${state.view.k.toFixed(1)}`);
+}
+
 function wire() {
   const host = document.getElementById('map');
   host.addEventListener('wheel', (e) => {
@@ -456,13 +531,14 @@ function wire() {
       }
     }
     tip(e);
+    readout(e);
   });
   const end = () => { drag = null; host.classList.remove('dragging'); };
   host.addEventListener('pointerup', (e) => {
     if (drag && !moved) choose(e);
     end();
   });
-  host.addEventListener('pointerleave', () => { hideTip(); });
+  host.addEventListener('pointerleave', () => { hideTip(); readout(null); });
   host.addEventListener('dblclick', resetView);
   document.getElementById('zoom-in').onclick = () => zoomTo(state.view.k * 1.6, 0, 0);
   document.getElementById('zoom-out').onclick = () => zoomTo(state.view.k / 1.6, 0, 0);
@@ -660,7 +736,7 @@ function panel() {
     pluginResults());
     return;
   }
-  put(box, 
+  put(box,
     el('h2', { text: `${library ? 'World trade in goods' : d?.title || 'Flows'}${A.year ? `, ${A.year}` : ''}` }),
     el('p', { class: 'lede', text: `${A.economies.length} places, ${amount(T.total)} flowing${!library && A.unit ? ` (${A.unit})` : ''}. What two places send each other both ways is exchange; what is left, one net flow for each pair, is driven or circulates.` }),
     el('div', { class: 'heading' }, el('span', { text: 'exchange and net transfer' })),
@@ -681,7 +757,7 @@ function panel() {
 // map is coloured by, each on its own axes.
 function placeHistory(e) {
   if (shared.flows !== 'library:trade') return null;
-  const H = history(e.iso3);
+  const H = placeYears(e.iso3);
   if (!H || H.years.length < 2) return null;
   const toBn = (v) => (Number.isFinite(v) ? v / 1e3 : null);
   const charts = [lineChart({ title: 'Its trade in goods, bn US$', x: H.years, compact: true,
@@ -706,23 +782,122 @@ function downloads(A) {
     el('div', { class: 'chips' },
       el('button', { class: 'quiet', onclick: places, text: 'the places, CSV' }),
       el('button', { class: 'quiet', onclick: flows, text: 'the net flows, CSV' }),
-      el('button', { class: 'quiet', onclick: () => download(`${stem}-map.svg`, mapSvg(), 'image/svg+xml'), text: 'the map, SVG' })));
+      el('button', { class: 'quiet', onclick: async () => download(`${stem}-figure.svg`, await figureSvg(), 'image/svg+xml'), text: 'the figure, SVG' }),
+      el('button', { class: 'quiet', onclick: figurePng(stem), text: 'the figure, PNG' })),
+    el('p', { class: 'note', text: 'A figure is the map as shown, with its title, legend, source and link, at 1800 pixels wide; the PNG at twice that.' }));
 }
 
-// The map as a file of its own: the drawing with the page's styles written into it.
-function mapSvg() {
+// The map's drawing with the page's styles written into it, its arcs standing still.
+function mapClone() {
   const host = document.getElementById('map');
   const copy = host.cloneNode(true);
   const from = host.querySelectorAll('*'), to = copy.querySelectorAll('*');
   const keep = ['fill', 'fill-opacity', 'stroke', 'stroke-width', 'stroke-opacity', 'stroke-dasharray', 'stroke-linecap', 'stroke-linejoin', 'paint-order', 'opacity',
-    'font-family', 'font-style', 'font-weight', 'letter-spacing'];
+    'font-family', 'font-style', 'font-weight', 'font-variant', 'letter-spacing', 'vector-effect'];
   from.forEach((node, n) => {
     if (!(node instanceof SVGGraphicsElement) || node.closest('defs')) return;
     const s = getComputedStyle(node);
-    to[n].setAttribute('style', keep.map((p) => `${p}:${s.getPropertyValue(p)}`).join(';'));
+    const flowing = node.classList.contains('flowing');
+    to[n].setAttribute('style', keep.map((p) => `${p}:${p === 'stroke-dasharray' && flowing ? 'none' : s.getPropertyValue(p)}`).join(';'));
+    // On paper an arc does not move: it is drawn whole, with its head.
+    if (flowing) to[n].setAttribute('marker-end', 'url(#head)');
+    to[n].removeAttribute('class');
   });
-  copy.setAttribute('style', `background:${getComputedStyle(document.body).backgroundColor}`);
-  return `<?xml version="1.0" encoding="utf-8"?>\n${new XMLSerializer().serializeToString(copy)}\n`;
+  return copy;
+}
+
+// Source Serif 4 written into the figure, so that it is set in the page's type wherever it is
+// opened; without the network, the figure names the font and falls back to Georgia.
+let fontFaces = null;
+function embeddedFonts() {
+  fontFaces ??= (async () => {
+    const link = document.querySelector('link[href*="fonts.googleapis.com/css2"]');
+    if (!link) return '';
+    const css = await (await fetch(link.href)).text();
+    const faces = [...css.matchAll(/@font-face\s*{[^}]*}/g)].map((m) => m[0]).filter((f) => /latin \*\/|unicode-range: U\+0000-00FF/.test(f) || !/unicode-range/.test(f));
+    const out = [];
+    for (const face of (faces.length ? faces : [...css.matchAll(/@font-face\s*{[^}]*}/g)].map((m) => m[0])).slice(0, 4)) {
+      const url = face.match(/url\(([^)]+)\)/)?.[1];
+      if (!url) continue;
+      const bytes = new Uint8Array(await (await fetch(url)).arrayBuffer());
+      let bin = '';
+      for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+      out.push(face.replace(url, `data:font/woff2;base64,${btoa(bin)}`));
+    }
+    return out.join('\n');
+  })().catch(() => '');
+  return fontFaces;
+}
+
+// The figure: a title, the map as shown, its legend, and a line of source, projection and link.
+async function figureSvg() {
+  const A = state.answer;
+  const C = colouring(A);
+  const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  const map = document.getElementById('map');
+  const vb = map.viewBox.baseVal;
+  const Wf = 1800, pad = 48, top = 104, mapW = Wf - 2 * pad, mapH = Math.round((mapW * vb.height) / vb.width), keyH = 150;
+  const Hf = top + mapH + keyH;
+  const font = "'Source Serif 4', Georgia, serif";
+  const text = (x, y, t, size, extra = {}) => svg('text', { x, y, 'font-family': font, 'font-size': size, fill: css('--ink'), ...extra, text: t });
+  const d = dataset(shared.flows);
+  const title = `${shared.flows === 'library:trade' ? 'World trade in goods' : d?.title || 'Flows'}${A.year ? `, ${A.year}` : ''}`;
+  const sub = `Places coloured by ${C.title.charAt(0).toLowerCase()}${C.title.slice(1)}; arcs: ${shared.arcs === 'none' ? 'none' : layer(shared.arcs) ? layer(shared.arcs).title : `the ${state.opts.shown} largest ${shared.arcs === 'all' ? 'net flows' : `${shared.arcs} parts of the net flows`}`}.`;
+  const out = svg('svg', { width: Wf, height: Hf, viewBox: `0 0 ${Wf} ${Hf}` });
+  const fonts = await embeddedFonts();
+  if (fonts) put(out, svg('style', {}, fonts));
+  // The ramp of the legend, as a gradient of the colours the map uses.
+  const stops = C.kind === 'sequential' ? [0, 0.25, 0.5, 0.75, 1].map((t) => [t, sequential(t)]) : [-1, -0.5, -0.2, 0, 0.2, 0.5, 1].map((t) => [(t + 1) / 2, diverging(t)]);
+  put(out, svg('defs', {}, svg('linearGradient', { id: 'figure-ramp' }, stops.map(([o, c]) => svg('stop', { offset: o, 'stop-color': c })))));
+  put(out, svg('rect', { width: Wf, height: Hf, fill: css('--paper') }),
+    text(pad, 56, title, 30, { 'font-weight': 600 }),
+    text(pad, 86, sub, 17, { fill: css('--ink-2') }));
+  const inner = mapClone();
+  inner.setAttribute('x', pad);
+  inner.setAttribute('y', top);
+  inner.setAttribute('width', mapW);
+  inner.setAttribute('height', mapH);
+  inner.removeAttribute('id');
+  put(out, inner);
+  // The legend beneath: the ramp and its ends, then the arcs' keys.
+  const ly = top + mapH + 30;
+  put(out, svg('rect', { x: pad, y: ly, width: 360, height: 12, fill: 'url(#figure-ramp)' }),
+    text(pad, ly - 10, C.title, 15, { 'font-weight': 500 }),
+    text(pad, ly + 32, C.ends[0], 14, { fill: css('--ink-2') }),
+    text(pad + 360, ly + 32, C.ends[1], 14, { fill: css('--ink-2'), 'text-anchor': 'end' }));
+  const keys = layer(shared.arcs) ? [[PART.plugin, layer(shared.arcs).title]] : shared.arcs === 'none' ? []
+    : [[PART.driven, 'mostly driven: from senders to drawers'], [PART.local, 'mostly circulating round the triangles of neighbours'], [PART.global, 'mostly circulating round holes, through distant links']];
+  keys.forEach(([c, t], k) => put(out, svg('path', { d: `M${pad + 440} ${ly + 6 + 24 * k}h40`, stroke: c, 'stroke-width': 3, 'stroke-linecap': 'round' }),
+    text(pad + 492, ly + 11 + 24 * k, t, 14, { fill: css('--ink-2') })));
+  put(out, svg('path', { d: `M${pad} ${Hf - 40}H${Wf - pad}`, stroke: css('--border'), 'stroke-width': 1 }),
+    text(pad, Hf - 18, `${sourceLine()} projection (Šavrič, Patterson and Jenny 2018). Decomposed by the economics domain of The Science Infrastructures. ${new Date().toISOString().slice(0, 10)}.`, 13, { fill: css('--ink-faint') }),
+    text(Wf - pad, Hf - 18, location.href, 13, { fill: css('--ink-faint'), 'text-anchor': 'end' }));
+  return `<?xml version="1.0" encoding="utf-8"?>\n${new XMLSerializer().serializeToString(out)}\n`;
+}
+
+// The figure drawn at twice its size into an image.
+function figurePng(stem) {
+  return async () => {
+    const text = await figureSvg();
+    const url = URL.createObjectURL(new Blob([text], { type: 'image/svg+xml' }));
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement('canvas');
+      c.width = img.width * 2;
+      c.height = img.height * 2;
+      const g = c.getContext('2d');
+      g.scale(2, 2);
+      g.drawImage(img, 0, 0);
+      URL.revokeObjectURL(url);
+      c.toBlob((b) => {
+        const a = el('a', { href: URL.createObjectURL(b), download: `${stem}-figure.png` });
+        document.body.append(a);
+        a.click();
+        a.remove();
+      }, 'image/png');
+    };
+    img.src = url;
+  };
 }
 
 const ranked = (A, order, library) => A.economies.map((e, i) => ({ ...e, i }))
@@ -847,7 +1022,9 @@ async function changeDataset() {
 export async function showMap(data, params = {}) {
   if (!state.geo) {
     state.geo = await (await fetch(COUNTRIES)).json();
+    panes();
     wire();
+    readout(null);
     on('layers', () => { refreshDock(); draw(); panel(); });
     on('dataset-chosen', (kind) => { if (kind === 'flows') changeDataset(); });
     on('datasets', () => { if (!document.querySelector('.view[data-view="map"]').hidden) refreshDock(); });
