@@ -6,6 +6,8 @@
   "foundations": [
     "calx",
     "morphe",
-    "physis"
+    "physis",
+    "tyche",
+    "nomos"
   ]
 }

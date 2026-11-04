@@ -17,8 +17,8 @@ export function on(event, f) {
   listeners.get(event).add(f);
 }
 
-export function emit(event, detail) {
-  for (const f of listeners.get(event) || []) f(detail);
+export function emit(event, ...detail) {
+  for (const f of listeners.get(event) || []) f(...detail);
 }
 
 export const datasetsOf = (kind) => shared.datasets.filter((d) => d.kind === kind);

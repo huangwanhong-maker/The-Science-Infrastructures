@@ -44,11 +44,12 @@ SOURCE = APP / "engine" / "economy.cpp"
 
 
 def include_dirs() -> list[Path]:
-    """The include directories of the engine: the economics domain, morphe, calx, physis, the API's C++ and the engine's own."""
+    """The include directories of the engine: the economics domain, morphe, calx, physis, tyche and nomos, the API's C++
+    and the engine's own."""
     dirs = sorted(p for p in ROOT.glob("domains/economics/*/include") if p.is_dir())
     dirs += [ROOT / "foundations" / "morphe" / "include"]
     for pattern in ("foundations/morphe/*/include", "foundations/calx/numerics/*/include", "foundations/calx/compute/*/include",
-                    "foundations/physis/*/include"):
+                    "foundations/physis/*/include", "foundations/tyche/*/include", "foundations/nomos/*/include"):
         dirs += sorted(p for p in ROOT.glob(pattern) if p.is_dir())
     dirs += [ROOT / "api" / "cpp", APP / "engine"]
     return [d for d in dirs if d.is_dir()]

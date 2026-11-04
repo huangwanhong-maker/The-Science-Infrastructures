@@ -48,6 +48,26 @@ export function quantity(x) {
   return x.toLocaleString('en-GB', { maximumFractionDigits: a >= 100 ? 0 : 2 });
 }
 
+// A file handed to the reader: text made in the page, saved under a name.
+export function download(name, text, type = 'text/csv') {
+  const url = URL.createObjectURL(new Blob([text], { type: `${type};charset=utf-8` }));
+  const a = el('a', { href: url, download: name });
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+// Rows as CSV: a header, then each row, cells quoted where they must be.
+export function csv(header, rows) {
+  const cell = (v) => {
+    if (v === null || v === undefined || (typeof v === 'number' && !Number.isFinite(v))) return '';
+    const s = String(v);
+    return /[",\n;]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  return [header, ...rows].map((r) => r.map(cell).join(',')).join('\n') + '\n';
+}
+
 export const percent = (x, digits = 1) => `${(100 * x).toFixed(digits)}%`;
 export const signed = (x, digits = 3) => `${x >= 0 ? '+' : '−'}${Math.abs(x).toFixed(digits)}`;
 export const fixed = (x, digits = 3) => (Number.isFinite(x) ? x.toFixed(digits) : '—');

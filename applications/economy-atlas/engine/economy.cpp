@@ -11,6 +11,7 @@
 //                                                      currencies held and exchanged: curvature, prices
 //   {"op": "production", "table": {...}}               a table's Leontief model and its circular flow
 //   {"op": "circuits", "network": {...}}               a transfer network's deficits, prices and circulation
+//   {"op": "tool", "tool": id, "columns", "roles", "params"}  a tool of the toolbox (tools.hpp)
 
 #include <economics/circulation/flows.hpp>
 #include <economics/places/map.hpp>
@@ -19,6 +20,8 @@
 #include <economics/transfer/network.hpp>
 #include <physis/discretisation/hodge.hpp>
 #include <science/json.hpp>
+
+#include "tools.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -432,6 +435,7 @@ int main() {
     else if (op == "spacetime") answer = spacetime(request);
     else if (op == "production") answer = production(request);
     else if (op == "circuits") answer = circuits(request);
+    else if (op == "tool") answer = tools::run(request);
     else throw std::invalid_argument("no operation \"" + op + "\"");
     std::cout << answer.dump() << "\n";
     return 0;

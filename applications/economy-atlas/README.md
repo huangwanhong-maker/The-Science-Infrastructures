@@ -1,11 +1,12 @@
 # The Economy Atlas
 
-*Status: draft.* An application of the economics domain ([ADR 0044](../../development/decisions/0044-value-in-space-and-time.md), [ADR 0046](../../development/decisions/0046-the-economy-atlas-data-and-plugins.md)). It draws value carried between places and through time:
+*Status: draft.* An application of the economics domain ([ADR 0044](../../development/decisions/0044-value-in-space-and-time.md), [ADR 0046](../../development/decisions/0046-the-economy-atlas-data-and-plugins.md), [ADR 0056](../../development/decisions/0056-nomos-and-a-toolbox-of-quantitative-economics.md)). It draws value carried between places and through time:
 
 - the world's trade on a map, or flows of one's own between any places, split into exchange, drive and circulation;
 - currencies held and exchanged as a spacetime complex, whose curvature is the departure from a price system;
 - production as a circular flow;
-- the loop deficits of transfer networks.
+- the loop deficits of transfer networks;
+- a toolbox of quantitative economics, on tables of the economies, the currencies, or one's own.
 
 Everything shown is computed by the domain's C++ on the foundations. Plug-ins in Python and C++ analyse the flows the map shows and draw their results on it. Serves research, learning and use.
 
@@ -13,11 +14,14 @@ Everything shown is computed by the domain's C++ on the foundations. Plug-ins in
 
 - **The map.** Flows between places in a year on an Equal Earth map, the geography domain's projection: by default the world's trade in goods (the OECD's balanced bilateral statistics, 2010–2024), or data of one's own (§2.2).
   - What two places send each other both ways is reciprocal exchange. What is left, one net flow for each pair, is decomposed (the domain's theory note, §3) on a complex whose faces are the spherical Delaunay triangles of the places.
-  - Each link conducts in proportion to its gross flow. The *driven* part between two places is their gross flow times their difference in attraction α: the potential runs from the places that send value to those that draw it, a share of gross flow without unit. Places are coloured by α, or by the values a plug-in returned.
+  - Each link conducts in proportion to its gross flow. The *driven* part between two places is their gross flow times their difference in attraction α: the potential runs from the places that send value to those that draw it, a share of gross flow without unit.
+  - Places are coloured by α; by the flows' other measures (net inflow, exports, imports, the share circulating); by any of the World Bank's indicators in the toolbox's table of economies (GDP per capita, population, life expectancy, CO₂ per person, the Gini index and others), in the map's year or the latest of the five before it, on a log scale where they span decades; or by the values a plug-in or a tool returned.
   - *Local circulation* turns round the triangles of neighbours, drawn as rose eddies. *Global circulation* runs round the loops of distant partners no triangle fills.
   - Arcs are the largest net flows, their driven or circulating parts, or a plug-in's arcs. Each wears the colour of its largest part: indigo driven, rose round the triangles, gold round the holes.
-  - The map zooms (the wheel, the buttons) and pans (dragging), and fits a regional dataset. Places without a country of their own are circles. The pointer brings a card for a place or an arc. Clicking a place opens its card: its flows, attraction and largest net flows, each with the share of it driven and circulating.
-  - A strip of years beneath the map gives every year's shares of the net flows' energy; a click, or ← and →, chooses the year.
+  - The map zooms (the wheel, the buttons) and pans (dragging), and fits a regional dataset. Places without a country of their own are circles. The pointer brings a card for a place or an arc. A place is found by its name or code, or clicked: its card gives its flows, attraction and largest net flows, each with the share of it driven and circulating, and its trade over the years beside the indicator the map is coloured by.
+  - A strip of years beneath the map gives every year's shares of the net flows' energy; a click, or ← and →, chooses the year, and **play** goes through them, each year's decomposition fetched while the one before is shown.
+  - The year's places and net flows are saved as CSV, and the map as SVG with its styles.
+- **The toolbox.** Quantitative economics on tables (§2.4): the library's (economies by year with their trade and the World Bank's indicators; currencies by month), one's own, or one pasted. Each tool is a form built from its declaration, run by the engine on the foundations' methods, and answered in figures, tables, charts and, for values by economy, a layer of the map.
 - **Spacetime.** Currencies held month by month at their policy rates and exchanged with a base at the month's rate, as the spacetime complex of the theory note, §5. The library's record holds twenty currencies against the euro: the ECB's rates, the BIS's policy rates, and for the euro the ECB's deposit facility rate. A record of one's own uses its own base.
   - A sheet shows every lens's curvature, the base's excess return over a currency in a month, the departure from uncovered interest parity.
   - Lines show its sum in time.
@@ -32,11 +36,11 @@ Everything shown is computed by the domain's C++ on the foundations. Plug-ins in
   - retention round directed cycles;
   - the circulation of flows and their pairing with the transports.
 
-The page is a ledger in gold: weak light gold on ivory by day and on deep ink by night, as the system prefers or as chosen (the button at the top right), with rose red as its minor colour. Its data's colours are validated for colour vision deficiencies on both (ADR 0046, §2.1).
+The page is a ledger in gold: weak light gold on a light ivory by day, with rose red as its minor colour and a clear sky blue for what is sent; deep ink by night, when chosen (the button at the top right). Its data's colours are validated for colour vision deficiencies on both (ADR 0046, §2.1; lightened by ADR 0048).
 
 ## 2. Running
 
-From the repository root, make the engine and the data once (g++ 11 or later, natively or in WSL; about 60 MB from the OECD, the ECB and the BIS), and serve the page:
+From the repository root, make the engine and the data once (g++ 11 or later, natively or in WSL; about 60 MB from the OECD, the ECB, the BIS and the World Bank), and serve the page:
 
 ```
 python data/acquisition/recipe.py applications/economy-atlas/recipe.json
@@ -55,7 +59,9 @@ The address holds the view and what it shows, so that a picture can be linked an
   - `shown`: how many arcs;
   - `faces=0`, `labels=0`, `flowing=0`: hide the triangles, the names or the movement of the arcs;
   - `economy`: a place's id, the ISO alpha-3 code for the library's;
+  - `colour`: `attraction`, `balance`, `exports`, `imports`, `circulating`, or `wb:` and a column of the economies table (`wb:gdp_per_capita`);
   - `dataset`: a dataset of one's own, by its id.
+- `#toolbox&tool=ols`: a tool, by its id, run on its example.
 - `#spacetime&from=2015-01&to=2026-06&currency=MXN`, with `dataset` as well.
 - `#production&table=three` (or `miller-blair`).
 - `#circuits&network=five` (or `triangle`, `fee`, `prices`, `round-trip`).
@@ -100,6 +106,27 @@ Three examples:
 
 Only files in `plugins/` are run. On a public address, plug-ins and datasets need the server's token, as the recipe does.
 
+### 2.4 The Toolbox
+
+Twenty-seven tools of quantitative economics ([ADR 0056](../../development/decisions/0056-nomos-and-a-toolbox-of-quantitative-economics.md)), in seven groups, each wearing the name of the library that computes it:
+
+| Group | Tools | On |
+|---|---|---|
+| Statistics | summary and correlation (Pearson and Spearman) | tyche |
+| Econometrics | linear regression (classical, HC0–HC3 or clustered errors, weights); logit, probit and Poisson (PPML) with average marginal effects; panels (fixed effects one- or two-way, random effects, Hausman's test); instrumental variables (2SLS, the first stage's F, Sargan and Hansen, least squares beside it); differences in differences (2 × 2 and two-way fixed effects); the convergence of incomes (β and σ) | tyche, nomos |
+| Time series | autocorrelation (ACF, PACF, Ljung–Box); unit roots (ADF, KPSS); ARIMA and forecasts; trend and cycle (Hodrick–Prescott); vector autoregressions (order, stability, impulse responses); cointegration (Engle and Granger) | tyche |
+| Inequality and indices | inequality (Gini, Theil, Atkinson, Palma, the Lorenz curve, Theil's split by group); poverty (FGT, Watts, the incidence curve); concentration (HHI, concentration ratios); index numbers (Laspeyres, Paasche, Fisher, Törnqvist, direct or chained) | nomos |
+| Trade | the gravity of trade (PPML with exporter and importer effects, PPML with sizes, least squares on logarithms); the concentration of each economy's partners; trade intensity with every partner | economics, on nomos and tyche |
+| Growth and macroeconomics | the Solow model; IS–LM with a policy's shift; growth accounting | economics |
+| Games and choice | two-player games; zero-sum games; stable matching; voting rules | nomos |
+
+A tool's form is built from its declaration ([`src/tools.js`](src/tools.js)): a table and its rows (`where year = 2019`), the columns its roles take, and its choices. Every tool opens on an example and runs at once. Where the library's data cannot carry a valid design, the example is simulated and says so: markets whose cost of supply is a valid instrument for their price, regions treated from 2020.
+
+- **The tables.** The library's ([`tables.py`](tables.py)): the economies by year, 2000–2024, with their trade (OECD BIMTS) beside eleven of the World Bank's indicators and its regions and income groups; the currencies by month, long and wide. One's own: **+ your data** takes a CSV or JSON table (a column is numbers when every filled cell is one). Or a table pasted into the form.
+- **The answers** are figures, tables (copied, or saved as CSV), charts (lines with their intervals, bars, scatters with their fit, matrices) and notes. Values for the economies (growth of income, a tool's effects, a partner's intensity) go to the map as a layer, by **Show on the map**.
+
+`#toolbox&tool=gravity` opens a tool by its id.
+
 ## 3. The Protocol
 
 The engine is `engine/economy.cpp`, header-only C++20 on:
@@ -107,7 +134,9 @@ The engine is `engine/economy.cpp`, header-only C++20 on:
 - the economics domain (`domains/economics/`);
 - physis: discrete exterior calculus, flows with conductances, the spherical Delaunay triangulation;
 - morphe: complexes, the worldline construction;
-- calx: linear algebra;
+- calx: linear algebra, integrators and solvers;
+- tyche: statistics, regression and time series (the toolbox);
+- nomos: the methods of the social sciences (the toolbox);
 - the API's JSON.
 
 The server runs it once per request: one JSON request on its standard input, one JSON answer on its standard output, an error as `{"error": "..."}`. Products are passed by their paths; the engine reads nothing else.
@@ -121,6 +150,7 @@ The server runs it once per request: one JSON request on its standard input, one
 | `{"op": "spacetime", "record": "<currency-spacetime.json>", "first": "YYYY-MM", "last": "YYYY-MM", "currencies"?: [...]}` | the lenses, statistics and price system of the currencies with complete records over the span, the record's base first (§3.3) |
 | `{"op": "production", "table": {"sectors", "z", "final_demand", "value_added"}, "value_added_coefficients"?, "final_demand"?}` | the Leontief model and the deliveries' circulation (§3.4) |
 | `{"op": "circuits", "network": {"positions", "legs": [{"from", "to", "ratio", "flow", "kind"}], "faces"?}}` | the network's cycles, prices and circulation (§3.5) |
+| `{"op": "tool", "tool", "columns"?: {name: [...]}, "roles": {role: column(s)}, "params", "flows"?, "sizes"?}` | a tool's answer: `{"title", "blocks": [{"kind": "figures" \| "table" \| "lines" \| "bars" \| "scatter" \| "matrix" \| "map" \| "note", …}]}`, as `engine/tools.hpp` describes |
 
 ### 3.2 The Answer to `map`
 
@@ -183,6 +213,8 @@ Fewer than four places make no map's faces: their flows are decomposed on their 
 | `GET /api/plugins`, `GET /api/plugins/describe?file=` | the plug-ins and their descriptions |
 | `POST /api/plugins/run` `{"file", "params", "dataset"?, "year"?}` | starts a run; `{"job"}` |
 | `GET /api/plugins/job/<id>`, `POST /api/plugins/job/<id>/cancel` | a run's state, progress and results; stopping it |
+| `GET /api/tables`, `GET /api/tables/<id>?rows=n` | the toolbox's tables, without or with their data |
+| `POST /api/tool` `{"tool", "table"? \| "columns"?, "where"?, "roles", "params"}` | the engine's `tool`, on the columns the roles name, in the rows `where` keeps; trade's tools on the flows, gravity with the economies' GDP |
 | `GET /setup`, `POST /setup/run` | the recipe: the engine and the data |
 
 Answers for a year or a span are kept in `data/cache/economy-atlas/answers/`, keyed by the engine's build and the product.
@@ -194,7 +226,10 @@ Answers for a year or a span are kept in `data/cache/economy-atlas/answers/`, ke
 | `index.html`, `styles.css`, `src/` | The page: ES modules, no build step; its colours as tokens of day and night |
 | `serve.py`, `engine.py`, `recipe.json` | The server, the engine's builder, the recipe |
 | `engine/economy.cpp` | The engine |
+| `engine/tools.hpp`, `engine/tools/` | The toolbox's engine: reading a request, writing an answer, and a header for each group of tools |
 | `datasets.py` | One's own data, read into the library's schemas and kept |
+| `tables.py` | The toolbox's tables, made from the library's products and the World Bank's indicators |
+| `src/toolbox.js`, `src/tools.js`, `src/charts.js` | The toolbox's view, its catalogue of tools, and its charts |
 | `plugins/` | The plug-ins, with their README and three examples |
 | `examples/` | Invented data to try the formats |
 | `src/map.js` | The map: places, arcs, eddies and the plug-ins' layers on Equal Earth; zoom, the card under the pointer, the strip of years |

@@ -9,13 +9,14 @@ import { showMap } from './map.js';
 import { showSpacetime } from './spacetime.js';
 import { showProduction } from './production.js';
 import { showCircuits } from './circuits.js';
+import { showToolbox } from './toolbox.js';
 
-const VIEWS = { map: showMap, spacetime: showSpacetime, production: showProduction, circuits: showCircuits };
+const VIEWS = { map: showMap, spacetime: showSpacetime, production: showProduction, circuits: showCircuits, toolbox: showToolbox };
 const state = { view: null, data: null };
 
 // The address: the view, then what it shows, so that a picture can be linked and taken again:
 // #map&year=2010&arcs=driven&economy=CHN, #spacetime&from=2015-01&to=2026-06&currency=MXN,
-// #production&table=three, #circuits&network=five; and on the map or in spacetime, dataset=<id>.
+// #production&table=three, #circuits&network=five, #toolbox&tool=ols; and on the map or in spacetime, dataset=<id>.
 function fromHash() {
   const [view, ...rest] = location.hash.slice(1).split('&');
   const params = Object.fromEntries(rest.filter((p) => p.includes('=')).map((p) => p.split('=').map(decodeURIComponent)));
@@ -48,11 +49,10 @@ async function engineBadge() {
   }
 }
 
-// Day and night: the system's unless chosen; the choice is kept in this browser.
+// Day and night: day unless night is chosen; the choice is kept in this browser.
 const MOON = 'M11.8 10.4A5.2 5.2 0 0 1 5.6 4.2a5.4 5.4 0 1 0 6.2 6.2z';
 const SUN = 'M8 4.6a3.4 3.4 0 1 0 0 6.8 3.4 3.4 0 0 0 0-6.8zM8 1v1.6M8 13.4V15M1 8h1.6M13.4 8H15M3 3l1.1 1.1M11.9 11.9 13 13M3 13l1.1-1.1M11.9 4.1 13 3';
-const dark = window.matchMedia('(prefers-color-scheme: dark)');
-const theme = () => document.documentElement.dataset.theme || (dark.matches ? 'night' : 'day');
+const theme = () => document.documentElement.dataset.theme || 'day';
 
 function themeButton() {
   const b = document.getElementById('theme');
@@ -69,7 +69,6 @@ document.getElementById('theme').addEventListener('click', () => {
   themeButton();
   themeChanged();
 });
-dark.addEventListener('change', () => { if (!document.documentElement.dataset.theme) { themeButton(); themeChanged(); } });
 themeButton();
 
 // The recipe, when the engine or the data are missing.

@@ -20,6 +20,7 @@ set(CALX_CHECKS ${SCIENCE_CHECKS})
 set(MORPHE_CHECKS ${SCIENCE_CHECKS})
 set(PHYSIS_CHECKS ${SCIENCE_CHECKS})
 set(TYCHE_CHECKS ${SCIENCE_CHECKS})
+set(NOMOS_CHECKS ${SCIENCE_CHECKS})
 set(NEUROSCIENCE_CHECKS ${SCIENCE_CHECKS})
 set(METROLOGY_CHECKS ${SCIENCE_CHECKS})
 set(GEODESY_CHECKS ${SCIENCE_CHECKS})
@@ -38,11 +39,13 @@ if(SCIENCE_CHECKS)
   enable_testing()
 endif()
 
-# The foundations: calx and morphe stand alone; physis uses both; tyche (chance and inference) uses the three.
+# The foundations: calx and morphe stand alone; physis uses both; tyche (inference) uses the three,
+# and nomos (the methods of the social sciences) uses tyche (ADR 0048).
 add_subdirectory(foundations/calx)
 add_subdirectory(foundations/morphe)
 add_subdirectory(foundations/physis)
 add_subdirectory(foundations/tyche)
+add_subdirectory(foundations/nomos)
 
 # The domains with C++, in the order of the domains.
 if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/domains/neuroscience/CMakeLists.txt)

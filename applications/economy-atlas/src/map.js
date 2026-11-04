@@ -9,13 +9,16 @@
 // their difference in attraction α: α is a share of gross flow, without unit, the potential from which
 // value is drawn to where it is drawn to.
 //
-// Places are coloured by α, or by the values a plug-in returned; places with a country of their own
-// colour it, the others are circles. Arcs are the largest net flows, their driven or circulating
+// Places are coloured by α, by the flows' other measures, by the World Bank's indicators (from the
+// toolbox's table of economies), or by the values a plug-in returned; places with a country of their
+// own colour it, the others are circles. Arcs are the largest net flows, their driven or circulating
 // parts, or a plug-in's arcs; small circular arrows on the triangles are the eddies of local
-// circulation. The strip beneath gives every year's shares; the map zooms and pans.
+// circulation. The strip beneath gives every year's shares and plays through them; the map zooms and
+// pans, finds a place, and gives its numbers and its drawing away as files.
 
 import * as api from './api.js';
-import { el, svg, clear, put, fill, money, quantity, percent, signed, shareBar } from './dom.js';
+import { el, svg, clear, put, fill, money, quantity, percent, signed, shareBar, download, csv } from './dom.js';
+import { lineChart } from './charts.js';
 import { diverging, sequential, rampCss, PART, onTheme } from './palette.js';
 import { shared, on, dataset } from './state.js';
 import { datasetChooser } from './data.js';
@@ -33,7 +36,7 @@ const RANKED = 2e4;
 const state = {
   geo: null, answer: null, selected: null, wanted: undefined, cache: new Map(), year: null, years: [],
   timeline: new Map(), view: { k: 1, x: 0, y: 0 }, opts: { faces: true, eddies: true, labels: true, flowing: true, shown: 150 },
-  drawn: [], built: false, covered: new Set(),
+  drawn: [], built: false, covered: new Set(), indicators: null, playing: null,
 };
 
 // The raw projection, not `forward`, which wraps +180° to −180°: Natural Earth splits its polygons at
@@ -92,23 +95,109 @@ const layer = (key) => shared.layers.find((l) => l.key === key) || null;
 const amount = (x) => (shared.flows === 'library:trade' ? money(x) : quantity(x));
 const fmt = (x) => (!Number.isFinite(x) ? '—' : Math.abs(x) >= 1000 ? quantity(x) : Math.abs(x) >= 1 ? x.toFixed(2) : x.toPrecision(2));
 
+// The q-quantile of sorted values, linear between order statistics.
+const quantile = (s, q) => { const h = (s.length - 1) * q, i = Math.floor(h); return i + 1 < s.length ? s[i] + (h - i) * (s[i + 1] - s[i]) : s[i]; };
+
+// Values by place id coloured on a scale: diverging about zero, or sequential from the least to the
+// most, on a log scale when the values are positive and span more than two decades. With twenty
+// places or more the scale runs between the 2nd and 98th percentiles (of |v| for a diverging one),
+// so that one outlying value does not wash the rest into one end; the values beyond are clamped,
+// and the legend's ends say so.
+function scaled(title, label, values, sequentialScale, show = fmt) {
+  const xs = Object.values(values).filter(Number.isFinite).sort((a, b) => a - b);
+  if (!xs.length) return null;
+  const robust = xs.length >= 20;
+  const lo = robust ? quantile(xs, 0.02) : xs[0], hi = robust ? quantile(xs, 0.98) : xs.at(-1);
+  const mags = xs.map(Math.abs).sort((a, b) => a - b);
+  const big = Math.max(1e-12, robust ? quantile(mags, 0.98) : mags.at(-1));
+  const log = sequentialScale && lo > 0 && hi / lo > 100;
+  const clamp = (u) => Math.max(0, Math.min(1, u));
+  const t = (v) => clamp(log ? Math.log(v / lo) / Math.log(hi / lo) : hi > lo ? (v - lo) / (hi - lo) : 0.5);
+  const below = xs[0] < lo, above = xs.at(-1) > hi, beyond = mags.at(-1) > big;
+  return {
+    title: `${title}${log ? ', on a log scale' : ''}`, kind: sequentialScale ? 'sequential' : 'diverging',
+    ends: sequentialScale ? [`${below ? '≤ ' : ''}${show(lo)}`, `${above ? '≥ ' : ''}${show(hi)}`] : [`${beyond ? '≤ ' : ''}−${show(big)}`, `${beyond ? '≥ ' : ''}+${show(big)}`],
+    of: (e) => { const v = values[e.iso3]; return Number.isFinite(v) ? (sequentialScale ? sequential(t(v)) : diverging(Math.max(-1, Math.min(1, v / big)))) : null; },
+    value: (e) => values[e.iso3], label, show,
+  };
+}
+
+// The flows' own measures of each place, besides α.
+const MEASURES = {
+  balance: ['Net inflow: imports − exports', 'net inflow', (e) => e.balance, false],
+  exports: ['Exports', 'exports', (e) => e.exports, true],
+  imports: ['Imports', 'imports', (e) => e.imports, true],
+  circulating: ['Circulating, of the parts on its links', 'circulating', (e) => e.circulating, true],
+};
+
 function colouring(A) {
-  const L = shared.colour !== 'attraction' ? layer(shared.colour) : null;
+  const key = shared.colour;
+  const byPlace = (f) => Object.fromEntries(A.economies.map((e) => [e.iso3, f(e)]));
+  if (MEASURES[key]) {
+    const [title, label, f, seq] = MEASURES[key];
+    const C = scaled(title, label, byPlace(f), seq, key === 'circulating' ? (v) => percent(v, 0) : amount);
+    if (C) return C;
+  }
+  if (key.startsWith('wb:') && state.indicators) {
+    const name = key.slice(3), column = state.indicators.columns.find((c) => c.name === name);
+    const values = {}, years = new Set();
+    for (const e of A.economies) {
+      const found = indicator(name, e.iso3, state.year);
+      if (found) { values[e.iso3] = found.value; years.add(found.year); }
+    }
+    const span = years.size ? [Math.min(...years), Math.max(...years)] : [];
+    const when = span.length ? (span[0] === span[1] ? `${span[0]}` : `${span[0]}–${span[1]}, the latest by ${state.year}`) : '';
+    const C = scaled(`${column?.label || name} (World Bank${when ? `, ${when}` : ''})`, column?.label || name, values, true);
+    if (C) return C;
+  }
+  const L = key !== 'attraction' ? layer(key) : null;
   if (L && L.result.kind === 'values') {
-    const values = L.result.values || {};
-    const xs = Object.values(values).filter(Number.isFinite);
-    const seq = L.result.scale === 'sequential';
-    const lo = Math.min(...xs), hi = Math.max(...xs), big = Math.max(1e-12, ...xs.map(Math.abs));
-    return {
-      title: `${L.title}${L.result.unit ? ` (${L.result.unit})` : ''}`, kind: seq ? 'sequential' : 'diverging',
-      ends: seq ? [fmt(lo), fmt(hi)] : [`−${fmt(big)}`, `+${fmt(big)}`],
-      of: (e) => { const v = values[e.iso3]; return Number.isFinite(v) ? (seq ? sequential(hi > lo ? (v - lo) / (hi - lo) : 0.5) : diverging(v / big)) : null; },
-      value: (e) => values[e.iso3], label: L.title,
-    };
+    const C = scaled(`${L.title}${L.result.unit ? ` (${L.result.unit})` : ''}`, L.title, L.result.values || {}, L.result.scale === 'sequential');
+    if (C) return C;
   }
   const maxA = Math.max(1e-9, ...A.economies.map((e) => Math.abs(e.attraction)));
   return { title: 'Attraction α, a share of gross flow', kind: 'diverging', ends: [`sends, −${maxA.toFixed(2)}`, `draws, +${maxA.toFixed(2)}`],
-    of: (e) => diverging(e.attraction / maxA), value: (e) => e.attraction, label: 'α' };
+    of: (e) => diverging(e.attraction / maxA), value: (e) => e.attraction, label: 'α', show: fmt };
+}
+
+// ---- the World Bank's indicators, from the toolbox's table of economies by year ---------------------------------
+
+// The table indexed by economy and year; the columns that are not the flows' own.
+const FLOW_COLUMNS = new Set(['year', 'exports', 'imports', 'balance', 'trade']);
+async function loadIndicators() {
+  if (state.indicators !== null) return state.indicators;
+  state.indicators = false;   // asked for once
+  try {
+    const t = await api.table('economies');
+    const index = new Map();
+    t.data.iso3.forEach((code, i) => index.set(`${code}|${t.data.year[i]}`, i));
+    state.indicators = { ...t, index, columns: t.columns.filter((c) => c.kind === 'number' && !FLOW_COLUMNS.has(c.name)) };
+  } catch {
+    // Without the table the map colours by the flows alone.
+  }
+  return state.indicators;
+}
+
+// An indicator's value for an economy in a year, or in the latest of the five years before it.
+function indicator(name, code, year) {
+  const T = state.indicators;
+  if (!T || !T.data[name]) return null;
+  for (let y = year; y >= year - 5; y--) {
+    const i = T.index.get(`${code}|${y}`);
+    const v = i === undefined ? null : T.data[name][i];
+    if (Number.isFinite(v)) return { value: v, year: y };
+  }
+  return null;
+}
+
+// An economy's years in the table: its trade and, when the map is coloured by one, that indicator.
+function history(code) {
+  const T = state.indicators;
+  if (!T) return null;
+  const rows = [];
+  T.data.iso3.forEach((c, i) => { if (c === code) rows.push(i); });
+  rows.sort((a, b) => T.data.year[a] - T.data.year[b]);
+  return { years: rows.map((i) => T.data.year[i]), column: (name) => rows.map((i) => T.data[name]?.[i] ?? null) };
 }
 
 // The arcs drawn: [{from, to, value, colour, parts?, title?}], from and to indices into the economies.
@@ -413,7 +502,7 @@ function tip(e) {
     const C = colouring(A);
     const v = C.value(x);
     content = [el('b', { text: x.name }),
-      C.label !== 'α' ? row(C.label, fmt(v)) : null,
+      C.label !== 'α' ? row(C.label, Number.isFinite(v) ? C.show(v) : '—') : null,
       row('attraction α', signed(x.attraction, 3)), row('exports', amount(x.exports)), row('imports', amount(x.imports)),
       row('net inflow', amount(x.balance)), row('circulating', percent(x.circulating))];
   } else if (arc) {
@@ -443,9 +532,12 @@ function strip() {
   box.hidden = false;
   const byYear = new Map((state.timeline.get(shared.flows) || []).map((t) => [t.year, t]));
   const short = state.years.length > 11;
-  fill(box, 
-    el('div', { class: 'caption' }, 'The net flows’ energy, year by year: ', el('span', { style: { color: PART.driven }, text: 'driven' }), ', ',
-      el('span', { style: { color: PART.local }, text: 'local' }), ', ', el('span', { style: { color: PART.global }, text: 'global' }), '.'),
+  fill(box,
+    el('div', { class: 'caption' },
+      el('button', { class: 'play', 'aria-pressed': String(!!state.playing), title: state.playing ? 'Stop' : 'Play through the years', onclick: play },
+        state.playing ? '❚❚ stop' : '▶ play'),
+      el('div', {}, 'The net flows’ energy, year by year: ', el('span', { style: { color: PART.driven }, text: 'driven' }), ', ',
+        el('span', { style: { color: PART.local }, text: 'local' }), ', ', el('span', { style: { color: PART.global }, text: 'global' }), '.')),
     el('div', { class: 'strip', role: 'listbox', 'aria-label': 'Years' }, state.years.map((y, n) => {
       const t = byYear.get(y);
       const stack = el('div', { class: 'stack' }, t ? [['driven', t.driven], ['local', t.local], ['global', t.global]]
@@ -455,6 +547,31 @@ function strip() {
         title: t ? `${y}: driven ${percent(t.driven)}, round triangles ${percent(t.local)}, round holes ${percent(t.global)}; reciprocal ${percent(t.reciprocal / t.total)} of all` : String(y),
         onclick: () => setYear(y) }, stack, el('div', { class: 'label', text: label }));
     })));
+}
+
+// The years one after another, from the one shown (or from the first, at the last), each held a moment;
+// pressed again, it stops.
+async function play() {
+  if (state.playing) { state.playing = null; strip(); return; }
+  const run = (state.playing = {});
+  let i = state.years.indexOf(state.year);
+  if (i < 0 || i >= state.years.length - 1) i = -1;
+  strip();
+  while (state.playing === run && ++i < state.years.length) {
+    const t0 = performance.now();
+    await setYear(state.years[i]);
+    await new Promise((r) => setTimeout(r, Math.max(0, 1400 - (performance.now() - t0))));
+  }
+  if (state.playing === run) { state.playing = null; strip(); }
+}
+
+// The next year's decomposition asked for while this one is looked at.
+function prefetch() {
+  const next = state.years[state.years.indexOf(state.year) + 1];
+  const key = `${shared.flows}|${next}`;
+  if (next === undefined || state.cache.has(key)) return;
+  const flows = shared.flows;
+  api.map(next, flows).then((A) => state.cache.set(`${flows}|${next}`, A)).catch(() => {});
 }
 
 async function loadTimeline() {
@@ -492,10 +609,11 @@ function pluginResults() {
   const byFile = new Map();
   for (const l of mine) byFile.set(l.file, [...(byFile.get(l.file) || []), l]);
   const show = (fn) => () => { fn(); refreshDock(); draw(); panel(); };
-  return el('div', { class: 'section' }, el('div', { class: 'heading' }, el('span', { text: 'from the plug-ins' }),
+  return el('div', { class: 'section' }, el('div', { class: 'heading' }, el('span', { text: 'from the plug-ins and the toolbox' }),
     el('button', { text: 'clear', onclick: show(() => { shared.layers = shared.layers.filter((l) => l.dataset !== shared.flows); shared.colour = 'attraction'; shared.arcs = 'all'; }) })),
   [...byFile.values()].map((ls) => el('div', { style: { marginBottom: '12px' } },
-    el('h3', {}, ls[0].plugin, ' ', el('span', { class: `badge ${ls[0].language === 'cpp' ? 'cpp' : 'py'}`, text: ls[0].language === 'cpp' ? 'C++' : 'Py' }),
+    el('h3', {}, ls[0].plugin, ' ', el('span', { class: `badge ${ls[0].language === 'cpp' ? 'cpp' : ls[0].language === 'tool' ? 'economics' : 'py'}`,
+      text: ls[0].language === 'cpp' ? 'C++' : ls[0].language === 'tool' ? 'toolbox' : 'Py' }),
       ls[0].year ? el('span', { class: 'note', text: ` · ${ls[0].year}` }) : null),
     ls.map((l) => {
       const r = l.result;
@@ -538,6 +656,7 @@ function panel() {
       const j = l[0] === i ? l[1] : l[0];
       return [[`${l[0] === i ? 'to' : 'from'} ${A.economies[j].name}`, partsBar(l)], amount(l[2]), j];
     }), pick),
+    placeHistory(e),
     pluginResults());
     return;
   }
@@ -554,7 +673,56 @@ function panel() {
     list('sending value most (α)', ranked(A, (a, b) => a.attraction - b.attraction, library).map((x) => [x.name, signed(x.attraction, 3), x.i]), pick),
     list('circulating most, of the parts on their links', ranked(A, (a, b) => b.circulating - a.circulating, library).map((x) => [x.name, percent(x.circulating), x.i]), pick),
     el('p', { class: 'note', text: `Decomposed ${A.method === 'sparse' ? 'by conjugate gradients' : 'exactly'} on the complex of ${A.economies.length} places, ${A.legs.length} net flows and ${A.faces.triangles} triangles. Source: ${A.source?.citation || ''}` }),
+    downloads(A),
   );
+}
+
+// A place over the years, from the toolbox's table of economies: its trade, and the indicator the
+// map is coloured by, each on its own axes.
+function placeHistory(e) {
+  if (shared.flows !== 'library:trade') return null;
+  const H = history(e.iso3);
+  if (!H || H.years.length < 2) return null;
+  const toBn = (v) => (Number.isFinite(v) ? v / 1e3 : null);
+  const charts = [lineChart({ title: 'Its trade in goods, bn US$', x: H.years, compact: true,
+    series: [{ name: 'exports', y: H.column('exports').map(toBn) }, { name: 'imports', y: H.column('imports').map(toBn) }] })];
+  if (shared.colour.startsWith('wb:')) {
+    const name = shared.colour.slice(3), label = state.indicators.columns.find((c) => c.name === name)?.label || name;
+    charts.push(lineChart({ title: label, x: H.years, compact: true, series: [{ name: 'World Bank', y: H.column(name) }] }));
+  }
+  return el('div', { class: 'section history' }, el('div', { class: 'heading' }, el('span', { text: 'over the years' })), charts);
+}
+
+// The year's numbers and the map itself, to take away.
+function downloads(A) {
+  const stem = `${shared.flows === 'library:trade' ? 'world-trade' : 'flows'}-${A.year || 'all'}`;
+  const C = colouring(A);
+  const places = () => download(`${stem}-places.csv`, csv(
+    ['id', 'name', 'latitude', 'longitude', 'exports', 'imports', 'net_inflow', 'attraction', 'circulating', ...(C.label !== 'α' ? [C.label] : [])],
+    A.economies.map((e) => [e.iso3, e.name, e.latitude, e.longitude, e.exports, e.imports, e.balance, e.attraction, e.circulating, ...(C.label !== 'α' ? [C.value(e)] : [])])));
+  const flows = () => download(`${stem}-net-flows.csv`, csv(['from', 'to', 'net', 'driven', 'round_triangles', 'round_holes'],
+    A.legs.map((l) => [A.economies[l[0]].iso3, A.economies[l[1]].iso3, l[2], l[3], l[4], l[5]])));
+  return el('div', { class: 'section downloads' }, el('div', { class: 'heading' }, el('span', { text: 'take away' })),
+    el('div', { class: 'chips' },
+      el('button', { class: 'quiet', onclick: places, text: 'the places, CSV' }),
+      el('button', { class: 'quiet', onclick: flows, text: 'the net flows, CSV' }),
+      el('button', { class: 'quiet', onclick: () => download(`${stem}-map.svg`, mapSvg(), 'image/svg+xml'), text: 'the map, SVG' })));
+}
+
+// The map as a file of its own: the drawing with the page's styles written into it.
+function mapSvg() {
+  const host = document.getElementById('map');
+  const copy = host.cloneNode(true);
+  const from = host.querySelectorAll('*'), to = copy.querySelectorAll('*');
+  const keep = ['fill', 'fill-opacity', 'stroke', 'stroke-width', 'stroke-opacity', 'stroke-dasharray', 'stroke-linecap', 'stroke-linejoin', 'paint-order', 'opacity',
+    'font-family', 'font-style', 'font-weight', 'letter-spacing'];
+  from.forEach((node, n) => {
+    if (!(node instanceof SVGGraphicsElement) || node.closest('defs')) return;
+    const s = getComputedStyle(node);
+    to[n].setAttribute('style', keep.map((p) => `${p}:${s.getPropertyValue(p)}`).join(';'));
+  });
+  copy.setAttribute('style', `background:${getComputedStyle(document.body).backgroundColor}`);
+  return `<?xml version="1.0" encoding="utf-8"?>\n${new XMLSerializer().serializeToString(copy)}\n`;
 }
 
 const ranked = (A, order, library) => A.economies.map((e, i) => ({ ...e, i }))
@@ -564,22 +732,50 @@ const ranked = (A, order, library) => A.economies.map((e, i) => ({ ...e, i }))
 
 let pluginsBox = null;
 
+// A place found by its name or code: chosen, and brought into view when the map is drawn closer.
+function findPlace(text) {
+  const A = state.answer;
+  const q = text.trim().toLowerCase();
+  if (!A || !q) return;
+  const i = A.economies.findIndex((e) => e.name.toLowerCase() === q || e.iso3.toLowerCase() === q);
+  const j = i >= 0 ? i : A.economies.findIndex((e) => e.name.toLowerCase().startsWith(q));
+  if (j < 0) return;
+  if (state.view.k > 1) {
+    const [x, y] = project(A.economies[j].longitude, A.economies[j].latitude);
+    state.view.x = -x * state.view.k;
+    state.view.y = -y * state.view.k;
+    applyView();
+  }
+  pick(j);
+}
+
 async function refreshDock() {
   const dock = document.getElementById('map-dock');
-  const colourOptions = [['attraction', 'Attraction α'], ...shared.layers.filter((l) => l.result.kind === 'values' && l.dataset === shared.flows).map((l) => [l.key, `${l.title} (${l.plugin})`])];
+  const plugins = shared.layers.filter((l) => l.result.kind === 'values' && l.dataset === shared.flows).map((l) => [l.key, `${l.title} (${l.plugin})`]);
+  const indicators = state.indicators ? state.indicators.columns.map((c) => [`wb:${c.name}`, c.label || c.name]) : [];
+  const colourGroups = [
+    ['the flows', [['attraction', 'Attraction α'], ...Object.entries(MEASURES).map(([k, [title]]) => [k, title])]],
+    ...(indicators.length ? [['the World Bank’s indicators', indicators]] : []),
+    ...(plugins.length ? [['plug-ins', plugins]] : []),
+  ];
   const arcOptions = [['all', 'all net flows'], ['driven', 'their driven part'], ['circulating', 'their circulating part'], ['none', 'none'],
     ...shared.layers.filter((l) => l.result.kind === 'arcs' && l.dataset === shared.flows).map((l) => [l.key, `${l.title} (${l.plugin})`])];
-  if (!colourOptions.some(([k]) => k === shared.colour)) shared.colour = 'attraction';
+  if (!colourGroups.some(([, os]) => os.some(([k]) => k === shared.colour)) && !(shared.colour.startsWith('wb:') && !state.indicators)) shared.colour = 'attraction';
   if (!arcOptions.some(([k]) => k === shared.arcs)) shared.arcs = 'all';
-  const select = (options, value, onChange) => el('select', { onchange: (e) => onChange(e.target.value) },
-    options.map(([k, label]) => el('option', { value: k, text: label, selected: k === value })));
+  const option = ([k, label], value) => el('option', { value: k, text: label, selected: k === value });
+  const select = (options, value, onChange) => el('select', { onchange: (e) => onChange(e.target.value) }, options.map((o) => option(o, value)));
+  const grouped = (groups, value, onChange) => el('select', { onchange: (e) => onChange(e.target.value) },
+    groups.map(([label, os]) => el('optgroup', { label }, os.map((o) => option(o, value)))));
   const toggle = (key, label) => el('label', {}, el('input', { type: 'checkbox', checked: state.opts[key], onchange: (e) => { state.opts[key] = e.target.checked; draw(); } }), label);
+  const names = el('datalist', { id: 'map-places' }, (state.answer?.economies || []).map((e) => el('option', { value: e.name })));
   if (!pluginsBox) pluginsBox = await pluginsSection(() => ({ dataset: shared.flows, year: state.year }));
-  fill(dock, 
+  fill(dock,
     el('div', { class: 'section' }, el('div', { class: 'heading' }, el('span', { text: 'data' })),
       datasetChooser('flows', () => changeDataset())),
     el('div', { class: 'section' }, el('div', { class: 'heading' }, el('span', { text: 'layers' })),
-      el('label', { class: 'field' }, el('span', { text: 'Colour the places by' }), select(colourOptions, shared.colour, (v) => { shared.colour = v; draw(); panel(); })),
+      el('label', { class: 'field' }, el('span', { text: 'Find a place' }), el('input', { type: 'search', list: 'map-places', placeholder: 'a name or a code',
+        onchange: (e) => findPlace(e.target.value), onkeydown: (e) => { if (e.key === 'Enter') findPlace(e.target.value); } }), names),
+      el('label', { class: 'field' }, el('span', { text: 'Colour the places by' }), grouped(colourGroups, shared.colour, (v) => { shared.colour = v; draw(); panel(); })),
       el('label', { class: 'field' }, el('span', { text: 'Arcs' }), select(arcOptions, shared.arcs, (v) => { shared.arcs = v; draw(); })),
       el('label', { class: 'field' }, el('span', { text: 'How many' }), select([['60', '60'], ['150', '150'], ['400', '400'], ['1000', '1000']], String(state.opts.shown),
         (v) => { state.opts.shown = Number(v); draw(); })),
@@ -628,8 +824,11 @@ async function load() {
     if (!state.built && state.geo) buildBase();
     fitToPlaces();
   }
+  const names = document.getElementById('map-places');
+  if (names) fill(names, state.answer.economies.map((e) => el('option', { value: e.name })));
   draw();
   panel();
+  if (state.playing) prefetch();
 }
 
 async function changeDataset() {
@@ -643,8 +842,8 @@ async function changeDataset() {
 }
 
 // The address may ask for a dataset, a year, the arcs and how many, the triangles, the names, the
-// flowing, and a place (its id; the ISO alpha-3 code for the library's economies):
-// #map&year=2010&arcs=driven&shown=400&faces=0&economy=CHN.
+// flowing, a place (its id; the ISO alpha-3 code for the library's economies) and the colouring:
+// #map&year=2010&arcs=driven&shown=400&faces=0&economy=CHN&colour=wb:gdp_per_capita.
 export async function showMap(data, params = {}) {
   if (!state.geo) {
     state.geo = await (await fetch(COUNTRIES)).json();
@@ -658,6 +857,7 @@ export async function showMap(data, params = {}) {
     state.year = state.years.at(-1) ?? null;
     await refreshDock();
     loadTimeline();
+    loadIndicators().then((T) => { if (T) { refreshDock(); if (shared.colour.startsWith('wb:')) { draw(); panel(); } } });
   } else if (params.dataset && params.dataset !== shared.flows && dataset(params.dataset)) {
     shared.flows = params.dataset;
     state.fit = true;
@@ -673,6 +873,7 @@ export async function showMap(data, params = {}) {
   if (params.labels) state.opts.labels = params.labels !== '0';
   if (params.flowing) state.opts.flowing = params.flowing !== '0';
   if ('economy' in params) state.wanted = params.economy.toUpperCase();
+  if (params.colour && (params.colour === 'attraction' || MEASURES[params.colour] || params.colour.startsWith('wb:'))) shared.colour = params.colour;
   if (Object.keys(params).length) await refreshDock();
   strip();
   await load();

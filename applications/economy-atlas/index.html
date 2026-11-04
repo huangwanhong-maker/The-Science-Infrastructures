@@ -4,14 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Economy Atlas</title>
-  <meta name="description" content="Value carried between places and through time: flows split into exchange, drive and circulation on a map of their places, from the world's trade or one's own data; currencies held and exchanged as a spacetime whose curvature is the departure from a price system; production as a circular flow; the loop deficits of transfer networks; and plug-ins in Python and C++.">
+  <meta name="description" content="Value carried between places and through time: flows split into exchange, drive and circulation on a map of their places, from the world's trade or one's own data; currencies held and exchanged as a spacetime whose curvature is the departure from a price system; production as a circular flow; the loop deficits of transfer networks; plug-ins in Python and C++; and a toolbox of quantitative economics: econometrics, time series, inequality and index numbers, trade, growth and macroeconomics, games and choice.">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12' fill='none' stroke='%23c9a85c' stroke-width='2'/%3E%3Cpath d='M8.5 19.5C11 10.5 20 9.5 23.5 14' fill='none' stroke='%23c4506e' stroke-width='1.8' stroke-linecap='round'/%3E%3Ccircle cx='8.5' cy='19.5' r='2.4' fill='%233a6ea5'/%3E%3Ccircle cx='23.5' cy='14' r='2.4' fill='%23c4506e'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" media="print" onload="this.media='all'"
         href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..600&display=swap">
   <script>
-    // The theme chosen before, if any, before the page is drawn (the system's otherwise).
+    // The theme chosen before, if any, before the page is drawn (the day's otherwise).
     try { const t = localStorage.getItem('economy-atlas-theme'); if (t === 'day' || t === 'night') document.documentElement.dataset.theme = t; } catch {}
   </script>
   <link rel="stylesheet" href="styles.css">
@@ -37,6 +37,7 @@
       <button data-view="spacetime" role="tab">Spacetime</button>
       <button data-view="production" role="tab">Production</button>
       <button data-view="circuits" role="tab">Circuits</button>
+      <button data-view="toolbox" role="tab">Toolbox</button>
     </nav>
     <div class="top-right">
       <span class="status" id="status" role="status"></span>
@@ -101,6 +102,12 @@
       <div class="ci-layout">
         <div class="ci-main" id="ci-main"></div>
         <aside class="panel" id="ci-panel"></aside>
+      </div>
+    </section>
+    <section class="view" data-view="toolbox" hidden>
+      <div class="tb-layout">
+        <aside class="tb-rail" id="tb-rail" aria-label="The tools"></aside>
+        <div class="tb-main" id="tb-main"></div>
       </div>
     </section>
   </main>

@@ -21,6 +21,9 @@ Currencies held and exchanged, kept as ``currency-spacetime/1`` (the spacetime v
                                                          rate (its rate is 1 or empty)
     or one JSON  {"title", "base", "rows": [{month, currency, rate, policy}]}
 
+A table for the toolbox (ADR 0048), kept as ``table/1``: any CSV with a header row, its columns
+numbers where every filled cell is one, text otherwise (or one JSON {"title", "columns": {name: [...]}}).
+
 Kept under data/cache/economy-atlas/datasets/<id>/: ``product.json`` and ``about.json``. The
 library's own products are listed beside them as ``library:trade`` and ``library:currencies``.
 
@@ -310,6 +313,62 @@ def _months_between(first: str, last: str) -> list[str]:
     return out
 
 
+# ---- tables ---------------------------------------------------------------------------------------------------
+
+LIMIT_CELLS = 5_000_000
+
+
+def make_table(title: str, files: list[dict]) -> dict:
+    """A table/1 product from one CSV (or JSON of columns): typed columns of equal length."""
+    parsed = _files(files)
+    if len(parsed) != 1:
+        raise DatasetError("a table is one file")
+    name, data = parsed[0]
+    if isinstance(data, dict):
+        title = title or str(data.get("title") or "")
+        cols = data.get("columns")
+        if not isinstance(cols, dict) or not cols:
+            raise DatasetError(f"{name}: a JSON table is {{\"columns\": {{name: [values]}}}}")
+        names = list(cols)
+        n = len(cols[names[0]])
+        if any(len(v) != n for v in cols.values()):
+            raise DatasetError(f"{name}: every column has the same length")
+        rows = [{k: cols[k][i] for k in names} for i in range(n)]
+    else:
+        rows = data
+        names = list(rows[0]) if rows else []
+    if not rows or not names:
+        raise DatasetError(f"{name}: no rows")
+    if len(rows) * len(names) > LIMIT_CELLS:
+        raise DatasetError(f"at most {LIMIT_CELLS:,} cells")
+    def number(v):
+        # A number as written in a table: thousands separated by commas when there is also a point.
+        text = str(v).strip()
+        if "," in text and "." in text:
+            text = text.replace(",", "")
+        return float(text)
+
+    columns, out = [], {}
+    for c in names:
+        values = [r.get(c) for r in rows]
+        filled = [v for v in values if v is not None and str(v).strip() != ""]
+        numeric = bool(filled)
+        for v in filled:
+            try:
+                if not math.isfinite(number(v)):
+                    raise ValueError
+            except ValueError:
+                numeric = False
+                break
+        if numeric:
+            out[c] = [number(v) if v is not None and str(v).strip() != "" else None for v in values]
+        else:
+            out[c] = [None if v is None else str(v) for v in values]
+        columns.append({"name": c, "kind": "number" if numeric else "text"})
+    return {"schema": "table/1", "title": title or Path(name).stem, "source": "data given to the Economy Atlas",
+            "rows": len(rows), "columns": columns, "data": out}
+
+
 # ---- the store -----------------------------------------------------------------------------------------------
 
 
@@ -356,8 +415,10 @@ class Datasets:
             product = make_flows(title, files)
         elif kind == "currencies":
             product = make_currencies(title, files, base)
+        elif kind == "table":
+            product = make_table(title, files)
         else:
-            raise DatasetError("a dataset is of flows or of currencies")
+            raise DatasetError("a dataset is of flows, of currencies, or a table")
         text = json.dumps(product, ensure_ascii=False, separators=(",", ":"))
         ident = hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
         folder = self.store / ident
@@ -378,6 +439,8 @@ class Datasets:
 def _summary(path: Path) -> dict:
     """What the page needs to offer a dataset: its years and places, or its months and currencies."""
     p = json.loads(path.read_text(encoding="utf-8"))
+    if p.get("schema", "").startswith("table"):
+        return {"rows": p["rows"], "columns": [c["name"] for c in p["columns"]]}
     if p.get("schema", "").startswith("trade-flows"):
         return {"years": p["years"], "places": len(p["economies"]), "unit": p.get("unit", ""),
                 "flows": sum(len(v) for v in p["flows"].values())}

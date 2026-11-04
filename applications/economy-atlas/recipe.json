@@ -1,6 +1,6 @@
 {
   "title": "The Economy Atlas's engine and data",
-  "about": "The economics domain's C++ compiled with g++ 11 or later (natively or in WSL) into data/cache/engines/economy/, and the data the atlas draws: the OECD's balanced bilateral trade (about 50 MB), Natural Earth's countries, the ECB's exchange rates and the BIS's policy rates, built into two products. A few minutes in all.",
+  "about": "The economics domain's C++ compiled with g++ 11 or later (natively or in WSL) into data/cache/engines/economy/, and the data the atlas draws: the OECD's balanced bilateral trade (about 50 MB), Natural Earth's countries, the ECB's exchange rates and the BIS's policy rates, built into two products, and the World Bank's indicators, joined with them into the toolbox's tables. A few minutes in all.",
   "steps": [
     {
       "id": "engine",
@@ -62,6 +62,15 @@
         "data/products/currency_record.py"
       ],
       "done": "data/cache/products/currency-spacetime.json"
+    },
+    {
+      "id": "tables",
+      "title": "The toolbox's tables: economies by year with the World Bank's indicators, and currencies by month",
+      "run": [
+        "applications/economy-atlas/tables.py",
+        "make"
+      ],
+      "done": "data/cache/economy-atlas/tables/economies.json"
     }
   ]
 }

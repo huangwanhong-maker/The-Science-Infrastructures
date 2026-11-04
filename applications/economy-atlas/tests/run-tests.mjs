@@ -33,9 +33,10 @@ for (const t of TABLES) {
   assert(`table ${t.id}: square deliveries and a final demand for each sector`,
     t.table.z.length === n && t.table.z.every((r) => r.length === n) && t.table.final_demand.length === n);
 }
-assert("colours: the diverging ramp runs from steel blue through the neutral to rose red (the day's, outside a page)",
-  diverging(-1) === 'rgb(58, 110, 165)' && diverging(1) === 'rgb(196, 80, 110)' && diverging(0) === 'rgb(239, 233, 221)', `${diverging(-1)} ${diverging(0)} ${diverging(1)}`);
-assert('colours: the sequential ramp runs from the neutral to deep gold', sequential(0) === 'rgb(239, 233, 221)' && sequential(1) === 'rgb(126, 98, 31)', `${sequential(0)} ${sequential(1)}`);
+assert("colours: the diverging ramp runs from sky blue through the neutral to rose (the day's, outside a page)",
+  diverging(-1) === 'rgb(74, 134, 197)' && diverging(1) === 'rgb(224, 96, 126)' && diverging(0) === 'rgb(244, 239, 229)', `${diverging(-1)} ${diverging(0)} ${diverging(1)}`);
+assert('colours: the sequential ramp runs from the neutral through gold to deep amber', sequential(0) === 'rgb(244, 239, 229)' && sequential(Math.pow(0.5, 1.25)) === 'rgb(221, 182, 90)'
+  && sequential(1) === 'rgb(168, 112, 26)', `${sequential(0)} ${sequential(Math.pow(0.5, 1.25))} ${sequential(1)}`);
 assert('colours: the series cycles', seriesColour(0) === seriesColour(20) && seriesColour(-1) === seriesColour(19));
 
 // ---- the recipe -------------------------------------------------------------------------------------
@@ -102,6 +103,60 @@ assert('colours: the series cycles', seriesColour(0) === seriesColour(20) && ser
       assert("engine: ... its curvature against the exchange rates' alone, 0 < rms and the share removed below 1",
         K.rms > 0 && K.rms_exchange > 0 && K.removed < 1 && Math.abs(K.removed - (1 - (K.rms / K.rms_exchange) ** 2)) < 1e-9, JSON.stringify(K));
     } else skip('the currencies\' record is not built: the spacetime is not checked');
+    toolbox(ask, sidePath);
+  }
+}
+
+// ---- the toolbox (ADR 0048): each tool's answer against a closed form or an identity ------------------------
+function toolbox(ask, sidePath) {
+  const figure = (answer, title, label) => answer.blocks?.find((b) => b.kind === 'figures' && b.title.startsWith(title))?.items.find(([k]) => k === label)?.[1] ?? NaN;
+  const solow = ask({ op: 'tool', tool: 'solow', params: { saving: 0.2, labour_growth: 0.01, technology_growth: 0.02, depreciation: 0.05, alpha: 1 / 3, sigma: 1 } });
+  check('toolbox: Solow, k* = (s/(n+g+δ))^(1/(1−α))', figure(solow, 'The steady state', 'capital k*') - Math.pow(0.2 / 0.08, 1.5), 1e-9);
+  check('toolbox: ... the golden rule saves α', figure(solow, 'The steady state', 'golden-rule saving') - 1 / 3, 1e-9);
+  const islm = ask({ op: 'tool', tool: 'islm', params: { c0: 200, c1: 0.75, taxes: 100, i0: 200, i1: 25, government: 100, money: 1000, price: 2, k: 0.5, h: 50, delta_government: 50 } });
+  check('toolbox: IS–LM, Y* = 1350 and r* = 3.5', Math.abs(figure(islm, 'The equilibrium', 'output Y*') - 1350) + Math.abs(figure(islm, 'The equilibrium', 'interest rate r*') - 3.5), 1e-9);
+  check('toolbox: ... the fiscal multiplier h/(h(1−c₁)+i₁k) = 2, and fifty more spent raise Y by 100', Math.abs(figure(islm, 'The equilibrium', 'fiscal multiplier dY/dG') - 2)
+    + Math.abs(figure(islm, 'After the policy', 'change in output') - 100), 1e-9);
+  const t = [2015, 2016, 2017, 2018, 2019, 2020], Y = [100, 104, 107, 112, 111, 118], K = [300, 310, 322, 330, 341, 350], L = [50, 51, 51.5, 52, 52.2, 53];
+  const ga = ask({ op: 'tool', tool: 'growth-accounting', columns: { year: t, output: Y, capital: K, labour: L }, roles: { time: 'year', output: 'output', capital: 'capital', labour: 'labour' },
+    params: { capital_share: 0.3 } });
+  const rows = ga.blocks?.find((b) => b.kind === 'table')?.rows || [];
+  check('toolbox: growth accounts add up, output = capital + labour + TFP, period by period',
+    rows.length === 5 ? Math.max(...rows.map((r) => Math.abs(r[1] - r[2] - r[3] - r[4]))) : NaN, 1e-9);
+
+  // tyche and nomos through the engine.
+  const tableOf = (answer, title) => answer.blocks?.find((b) => b.kind === 'table' && b.title.startsWith(title));
+  const xs = [1, 2, 3, 4, 5, 6, 7, 8], zs = [3, 1, 4, 1, 5, 9, 2, 6];
+  const ols = ask({ op: 'tool', tool: 'ols', columns: { y: xs.map((x, i) => 1 + 2 * x - 0.5 * zs[i]), x: xs, z: zs }, roles: { y: 'y', x: ['x', 'z'] }, params: { covariance: 'HC1', logs: 'none', constant: true } });
+  const beta = (tableOf(ols, 'Coefficients')?.rows || []).map((r) => r[1]);
+  check('toolbox: least squares on exact data returns (1, 2, −0.5)', beta.length === 3 ? Math.abs(beta[0] - 1) + Math.abs(beta[1] - 2) + Math.abs(beta[2] + 0.5) : NaN, 1e-10);
+  const y4 = [10, 11, 12, 16, 9, 10.5, 11.5, 15.5];
+  const did = ask({ op: 'tool', tool: 'did', columns: { y: y4, g: [0, 0, 1, 1, 0, 0, 1, 1], t: [0, 1, 0, 1, 0, 1, 0, 1] }, roles: { y: 'y', treated: 'g', post: 't' }, params: {} });
+  check('toolbox: difference in differences is the difference of the four means: (15.75 − 11.75) − (10.75 − 9.5) = 2.75',
+    figure(did, 'The effect', 'δ̂, difference in differences') - 2.75, 1e-12);
+  const bos = ask({ op: 'tool', tool: 'game', params: { payoffs: '2,1  0,0\n0,0  1,2' } });
+  const eq = tableOf(bos, 'Nash equilibria')?.rows || [];
+  assert("toolbox: the Battle of the Sexes has two pure equilibria and the mixed one (⅔, ⅓), (⅓, ⅔)",
+    eq.length === 3 && eq.some((r) => r[0] === 'R1 0.667, R2 0.333' && r[1] === 'C1 0.333, C2 0.667'), JSON.stringify(eq));
+  const vote = ask({ op: 'tool', tool: 'voting', params: { ballots: '8: A > B > C > D\n6: B > C > D > A\n5: C > D > B > A\n4: D > C > B > A' } });
+  const winners = Object.fromEntries(vote.blocks?.find((b) => b.kind === 'figures')?.items || []);
+  assert('toolbox: on one profile, plurality elects A, instant runoff C, and B is the Condorcet winner',
+    winners.plurality === 'A' && winners['instant runoff'] === 'C' && winners['the Condorcet winner'] === 'B', JSON.stringify(winners));
+  const pi = ask({ op: 'tool', tool: 'price-index', columns: { period: ['1', '1', '2', '2'], item: ['a', 'b', 'a', 'b'], price: [1, 2, 1.5, 2.2], quantity: [10, 5, 8, 6] },
+    roles: { period: 'period', item: 'item', price: 'price', quantity: 'quantity' }, params: { chained: false } });
+  const last = tableOf(pi, 'The indices')?.rows?.[1] || [];
+  // P_F · Q_F = Σp₁q₁ / Σp₀q₀ (the factor reversal test): (12 + 13.2) / (10 + 10).
+  check("toolbox: Fisher's price index times his quantity index is the ratio of values", (last[3] * last[7]) / 1e4 - 25.2 / 20, 1e-12);
+  const hp = ask({ op: 'tool', tool: 'hp-filter', columns: { t: [...Array(30).keys()], v: [...Array(30).keys()].map((k) => Math.exp(0.02 * k + 0.1 * Math.sin(k))) }, roles: { time: 't', value: 'v' }, params: { lambda: 1600, log: true } });
+  const [trendBlock, cycleBlock] = hp.blocks?.filter((b) => b.kind === 'lines') || [];
+  const [ser, trend] = trendBlock?.series || [];
+  check('toolbox: the Hodrick–Prescott trend and cycle add up to the series', ser ? Math.max(...ser.y.map((v, k) => Math.abs(v - trend.y[k] - cycleBlock.series[0].y[k]))) : NaN, 1e-9);
+  const trade = join(ROOT, 'data/cache/products/trade-flows.json');
+  if (existsSync(trade)) {
+    const g = ask({ op: 'tool', tool: 'trade-gravity', flows: sidePath(trade), params: { year: 2022, method: 'ppml' } });
+    const elasticity = figure(g, 'The gravity', 'distance elasticity');
+    assert('toolbox: the gravity of 2022 by PPML with effects, a distance elasticity between −1.2 and −0.6 (the literature: about −0.9)',
+      elasticity > -1.2 && elasticity < -0.6, String(elasticity));
   }
 }
 

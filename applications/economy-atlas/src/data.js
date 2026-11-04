@@ -12,6 +12,11 @@ const FORMATS = {
     help: 'One file of flows, and, for places that are not economies of the library, one of places. Ids that are ISO alpha-3 codes (USA, DEU) or the names of economies need no place.',
     example: 'flows.csv\nfrom,to,value,year\nFRA,DEU,104.2,2024\nDEU,FRA,121.7,2024\n\nplaces.csv (optional)\nid,name,latitude,longitude,group\nlyon,Lyon,45.76,4.84,France',
   },
+  table: {
+    title: 'A table for the toolbox',
+    help: 'Any table with a header row, for the toolbox’s instruments: a column is numbers when every filled cell is one.',
+    example: 'table.csv\nregion,year,income,population\nNorth,2023,41200,1.5\nSouth,2023,28700,2.1',
+  },
   currencies: {
     title: 'Currencies held and exchanged',
     help: 'Monthly rates against a base currency, and each currency\'s policy rate in per cent a year. The base\'s rows carry its own policy rate, with a rate of 1 or none.',
@@ -70,8 +75,8 @@ async function add(status) {
     const files = await Promise.all(dialogState.files.map(async (f) => ({ name: f.name, text: await f.text() })));
     const about = await api.addDataset(dialogState.kind, dialogState.title || '', files, dialogState.base || '');
     await refresh();
-    shared[dialogState.kind === 'flows' ? 'flows' : 'currencies'] = about.id;
-    emit('dataset-chosen', dialogState.kind);
+    if (dialogState.kind !== 'table') shared[dialogState.kind === 'flows' ? 'flows' : 'currencies'] = about.id;
+    emit('dataset-chosen', dialogState.kind, about.id);
     dialogState.files = [];
     dialogState.title = '';
     document.getElementById('data-dialog').close();
@@ -87,6 +92,7 @@ export function describe(d) {
     const span = years.length > 1 ? `${years[0]}–${years.at(-1)}` : years[0] ? String(years[0]) : 'no year';
     return `${d.places} places · ${(d.flows ?? 0).toLocaleString('en-GB')} flows · ${span}${d.unit ? ` · ${d.unit}` : ''}`;
   }
+  if (d.kind === 'table') return `${(d.rows ?? 0).toLocaleString('en-GB')} rows · ${(d.columns || []).length} columns`;
   return `${(d.currencies || []).length} currencies on ${d.base} · ${(d.months || []).join(' to ')}`;
 }
 

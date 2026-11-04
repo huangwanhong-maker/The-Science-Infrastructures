@@ -2,13 +2,13 @@
 // day and night; outside a page (in the checks) the day's values. Every data colour was validated
 // for colour vision deficiencies on its surface (the dataviz method: OKLab ΔE ≥ 8 between neighbours
 // under protanopia and deuteranopia):
-//   diverging, for a polarity: steel blue (value sent out) through a neutral to rose red (drawn in);
-//   sequential, for a magnitude: the neutral to deep gold;
+//   diverging, for a polarity: sky blue (value sent out) through a neutral to rose (drawn in);
+//   sequential, for a magnitude: the neutral through light gold to a deep amber (by night, to pale gold);
 //   the parts of a flow: indigo (driven), rose (local, round the triangles), gold (global, round the holes).
 
 const DAY = {
-  sends: '#3A6EA5', draws: '#C4506E', neutral: '#EFE9DD', driven: '#4B4F8F', local: '#C4506E', global: '#A98A2C',
-  reciprocal: '#E4D4A8', gold: '#C9A85C', 'gold-ink': '#7E621F', rose: '#C4506E', ink: '#2B2620', paper: '#FBF8F1',
+  sends: '#4A86C5', draws: '#E0607E', neutral: '#F4EFE5', driven: '#5B63B0', local: '#E0607E', global: '#C39A2E',
+  reciprocal: '#F0DFAE', magnitude: '#A8701A', gold: '#DDB65A', 'gold-ink': '#8A6A1C', rose: '#E0607E', ink: '#3A3128', paper: '#FFFDF7',
 };
 
 let cache = null;
@@ -51,10 +51,11 @@ export function diverging(t) {
   return css(s < 0 ? mix(mid, rgb(token('sends')), -s) : mix(mid, rgb(token('draws')), s));
 }
 
-// t in [0, 1]: a magnitude, from the neutral to deep gold.
+// t in [0, 1]: a magnitude, from the neutral through light gold to deep amber, one warm hue whose
+// lightness falls throughout, so that the map stays light where the values are middling.
 export function sequential(t) {
-  const u = Math.max(0, Math.min(1, Number.isFinite(t) ? t : 0));
-  return css(mix(rgb(token('neutral')), rgb(token('gold-ink')), Math.pow(u, 0.8)));
+  const u = Math.pow(Math.max(0, Math.min(1, Number.isFinite(t) ? t : 0)), 0.8);
+  return css(u < 0.5 ? mix(rgb(token('neutral')), rgb(token('gold')), 2 * u) : mix(rgb(token('gold')), rgb(token('magnitude')), 2 * u - 1));
 }
 
 export const rampCss = (kind = 'diverging') => kind === 'sequential'
@@ -71,6 +72,6 @@ export const PART = {
 };
 
 // A sequence for currencies, sectors and positions: identity only, muted, the chosen one drawn heavier.
-export const SERIES = ['#A98A2C', '#3A6EA5', '#C4506E', '#4B4F8F', '#6E8B4E', '#9B6A3A', '#3E7A72', '#8C5A86', '#B07A3A', '#5A6E8F',
+export const SERIES = ['#C39A2E', '#4A86C5', '#E0607E', '#5B63B0', '#6E8B4E', '#9B6A3A', '#3E7A72', '#8C5A86', '#B07A3A', '#5A6E8F',
   '#A0504A', '#4F8A6A', '#7B6A9B', '#B09040', '#5A7A9A', '#8F4E3C', '#3F6E5A', '#9A7A3A', '#6A5A8A', '#7F4F5F'];
 export const seriesColour = (i) => SERIES[((i % SERIES.length) + SERIES.length) % SERIES.length];

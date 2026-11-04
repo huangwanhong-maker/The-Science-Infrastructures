@@ -22,6 +22,9 @@ CSV or JSON) and plug-ins (Python scripts and C++ programs in ``plugins/``, run 
     GET    /api/datasets                 the library's products and the datasets kept here
     POST   /api/datasets                 {"kind": "flows"|"currencies", "title", "files": [{name, text}], "base"?}
     DELETE /api/datasets/<id>            forget one
+    GET    /api/tables                   the toolbox's tables: the library's and one's own (tables.py, ADR 0048)
+    GET    /api/tables/<id>[?rows=n]     a table's columns, or its first n rows
+    POST   /api/tool                     {"tool", "table"?, "roles": {role: column(s)}, "params"}: a tool of the toolbox
     GET    /api/plugins                  the plug-ins in plugins/, with their descriptions once known
     GET    /api/plugins/describe?file=   one plug-in's description (a C++ one is compiled first)
     POST   /api/plugins/run              {"file", "params", "dataset"?, "year"?}: starts a job; returns {"job"}
@@ -88,15 +91,16 @@ sys.path.insert(0, str(APP))
 sys.path.insert(0, str(ROOT / "api" / "python"))
 import datasets  # noqa: E402
 import engine  # noqa: E402
+import tables  # noqa: E402
 
 RECIPE = None
 WRITES = {"allowed": True, "token": None}
 LIMITS = {"bytes": 1024 * 1024, "upload": 48 * 1024 * 1024,
-          "seconds": {"map": 120.0, "timeline": 600.0, "spacetime": 120.0, "production": 30.0, "circuits": 30.0, "plugin": 600.0}}
+          "seconds": {"map": 120.0, "timeline": 600.0, "spacetime": 120.0, "production": 30.0, "circuits": 30.0, "plugin": 600.0, "tool": 300.0}}
 RUNNING: set = set()
 SLOTS = threading.BoundedSemaphore(3)
 OPS = {"/api/map": "map", "/api/timeline": "timeline", "/api/spacetime": "spacetime", "/api/production": "production",
-       "/api/circuits": "circuits"}
+       "/api/circuits": "circuits", "/api/tool": "tool"}
 DATASETS = datasets.Datasets()
 PLUGINS = APP / "plugins"
 PLUGIN_WORK = ROOT / "data" / "cache" / "economy-atlas" / "plugins"
@@ -184,12 +188,51 @@ def compute(op: str, body: dict) -> tuple[str | dict, int]:
             if not isinstance(body.get("network"), dict):
                 return {"message": "a circuits request needs a network"}, 400
             request["network"] = body["network"]
+        elif op == "tool":
+            if not isinstance(body.get("tool"), str):
+                return {"message": "name the tool"}, 400
+            request["tool"] = body["tool"]
+            request["params"] = body.get("params") if isinstance(body.get("params"), dict) else {}
+            roles = body.get("roles") if isinstance(body.get("roles"), dict) else {}
+            request["roles"] = roles
+            # The table's columns the roles name, and only those, go to the engine, in the rows the
+            # filter keeps (where: {column: value}); a table pasted in the page comes as its columns.
+            wanted = {c for v in roles.values() for c in (v if isinstance(v, list) else [v]) if isinstance(c, str)}
+            if isinstance(body.get("table"), str):
+                t = tables.table(body["table"])
+                data, about = t["data"], {"id": t["id"], "title": t["title"], "source": t.get("source", "")}
+            elif isinstance(body.get("columns"), dict):
+                data, about = {k: v for k, v in body["columns"].items() if isinstance(v, list)}, {"id": "pasted", "title": "a table pasted", "source": ""}
+            else:
+                data, about = None, None
+            if data is not None:
+                where = body.get("where") if isinstance(body.get("where"), dict) else {}
+                missing = (wanted | set(where)) - set(data)
+                if missing:
+                    return {"message": f"the table has no column {', '.join(sorted(missing))}"}, 400
+                n = len(next(iter(data.values()))) if data else 0
+                keep = [i for i in range(n) if all(data[c][i] == v or (isinstance(v, (int, float)) and isinstance(data[c][i], (int, float))
+                                                                        and abs(data[c][i] - v) < 1e-9) for c, v in where.items())]
+                request["columns"] = {c: [data[c][i] for i in keep] for c in sorted(wanted)}
+                request["table"] = {**about, "rows": len(keep), "where": where}
+            # A tool on flows between places reads the dataset's product itself.
+            if isinstance(body.get("flows"), str) or body.get("tool", "").startswith("trade-"):
+                product = DATASETS.product(body.get("flows") if isinstance(body.get("flows"), str) else None, "flows")
+                request["flows"] = engine.path_for(toolchain, product)
+                # The economies' sizes (GDP) for gravity, from the toolbox's table, made if its sources changed.
+                if body.get("tool") == "trade-gravity":
+                    tables.library()
+                    sizes = tables.KEPT / "economies.json"
+                    if sizes.exists():
+                        request["sizes"] = engine.path_for(toolchain, sizes)
     except datasets.DatasetError as error:
         return {"message": str(error)}, 404
     state = engine.status()
     if not state["current"]:
         return {"message": "the engine is not built from the present sources: build it first", "engine": state}, 503
-    keyed = {k: v for k, v in request.items() if k not in ("flows", "record")}
+    keyed = {k: v for k, v in request.items() if k not in ("flows", "record", "sizes")}
+    if "sizes" in request:  # the table of sizes by its version, not its path
+        keyed["sizes"] = (tables.KEPT / "economies.json").stat().st_mtime_ns
     kept = KEPT / f"{answer_key(op, keyed, product)}.json" if product is not None else None
     if kept is not None and kept.exists():
         return kept.read_text(encoding="utf-8"), 200
@@ -336,6 +379,17 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             return self.reply_json(*self.recipe_request(url))
         if url.path == "/api/datasets":
             return self.datasets_request("GET", url)
+        if url.path == "/api/tables":
+            return self.reply_json({"tables": tables.listing()}, 200)
+        if url.path.startswith("/api/tables/"):
+            try:
+                t = tables.table(urllib.parse.unquote(url.path[len("/api/tables/"):]))
+            except datasets.DatasetError as error:
+                return self.reply_json({"message": str(error)}, 404)
+            n = dict(urllib.parse.parse_qsl(url.query)).get("rows")
+            if n and n.isdigit():
+                t = {**t, "data": {k: v[:int(n)] for k, v in t["data"].items()}}
+            return self.reply_json(t, 200)
         if url.path.startswith("/api/plugins"):
             return self.plugins_request("GET", url)
         return super().do_GET()
@@ -378,7 +432,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             return None
 
     def engine_request(self, op: str) -> None:
-        body = self.read_body()
+        body = self.read_body(LIMITS["upload"] if op == "tool" else None)
         if body is None:
             return
         out, code = compute(op, body)

@@ -1,6 +1,6 @@
 # 0044. Value in Space and Time: the Economics Domain and the Economy Atlas
 
-- **Status:** Accepted, provisionally (the application's name and colour are the user's to choose; the inference foundation will take over the fitting of transports)
+- **Status:** Accepted, provisionally (the application's name and colour are the user's to choose; the inference foundation will take over the fitting of transports); amended by [0046](0046-the-economy-atlas-data-and-plugins.md) and [0056](0056-nomos-and-a-toolbox-of-quantitative-economics.md)
 - **Date:** 2026-10-24
 - **Decided by:** the user asked for the next domain after history: "Economics, GIS and Spacetime (complex) … another single application; the former one mainly renders and investigates the value circulation", to be designed with care and creativity, drawing on their papers if useful, and under their rule that a domain reuses the foundations. Claude read the papers, designed the domain, its foundations and the application, and wrote this record. The design was first written as the idea note [Value in space and time](../ideas/2026-10-24-value-in-space-and-time.md).
 

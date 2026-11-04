@@ -12,14 +12,15 @@ Each foundation is a repository of its own, attached here as a git submodule, be
 
 | Library | Scope | Depends on | Status |
 |---|---|---|---|
-| [calx](https://github.com/huangwanhong-maker/calx) | Computation: a retargetable stack (representation, schedule, compiler, runtime, backends) and numerical methods on floating-point numbers and arrays | — | planned |
-| [morphe](https://github.com/huangwanhong-maker/morphe) | Mathematical structures and their equivalences: arithmetic, algebra, categories, topology, algebraic geometry, formal structures | — | planned |
-| [physis](https://github.com/huangwanhong-maker/physis) | Geometry and theoretical physics: units, geometry, discretisation, mechanics, gravitation, thermodynamics, continuum, chemistry, radiation | calx, morphe | planned |
-| inference | Estimation, filtering, data assimilation, uncertainty and learning: inference under uncertainty, common to every science. Its name is to be chosen when its first code is written. | calx, morphe | planned |
+| [calx](https://github.com/huangwanhong-maker/calx) | Computation: a retargetable stack (representation, schedule, compiler, runtime, backends) and numerical methods on floating-point numbers and arrays | — | draft |
+| [morphe](https://github.com/huangwanhong-maker/morphe) | Mathematical structures and their equivalences: arithmetic, algebra, categories, topology, algebraic geometry, formal structures | — | draft |
+| [physis](https://github.com/huangwanhong-maker/physis) | Geometry and theoretical physics: units, geometry, discretisation, mechanics, gravitation, thermodynamics, continuum, chemistry, radiation | calx, morphe | draft |
+| [tyche](https://github.com/huangwanhong-maker/tyche) | Chance: probability, the description of samples, regression, time series, spatial statistics, testing and learning; later estimation, Bayesian inference and assimilation (ADR 0048) | calx, morphe, physis | draft |
+| [nomos](https://github.com/huangwanhong-maker/nomos) | The methods of the social sciences: measurement, index numbers, games, matching, social choice and econometrics; later psychometrics, surveys, networks, mechanisms and agents (ADR 0056) | tyche, morphe, calx | draft |
 
 ## 3. Dependencies
 
-- calx and morphe depend on nothing in the programme; physis depends on both.
+- calx and morphe depend on nothing in the programme; physis depends on both; tyche on the three; nomos on tyche (and through it on the rest).
 - No foundation depends on a domain, an application or this repository.
 - Domains, the shared edges and applications use a foundation only through its public interface.
 
@@ -27,5 +28,5 @@ Each foundation is a repository of its own, attached here as a git submodule, be
 
 - Work inside `foundations/<name>`, and read that library's CLAUDE.md first.
 - Commit in the library, then commit the updated submodule pointer in this repository.
-- Commit in dependency order: calx and morphe, then physis, then this repository.
+- Commit in dependency order: calx and morphe, then physis, then tyche, then nomos, then this repository.
 - Links into a library use absolute GitHub URLs, since a relative link into a submodule does not resolve on GitHub.

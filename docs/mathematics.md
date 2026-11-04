@@ -6,7 +6,7 @@
 
 The sciences share their mathematics, so it is written once, below the domains, in libraries that name no object in nature. Six principles divide it among them.
 
-1. **By the kind of object and the mode of computation.** Exact, symbolic and discrete structures are one library, *morphe*, where an algorithm states when it terminates. Approximate computation on floating-point numbers and arrays, and the machinery that runs it on devices, is another, *calx*, where an algorithm states its accuracy and cost. The continuum, where structures meet numbers (geometry, analysis, dynamics) and the laws of physics written in it, is a third, *physis*. Chance (probability, statistics, inference, learning) is a fourth, *inference*, named provisionally.
+1. **By the kind of object and the mode of computation.** Exact, symbolic and discrete structures are one library, *morphe*, where an algorithm states when it terminates. Approximate computation on floating-point numbers and arrays, and the machinery that runs it on devices, is another, *calx*, where an algorithm states its accuracy and cost. The continuum, where structures meet numbers (geometry, analysis, dynamics) and the laws of physics written in it, is a third, *physis*. Chance (probability, statistics, inference, learning) is a fourth, *tyche* ([ADR 0048](../development/decisions/0048-the-inference-foundation-tyche.md)), called *inference* in this map where its role matters more than its name; the methods of the social sciences are a fifth, *nomos*, on tyche ([ADR 0056](../development/decisions/0056-nomos-and-a-toolbox-of-quantitative-economics.md)).
 2. **One home for each area.** Every area has exactly one module that owns it. An area with an exact and a numerical side lives on each side with its mode of computation, and each module names its counterpart: linear algebra over the integers in morphe and in floating point in calx; a finite group in morphe and a Lie group in physis.
 3. **An order, and only downward dependence.** The libraries and their modules form a directed acyclic graph; a module uses only modules beneath it, through their public headers. morphe and calx are independent of each other.
 4. **Generic, not particular.** A foundation knows no body, dataset or organism. A neuron is a hybrid dynamical system to physis, and becomes a neuron only in the neuroscience domain.
@@ -19,10 +19,10 @@ The sciences share their mathematics, so it is written once, below the domains, 
    the domains and the works        may use every library beneath them
         │
         ▼
-   social methods (planned)         measurement · econometrics · games · social choice
+   nomos                            the social methods: measurement · econometrics · games · social choice
         │
         ▼
-   inference (planned)              chance: probability · statistics · learning
+   tyche                            chance: probability · statistics · learning
         │
         ▼
    physis                           the continuum: units · geometry · analysis · dynamics · physical law
@@ -38,8 +38,8 @@ Each level may use every level beneath it, and none above.
 | morphe | `morphe` | Structures and their equivalences: exact, symbolic, discrete | — | designed; first slice written (arithmetic, algebra, combinatorics, topology) |
 | calx | `calx` | Numerical methods on floating-point numbers and arrays; the computation stack | — | designed; first modules written |
 | physis | `physis` | Units, geometry, analysis, dynamics, control, discretisation, and physical law | calx, morphe | designed; units, dynamics, quantum, symmetry, geometry (in part), spacetime, field theory, gauge, quantum gravity written |
-| inference (name open) | `inference` | Probability, stochastic processes, statistics, inference, learning | calx, morphe, physis | designed here (§6); no repository yet |
-| social methods (name open) | — | Measurement, surveys, econometrics, games, social choice, agent-based models | inference, morphe, calx | named in README §4.3 (§7) |
+| tyche (inference) | `tyche` | Probability, stochastic processes, statistics, inference, learning | calx, morphe, physis | designed here (§6); probability, description, regression and time series written (ADR 0048), and since then spatial statistics, spectra, change points, testing and learning |
+| nomos (social methods) | `nomos` | Measurement, surveys, econometrics, games, social choice, agent-based models | tyche, morphe, calx | measurement, index numbers, games, matching, choice and econometrics written (ADR 0056, §7) |
 
 *Remark.* inference depends on physis because data assimilation and the uncertainty of models need dynamical systems; physis never depends on inference. A stochastic differential equation is therefore a system of physis (`dynamics`), integrated by calx (`integrators`), whose statistics are inference's (`processes`).
 
@@ -105,7 +105,7 @@ Order: every numerics module may use `compute/` for bulk kernels; `integrators`,
 
 Order: `units` stands alone; `symmetry` uses calx and morphe `arithmetic`; `geometry` uses `units` and `symmetry`; `spacetime` uses `geometry` and morphe `topology`; `field_theory` uses `spacetime`; `gauge` uses `field_theory` and `symmetry`; `quantum_gravity` uses `gauge`; `electromagnetism` uses `geometry`, `discretisation` and `gauge` (physis decision 0005, §2.2); `analysis` and `dynamics` use `units`; `computational_geometry` uses `geometry`; `control` uses `dynamics`; `discretisation` uses `geometry`, `analysis` and `dynamics`; `quantum` uses `geometry` (its groups) and `dynamics` (an open system's flow is linear on its density matrix); `statistical_mechanics` uses `thermodynamics`, `dynamics` and `quantum`; the physics modules as physis's architecture lists them, `mechanics` using `dynamics` too.
 
-## 6. Chance (inference, planned)
+## 6. Chance (tyche)
 
 The library of probability, statistics and learning, with its modules in the order they build on each other. It reads what calx samples and what physis simulates.
 
@@ -130,11 +130,11 @@ The library of probability, statistics and learning, with its modules in the ord
 
 Order: `probability` stands alone; `information` and `processes` use it; `descriptive`, `estimation` and `testing` use `probability`; `regression`, `multivariate` and `time_series` use `estimation`; `spatial` uses `regression` and `processes`; `bayes` uses `estimation` and `processes`; `assimilation` and `uncertainty` use `bayes` and physis `dynamics`; `causal` uses `regression` and morphe `combinatorics`; `design` uses `estimation`; `learning` uses `regression`, `multivariate` and calx `optimisation`.
 
-*Remark.* Its name and first module are an open decision (CLAUDE.md §8, open decision 3). The first module will be the one a domain needs first; for the neuroscience domain that is `processes` (spike trains as point processes) and `testing` (statistics of maps).
+*Remark.* Its name, tyche, and its first modules (`probability`, `descriptive`, `regression`, `time_series`) were chosen when the economics domain first needed them ([ADR 0048](../development/decisions/0048-the-inference-foundation-tyche.md)); `descriptive`, the description of samples, is a module this map did not name. For the neuroscience domain the first will be `processes` (spike trains as point processes) and `testing` (statistics of maps).
 
-## 7. The Methods of the Social Sciences (planned)
+## 7. The Methods of the Social Sciences (nomos)
 
-Measurement (psychometrics, item response theory, indices), surveys, econometrics (panels, instruments, discrete choice), game theory and mechanism design, social choice and voting, social networks, and agent-based models. They rest on inference (estimation, causal inference, design), morphe (games and choice as combinatorial and order structures, networks as graphs) and calx (optimisation, simulation). Whether they form a library of their own or modules of inference is open (README §4.3).
+Measurement (psychometrics, item response theory, indices), surveys, econometrics (panels, instruments, discrete choice), game theory and mechanism design, social choice and voting, social networks, and agent-based models. They rest on inference (estimation, causal inference, design), morphe (games and choice as combinatorial and order structures, networks as graphs) and calx (optimisation, simulation). They form a library of their own, nomos, on tyche ([ADR 0056](../development/decisions/0056-nomos-and-a-toolbox-of-quantitative-economics.md)): tyche estimates and tests in general, nomos holds the measures and designs of the social sciences. Its first modules are `measurement`, `indices`, `games`, `matching`, `choice` and `econometrics`; `psychometrics`, `surveys`, `networks`, `mechanisms` and `agents` are planned.
 
 ## 8. Coverage: the Mathematics Subject Classification
 
@@ -278,11 +278,13 @@ The second slice ([ADR 0039](../development/decisions/0039-complexes-symmetry-an
 
 The third slice ([ADR 0043](../development/decisions/0043-the-genome-infrastructure.md)) is the genome: morphe's `formal` (words, their indexes and their alignment over semirings, the polytope algebra), exact determinants and the BEST theorem; calx's CPU backend (the target and vector lanes), task graphs and dynamic loops, the symmetric eigenproblem, the gamma family and its variates, and Brent's minimiser, the first content of `optimisation`. The statistics the genome needed and no foundation yet holds (mixtures by EM, negative binomial models, false discovery rates) are written in the genomics domain until the inference foundation exists.
 
-Everything else in this map is planned. The roadmap continues with morphe's arithmetic, algebra and topology toward discrete exterior calculus, and physis's shallow-water model (README §4.6); inference begins when a domain first needs its statistics.
+The fourth slice ([ADR 0048](../development/decisions/0048-the-inference-foundation-tyche.md), [ADR 0056](../development/decisions/0056-nomos-and-a-toolbox-of-quantitative-economics.md)) is quantitative economics: tyche, founded with `probability`, `descriptive`, `regression` and `time_series`; nomos, founded with `measurement`, `indices`, `games`, `matching`, `choice` and `econometrics`; calx's optimisation in several variables and linear programming (its decision 0008); and the economics domain's growth, short run and trade, which the Economy Atlas's toolbox computes with.
+
+Everything else in this map is planned. The roadmap continues with morphe's arithmetic, algebra and topology toward discrete exterior calculus, and physis's shallow-water model (README §4.6).
 
 ## 12. Open Questions
 
-1. **The names of inference and of the social methods,** and the boundary between them (CLAUDE.md §8).
+1. *Closed:* the names of inference and of the social methods, and the boundary between them: tyche and nomos ([ADR 0048](../development/decisions/0048-the-inference-foundation-tyche.md), [ADR 0056](../development/decisions/0056-nomos-and-a-toolbox-of-quantitative-economics.md), §2.1).
 2. **Whether the mathematical half of physis** (geometry, analysis, dynamics, control, discretisation) becomes a library of its own as it grows (§2).
 3. **Typed units.** Dimensions are checked at run time now; compile-time types, and calx's typed IR annotations, may follow (physis's open decision 1).
 4. **Automatic differentiation** in calx's IR, which `optimisation`, `bayes` and `learning` would use (calx's open decision 1).

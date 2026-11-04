@@ -16,3 +16,6 @@
 [submodule "cosmopoiesis-lab"]
 	path = applications/cosmopoiesis-lab
 	url = https://github.com/huangwanhong-maker/Cosmopoiesis-Lab.git
+[submodule "nomos"]
+	path = foundations/nomos
+	url = https://github.com/huangwanhong-maker/nomos.git

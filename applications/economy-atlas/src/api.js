@@ -38,3 +38,7 @@ export const describePlugin = (file) => call(`/api/plugins/describe?file=${encod
 export const runPlugin = (file, params, dataset, year) => call('/api/plugins/run', { file, params, ...withDataset(dataset), ...(Number.isInteger(year) ? { year } : {}) });
 export const job = (id) => call(`/api/plugins/job/${encodeURIComponent(id)}`);
 export const cancelJob = (id) => call(`/api/plugins/job/${encodeURIComponent(id)}/cancel`, {});
+
+export const tables = () => call('/api/tables');
+export const table = (id, rows) => call(`/api/tables/${encodeURIComponent(id)}${rows ? `?rows=${rows}` : ''}`);
+export const tool = (body) => call('/api/tool', body);

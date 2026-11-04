@@ -1,6 +1,6 @@
 # 0046. The Economy Atlas: One's Own Data, Plug-ins over Networks of Places, and a Ledger in Gold
 
-- **Status:** Accepted, provisionally (the colours are the user's to confirm)
+- **Status:** Accepted, provisionally (the colours are the user's to confirm); amended by [0056](0056-nomos-and-a-toolbox-of-quantitative-economics.md), whose colours are lighter
 - **Date:** 2026-10-24
 - **Amends:** [ADR 0044](0044-value-in-space-and-time.md)
 - **Decided by:** the user asked to revise the Economy Atlas's interface ("we love weak light gold main colour, rose red as minor colour … please revise"), to let it use new data of one's own, and to give it plug-ins, "custom written scripts (support Python and C++ as plug-in) to analyse data and render in the economics GIS", and to make it more elegant and creative. Claude designed the palette with the dataviz method's validator, the formats of one's own data, the plug-in contract and the new map, and wrote this record. A subagent wrote the API's module and header and the example plug-ins to the contract stated here.
