@@ -192,6 +192,7 @@ struct SimulationConfig {
   double step = 1e-3, control_period = 5e-3, frame_period = 1.0 / 30;
   double density = 1025;               // kg/m³, the water's where it swims
   std::array<double, 2> current{0, 0}; // m/s, in the plane's axes
+  Gains gains{};                       // the controller's gains, by default those of Gains
 };
 
 // The force a strip gives the water, where: a mark of the wake.
@@ -244,7 +245,7 @@ class Simulation {
  public:
   Simulation(const Fish& f, SimulationConfig c)
       : f_(f), c_(c), tree_(pm::Base::floating, f_.links, 0.0), water_(water(c.density, c.current)), forces_{&tree_, &f_, &water_, &targets_},
-        ctl_(f_, joint_inertia()) {
+        ctl_(f_, joint_inertia(), c.gains) {
     forces_.kp = ctl_.kp(), forces_.kd = ctl_.kd();
     if (!(c.step > 0) || !(c.control_period >= c.step)) throw std::invalid_argument("robotics::swimming::Simulation: a positive step within the controller's period");
     q_.fill(0), v_.fill(0);

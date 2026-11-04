@@ -291,6 +291,7 @@ struct SimulationConfig {
   std::function<pm::CompliantContact(double x)> ground_at;  // the world's ground along the line, or a rock's
   GroundPresumption presumption{};
   std::uint64_t sensor_seed = 1;
+  Gains gains{};  // the controller's gains, by default those of Gains
 };
 
 struct Frame {
@@ -379,7 +380,7 @@ class Simulation {
 
  public:
   Simulation(const Dog& d, SimulationConfig c)
-      : d_(d), c_(c), tree_(pm::Base::floating, d_.links, c.gravity), forces_{&tree_, &d_, c.ground, &torque_}, ctl_(d_, c.gravity),
+      : d_(d), c_(c), tree_(pm::Base::floating, d_.links, c.gravity), forces_{&tree_, &d_, c.ground, &torque_}, ctl_(d_, c.gravity, c.gains),
         belief_(c.presumption), noise_(c.sensor_seed, 0xD06u, 0u, 0u) {
     if (!(c.step > 0) || !(c.control_period >= c.step)) throw std::invalid_argument("robotics::quadruped::Simulation: a positive step within the controller's period");
     if (c_.ground_at) table_ = std::make_unique<TabulatedGround>(c_.ground_at), forces_.table = table_.get();

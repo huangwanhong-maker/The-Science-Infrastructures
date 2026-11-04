@@ -254,5 +254,15 @@ int main() {
     s.check("earth: it stands, its feet carrying its weight (relative)", load / (rabbit.mass() * 9.81) - 1, 0.01);
   }
 
+  // ---- gains set through the simulation (for searches over them) ----------------------------------------------
+  {
+    rl::SimulationConfig c;
+    c.gains.placement = 0.067;
+    c.gains.leg_rest = 0.211;
+    rl::Simulation tuned(rabbit, c), plain(rabbit, rl::SimulationConfig{});
+    s.require("gains: the simulation's controller takes the configured gains", tuned.controller().gains().placement == 0.067 && tuned.controller().gains().leg_rest == 0.211);
+    s.require("gains: by default, the controller's own", plain.controller().gains().placement == rl::Gains{}.placement && plain.controller().gains().leg_rest == rl::Gains{}.leg_rest);
+  }
+
   return s.done();
 }

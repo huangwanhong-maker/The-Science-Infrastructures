@@ -74,6 +74,8 @@ struct SimulationConfig {
   // world's model), and the seed of its feet's sensor noise.
   GroundPresumption presumption{};
   std::uint64_t sensor_seed = 1;
+  // The controller's gains: the defaults of controller.hpp unless a search or an experiment sets them.
+  Gains gains{};
 };
 
 // A reading of a foot: where, which parameter (0 friction, 1 load) and its value.
@@ -99,7 +101,7 @@ class Simulation {
 
  public:
   Simulation(const Rabbit& rabbit, SimulationConfig c)
-      : r_(rabbit), c_(c), tree_(pm::Base::floating, r_.links, c.gravity), forces_{&tree_, &r_, c.ground, &torque_}, ctl_(r_, c.gravity),
+      : r_(rabbit), c_(c), tree_(pm::Base::floating, r_.links, c.gravity), forces_{&tree_, &r_, c.ground, &torque_}, ctl_(r_, c.gravity, c.gains),
         belief_(c.presumption), noise_(c.sensor_seed, 0xF007u, 0u, 0u) {
     if (!(c.step > 0) || !(c.control_period >= c.step)) throw std::invalid_argument("robotics::legged::Simulation: a positive step within the controller's period");
     r_.ground_law.validate();
