@@ -1,0 +1,34 @@
+{
+  "id": "melbourne-road-surfaces",
+  "kind": "http",
+  "domain": "urban-science",
+  "title": "City of Melbourne road segments with surface type: every road surface the City manages (carriageways, footways, kerbs, channels, medians, nature strips), with its condition rating at its last evaluation, its installation date and its design life",
+  "provider": "City of Melbourne, Open Data Platform (Opendatasoft Explore API v2.1): dataset road-segments-with-surface-type",
+  "credit": "Road segments with surface type: City of Melbourne, CC BY",
+  "licence": "CC BY (the dataset's metadata, license: CC BY; checked 2026-11-04)",
+  "citation": "City of Melbourne, Road segments with surface type, https://data.melbourne.vic.gov.au/explore/dataset/road-segments-with-surface-type/",
+  "format": "CSV separated by semicolons, with a byte-order mark; one row a surface polygon. Fields selected: assetid; class (Road, ...); type (Road Carriageway, Road Footway, Road Kerb, Road Channel, Road Arterial, ...); area (m2); company and responsibleauthoritycommonname (City of Melbourne, VicRoads, ...); ownership (Owned, Not Owned); conditionrating (a real number from 1, failed, to 5, good; empty where never rated); evaluationdate (the date of that rating); installationdate; designlife (years); surfacematerial (HMA, concrete, bluestone, ...); segtype; roadsegmentdescription (the street and its ends); geo_point_2d (WGS 84, the polygon's point). Only the latest rating is published: no history of ratings or repairs; a renewal probably resets the installation date.",
+  "coverage": "The municipality, 61,424 surfaces on 2026-11-04 (the dataset modified 2026-09-10); the profile takes the Hoddle Grid's box, -37.8205 to -37.8075 S and 144.9535 to 144.9735 E, by the API's in_bbox on geo_point_2d (about 9,900 surfaces, 9,600 of them rated).",
+  "used_by": [
+    "data/products/road_condition.py"
+  ],
+  "requests": [
+    {
+      "url": "https://data.melbourne.vic.gov.au/api/explore/v2.1/catalog/datasets/road-segments-with-surface-type/exports/csv?select=assetid,class,type,area,company,responsibleauthoritycommonname,ownership,conditionrating,evaluationdate,installationdate,designlife,surfacematerial,segtype,roadsegmentdescription,geo_point_2d&where=in_bbox(geo_point_2d,{south},{west},{north},{east})",
+      "file": "surfaces.csv"
+    }
+  ],
+  "parameters": {
+    "south": {"type": "float", "default": -37.8205, "min": -38.0, "max": -37.6, "description": "southern edge of the box (degrees, WGS 84)"},
+    "west": {"type": "float", "default": 144.9535, "min": 144.8, "max": 145.1, "description": "western edge of the box (degrees, WGS 84)"},
+    "north": {"type": "float", "default": -37.8075, "min": -38.0, "max": -37.6, "description": "northern edge of the box (degrees, WGS 84)"},
+    "east": {"type": "float", "default": 144.9735, "min": 144.8, "max": 145.1, "description": "eastern edge of the box (degrees, WGS 84)"}
+  },
+  "profiles": {
+    "hoddle-grid": {
+      "description": "The Hoddle Grid's road surfaces (about 2 MB; fetch again with --refresh after the City's update, so that ratings accumulate as a panel)",
+      "parameters": {}
+    }
+  },
+  "default_profile": "hoddle-grid"
+}

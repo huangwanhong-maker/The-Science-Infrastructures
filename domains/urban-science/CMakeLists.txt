@@ -16,6 +16,9 @@
 #                   block as rewrites; the landscape running as a hybrid process on its strata, with its record,
 #                   causal order and registry of events; its event skeleton composed from five parts and solved
 #                   exactly; resources and what they conserve (ADR 0062);
+#   maintenance     the deterioration of surfaces through classes of condition, fitted to their ratings at their
+#                   ages; each surface a POMDP, the city their sum under a budget, planned by the Lagrangian bound
+#                   (ADR 0071);
 #   events          the record of a city's events; its event complex and refinement on morphe's worldline
 #                   complexes, their cut at a date and their homology; a district's volumes and interfaces, its
 #                   buildings (architecture) and its street and junction spaces joined as one network (ADR 0067).
@@ -89,3 +92,7 @@ urban_module(flow LIBRARIES urban::rhythm tyche::probability physis::continuum p
 urban_module(classification LIBRARIES tyche::spatial)
 urban_module(landscape LIBRARIES morphe::topology morphe::combinatorics morphe::formal physis::statistical_mechanics physis::dynamics physis::discretisation physis::computational_geometry physis::chemistry calx::linalg calx::random)
 urban_module(events LIBRARIES urban::landscape architecture::space morphe::topology physis::computational_geometry physis::statistical_mechanics calx::random)
+urban_module(maintenance LIBRARIES tyche::decision tyche::processes calx::random)
+if(URBAN_SCIENCE_CHECKS)
+  target_compile_definitions(check_urban_maintenance PRIVATE URBAN_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/maintenance/tests/fixtures")
+endif()

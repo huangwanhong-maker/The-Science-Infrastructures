@@ -28,3 +28,4 @@ This is the cheapest place to write a thought down. An idea here may be wrong, a
 | 2026-10-24 | [Value in space and time: the economics domain and the Economy Atlas](2026-10-24-value-in-space-and-time.md) | seed |
 | 2026-11-04 | [Event-based 3D GIS on a 2-complex: the user's discussion](2026-11-04-event-based-gis-on-a-2-complex-discussion.md) | seed |
 | 2026-11-04 | [Event-based 3D GIS on a 2-complex: a spin-foam approach, the formalism and its engineering](2026-11-04-event-based-gis-on-a-2-complex.md) | seed; decided ([ADR 0067](../decisions/0067-event-spacetime.md)), built in part |
+| 2026-11-04 | [Agents and decisions for urban planning: agent-based models, decisions under partial observation, and four models of a city](2026-11-04-agents-and-decisions-for-urban-planning.md) | seed; decided ([ADR 0071](../decisions/0071-agents-and-decisions-for-urban-planning.md)), built in part |

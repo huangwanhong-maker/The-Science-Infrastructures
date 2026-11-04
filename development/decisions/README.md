@@ -83,6 +83,7 @@ Decisions that concern only one library are recorded in that library's own `deve
 | [0068](0068-the-economy-atlas-as-a-scholarly-instrument.md) | The Economy Atlas as a scholarly instrument: porcelain and gold, and figures for publication | Accepted, provisionally; amends 0046 and 0056; amended by 0069 |
 | [0069](0069-names-of-places-and-a-2d-gis.md) | The names of places, areas in dispute, and a 2D GIS: a naming policy for every product and map, and maps of the sphere in the visualization layer | Accepted, provisionally; amends 0014, 0044, 0046 and 0068 |
 | [0070](0070-structures-reconstructed-from-images.md) | Structures reconstructed from images: eikon (a foundation for images), the medical-imaging domain, vascular trees, physiology founded, and the Body Atlas renamed Fabrica; vessels first | Accepted, provisionally; amends 0035, 0061 and 0066 |
+| [0071](0071-agents-and-decisions-for-urban-planning.md) | Agents and decisions for urban planning: POMDPs in tyche, agent-based models in nomos, the maintenance of surfaces | Accepted, provisionally |
 
 ## 2. Template
 
