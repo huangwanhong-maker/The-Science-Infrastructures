@@ -102,7 +102,7 @@ An integrative infrastructure for learning, using and researching all domains of
 </p>
 <p align="center">
 <a href="docs/gallery.md"><img src="assets/gallery/body-02-kidneys.jpg" width="32%" alt="The kidneys between the aorta and the inferior vena cava, the left kidney chosen with its card, in the Body Atlas"></a>
-<a href="docs/gallery.md"><img src="assets/gallery/body-05-midsagittal.jpg" width="32%" alt="The midsagittal section of the whole body as a plate, its parts named, in the Body Atlas"></a>
+<a href="docs/gallery.md"><img src="assets/gallery/body-05-section-l1.jpg" width="32%" alt="A transverse section at the first lumbar vertebra as a plate, its parts named, in the Body Atlas"></a>
 <a href="docs/gallery.md"><img src="assets/gallery/body-06-saphenous-calibre.jpg" width="32%" alt="The great saphenous vein chosen, with its calibre along its length, in the Body Atlas"></a>
 </p>
 <p align="center"><i>The Body Atlas: the whole body of an adult man, every part named by the Foundational Model of Anatomy and measured by the anatomy domain, by system, cut in the planes of imaging and drawn as anatomical plates; a card for each part with what is known of it, where it lies, what it touches, and for a vessel its calibre along its course.</i></p>
