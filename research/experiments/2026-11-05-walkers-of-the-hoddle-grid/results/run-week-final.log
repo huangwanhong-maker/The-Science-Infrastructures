@@ -1,0 +1,45 @@
+the flow study's calibration again: gross R2 0.7214 (leave-one-counter-out 0.5293), net R2 0.5494; 16 counters, 24 entrances  [2 s]
+  amplitudes against the flow study's results/calibration.json: largest relative difference 4.28e-04 (it rounds to 4 significant figures)
+the walkers' network: 369 junctions, 412 segments (824 directed), spectral radius 0.8206; 47 signalled junctions; the festival block: 15 segments, 251 m
+666 streams in the week, 286 targets, their walk sums solved  [2 s]
+the street's regimes solved; the Sunday's 778 streams, its own walkers apart  [3 s]
+the module's expected flow against the flow study's mode_flows: largest difference 9.329e-14 of the largest flow (4977 walker-segments an hour); 53580571 walker-segments a week  [12 s]
+  Monday 13:00, arrive (work)  largest difference 0.000e+00 of its largest flow 0.0; totals 0.000 and 0.000
+  Monday 13:00, arrive (home)  largest difference 0.000e+00 of its largest flow 0.0; totals 0.000 and 0.000
+  Monday 13:00, leave (work)   largest difference 0.000e+00 of its largest flow 0.0; totals 0.000 and 0.000
+  Monday 13:00, leave (home)   largest difference 0.000e+00 of its largest flow 0.0; totals 0.000 and 0.000
+  Monday 13:00, through        largest difference 7.358e-14 of its largest flow 1903.5; totals 288054.931 and 288054.931
+  Monday 13:00, local          largest difference 9.737e-14 of its largest flow 3712.9; totals 356974.022 and 356974.022
+  Monday 13:00, visit          largest difference 9.005e-14 of its largest flow 492.4; totals 78675.553 and 78675.553
+  hour   6: 117 walking, 6354 trips so far  [0 s]
+  hour  12: 3949 walking, 75955 trips so far  [4 s]
+  hour  18: 5225 walking, 291434 trips so far  [18 s]
+  hour  24: 493 walking, 383334 trips so far  [24 s]
+  hour  30: 113 walking, 388661 trips so far  [24 s]
+  hour  36: 4124 walking, 464411 trips so far  [29 s]
+  hour  42: 6040 walking, 695286 trips so far  [46 s]
+  hour  48: 656 walking, 801589 trips so far  [52 s]
+  hour  54: 145 walking, 808565 trips so far  [52 s]
+  hour  60: 4162 walking, 884744 trips so far  [56 s]
+  hour  66: 6175 walking, 1118022 trips so far  [71 s]
+  hour  72: 854 walking, 1231634 trips so far  [78 s]
+  hour  78: 136 walking, 1238626 trips so far  [78 s]
+  hour  84: 4359 walking, 1317581 trips so far  [83 s]
+  hour  90: 6651 walking, 1562807 trips so far  [99 s]
+  hour  96: 1061 walking, 1695854 trips so far  [107 s]
+  hour 102: 123 walking, 1705981 trips so far  [107 s]
+  hour 108: 4381 walking, 1778952 trips so far  [113 s]
+  hour 114: 6515 walking, 2019751 trips so far  [130 s]
+  hour 120: 2342 walking, 2197870 trips so far  [140 s]
+  hour 126: 135 walking, 2225316 trips so far  [141 s]
+  hour 132: 4818 walking, 2289994 trips so far  [145 s]
+  hour 138: 6597 walking, 2561177 trips so far  [163 s]
+  hour 144: 2538 walking, 2738162 trips so far  [175 s]
+  hour 150: 216 walking, 2771864 trips so far  [176 s]
+  hour 156: 4169 walking, 2827950 trips so far  [180 s]
+  hour 162: 5070 walking, 3056012 trips so far  [196 s]
+  hour 168: 762 walking, 3159358 trips so far  [203 s]
+the walkers: 3160120 trips in 203 s on 2 threads (at most 7295 walking at once); 53610965 entries against the flow's 53580571; over 118722 state-hours (μ ≥ 5) the standardised deviations have mean 0.005 and variance 1.027, 0.29% beyond 3; χ²/dof 1.027
+the counters, 16 x 168 hours: R2 of the walkers against the counts 0.7202 (the flow's 0.7214); of the walkers against the flow 0.9983
+week done  [215 s]
+all done  [215 s]

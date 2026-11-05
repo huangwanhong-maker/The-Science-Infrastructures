@@ -1,0 +1,30 @@
+{
+  "id": "melbourne-clue-floor-space",
+  "kind": "http",
+  "domain": "urban-science",
+  "title": "City of Melbourne Census of Land Use and Employment (CLUE): floor space per space use for blocks, every census year since 2002, with five columns of unoccupied space",
+  "provider": "City of Melbourne, Open Data Platform (Opendatasoft Explore API v2.1): dataset floor-space-by-use-by-block",
+  "credit": "CLUE: City of Melbourne, CC BY 4.0",
+  "licence": "CC BY 4.0 (stated in the dataset's metadata, license CC BY, https://creativecommons.org/licenses/by/4.0/legalcode; checked 2026-11-05)",
+  "citation": "City of Melbourne, Census of Land Use and Employment (CLUE), Floor space per space use for blocks, https://data.melbourne.vic.gov.au/explore/dataset/floor-space-by-use-by-block/ ; definitions: https://www.melbourne.vic.gov.au/clue",
+  "format": "CSV separated by semicolons, with a byte-order mark; one row a CLUE block and a census year. Fields: census_year; block_id; clue_small_area; then the floor space (m2) of each of CLUE's 38 space uses, among them office, retail_shop, residential_apartment, commercial_accommodation, and the five unoccupied uses unoccupied_unused, unoccupied_under_renovation, unoccupied_under_construction, unoccupied_under_demolition_condemned and unoccupied_undeveloped_site; and total_floor_space_in_block. The dataset is confidentialised: a cell that pertains to two or fewer businesses is suppressed and blank, while the row's total is the true total including the suppressed cells; so a column's sum over blocks is a lower bound, and the floor space not shown in a row is the total less the sum of its cells.",
+  "coverage": "The municipality, census years 2002 to 2024: 13,519 rows (543 blocks a year to 2006, 603 from 2008; checked 2026-11-05; the dataset's metadata last modified 2021-11-02, its rows extended since).",
+  "used_by": [
+    "data/products/occupancy_record.py",
+    "research/experiments/2026-11-05-owners-and-occupiers"
+  ],
+  "requests": [
+    {
+      "url": "https://data.melbourne.vic.gov.au/api/explore/v2.1/catalog/datasets/floor-space-by-use-by-block/exports/csv",
+      "file": "floor-space.csv"
+    }
+  ],
+  "parameters": {},
+  "profiles": {
+    "all": {
+      "description": "Every block of every census year (about 1.5 MB; fetch again with --refresh after the City adds a year)",
+      "parameters": {}
+    }
+  },
+  "default_profile": "all"
+}

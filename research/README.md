@@ -11,5 +11,5 @@ This directory keeps the research process explicit: what we are asking, what we 
 | Directory | Content |
 |---|---|
 | `questions/` | Open research questions, each with its motivation, status and related ideas |
-| [`experiments/`](experiments/) | One record per experiment, giving the question, code version, parameters, data and results; the first eighteen are case studies of the search foundation heuresis (draft) |
+| [`experiments/`](experiments/) | One record per experiment, giving the question, code version, parameters, data and results; the first eighteen are case studies of the search foundation heuresis, the next three the urban-science domain's agent-based models (draft) |
 | `papers/` | Manuscripts, in LaTeX |

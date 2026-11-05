@@ -1,0 +1,30 @@
+{
+  "id": "melbourne-clue-blocks",
+  "kind": "http",
+  "domain": "urban-science",
+  "title": "City of Melbourne Census of Land Use and Employment (CLUE): the boundaries of its city blocks",
+  "provider": "City of Melbourne, Open Data Platform (Opendatasoft Explore API v2.1): dataset blocks-for-census-of-land-use-and-employment-clue",
+  "credit": "CLUE blocks: City of Melbourne, CC BY 4.0",
+  "licence": "CC BY 4.0 (the dataset's metadata: license CC BY, https://creativecommons.org/licenses/by/4.0/legalcode; checked 2026-11-05)",
+  "citation": "City of Melbourne, Blocks for Census of Land Use and Employment (CLUE), https://data.melbourne.vic.gov.au/explore/dataset/blocks-for-census-of-land-use-and-employment-clue/",
+  "format": "GeoJSON (WGS 84): one feature a block, with block_id (the key of every CLUE table), region_name and area_name (its CLUE small area), its polygon (geo_shape) and its point (geo_point_2d).",
+  "coverage": "The municipality of the City of Melbourne: 603 blocks (checked 2026-11-05).",
+  "used_by": [
+    "data/products/occupancy_record.py",
+    "data/products/housing_records.py"
+  ],
+  "requests": [
+    {
+      "url": "https://data.melbourne.vic.gov.au/api/explore/v2.1/catalog/datasets/blocks-for-census-of-land-use-and-employment-clue/exports/geojson",
+      "file": "blocks.geojson"
+    }
+  ],
+  "parameters": {},
+  "profiles": {
+    "all": {
+      "description": "Every block of the municipality (about 0.4 MB)",
+      "parameters": {}
+    }
+  },
+  "default_profile": "all"
+}

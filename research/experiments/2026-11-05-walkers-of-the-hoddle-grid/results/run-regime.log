@@ -1,0 +1,30 @@
+the flow study's calibration again: gross R2 0.7214 (leave-one-counter-out 0.5293), net R2 0.5494; 16 counters, 24 entrances  [4 s]
+  amplitudes against the flow study's results/calibration.json: largest relative difference 4.28e-04 (it rounds to 4 significant figures)
+the walkers' network: 369 junctions, 412 segments (824 directed), spectral radius 0.8206; 47 signalled junctions; the festival block: 15 segments, 251 m
+666 streams in the week, 286 targets, their walk sums solved  [4 s]
+the street's regimes solved; the Sunday's 778 streams, its own walkers apart  [5 s]
+the festival's counters with 2017's counts whole: 5 of 16
+  Bourke Street Mall (South)         a visitor from the entrances passes it 0.121 times out, 0.121 back; from the buildings 0.169, 0.169
+  Chinatown-Swanston St (North)      a visitor from the entrances passes it 0.299 times out, 0.262 back; from the buildings 0.306, 0.260
+  Chinatown-Lt Bourke St (South)     a visitor from the entrances passes it 0.050 times out, 0.051 back; from the buildings 0.037, 0.042
+  155-161 Russell Street             a visitor from the entrances passes it 0.114 times out, 0.118 back; from the buildings 0.134, 0.138
+  Collins Street (North)             a visitor from the entrances passes it 0.051 times out, 0.046 back; from the buildings 0.035, 0.031
+  dwell 0.25 h: R2 of the excess 0.2953, 16341 visitors
+  dwell 0.50 h: R2 of the excess 0.2947, 16327 visitors
+  dwell 0.75 h: R2 of the excess 0.2940, 16340 visitors
+  dwell 1.00 h: R2 of the excess 0.2931, 16369 visitors
+  dwell 1.50 h: R2 of the excess 0.2912, 16440 visitors
+  dwell 2.00 h: R2 of the excess 0.2894, 16518 visitors
+  dwell 3.00 h: R2 of the excess 0.2859, 16753 visitors
+the festival: dwell 0.25 h, 16341 visitors, arrivals by hour fitted  [8 s]
+regimes: sensed 2 counters, bins of a half hour's reading 788 and 973
+regimes: 17 of 24 cases already in regime-cases.jsonl
+  scale 1.6, day 0, closed   value -50539.4 (50494.7 person-hours, 4.47 at level F) in 36 s; regimes 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+  scale 1.0, day 1, POMCP    value -46128.5 (46090.3 person-hours, 3.83 at level F) in 1353 s; regimes 2 1 1 1 0 0 0 2 0 0 1 1 0 0 1 2
+  scale 1.6, day 1, open     value -50764.2 (50718.7 person-hours, 4.55 at level F) in 53 s; regimes 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+  scale 1.6, day 1, one-way  value -51923.7 (51751.1 person-hours, 17.26 at level F) in 35 s; regimes 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+  scale 1.6, day 1, closed   value -50676.8 (50629.1 person-hours, 4.77 at level F) in 57 s; regimes 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+  scale 1.6, day 0, POMCP    value -51400.4 (51251.5 person-hours, 14.89 at level F) in 1550 s; regimes 1 0 2 2 0 1 1 1 1 1 1 0 0 1 2 0 (8 restarts)
+  scale 1.6, day 1, POMCP    value -51226.0 (51141.9 person-hours, 8.41 at level F) in 375 s; regimes 2 0 1 0 1 1 1 1 2 0 0 0 1 2 2 0 (1 restarts)
+regime done  [1908 s]
+all done  [1908 s]

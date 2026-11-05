@@ -1,0 +1,34 @@
+{
+  "id": "abs-asgs-2021-sa1",
+  "kind": "http",
+  "domain": "urban-science",
+  "title": "ABS Australian Statistical Geography Standard (ASGS) Edition 3, 2021: Statistical Areas Level 1 in a box, generalised boundaries",
+  "provider": "Australian Bureau of Statistics, its ArcGIS REST service ASGS2021/SA1 (layer 1, SA1_GEN: the generalised boundaries), queried by a box",
+  "credit": "ASGS Edition 3: Australian Bureau of Statistics, CC BY 4.0",
+  "licence": "CC BY 4.0 (the service's copyright text: 'Unless otherwise noted, content is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0)'; checked 2026-11-05)",
+  "citation": "Australian Bureau of Statistics (2021), Australian Statistical Geography Standard (ASGS) Edition 3, https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3 ; the service https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/SA1/MapServer",
+  "format": "GeoJSON (WGS 84, outSR 4326): one feature an SA1, with sa1_code_2021 (the key of the Census's tables), sa2_code_2021 and sa2_name_2021, sa3_name_2021 and area_albers_sqkm; its polygon, generalised by the ABS for display.",
+  "coverage": "The SA1s whose boundaries meet the box, by default about the City of Melbourne, -37.86 to -37.77 S and 144.88 to 145.00 E (956 SA1s on 2026-11-05; the service returns at most 2,000 a request).",
+  "used_by": [
+    "data/products/housing_records.py"
+  ],
+  "requests": [
+    {
+      "url": "https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/SA1/MapServer/1/query?where=1%3D1&geometry={west},{south},{east},{north}&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=sa1_code_2021,sa2_code_2021,sa2_name_2021,sa3_name_2021,area_albers_sqkm&returnGeometry=true&outSR=4326&f=geojson",
+      "file": "sa1.geojson"
+    }
+  ],
+  "parameters": {
+    "south": {"type": "float", "default": -37.86, "min": -44.0, "max": -9.0, "description": "southern edge of the box (degrees, WGS 84)"},
+    "west": {"type": "float", "default": 144.88, "min": 112.0, "max": 154.0, "description": "western edge of the box (degrees, WGS 84)"},
+    "north": {"type": "float", "default": -37.77, "min": -44.0, "max": -9.0, "description": "northern edge of the box (degrees, WGS 84)"},
+    "east": {"type": "float", "default": 145.0, "min": 112.0, "max": 154.0, "description": "eastern edge of the box (degrees, WGS 84)"}
+  },
+  "profiles": {
+    "city-of-melbourne": {
+      "description": "The SA1s about the City of Melbourne (about 2 MB)",
+      "parameters": {}
+    }
+  },
+  "default_profile": "city-of-melbourne"
+}

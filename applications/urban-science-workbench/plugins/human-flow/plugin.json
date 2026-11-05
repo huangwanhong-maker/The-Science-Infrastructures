@@ -1,22 +1,44 @@
 {
   "title": "Human flow",
-  "summary": "Where people go, and with what: trajectories, origins and destinations, and the composition a count discards.",
-  "status": "planned",
-  "order": 2,
-  "views": [],
-  "planned": [
+  "summary": "The district's walkers as agents: every walker of the urban-science domain's movement model on the Hoddle Grid's streets, its departures set by the City's counters each way, moving with the clock; the counters' readings beside what they count; a street closed or made one-way and an event's crowd brought to a street, with how the walkers redistribute; the street's regime decided online by POMCP on the walkers themselves; every record they make marked simulated.",
+  "status": "draft",
+  "activity": "research",
+  "order": 4,
+  "layers": [
     {
-      "title": "Trajectories and origin–destination",
-      "about": "Flows between the places of a district from trajectory records and counts at many cordons, fitted as gravity models (nomos's Poisson regression with two sets of fixed effects) and drawn as circulation on the district's complex (physis's Hodge decomposition): the attraction a place exerts, apart from the circulation round its blocks."
+      "id": "walkers",
+      "group": "Walkers as agents",
+      "title": "walkers on the streets (a model)",
+      "module": "layers/walkers.js",
+      "areas": ["melbourne"],
+      "default": false,
+      "about": "Every walker of the model at the clock's hour, moving between its places every ten seconds, keeping left; coloured by its pattern (passing through, arriving at work, leaving, between buildings, visiting shops, an event's crowd) or by what it is doing (walking, waiting at red, queued at a full street, standing at the event); the streets beneath by their density, or by how many more or fewer walk them in a scenario; the queues at full streets' mouths; a simulated record's events in pale violet glass."
     },
     {
+      "id": "counters",
+      "group": "Walkers as agents",
+      "title": "counters: counted and simulated",
+      "module": "layers/counters.js",
+      "areas": ["melbourne"],
+      "default": false,
+      "about": "At each of the City's counters in the district that counts each way, two columns at the clock's hour: what it counts on average at that hour of the week (2025–26) and what the walkers passing its line make it read."
+    }
+  ],
+  "tools": [
+    { "id": "walkers", "title": "Walkers of the district", "module": "tools/walkers.js", "areas": ["melbourne"], "about": "Who is on the district's streets at the clock's hour and through the day; each counter's reading beside its count and the calibration's expectation; how the walkers' departures were set from the counters." },
+    { "id": "regime", "title": "A street closed or one-way", "module": "tools/regime.js", "areas": ["melbourne"], "about": "A street, or a block of it picked on the map, closed to walkers passing through or made one-way for a few hours: the walkers run again beside the same hours as built, and how they redistribute is drawn on the map; or all three regimes side by side." },
+    { "id": "event", "title": "An event's crowd", "module": "tools/event.js", "areas": ["melbourne"], "about": "The City's event permits on the district's streets, with what the counters counted that day; a crowd brought to a street and the walkers around it; the record they make, every event simulated; the street's regime decided online by POMCP on the walkers, the crowd's size unknown." }
+  ],
+  "engine": "engine/main.cpp",
+  "source": "The urban-science domain's movement module (walkers as agents on nomos's agents engine, regimes as decisions on tyche's POMCP; ADR 0075), calibrated as the district-economy flow study calibrates its flow (research/experiments/2026-11-05-a-district-economy-as-a-flow)",
+  "planned": [
+    {
       "title": "Composition at entry and departure",
-      "about": "The instrument Street Oceanography §20 asks for and nobody has built: carried properties registered at entry and departure on the same units, with a comparison population. Its holding is stated with its design (§33, Requirement 33.3)."
+      "about": "The instrument Street Oceanography §20 asks for and nobody has built: carried properties registered at entry and departure on the same units, with a comparison population."
     },
     {
       "title": "Crowds beyond the kinematic wave",
-      "about": "Two-dimensional crowd models (Hughes's continuum, social-force agents) on the walkable surface, offered as representations under Withholding 2.1."
+      "about": "Two-dimensional crowd models (Hughes's continuum, social-force agents) on the walkable surface, offered as representations."
     }
-  ],
-  "begins": "Begins from the Street Oceanography plug-in's counts, flows and circulation (its Flow view), which it will extend."
+  ]
 }

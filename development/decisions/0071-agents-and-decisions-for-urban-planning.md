@@ -1,6 +1,6 @@
 # 0071. Agents and Decisions for Urban Planning
 
-- **Status:** Accepted, provisionally. Built: tyche's `decision` and `processes`, nomos's `agents`, calx's categorical draws and urban-science's `maintenance`. Housing, movement and occupancy are planned.
+- **Status:** Accepted, provisionally. Built: tyche's `decision` and `processes`, nomos's `agents`, calx's categorical draws and urban-science's `maintenance`. Housing, movement and occupancy are planned. Amended by [ADR 0075](0075-agents-in-the-city.md), which builds housing, movement and occupancy.
 - **Date:** 2026-11-04
 - **Decided by:**
   - **The request.** The user asked to "further implement urban science lib ... two important module for modern urban planning. One is ABM, another one is POMDP (many variant). Both of two can be reuse. So I think it would be seperate from the applications."

@@ -8,6 +8,10 @@
 // hours and mixing (M = between + within); the tides (high water on a weekday, a day's prediction near its
 // counts), the current meters (each way summing to the total, the handedness test), a street's crowd second
 // by second (conserved, a red crossing passing nobody) and a visitor's plume (its masses summing to one).
+// When the engine of Human flow is built and the records are, on Melbourne's district as the page sends it: the walkway
+// and its counters, the departures calibrated each way, the walkers' counters reading what the calibrated flow expects,
+// a quarter's frames inside the district, a street closed to walkers passing through, an event's crowd and its record
+// (every event simulated), the permits, and one decision of POMCP on the walkers.
 // When the engine of Landscape Dynamics is built, on a grid district with a hole: its cells, the lane's rewrites
 // (refinements, then the split) undone and planned again, a day's run (walkers kept, each way's hops), the event
 // skeleton, the scales (harmonic flows as many as holes, memory keeping every walker) and a building's events.
@@ -45,6 +49,26 @@ for (const p of plugins) {
 {
   const recipe = JSON.parse(readFileSync(join(APP, 'recipe.json'), 'utf8'));
   assert('the recipe: every step a script that exists', recipe.steps.every((s) => existsSync(join(ROOT, s.run[0]))), recipe.steps.map((s) => s.run[0]).join(', '));
+}
+
+// ---- Human flow's colours: the walkers' patterns, every two apart in every vision -------------------------
+{
+  const src = readFileSync(join(APP, 'plugins/human-flow/shared.js'), 'utf8');
+  const list = (name) => JSON.parse(src.match(new RegExp(`export const ${name} = (\\[[^\\]]*\\])`))[1].replace(/'/g, '"'));
+  const S = await import(new URL(`file:///${join(ROOT, 'visualization/styles/index.js').replace(/\\/g, '/')}`));
+  const least = (hexes) => {
+    const rgb = hexes.map(S.hexRgb), out = {};
+    for (const kind of ['normal', ...S.DEFICIENCIES]) {
+      const seen = rgb.map((c) => (kind === 'normal' ? c : S.simulate(c, kind).map((v) => Math.min(1, Math.max(0, v)))));
+      let m = Infinity;
+      for (let i = 0; i < seen.length; i++) for (let j = i + 1; j < seen.length; j++) m = Math.min(m, S.deltaE(seen[i], seen[j]));
+      out[kind] = m;
+    }
+    return out;
+  };
+  const modes = least(list('MODE_COLOURS')), status = least(list('STATUS_COLOURS').slice(1, 5));
+  assert(`human flow: the walkers' six patterns apart in every vision (least OKLab ΔE ${Math.min(...Object.values(modes)).toFixed(3)}), and what they do (${Math.min(...Object.values(status)).toFixed(3)})`,
+    Object.values(modes).every((d) => d >= 0.09) && Object.values(status).every((d) => d >= 0.06), JSON.stringify(modes));
 }
 
 // ---- the page's modules -----------------------------------------------------------------------------
@@ -219,6 +243,96 @@ for (const p of plugins) {
     assert('event spacetime: the network of the moment in 2006 holds five volumes and five interfaces, in 2017 six and six',
       before.couplings.length === 5 && before.primitives.length === 5 && after.couplings.length === 6 && after.primitives.length === 6,
       `${before.couplings.length}/${before.primitives.length} → ${after.couplings.length}/${after.primitives.length}`);
+  }
+}
+
+// ---- the engine of Human flow, when it is built --------------------------------------------------------
+{
+  const status = spawnSync('python', [join(APP, 'engine.py'), 'status'], { cwd: ROOT, encoding: 'utf8' });
+  let state = null;
+  try { state = JSON.parse(status.stdout).find((s) => s.plugin === 'human-flow'); } catch { /* not built */ }
+  const products = ['city-model-melbourne.json', 'street-sensors.json', 'street-holidays-victoria.json', 'street-terrain-melbourne.json', 'city-events-melbourne.json'];
+  if (!state || !state.current) {
+    skip('the engine of Human flow is not built from the present sources (python applications/urban-science-workbench/engine.py build human-flow)');
+  } else if (!products.every((p) => existsSync(join(ROOT, 'data/cache/products', p)))) {
+    skip('Human flow: the data library\'s city model and street records are not built (the recipe)');
+  } else {
+    // The district the page sends (src/district.js on the city model, the sensors placed in the area's frame with their
+    // nearest way), for Melbourne.
+    const { districtOf, boxOf, networkOf, footprintsIn } = await import(new URL(`file:///${join(APP, 'src/district.js').replace(/\\/g, '/')}`));
+    const { localFrameAt } = await import(new URL(`file:///${join(ROOT, 'visualization/js/gis/frame.js').replace(/\\/g, '/')}`));
+    const area = JSON.parse(readFileSync(join(APP, 'areas.json'), 'utf8')).areas.find((a) => a.id === 'melbourne');
+    const model = JSON.parse(readFileSync(join(ROOT, 'data/cache/products/city-model-melbourne.json'), 'utf8'));
+    const frame = localFrameAt(model.origin.lat, model.origin.lon);
+    const B = boxOf(frame, districtOf(area));
+    const net = networkOf(model, B);
+    const WALK = new Set(['primary', 'secondary', 'tertiary', 'residential', 'unclassified', 'living_street', 'pedestrian', 'service', 'primary_link', 'secondary_link', 'tertiary_link']);
+    const roads = model.roads.filter((r) => WALK.has(r.kind) && r.line && r.line.length >= 2);
+    const sensors = [];
+    for (const s of JSON.parse(readFileSync(join(ROOT, 'data/cache/products/street-sensors.json'), 'utf8')).sensors) {
+      if (!Number.isFinite(s.lat) || !s.lat) continue;
+      const p = frame.toLocal(s.lat, s.lon), at = [+p[0].toFixed(2), +p[1].toFixed(2)];
+      if (!(at[0] > B.x0 - 500 && at[0] < B.x1 + 500 && at[1] > B.y0 - 500 && at[1] < B.y1 + 500)) continue;
+      let best = [Infinity, null, ''];
+      for (const r of roads) for (let i = 0; i + 1 < r.line.length; i++) {
+        const a = r.line[i], b = r.line[i + 1], ex = b[0] - a[0], ey = b[1] - a[1], L2 = ex * ex + ey * ey;
+        const t = L2 ? Math.max(0, Math.min(1, ((at[0] - a[0]) * ex + (at[1] - a[1]) * ey) / L2)) : 0;
+        const d = Math.hypot(at[0] - a[0] - t * ex, at[1] - a[1] - t * ey);
+        if (d < best[0]) best = [d, r.kind, r.name || ''];
+      }
+      sensors.push({ id: s.id, at, way: { name: best[2], kind: best[1] === 'service' ? 'laneway' : best[1] === 'pedestrian' || best[1] === 'living_street' ? 'mall' : 'street' } });
+    }
+    const district = { box: { x0: B.x0, y0: B.y0, x1: B.x1, y1: B.y1 }, ...net, buildings: footprintsIn(model, B).map((b) => ({ key: b.key, ring: b.ring, base: b.base, top: b.top })), sensors };
+    // One engine process for every request (its runs are jobs it keeps), polled until each is done.
+    const dir = mkdtempSync(join(tmpdir(), 'urban-hf-'));
+    writeFileSync(join(dir, 'district.json'), JSON.stringify(district));
+    const driver = [
+      'import json, sys, time', `sys.path.insert(0, ${JSON.stringify(APP)})`, 'import engine',
+      'D = json.load(open(sys.argv[1], encoding="utf-8"))', 'w = engine.Worker("human-flow")', 'out = {}',
+      'def ask(op, **kw):', '    a = w.ask({"op": op, **D, **kw})', '    if not a.get("ok"): raise SystemExit(op + ": " + str(a.get("error")))', '    return a["result"]',
+      'def wait(op, **kw):', '    while True:', '        r = ask(op, **kw)', '        if not r.get("pending"): return r', '        time.sleep(1)',
+      'base = {"weekday": 2, "from": 12, "to": 14}',
+      'opened = {**base, "regime": {"street": "Little Collins Street", "kind": "open", "from": 13, "to": 14}}',
+      'closed = {**base, "regime": {"street": "Little Collins Street", "kind": "closed", "from": 13, "to": 14}}',
+      'event = {**base, "event": {"street": "Bourke Street Mall", "crowd": 3000, "from": 13, "to": 14, "dwell": 30}}',
+      'out["prepare"] = ask("prepare")', 'out["base"] = wait("result", **base)', 'out["frame"] = ask("frame", hour=13.5, **base)',
+      'out["closed"] = wait("result", **closed)', 'out["opened"] = wait("result", **opened)', 'out["compare"] = ask("compare", a=opened, b=closed, over=13, until=14)',
+      'out["event"] = wait("result", **event)', 'out["record"] = wait("record", mjd0=61000.5, **event)', 'out["permits"] = ask("permits")',
+      'out["advice"] = wait("advice", epochs=1, epochMinutes=5, simulations=4, truth=1.5, **event)',
+      'w.stop()', 'print(json.dumps(out))',
+    ].join('\n');
+    const r = spawnSync('python', ['-c', driver, join(dir, 'district.json')], { cwd: ROOT, encoding: 'utf8', maxBuffer: 1 << 29, env: { ...process.env, PYTHONIOENCODING: 'utf-8' } });
+    let O = null;
+    try { O = JSON.parse(r.stdout); } catch { assert('human flow: the engine answers', false, (r.stderr || r.stdout || '').slice(-400)); }
+    if (O) {
+      const P = O.prepare;
+      assert(`human flow: the district's walkway (${P.junctions.length} junctions, ${P.segments.length} segments), its walk sums converging (radius ${P.radius})`,
+        P.segments.length >= 300 && P.radius < 1 && P.signals.length >= 10, `${P.signals.length} signalled junctions`);
+      assert(`human flow: ${P.counters.length} counters each way and ${P.entrances.length} entrances; the departures calibrated to them each way (R² ${P.calibration.r2Way}), visits a tenth of the trips`,
+        P.counters.length >= 10 && P.entrances.length >= 15 && P.calibration.r2Way > 0.6 && Math.abs(P.calibration.visitShare - 0.09) < 0.02);
+      const S = O.base;
+      let sim = 0, exp = 0;
+      for (const c of S.counters) for (let w = 0; w < 2; w++) for (let hh = 1; hh < c.simulated[w].length; hh++) sim += c.simulated[w][hh], exp += c.expected[w][hh];
+      assert(`human flow: the walkers' counters read what the calibrated flow expects (Σ ${Math.round(sim)} against ${Math.round(exp)}, after the warm-up hour), and every walker arrives`,
+        Math.abs(sim / exp - 1) < 0.1 && S.totals.failed === 0 && S.totals.arrived > 0.9 * S.totals.departed, `${S.totals.arrived} of ${S.totals.departed}`);
+      const F = O.frame, inBox = F.frames.every((fr) => { for (let i = 0; i < fr.length; i += 7) { const x = fr[i + 4] / 10, y = fr[i + 5] / 10; if (x < B.x0 - 30 || x > B.x1 + 30 || y < B.y0 - 30 || y > B.y1 + 30 || fr[i + 3] < 1 || fr[i + 3] > 4) return false; } return true; });
+      assert(`human flow: a quarter's frames, seven a minute apart by ten seconds, ${F.frames[0].length / 7} walkers at 13:30 inside the district, each walking, waiting or standing`,
+        F.frames.length === 7 && F.frames[0].length / 7 > 1000 && inBox && F.density.length === P.segments.length);
+      const lc = P.streets.find((s) => s.name === 'Little Collins Street');
+      const inner = lc.edges.filter((e) => { const g = P.segments[e]; return [g.u, g.v].every((j) => P.segments.filter((x) => x.u === j || x.v === j).length > 1); });
+      const onIt = (v) => inner.reduce((a, e) => a + v[e], 0);
+      // Against the street open with the same walkers' draws (its own walkers kept apart alike): those passing through
+      // leave it; those beginning or ending on it, or on a lane reached only through it, keep it, and nobody is stranded.
+      assert(`human flow: Little Collins Street closed to walkers passing through carries fewer walkers (${Math.round(onIt(O.compare.entriesA))} → ${Math.round(onIt(O.compare.entriesB))} entries in the hour, the street open with the same draws against closed), none left with no way`,
+        onIt(O.compare.entriesB) < onIt(O.compare.entriesA) && O.closed.totals.failed === 0 && O.opened.totals.failed === 0);
+      // The other streams draw alike with the crowd and without it, so the crowd's departures are the difference.
+      const crowd = O.event.totals.departed - O.base.totals.departed;
+      assert(`human flow: an event's crowd of 3,000 an hour for an hour comes (${crowd} departures), and its run's record is sound with every event simulated`,
+        Math.abs(crowd - 3000) < 4 * Math.sqrt(3000) && O.record.simulated && O.record.problems.length === 0 && O.record.events.length > 0);
+      assert(`human flow: ${O.permits.permits.length} of the City's permits on the district's streets, with their days' counts`, O.permits.permits.length > 100 && O.permits.permits.some((p) => p.counts.length > 0));
+      assert('human flow: POMCP decides the street\'s regime on the walkers (one decision), beside each regime held throughout',
+        O.advice.steps.length === 1 && ['open', 'one-way', 'closed'].includes(O.advice.steps[0].action) && O.advice.fixed.length === 3);
+    }
   }
 }
 

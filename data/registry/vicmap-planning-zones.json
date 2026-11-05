@@ -1,0 +1,35 @@
+{
+  "id": "vicmap-planning-zones",
+  "kind": "http",
+  "domain": "urban-science",
+  "title": "Vicmap Planning: planning scheme zone polygons (the zones of Victoria's planning schemes, which say which uses land admits)",
+  "provider": "State of Victoria, Department of Transport and Planning: Vicmap Planning (VMPLAN_PLAN_ZONE), through the Victorian Government's open data web feature service (GeoServer WFS 2.0.0, layer open-data-platform:plan_zone)",
+  "credit": "Vicmap Planning: State of Victoria (Department of Transport and Planning), CC BY 4.0",
+  "licence": "CC BY 4.0 (Creative Commons Attribution 4.0 International, stated on https://discover.data.vic.gov.au/dataset/vicmap-planning; checked 2026-11-05)",
+  "citation": "State of Victoria, Vicmap Planning, https://discover.data.vic.gov.au/dataset/vicmap-planning ; the zones' purposes are the planning schemes' (Melbourne Planning Scheme, https://planning-schemes.app.planning.vic.gov.au/Melbourne)",
+  "format": "GeoJSON (WGS 84, longitude and latitude): one feature a zone polygon, with pfi and ufi (identifiers), scheme_code (ZN), lga_code and lga (the municipality), zone_num, zone_code (e.g. CCZ1, the Capital City Zone, schedule 1), zone_description, zone_status, gaz_begin_date (the date the zone's polygon was gazetted), and the layer's own dates. A zone's schedule (CCZ1, CCZ2, ...) is part of its code.",
+  "coverage": "The zones meeting the box, by the WFS's bbox (axis order latitude, longitude for urn:ogc:def:crs:EPSG::4326); the profile takes the Hoddle Grid's box, -37.8205 to -37.8075 S and 144.9535 to 144.9735 E (37 polygons on 2026-11-05, among them CCZ1, the Capital City Zone, over most of the grid).",
+  "used_by": [
+    "data/products/occupancy_record.py",
+    "research/experiments/2026-11-05-owners-and-occupiers"
+  ],
+  "requests": [
+    {
+      "url": "https://opendata.maps.vic.gov.au/geoserver/wfs?service=WFS&version=2.0.0&request=GetFeature&typeNames=open-data-platform:plan_zone&outputFormat=application/json&bbox={south},{west},{north},{east},urn:ogc:def:crs:EPSG::4326",
+      "file": "zones.geojson"
+    }
+  ],
+  "parameters": {
+    "south": {"type": "float", "default": -37.8205, "min": -39.2, "max": -33.9, "description": "southern edge of the box (degrees, WGS 84)"},
+    "west": {"type": "float", "default": 144.9535, "min": 140.9, "max": 150.0, "description": "western edge of the box (degrees, WGS 84)"},
+    "north": {"type": "float", "default": -37.8075, "min": -39.2, "max": -33.9, "description": "northern edge of the box (degrees, WGS 84)"},
+    "east": {"type": "float", "default": 144.9735, "min": 140.9, "max": 150.0, "description": "eastern edge of the box (degrees, WGS 84)"}
+  },
+  "profiles": {
+    "hoddle-grid": {
+      "description": "The zones of the Hoddle Grid's box (about 0.2 MB; fetch again with --refresh after an amendment of the planning scheme)",
+      "parameters": {}
+    }
+  },
+  "default_profile": "hoddle-grid"
+}

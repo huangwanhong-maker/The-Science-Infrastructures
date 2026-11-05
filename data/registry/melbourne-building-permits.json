@@ -1,0 +1,30 @@
+{
+  "id": "melbourne-building-permits",
+  "kind": "http",
+  "domain": "urban-science",
+  "title": "City of Melbourne building permits: permits, occupancy permits and certificates of final inspection whose description of works names a change of use",
+  "provider": "City of Melbourne, Open Data Platform (Opendatasoft Explore API v2.1): dataset building-permits",
+  "credit": "Building permits: City of Melbourne, CC BY 4.0",
+  "licence": "CC BY 4.0 (stated in the dataset's metadata, license CC BY, https://creativecommons.org/licenses/by/4.0/legalcode; checked 2026-11-05)",
+  "citation": "City of Melbourne, Building Permits, https://data.melbourne.vic.gov.au/explore/dataset/building-permits/",
+  "format": "CSV separated by semicolons, with a byte-order mark; one row a permit or certificate. Fields: council_ref (the City's reference, BP-<year>-<n>, shared by the documents of one matter); permit_number; issue_date; address (text, e.g. \"25-31 Sutherland Street, MELBOURNE VIC 3000\" or \"Shop 2, 123 Collins Street, MELBOURNE VIC 3000\": no identifier of the property and no coordinates); desc_of_works (free text); estimated_cost_of_works (A$); rbs_number (the building surveyor's registration); commence_by_date; completed_by_date; permit_certificate_type (Building Permit, Occupancy Permit, Certificate of Final Inspection, ...). The request keeps the rows whose desc_of_works contains \"change of use\" (the API's like, case-insensitive).",
+  "coverage": "The municipality, issue dates 1992-09-09 to 2026-12-22 (sic: a date in the future in the City's data): 4,129 rows of 184,968 (checked 2026-11-05; the dataset modified 2026-11-04).",
+  "used_by": [
+    "data/products/occupancy_record.py",
+    "research/experiments/2026-11-05-owners-and-occupiers"
+  ],
+  "requests": [
+    {
+      "url": "https://data.melbourne.vic.gov.au/api/explore/v2.1/catalog/datasets/building-permits/exports/csv?where=desc_of_works%20like%20%27%25change%20of%20use%25%27",
+      "file": "permits.csv"
+    }
+  ],
+  "parameters": {},
+  "profiles": {
+    "change-of-use": {
+      "description": "Every permit or certificate naming a change of use (about 0.6 MB; fetch again with --refresh as the City adds permits)",
+      "parameters": {}
+    }
+  },
+  "default_profile": "change-of-use"
+}

@@ -1,0 +1,30 @@
+{
+  "id": "melbourne-clue-dwellings",
+  "kind": "http",
+  "domain": "urban-science",
+  "title": "City of Melbourne Census of Land Use and Employment (CLUE): residential dwellings by building and type, every census year 2002-2024",
+  "provider": "City of Melbourne, Open Data Platform (Opendatasoft Explore API v2.1): dataset residential-dwellings",
+  "credit": "CLUE: City of Melbourne, CC BY 4.0",
+  "licence": "CC BY 4.0 (the dataset's metadata: license CC BY, https://creativecommons.org/licenses/by/4.0/legalcode; checked 2026-11-05)",
+  "citation": "City of Melbourne, Census of Land Use and Employment (CLUE), Residential dwellings, https://data.melbourne.vic.gov.au/explore/dataset/residential-dwellings/ ; definitions: https://www.melbourne.vic.gov.au/clue",
+  "format": "CSV separated by semicolons, with a byte-order mark; one row a property (a building) and a dwelling type in a census year. Fields, as the dataset's metadata defines them: census_year (the year in which the census's surveying was completed); block_id (the CLUE city block, bounded mostly by major roads; about 606 in the municipality); property_id (the second tier of the property hierarchy: a building where several stand within one base property); base_property_id (the first tier: a land parcel); building_address; clue_small_area (a group of blocks); dwelling_type (Residential Apartments, House/Townhouse or Student Apartments: a simplified classification of the Council's property rates database); dwelling_number (dwellings of that type in the property); longitude, latitude (WGS 84) and location. No rents, no bedrooms, no occupancy: the stock only.",
+  "coverage": "The municipality of the City of Melbourne, census years 2002 to 2024: 219,680 rows in all (checked 2026-11-05), the whole dataset, since 2,869 rows have no location (2,023 of them in 2016, holding 10,504 dwellings) and a query by box would drop them; the product places them by their property's location in other years, or else at their block's point.",
+  "used_by": [
+    "data/products/housing_records.py",
+    "domains/urban-science (housing)"
+  ],
+  "requests": [
+    {
+      "url": "https://data.melbourne.vic.gov.au/api/explore/v2.1/catalog/datasets/residential-dwellings/exports/csv",
+      "file": "dwellings.csv"
+    }
+  ],
+  "parameters": {},
+  "profiles": {
+    "municipality": {
+      "description": "Every residential building of the municipality, every census year (about 25 MB; fetch again with --refresh after the City adds a year)",
+      "parameters": {}
+    }
+  },
+  "default_profile": "municipality"
+}

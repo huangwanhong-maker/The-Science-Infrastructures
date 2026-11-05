@@ -61,7 +61,7 @@ struct Event {
   std::vector<std::size_t> couplings;   // the couplings it touches
   std::vector<std::size_t> primitives;  // the primitives it meets
   std::vector<std::size_t> begins_couplings, ends_couplings, begins_primitives, ends_primitives;
-  std::string source, provenance = "recorded";  // provenance: recorded, inferred, modelled, synthetic
+  std::string source, provenance = "recorded";  // provenance: recorded, inferred, modelled, synthetic, simulated (by an agent-based model; never drawn as observed)
 };
 
 struct Record {

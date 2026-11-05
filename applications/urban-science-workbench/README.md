@@ -1,6 +1,6 @@
 # Urban Science Workbench
 
-*A three-dimensional GIS of cities, with the analysis of streets and buildings on top, built of plug-ins.* Status: **draft** (2026-11-04). Activities: research, learning. [ADR 0060](../../development/decisions/0060-streets-as-open-systems.md), [ADR 0065](../../development/decisions/0065-new-york-in-the-workbench.md), [ADR 0067](../../development/decisions/0067-event-spacetime.md). Named the Urban Building Workbench until the user renamed it (ADR 0067).
+*A three-dimensional GIS of cities, with the analysis of streets and buildings on top, built of plug-ins.* Status: **draft** (2026-11-05). Activities: research, learning. [ADR 0060](../../development/decisions/0060-streets-as-open-systems.md), [ADR 0065](../../development/decisions/0065-new-york-in-the-workbench.md), [ADR 0067](../../development/decisions/0067-event-spacetime.md), [ADR 0075](../../development/decisions/0075-agents-in-the-city.md). Named the Urban Building Workbench until the user renamed it (ADR 0067).
 
 ## 1. Purpose
 
@@ -34,6 +34,12 @@ The third plug-in, **Event Spacetime** ([ADR 0067](../../development/decisions/0
 - **The moment.** A plane at the clock's date carries the network of what stood then.
 - **The record and its complex.** The analysis gives what the record holds and what it left out, and the cells and homology of both complexes.
 
+The fourth plug-in, **Human flow** ([ADR 0075](../../development/decisions/0075-agents-in-the-city.md); [its README](plugins/human-flow/README.md)), draws the Hoddle Grid district's walkers as agents, the urban-science domain's movement model, on the map:
+- **Every walker, moving with the clock.** Each has an origin and a target, chooses its way as it goes, slows in a crowd and waits at red signals and at full streets. They are coloured by pattern (passing through, arriving at work, leaving, between buildings, visiting shops) or by what they are doing, over the streets coloured by their density.
+- **Set by the counters.** Their departures are the district-economy flow study's patterns, calibrated hour by hour to what the City's counters count each way. Each counter's reading by the walkers stands beside its count.
+- **A street changed.** A street or a block closed to walkers passing through, or made one-way, for a few hours: the walkers run again, and the map draws how they redistribute.
+- **An event's crowd.** A crowd is brought to a street on the day of one of the City's event permits, and the crowds and queues it makes are written as a record of events, every one simulated. The street's regime can be decided online by POMCP on the walkers, the crowd's size hidden from it.
+
 The city can be seen through, for this and every plug-in: the rail's slider lowers its opacity.
 
 ## 2. The Map
@@ -55,7 +61,7 @@ Drag to pan, right-drag to turn and tilt, and wheel to zoom. Picking a building,
 | [Street Oceanography](plugins/street-oceanography/README.md) | Six layers and eight analyses (§4) | draft |
 | [Landscape Dynamics](plugins/landscape-dynamics/README.md) | Four layers and four analyses: the district as a complex (its buildings among its cells), the landscape running, its spacetime, a building's rooms; the district's complex, freedom and dynamics; its events, exactly; scales and memory | draft |
 | [Event Spacetime](plugins/event-spacetime/README.md) | One layer and one analysis: the district's real events as a 2-complex in spacetime (volumes as worldlines, interfaces as sheets, events as vertices, the network of the moment at the clock's date); the record and its complex. The amplitudes and their modes are being written (the design, §8) | draft |
-| Human flow | Trajectories and origin–destination; what people carry at entry and departure; crowds beyond the kinematic wave | planned |
+| [Human flow](plugins/human-flow/README.md) | Two layers and three analyses: the district's walkers as agents on the map, moving with the clock (by pattern or by what they do, over the streets' density, with queues at full streets); the counters, counted beside the walkers' reading; the walkers of the district; a street closed or one-way; an event's crowd, its simulated record and its street's regime decided online by POMCP. Melbourne first | draft |
 | Architecture | Form, space and order; the frontage as an interface; plans and districts as cell complexes | planned |
 | Cultural analysis | Display and description; the record of manners (a survey at fixed positions, after Kon Wajirō) | planned |
 
@@ -124,14 +130,15 @@ An operation that lists sensors takes an area, Melbourne's when none is named: `
 
 `node applications/urban-science-workbench/tests/run-tests.mjs` checks:
 - the manifests, the areas, the recipe and every page module's syntax;
-- when the engines are built, their answers (Landscape Dynamics on a grid district with a hole: cells, rewrites, a day's run, the skeleton, the scales, a building);
+- when the engines are built, their answers (Landscape Dynamics on a grid district with a hole: cells, rewrites, a day's run, the skeleton, the scales, a building; Human flow on Melbourne's district: the calibration each way, the walkers' counters reading what the calibrated flow expects, a quarter's frames, a closure, an event's crowd and its simulated record, the permits, one decision of POMCP);
+- Human flow's colours, apart in every vision;
 - when the records are built, a sensor's week, rhythm and clock, a street's hours and mixing, every street's tide and a day of the sea (the counts within 15% of the tide on an ordinary Wednesday, each way summing to the total), the current meters and their handedness, a street's crowd second by second, and a visitor's plume.
 
 The GIS's arithmetic (the frame against the WGS 84 meridian arc, the round trip, rings, ribbons) is checked in the visualization layer's suite. The mathematics is checked in the foundations and in the urban-science domain.
 
 ## 8. Dependencies
 
-- the urban-science and architecture domains and the foundations calx, morphe, physis and tyche;
+- the urban-science and architecture domains and the foundations calx, morphe, physis, tyche and nomos (Human flow's walkers stand on nomos's agents);
 - the astronomy domain (the Sun);
 - the visualization layer (`gis`, the styles);
 - three.js 0.170.0 from jsDelivr;

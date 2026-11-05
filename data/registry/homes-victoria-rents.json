@@ -1,0 +1,24 @@
+{
+  "id": "homes-victoria-rents",
+  "domain": "urban-science",
+  "title": "Homes Victoria, Rental Report: moving annual median rents of new lettings by suburb (and suburb group) and dwelling type, quarterly from March 2000 to September 2025",
+  "provider": "Homes Victoria (Department of Families, Fairness and Housing), Rental Report - Quarterly: Moving Annual Rents by Suburb, the September quarter 2025 workbook (released 2026-02-20), listed at data.vic.gov.au; the copy kept by the Internet Archive's Wayback Machine on 2026-08-17",
+  "credit": "Rental Report: Homes Victoria, CC BY 4.0",
+  "licence": "CC BY 4.0 (the dataset's metadata at data.vic.gov.au: license_id cc-by, Creative Commons Attribution 4.0 International; checked 2026-11-05)",
+  "citation": "Homes Victoria, Rental Report - Quarterly: Moving Annual Rents by Suburb, https://discover.data.vic.gov.au/dataset/rental-report-quarterly-moving-annual-rents-by-suburb ; the workbook https://www.dffh.vic.gov.au/moving-annual-rent-suburb-september-quarter-2025-excel",
+  "format": "Office Open XML workbook (.xlsx), read by the standard library (zipfile and ElementTree). Seven sheets, one a type of dwelling: 1 bedroom flat, 2 bedroom flat, 3 bedroom flat, 2 bedroom house, 3 bedroom house, 4 bedroom house, All properties. Rows: a region (Inner Melbourne, ...) and a suburb or suburb group (CBD-St Kilda Rd, Southbank, Docklands, Carlton-Parkville, North Melbourne-West Melbourne, East Melbourne, Flemington-Kensington, South Yarra, Port Melbourne, ...), with group totals; columns: each quarter from Mar 2000, a Count of new lettings and their Median weekly rent (A$) over the year ending in that quarter, '-' where fewer lettings than the report publishes. From the Residential Tenancies Bond Authority's bonds lodged: new lettings only, not the rents of sitting tenants.",
+  "coverage": "Victoria's suburbs and suburb groups, quarters March 2000 to September 2025 (103 quarters). The groups cut across the City of Melbourne's boundary (Flemington, South Yarra and Port Melbourne lie mostly outside it).",
+  "caveat": "The publisher's server (www.dffh.vic.gov.au) did not answer this library's requests on 2026-11-05 (connections accepted, no response: its protection refuses clients that are not browsers), so the workbook is taken from the Wayback Machine's copy, pinned to its snapshot and verified by its checksum. Later quarters (to June 2026) are listed at data.vic.gov.au but no copy was reachable.",
+  "used_by": [
+    "data/products/housing_records.py",
+    "domains/urban-science (housing)"
+  ],
+  "files": [
+    {
+      "url": "https://web.archive.org/web/20260817181431id_/https://www.dffh.vic.gov.au/moving-annual-rent-suburb-september-quarter-2025-excel",
+      "file": "moving-annual-rent-suburb-september-quarter-2025.xlsx",
+      "size": 1135709,
+      "sha256": "817c5b8ea7985651af84519149276ef0281f8b6cfa4bcada39ea8aa87ed2952e"
+    }
+  ]
+}
