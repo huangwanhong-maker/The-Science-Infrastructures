@@ -8,7 +8,7 @@
 #                   district's buildings through their party walls, facades and roofs (massing_heat.hpp).
 #
 # The domain stands on the foundations alone (module.json): calx (linalg), morphe (topology, formal) and physis
-# (discretisation). Inside The Science Infrastructures they are the sibling foundations, added here when no larger
+# (discretisation). Inside Noetarium they are the sibling foundations, added here when no larger
 # project has added them.
 
 cmake_minimum_required(VERSION 3.20)
@@ -35,7 +35,7 @@ if(NOT TARGET calx::verification)
   if(EXISTS ${SCIENCE_ROOT}/foundations/calx/CMakeLists.txt)
     add_subdirectory(${SCIENCE_ROOT}/foundations/calx ${CMAKE_CURRENT_BINARY_DIR}/calx)
   else()
-    message(FATAL_ERROR "the architecture domain needs the foundations: build it inside The Science Infrastructures")
+    message(FATAL_ERROR "the architecture domain needs the foundations: build it inside Noetarium")
   endif()
 endif()
 if(NOT TARGET morphe::topology)

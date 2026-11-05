@@ -282,7 +282,7 @@ def _netcdf(product: Product, v: dict, indices: list[int], sel: Selection) -> by
     glob = {"Conventions": "CF-1.11", "title": product.meta.get("title", product.meta["name"]),
             "source": source.get("provider") or source.get("dataset") or "",
             "history": f"{dt.datetime.now(dt.timezone.utc):%Y-%m-%dT%H:%M:%SZ} written by data/formats/export.py "
-                       f"from the product {product.meta['name']} of The Science Infrastructures"}
+                       f"from the product {product.meta['name']} of Noetarium"}
     for key, attr in (("credit", "acknowledgement"), ("licence", "license"), ("citation", "references")):
         if source.get(key):
             glob[attr] = str(source[key])

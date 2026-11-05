@@ -23,8 +23,8 @@ You need [Git](https://git-scm.com/), [Python 3.12 or later](https://www.python.
 Windows (PowerShell or Command Prompt):
 
 ```
-git clone --recurse-submodules https://github.com/huangwanhong-maker/The-Science-Infrastructures.git
-cd The-Science-Infrastructures
+git clone --recurse-submodules https://github.com/huangwanhong-maker/Noetarium-The-Science-and-Humanity-Infrastructure.git
+cd Noetarium-The-Science-and-Humanity-Infrastructure
 python -m venv .venv
 .venv\Scripts\python -m pip install -r data\requirements.txt
 .venv\Scripts\python data\acquisition\recipe.py applications\celestial-atlas\recipe.json
@@ -34,8 +34,8 @@ python -m venv .venv
 macOS and Linux:
 
 ```
-git clone --recurse-submodules https://github.com/huangwanhong-maker/The-Science-Infrastructures.git
-cd The-Science-Infrastructures
+git clone --recurse-submodules https://github.com/huangwanhong-maker/Noetarium-The-Science-and-Humanity-Infrastructure.git
+cd Noetarium-The-Science-and-Humanity-Infrastructure
 python3 -m venv .venv
 .venv/bin/python -m pip install -r data/requirements.txt
 .venv/bin/python data/acquisition/recipe.py applications/celestial-atlas/recipe.json

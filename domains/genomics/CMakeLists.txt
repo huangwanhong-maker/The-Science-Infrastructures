@@ -7,7 +7,7 @@
 # its checks), morphe (words and their indexes, alignment over semirings, exact integers,
 # grammars and their parsers), and from ADR 0064 physis and tyche (segmentation, penalised
 # regression, factorisation).
-# Inside The Science Infrastructures they are the sibling foundations, added here when no
+# Inside Noetarium they are the sibling foundations, added here when no
 # larger project has added them.
 
 cmake_minimum_required(VERSION 3.20)
@@ -35,7 +35,7 @@ if(NOT TARGET calx::verification)
   if(EXISTS ${SCIENCE_FOUNDATIONS}/calx/CMakeLists.txt)
     add_subdirectory(${SCIENCE_FOUNDATIONS}/calx ${CMAKE_CURRENT_BINARY_DIR}/calx)
   else()
-    message(FATAL_ERROR "the genomics domain needs calx and morphe: build it inside The Science Infrastructures")
+    message(FATAL_ERROR "the genomics domain needs calx and morphe: build it inside Noetarium")
   endif()
 endif()
 if(NOT TARGET morphe::check)

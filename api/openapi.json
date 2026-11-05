@@ -1,7 +1,7 @@
 {
  "openapi": "3.1.0",
  "info": {
-  "title": "The Science Infrastructures API",
+  "title": "Noetarium API",
   "version": "0.1.0",
   "summary": "The data library's products, the sensors' observations, the domains' algorithms and the servers' plug-ins, for programs in any language.",
   "description": "Every endpoint is under /api/v1. Answers are JSON unless stated; errors are {\"error\": \"...\"} with the status that says why. Units are SI unless a product states its own; angles in degrees at this boundary; times UTC. See api/README.md.",

@@ -649,7 +649,7 @@ async function figureSvg() {
   return composeFigure({
     map: document.getElementById('map'), title, subtitle,
     legend: { title: C.title, stops, ends: C.ends, keys, hatched: state.disputed ? [css('--map-disputed-ground'), css('--map-disputed-hatch'), DISPUTED_TEXT] : null },
-    footer: [`${sourceLine()} projection (Šavrič, Patterson and Jenny 2018). Decomposed by the economics domain of The Science Infrastructures. ${new Date().toISOString().slice(0, 10)}.`, location.href],
+    footer: [`${sourceLine()} projection (Šavrič, Patterson and Jenny 2018). Decomposed by the economics domain of Noetarium. ${new Date().toISOString().slice(0, 10)}.`, location.href],
     colours: { paper: css('--paper'), ink: css('--ink'), ink2: css('--ink-2'), faint: css('--ink-faint'), border: css('--border') },
   });
 }

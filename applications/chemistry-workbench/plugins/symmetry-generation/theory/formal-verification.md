@@ -6,7 +6,7 @@
 
 The manuscript separates four levels of claim: representational admissibility, mathematical validity, physical adequacy and ontological attribution (§3). This note examines the second level only: whether each definition is well-formed, each proposition true under its hypotheses, and each computed value correct. It does not judge the conjectures' physical truth, though §6 notes where known experiments bear on them.
 
-The verification has two halves. Every proposition was read with its proof. Every claim that admits computation was then executed on the foundations of The Science Infrastructures:
+The verification has two halves. Every proposition was read with its proof. Every claim that admits computation was then executed on the foundations of Noetarium:
 
 - **Graph rewriting.** morphe's double-pushout graph rewriting with relabelling (`formal/graph_rewriting.hpp`, new).
 - **Symmetry.** physis's point groups (`symmetry/point_group.hpp`, new).

@@ -1,6 +1,6 @@
 # Decision Log
 
-Each record captures one decision that shapes the structure, conventions or tooling of The Science Infrastructures.
+Each record captures one decision that shapes the structure, conventions or tooling of Noetarium.
 
 - Records are numbered and are never rewritten.
 - To change a decision, write a new record that supersedes or amends the old one, and update the old record's status to point to the new one.
@@ -89,6 +89,7 @@ Decisions that concern only one library are recorded in that library's own `deve
 | [0074](0074-perception-and-decision-in-the-economy-atlas.md) | Perception and decision in the Economy Atlas: the regimes of the business cycle read from growth by hidden Markov models (tyche), decisions on that belief by POMDPs, a fund, a budget and two policymakers, and agents that herd (nomos) | Accepted, provisionally |
 | [0075](0075-agents-in-the-city.md) | Agents in the city: walkers, households, owners and occupiers, simulated and drawn | Accepted, provisionally; amends 0071 |
 | [0076](0076-physical-computing.md) | Physical computing: computation by the dynamics of matter, a pipeline after calx's and TVM's (tasks, an optional future IR, compiler, schedule, runtime, backends) with a simulator as each family's first backend, and fourteen families of substrates planned | Accepted, provisionally; planned |
+| [0077](0077-the-programme-named-noetarium.md) | The programme named Noetarium: the Science and Humanity Infrastructure | Accepted |
 
 ## 2. Template
 

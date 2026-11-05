@@ -1,4 +1,4 @@
-"""The API of The Science Infrastructures: the low layers of the repository (the
+"""The API of Noetarium: the low layers of the repository (the
 data library's products, the sensors' observations, the domains' algorithms and
 the servers' plug-ins) answered over HTTP, for any program in any language, as
 they happen. `Api` mounts on any standard-library server:
@@ -371,7 +371,7 @@ class Api:
     def on_get_index(self, request, query):
         bridge_reason = self.local.bridge().available()
         return {
-            "name": "The Science Infrastructures API", "version": VERSION, "api": "v1", "base": PREFIX + "/",
+            "name": "Noetarium API", "version": VERSION, "api": "v1", "base": PREFIX + "/",
             "documentation": PREFIX + "/openapi.json", "time": iso(dt.datetime.now(dt.timezone.utc)),
             "endpoints": [{"method": m, "path": PREFIX + p.rstrip("/"), "summary": s} for m, p, s in ENDPOINTS],
             "writes": self.policy(request),

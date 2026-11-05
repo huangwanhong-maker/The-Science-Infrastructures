@@ -579,7 +579,7 @@ def encode_grid(values, grid: dict, *, name: str = "", units: str = "", descript
         _entry(COMPRESSION, 3, DEFLATE), _entry(PHOTOMETRIC, 3, 1),
         _entry(STRIP_OFFSETS, 4, [0] * len(strips)), _entry(SAMPLES_PER_PIXEL, 3, 1),
         _entry(ROWS_PER_STRIP, 4, rows_per_strip), _entry(STRIP_BYTE_COUNTS, 4, [len(s) for s in strips]),
-        _entry(PLANAR_CONFIGURATION, 3, 1), _entry(SOFTWARE, 2, "The Science Infrastructures, data/formats/tiff.py"),
+        _entry(PLANAR_CONFIGURATION, 3, 1), _entry(SOFTWARE, 2, "Noetarium, data/formats/tiff.py"),
         _entry(PREDICTOR, 3, FLOATING_POINT), _entry(SAMPLE_FORMAT, 3, 3),
         _entry(MODEL_PIXEL_SCALE, 12, [grid["dlon"], grid["dlat"], 0.0]),
         _entry(MODEL_TIEPOINT, 12, [0.0, 0.0, 0.0, corner_lon, corner_lat, 0.0]),

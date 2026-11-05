@@ -25,7 +25,7 @@
 #
 # The domain stands on architecture and the foundations (module.json; a bridge since ADR 0067): calx (signal,
 # linalg, random), morphe (topology, formal), physis (continuum, statistical_mechanics, chemistry, discretisation,
-# computational_geometry) and tyche (time_series, regression, spatial). Inside The Science Infrastructures they are
+# computational_geometry) and tyche (time_series, regression, spatial). Inside Noetarium they are
 # the sibling domain and foundations, added here when no larger project has added them.
 
 cmake_minimum_required(VERSION 3.20)
@@ -52,7 +52,7 @@ if(NOT TARGET calx::verification)
   if(EXISTS ${SCIENCE_ROOT}/foundations/calx/CMakeLists.txt)
     add_subdirectory(${SCIENCE_ROOT}/foundations/calx ${CMAKE_CURRENT_BINARY_DIR}/calx)
   else()
-    message(FATAL_ERROR "the urban-science domain needs the foundations: build it inside The Science Infrastructures")
+    message(FATAL_ERROR "the urban-science domain needs the foundations: build it inside Noetarium")
   endif()
 endif()
 if(NOT TARGET morphe::topology)

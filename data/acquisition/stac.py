@@ -39,7 +39,7 @@ import time
 import urllib.error
 import urllib.request
 
-AGENT = "science-infrastructures-data/1 (+https://github.com/huangwanhong-maker/The-Science-Infrastructures)"
+AGENT = "noetarium-data/1 (+https://github.com/huangwanhong-maker/Noetarium-The-Science-and-Humanity-Infrastructure)"
 UTC = dt.timezone.utc
 
 EARTH_SEARCH = "https://earth-search.aws.element84.com/v1"

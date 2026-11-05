@@ -50,7 +50,7 @@ from pathlib import Path
 
 import numpy as np
 
-AGENT = "science-infrastructures-data/1 (+https://github.com/huangwanhong-maker/The-Science-Infrastructures)"
+AGENT = "noetarium-data/1 (+https://github.com/huangwanhong-maker/Noetarium-The-Science-and-Humanity-Infrastructure)"
 
 MEASURED, FILLED, COMPILED, FINER, SYNTHETIC, SEA = 1, 2, 3, 4, 5, 6
 

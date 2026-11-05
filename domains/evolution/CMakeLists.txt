@@ -4,7 +4,7 @@
 #
 # The domain stands on genomics (sequences, alignments, variants) and uses calx (linear
 # algebra, special functions, random streams, task graphs, the report of its checks) and
-# morphe. Inside The Science Infrastructures they are its siblings, added here when no larger
+# morphe. Inside Noetarium they are its siblings, added here when no larger
 # project has added them.
 
 cmake_minimum_required(VERSION 3.20)
@@ -31,7 +31,7 @@ if(NOT TARGET genomics::sequence)
   if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../genomics/CMakeLists.txt)
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../genomics ${CMAKE_CURRENT_BINARY_DIR}/genomics)
   else()
-    message(FATAL_ERROR "the evolution domain needs the genomics domain: build it inside The Science Infrastructures")
+    message(FATAL_ERROR "the evolution domain needs the genomics domain: build it inside Noetarium")
   endif()
 endif()
 if(EVOLUTION_CHECKS)

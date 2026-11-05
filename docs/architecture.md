@@ -1,6 +1,6 @@
 # Architecture
 
-*Status: draft, 2026-10-22.* This document describes how The Science Infrastructures is structured: its tiers, the order of its domains, the rules that connect them, and the computation and representation stacks. The decisions behind it are recorded in [development/decisions/](../development/decisions/); the present form is [ADR 0026](../development/decisions/0026-domains-as-libraries.md).
+*Status: draft, 2026-10-22.* This document describes how Noetarium is structured: its tiers, the order of its domains, the rules that connect them, and the computation and representation stacks. The decisions behind it are recorded in [development/decisions/](../development/decisions/); the present form is [ADR 0026](../development/decisions/0026-domains-as-libraries.md).
 
 ## 1. Principles
 

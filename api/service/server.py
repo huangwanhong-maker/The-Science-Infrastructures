@@ -99,7 +99,7 @@ class Server(http.server.ThreadingHTTPServer):
 
 
 def main(argv: list[str]) -> int:
-    parser = argparse.ArgumentParser(description="Serve the API of The Science Infrastructures.")
+    parser = argparse.ArgumentParser(description="Serve the API of Noetarium.")
     parser.add_argument("--host", default="127.0.0.1", help="the address to bind; 0.0.0.0 for every interface")
     parser.add_argument("--port", type=int, default=8800)
     parser.add_argument("--token", default=os.environ.get("SCIENCE_API_TOKEN"),

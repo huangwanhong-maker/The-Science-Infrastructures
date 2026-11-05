@@ -3,7 +3,7 @@
 # frames (frames). Header-only; each module a target metrology::<module>.
 #
 # The domain uses physis (rotations, rigid motions and the frame graph, physis::geometry) and calx
-# (the report of its checks). Inside The Science Infrastructures they are the sibling foundations,
+# (the report of its checks). Inside Noetarium they are the sibling foundations,
 # added here when no larger project has added them.
 
 cmake_minimum_required(VERSION 3.20)
@@ -30,7 +30,7 @@ if(NOT TARGET calx::verification)
   if(EXISTS ${SCIENCE_FOUNDATIONS}/calx/CMakeLists.txt)
     add_subdirectory(${SCIENCE_FOUNDATIONS}/calx ${CMAKE_CURRENT_BINARY_DIR}/calx)
   else()
-    message(FATAL_ERROR "the metrology domain needs calx and physis: build it inside The Science Infrastructures")
+    message(FATAL_ERROR "the metrology domain needs calx and physis: build it inside Noetarium")
   endif()
 endif()
 if(NOT TARGET morphe::topology)

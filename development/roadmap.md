@@ -10,7 +10,7 @@
   - the evaluator for the JPL DE format and the registry entry for DE440.
 
   It is validated against JPL Horizons. When the C++ is built, it takes over this work and must pass the same checks.
-- **2026-10-22. The umbrella.** The Science Infrastructures was founded, with the first laboratory as a submodule ([ADR 0025](decisions/0025-an-umbrella-of-laboratories.md)).
+- **2026-10-22. The umbrella.** The Science Infrastructures (Noetarium since 2026-11-06) was founded, with the first laboratory as a submodule ([ADR 0025](decisions/0025-an-umbrella-of-laboratories.md)).
 - **2026-10-22. Domains as libraries** ([ADR 0026](decisions/0026-domains-as-libraries.md)):
   - The first laboratory's history was joined to this repository, and the libraries were raised to `foundations/`.
   - Its knowledge became the domains: one library per science, each declaring its dependencies, each passing its checks alone.
@@ -24,7 +24,7 @@
 
 - **Repositories.** Done (2026-10-22): this repository and the three foundations are published on GitHub.
 - **Names.**
-  - Settled: The Science Infrastructures; calx, morphe and physis.
+  - Settled: The Science Infrastructures, renamed Noetarium on 2026-11-06 (ADR 0077); calx, morphe and physis.
   - Still open:
     - the C++ namespaces of the domains;
     - the name of the inference foundation.

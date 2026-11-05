@@ -41,7 +41,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 RAW = ROOT / "data" / "cache" / "raw" / "wikidata"
 OUT = ROOT / "data" / "cache" / "products" / "history"
-USER_AGENT = "TheScienceInfrastructures-history-check/0.1 (https://github.com/huangwanhong-maker/The-Science-Infrastructures)"
+USER_AGENT = "Noetarium-history-check/0.1 (https://github.com/huangwanhong-maker/Noetarium-The-Science-and-Humanity-Infrastructure)"
 PAUSE = 1.5
 JULIAN_MODEL = "http://www.wikidata.org/entity/Q1985786"   # Wikidata's proleptic Julian calendar
 

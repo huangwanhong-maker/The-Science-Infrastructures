@@ -19,7 +19,7 @@ import urllib.error
 import urllib.request
 import zipfile
 
-AGENT = "science-infrastructures-data/1 (+https://github.com/huangwanhong-maker/The-Science-Infrastructures)"
+AGENT = "noetarium-data/1 (+https://github.com/huangwanhong-maker/Noetarium-The-Science-and-Humanity-Infrastructure)"
 
 
 class RangeError(OSError):

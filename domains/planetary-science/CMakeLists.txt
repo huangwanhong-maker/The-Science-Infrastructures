@@ -7,7 +7,7 @@
 #
 # The domain may use astronomy, geophysics and meteorology (module.json); magnetism uses only the
 # foundations: physis (potential fields and random fields, physis::analysis; fields, physis::fields) and
-# calx (the report of its checks). Inside The Science Infrastructures they are the sibling foundations, added here when no
+# calx (the report of its checks). Inside Noetarium they are the sibling foundations, added here when no
 # larger project has added them.
 
 cmake_minimum_required(VERSION 3.20)
@@ -34,7 +34,7 @@ if(NOT TARGET calx::verification)
   if(EXISTS ${SCIENCE_ROOT}/foundations/calx/CMakeLists.txt)
     add_subdirectory(${SCIENCE_ROOT}/foundations/calx ${CMAKE_CURRENT_BINARY_DIR}/calx)
   else()
-    message(FATAL_ERROR "the planetary-science domain needs calx and physis: build it inside The Science Infrastructures")
+    message(FATAL_ERROR "the planetary-science domain needs calx and physis: build it inside Noetarium")
   endif()
 endif()
 if(NOT TARGET morphe::topology)

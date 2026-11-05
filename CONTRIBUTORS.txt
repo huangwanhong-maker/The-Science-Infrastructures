@@ -1,9 +1,9 @@
 CONTRIBUTORS
 ============
 
-Repository:  The Science Infrastructures
-             https://github.com/huangwanhong-maker/The-Science-Infrastructures
-Part of:     The Science Infrastructures, a project of Serendip Commons
+Repository:  Noetarium, the Science and Humanity Infrastructure
+             https://github.com/huangwanhong-maker/Noetarium-The-Science-and-Humanity-Infrastructure
+Part of:     Noetarium (The Science Infrastructures until 2026-11-06), a project of Serendip Commons
              Society (Project Approval SCS/PA/2026/05, 30 October 2026)
 Licence:     MIT, in LICENSE
 This file:   the record of who made this repository and of the terms on

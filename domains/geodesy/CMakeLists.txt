@@ -7,7 +7,7 @@
 #
 # The domain uses physis (rotations and rigid motions, physis::geometry; fields, physis::fields) and calx
 # (quadrature, and the report of its checks); it may use metrology, beneath it in the order of the
-# domains. Inside The Science Infrastructures they are the sibling foundations and domains, added here
+# domains. Inside Noetarium they are the sibling foundations and domains, added here
 # when no larger project has added them.
 
 cmake_minimum_required(VERSION 3.20)
@@ -34,7 +34,7 @@ if(NOT TARGET calx::verification)
   if(EXISTS ${SCIENCE_FOUNDATIONS}/calx/CMakeLists.txt)
     add_subdirectory(${SCIENCE_FOUNDATIONS}/calx ${CMAKE_CURRENT_BINARY_DIR}/calx)
   else()
-    message(FATAL_ERROR "the geodesy domain needs calx and physis: build it inside The Science Infrastructures")
+    message(FATAL_ERROR "the geodesy domain needs calx and physis: build it inside Noetarium")
   endif()
 endif()
 if(NOT TARGET morphe::topology)

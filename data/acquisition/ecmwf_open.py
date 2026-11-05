@@ -85,7 +85,7 @@ import urllib.request
 from pathlib import Path
 
 UTC = dt.timezone.utc
-USER_AGENT = "science-infrastructures-data/1 (+https://github.com/huangwanhong-maker/The-Science-Infrastructures)"
+USER_AGENT = "noetarium-data/1 (+https://github.com/huangwanhong-maker/Noetarium-The-Science-and-Humanity-Infrastructure)"
 MAX_RANGES = 40        # byte ranges in one request; servers bound their number (Apache's MaxRanges: 200)
 LOOKBACK = 6           # runs tried, latest first: at 00 and 12 UTC, three days, as long as ECMWF keeps them
 CONTENT_RANGE = re.compile(rb"Content-Range:\s*bytes\s+(\d+)-(\d+)/(\d+|\*)", re.IGNORECASE)

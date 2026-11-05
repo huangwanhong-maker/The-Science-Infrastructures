@@ -3,7 +3,7 @@
 # each module a target meteorology::<module>. The rest of the domain is provisional JavaScript (js/).
 #
 # The domain uses physis (fields, physis::fields) and calx (the report of its checks); it may use geodesy
-# and the domains beneath it in the order of the domains. Inside The Science Infrastructures they are the
+# and the domains beneath it in the order of the domains. Inside Noetarium they are the
 # sibling foundations, added here when no larger project has added them.
 
 cmake_minimum_required(VERSION 3.20)
@@ -30,7 +30,7 @@ if(NOT TARGET calx::verification)
   if(EXISTS ${SCIENCE_FOUNDATIONS}/calx/CMakeLists.txt)
     add_subdirectory(${SCIENCE_FOUNDATIONS}/calx ${CMAKE_CURRENT_BINARY_DIR}/calx)
   else()
-    message(FATAL_ERROR "the meteorology domain needs calx and physis: build it inside The Science Infrastructures")
+    message(FATAL_ERROR "the meteorology domain needs calx and physis: build it inside Noetarium")
   endif()
 endif()
 if(NOT TARGET morphe::topology)

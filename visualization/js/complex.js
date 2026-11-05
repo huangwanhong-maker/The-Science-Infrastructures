@@ -1,6 +1,6 @@
 // Cell complexes, drawn: an abstract CW complex realised in three dimensions, its 2-cells
 // unfolded into a net, and its cells as a Hasse diagram; and the conversions from surface
-// words and lists of facets to the Complex JSON of The Science Infrastructures.
+// words and lists of facets to the Complex JSON of Noetarium.
 //
 // A complex (the protocol of applications/complex-atlas/README.md) has `vertices` (a count),
 // `edges` ([tail, head] pairs), `faces` ({base, boundary}: a closed edge path from the base

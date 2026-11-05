@@ -44,7 +44,7 @@ CRAN = "https://cran.r-project.org/src/contrib/Archive/RCytoGPS/RCytoGPS_1.2.14.
 CRAN_CURRENT = "https://cran.r-project.org/src/contrib/RCytoGPS_1.2.14.tar.gz"
 ONTOLOGY = "https://raw.githubusercontent.com/jaydchan/tawny-karyotype/3a875e5ef7de9372aee70d9e6cc8c22fc5187544/src/ncl/karyotype/iscnexamples.clj"
 ORDULU = "https://pmc.ncbi.nlm.nih.gov/articles/PMC4067557/"
-AGENT = {"User-Agent": "Mozilla/5.0 (The Science Infrastructures; fixtures of genomics/karyotype)"}
+AGENT = {"User-Agent": "Mozilla/5.0 (Noetarium; fixtures of genomics/karyotype)"}
 
 # Detailed forms the Karyotype Ontology's quotation garbled: the example is kept, its detailed form
 # is not.

@@ -1,6 +1,6 @@
-# The Science Infrastructures
+# Noetarium: The Science and Humanity Infrastructure
 
-An integrative infrastructure for learning, using and researching all domains of science, as one connected body of knowledge. Foundation libraries carry mathematics, computation and physics. Each science is a domain: a library of its own objects and models, pure and tested, that runs on its own with only the domains beneath it. Applications and studies, organised by purpose, compose the domains they need.
+An integrative infrastructure for learning, using and researching all domains of science and the humanities, as one connected body of knowledge. Foundation libraries carry mathematics, computation and physics. Each science is a domain: a library of its own objects and models, pure and tested, that runs on its own with only the domains beneath it. Applications and studies, organised by purpose, compose the domains they need.
 
 <p align="center">
 <a href="docs/gallery.md"><img src="assets/gallery/earth-20-plates.jpg" width="32%" alt="The tectonic plates in motion, in the Earth Atlas"></a>
@@ -144,8 +144,8 @@ The Earth and Celestial Atlases link to each other: a place on the Earth leads t
 Windows (PowerShell or Command Prompt):
 
 ```
-git clone --recurse-submodules https://github.com/huangwanhong-maker/The-Science-Infrastructures.git
-cd The-Science-Infrastructures
+git clone --recurse-submodules https://github.com/huangwanhong-maker/Noetarium-The-Science-and-Humanity-Infrastructure.git
+cd Noetarium-The-Science-and-Humanity-Infrastructure
 python -m venv .venv
 .venv\Scripts\python -m pip install -r data\requirements.txt
 .venv\Scripts\python data\acquisition\recipe.py applications\earth-atlas\recipe.json
@@ -156,8 +156,8 @@ python -m venv .venv
 macOS and Linux:
 
 ```
-git clone --recurse-submodules https://github.com/huangwanhong-maker/The-Science-Infrastructures.git
-cd The-Science-Infrastructures
+git clone --recurse-submodules https://github.com/huangwanhong-maker/Noetarium-The-Science-and-Humanity-Infrastructure.git
+cd Noetarium-The-Science-and-Humanity-Infrastructure
 python3 -m venv .venv
 .venv/bin/python -m pip install -r data/requirements.txt
 .venv/bin/python data/acquisition/recipe.py applications/earth-atlas/recipe.json
@@ -183,8 +183,8 @@ It opens at http://127.0.0.1:8810/.
 Then, in a terminal (on macOS and Linux, write `python3`; skip the first two lines if you have the repository already):
 
 ```
-git clone --recurse-submodules https://github.com/huangwanhong-maker/The-Science-Infrastructures.git
-cd The-Science-Infrastructures
+git clone --recurse-submodules https://github.com/huangwanhong-maker/Noetarium-The-Science-and-Humanity-Infrastructure.git
+cd Noetarium-The-Science-and-Humanity-Infrastructure
 python data/acquisition/recipe.py applications/spiking-simulator/recipe.json
 python applications/spiking-simulator/serve.py --open
 ```
@@ -598,7 +598,7 @@ The three atlases run online on the project's server, the [Celestial Atlas](http
 To clone it with the foundations and the neuroscience domain:
 
 ```
-git clone --recurse-submodules https://github.com/huangwanhong-maker/The-Science-Infrastructures.git
+git clone --recurse-submodules https://github.com/huangwanhong-maker/Noetarium-The-Science-and-Humanity-Infrastructure.git
 ```
 
 To run every check (the dependency rules, the suites of the foundations, domains, visualization and applications, and each domain alone):

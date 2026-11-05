@@ -68,7 +68,7 @@ def repository(start: Path | None = None) -> Path:
     for folder in [Path(start or Path.cwd()).resolve(), *Path(start or Path.cwd()).resolve().parents]:
         if (folder / "data" / "registry").is_dir():
             return folder
-    raise NotFound("no repository of The Science Infrastructures here: pass its root to Local(root)")
+    raise NotFound("no repository of Noetarium here: pass its root to Local(root)")
 
 
 def instant(value, now: dt.datetime | None = None) -> dt.datetime:

@@ -1,4 +1,4 @@
-"""The Science Infrastructures from Python: the API's client, and the library
+"""Noetarium from Python: the API's client, and the library
 read on this computer without a server.
 
     import science
