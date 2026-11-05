@@ -30,3 +30,4 @@ This is the cheapest place to write a thought down. An idea here may be wrong, a
 | 2026-11-04 | [Event-based 3D GIS on a 2-complex: a spin-foam approach, the formalism and its engineering](2026-11-04-event-based-gis-on-a-2-complex.md) | seed; decided ([ADR 0067](../decisions/0067-event-spacetime.md)), built in part |
 | 2026-11-04 | [Agents and decisions for urban planning: agent-based models, decisions under partial observation, and four models of a city](2026-11-04-agents-and-decisions-for-urban-planning.md) | seed; decided ([ADR 0071](../decisions/0071-agents-and-decisions-for-urban-planning.md)), built in part |
 | 2026-11-05 | [What the search case studies ask of the libraries and the domains](2026-11-05-what-the-search-case-studies-ask-of-the-libraries.md) | seed |
+| 2026-11-05 | [Physical computing, computation by the dynamics of matter: a proposed domain](2026-11-05-physical-computing.md) | promoted ([ADR 0076](../decisions/0076-physical-computing.md)) |

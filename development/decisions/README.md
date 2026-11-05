@@ -87,6 +87,7 @@ Decisions that concern only one library are recorded in that library's own `deve
 | [0072](0072-a-womans-body.md) | A woman's body, from the Human Reference Atlas: a second body for the anatomy domain and Fabrica, and pictures without sensitive parts | Accepted, provisionally; amends 0066 and 0070 |
 | [0073](0073-the-search-foundation-heuresis.md) | The search foundation heuresis: evolutionary computation and search over spaces too large to enumerate, with its seams for devices, distributed and quantum search | Accepted, provisionally |
 | [0074](0074-perception-and-decision-in-the-economy-atlas.md) | Perception and decision in the Economy Atlas: the regimes of the business cycle read from growth by hidden Markov models (tyche), decisions on that belief by POMDPs, a fund, a budget and two policymakers, and agents that herd (nomos) | Accepted, provisionally |
+| [0076](0076-physical-computing.md) | Physical computing: computation by the dynamics of matter, a pipeline after calx's and TVM's (tasks, an optional future IR, compiler, schedule, runtime, backends) with a simulator as each family's first backend, and fourteen families of substrates planned | Accepted, provisionally; planned |
 
 ## 2. Template
 

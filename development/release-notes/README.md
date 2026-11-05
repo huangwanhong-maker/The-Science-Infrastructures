@@ -13,6 +13,7 @@ A running record, for readers, of what each commit made possible or better, in t
 
 | Date | Commits |
 |---|---|
+| [2026-11-06](2026-11-06.md) | Physical computing, a domain planned |
 | [2026-11-05](2026-11-05.md) | a district's economy, planned three ways; heuresis corrected by its case studies; fourteen case studies of search, in the gallery; robots' controller gains set through their simulations; heuresis: a foundation for search, evolutionary computation first; perception and decision in the Economy Atlas |
 | [2026-11-04](2026-11-04.md) | A woman's body in Fabrica; Agents and decisions for urban planning, and the wear of the city's surfaces; The body's pictures, the genital system hidden; Vessels reconstructed from images: eikon, medical imaging, and Fabrica; What a district remembers, and the probability of its record; the names of places, areas in dispute, and a 2D GIS; the Body Atlas, and the anatomy domain; Event Spacetime, a city's events as a 2-complex, in the Urban Science Workbench; the Economy Atlas as a scholarly instrument; a toolbox of quantitative economics, on two new foundations; Cosmopoiesis as a submodule |
 | [2026-11-01](2026-11-01.md) | Abnormal genomes: the international notations, their detection, and expression read from sequence; New York in the Urban Building Workbench; Landscape Dynamics, quieter: one thing at a time |

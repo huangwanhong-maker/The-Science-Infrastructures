@@ -357,7 +357,7 @@ A priority such as 1.3 is the third place in tier 1. Within a tier, a domain com
 
 ### 4.4 The Domains
 
-Fifty-seven domains: eighteen built, and nine more placed in the order as planned, each with a directory of its own. A name links to the domain's directory where it exists; the others are placed in the order only when their work begins.
+Fifty-eight domains: eighteen built, and ten more placed in the order as planned, each with a directory of its own. A name links to the domain's directory where it exists; the others are placed in the order only when their work begins.
 
 **The Earth and the sky.**
 
@@ -455,6 +455,7 @@ Fifty-seven domains: eighteen built, and nine more placed in the order as planne
 | [architecture](domains/architecture/) | field | — (later astronomy, civil-engineering) | Buildings: their form, plans and districts as cell complexes, the frontage at which a building meets its street, the rules that bound them, their environment ([ADR 0060](development/decisions/0060-streets-as-open-systems.md)) | planned, at the user's word |
 | chemical-engineering | field | chemistry | Processes and reactors at scale | 4 |
 | [robotics](domains/robotics/) | field | the foundations; later mechanical-engineering, electrical-engineering | Systems that sense and act: first vehicles on a sphere at two fidelities, following waypoints, surveys and sensors' mounts; then a hopping rabbit with joints, its controller and three methods of its motion ([ADR 0058](development/decisions/0058-a-body-with-joints.md)) | built |
+| [physical-computing](domains/physical-computing/) | field | the foundations; later neuroscience, robotics | Computation by the dynamics of matter: substrates held as computers in fourteen families (analogue electronics, spintronics, memristive, probabilistic, photonics, chemical, molecular, fluids, soft matter, mechanical, learning networks, living, quantum, swarms); tasks carried onto them by a pipeline after calx's and TVM's, each family's simulator its first backend; the cost of a verified result in energy and materials ([ADR 0076](development/decisions/0076-physical-computing.md)) | planned, at the user's request |
 | energy-systems | bridge | meteorology, electrical-engineering, economics | Power from wind and sun, storage, grids | 4 |
 
 ### 4.5 Disciplines Held as Modules
@@ -513,7 +514,7 @@ height 2   astronomy · geophysics · geography · oceanography · meteorology �
            microbiology⁴ · physiology⁴ · developmental-biology⁴
 height 1   geodesy · evolution · drug-discovery¹ · chemistry³ · cell-biology³ · epidemiology³ · urban-science
 height 0   metrology · neuroscience · history · genomics · economics · robotics · architecture ·
-           anatomy · linguistics¹ · molecular-science¹ · demography³
+           anatomy · physical-computing · linguistics¹ · molecular-science¹ · demography³
 ```
 
 *Rationale.*
@@ -575,7 +576,8 @@ The three atlases run online on the project's server, the [Celestial Atlas](http
 ├── domains/         metrology · geodesy · astronomy · geophysics · geography · oceanography ·
 │                    meteorology · tides · navigation · air-sea · climate · neuroscience (submodule) ·
 │                    history · genomics · evolution · economics · planetary-science · robotics ·
-│                    urban-science · architecture · anatomy · medical-imaging · the domains of life, planned:
+│                    urban-science · architecture · anatomy · medical-imaging · physical-computing (planned) ·
+│                    the domains of life, planned:
 │                    molecular-science · cell-biology · microbiology · physiology ·
 │                    developmental-biology · ecology
 ├── data/            registry · acquisition · formats · products · terrain tiles · requests on demand

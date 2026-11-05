@@ -1,0 +1,12 @@
+{
+  "name": "physical-computing",
+  "kind": "field",
+  "status": "planned",
+  "depends": [],
+  "foundations": [
+    "calx",
+    "morphe",
+    "physis",
+    "tyche"
+  ]
+}
