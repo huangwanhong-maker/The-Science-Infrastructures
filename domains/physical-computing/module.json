@@ -1,7 +1,7 @@
 {
   "name": "physical-computing",
   "kind": "field",
-  "status": "planned",
+  "status": "draft",
   "depends": [],
   "foundations": [
     "calx",

@@ -1,6 +1,6 @@
 # runtime: Programs Run on Backends
 
-*Status: planned (ADR 0076 §2.3).* The runtime runs a compiled program under its schedule on a backend, and returns the readings with their provenance.
+*Status: draft (2026-11-06): the backend interface and provenance (`backend.hpp`), programs driven under a schedule (`run.hpp`); checked by `tests/check_runtime.cpp` on a leaky integrator solved exactly.* The runtime runs a compiled program under its schedule on a backend, and returns the readings with their provenance.
 
 ## 1. The Backend Interface
 

@@ -1,6 +1,6 @@
 # computer: The Contract, its Tolerance and its Cost
 
-*Status: planned (ADR 0076 §2.3).* What makes a substrate a computer, and what a result costs. Every run on every backend reports it.
+*Status: draft (2026-11-06): the square (`square.hpp`), the cost account with physis's floors (`cost.hpp`), the materials' marks with the list of critical raw materials (`materials.hpp`); `tests/check_computer.cpp`. The invariants of chaos use physis's Lyapunov spectra; the energy distance waits for tyche.* What makes a substrate a computer, and what a result costs. Every run on every backend reports it.
 
 ## 1. The Square
 

@@ -1,6 +1,6 @@
 # chemical: The BZ Medium, Reaction Networks as Programs, and Electrochemical Oscillators
 
-*Status: planned (ADR 0076).* Modes: analogue, programmed, reservoir. **Breadth:** the broadest with analogue electronics. Continuous reaction networks realise any polynomial ODE after a dual-rail encoding (Fages et al. 2017), and their exact theory says what they compute (theory note §1.2). Priority: first, on physis's `chemistry`, already written.
+*Status: draft (2026-11-06): the four simulators below are written (25 checks), on physis's decision 0022. Found on the way: the Oregonator's kinetics are stiff in a wave's refractory tail and have a pole at u = −q, so the medium is stepped implicitly with non-negative concentrations; and a pulse propagates only where the lattice resolves its front (about √(εD) wide); on a coarser one it is pinned.* Modes: analogue, programmed, reservoir. **Breadth:** the broadest with analogue electronics. Continuous reaction networks realise any polynomial ODE after a dual-rail encoding (Fages et al. 2017), and their exact theory says what they compute (theory note §1.2). Priority: first, on physis's `chemistry`, already written.
 
 ## 1. The Substrates
 

@@ -1,6 +1,6 @@
 # tasks: What is Computed
 
-*Status: planned (ADR 0076 §2.3).* The first stage of the pipeline: a task says what is to be computed, on no particular substrate, with the set $K$ it must hold on, its metric $d$, its tolerance $\varepsilon$ and its check (theory note §1.1). Until the [IR](../ir/) exists, a task is a C++ value.
+*Status: draft (2026-11-06): the kinds and tolerances, `include/physical_computing/tasks/task.hpp`.* The first stage of the pipeline: a task says what is to be computed, on no particular substrate, with the set $K$ it must hold on, its metric $d$, its tolerance $\varepsilon$ and its check (theory note §1.1). Until the [IR](../ir/) exists, a task is a C++ value.
 
 ## 1. The Kinds of Task
 

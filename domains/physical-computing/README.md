@@ -1,6 +1,6 @@
 # physical-computing: Computation by the Dynamics of Matter
 
-*Status: planned ([ADR 0076](../../development/decisions/0076-physical-computing.md)); no code yet.* Purpose: learning, use and research.
+*Status: draft ([ADR 0076](../../development/decisions/0076-physical-computing.md)). Written (2026-11-06): the formalism (tasks, schedules, the commuting square, the cost and materials, the backend interface and runtime) and the simulators of the fluids, chemical and molecular families, 127 checks; the other eleven families are planned.* Purpose: learning, use and research.
 
 ## 1. Purpose
 
@@ -26,13 +26,13 @@ task ──▶ [ir: optional, future] ──▶ compiler ──▶ schedule ─�
 
 | Stage | Directory | Role | Status |
 |---|---|---|---|
-| Task | [`tasks/`](tasks/) | What is computed, substrate-neutral, with its tolerance and check: filters, flows, energy problems, functions, phenomena, learning | planned |
+| Task | [`tasks/`](tasks/) | What is computed, substrate-neutral, with its tolerance and check: filters, flows, energy problems, functions, phenomena, learning | draft: the kinds, tolerances |
 | Intermediate representation | [`ir/`](ir/) | A versioned text form of tasks, programs and schedules | optional, future |
 | Compiler | [`compiler/`](compiler/) | Passes lowering a task onto a target: capabilities, scaling, encoding, readout, fitting and search | planned |
-| Schedule | [`schedule/`](schedule/) | When: injection, washout, virtual nodes, sampling, annealing, training and testing, repetitions | planned |
-| Runtime | [`runtime/`](runtime/) | Runs a compiled program under its schedule on a backend; readings with their provenance | planned |
-| Backends | [`substrates/`](substrates/) | One family of substrates per directory, each with its simulator first | planned |
-| The contract | [`computer/`](computer/) | The square and its tolerance, invariants, the cost of a verified result, the materials' marks | planned |
+| Schedule | [`schedule/`](schedule/) | When: injection, washout, virtual nodes, sampling, annealing, training and testing, repetitions | draft: sample-and-hold, washout, repetitions |
+| Runtime | [`runtime/`](runtime/) | Runs a compiled program under its schedule on a backend; readings with their provenance | draft: the backend interface, provenance, `drive` |
+| Backends | [`substrates/`](substrates/) | One family of substrates per directory, each with its simulator first | draft: fluids, chemical, molecular |
+| The contract | [`computer/`](computer/) | The square and its tolerance, invariants, the cost of a verified result, the materials' marks | draft: the square, the cost account and floors, the materials' marks |
 
 The pipeline keeps six invariants:
 
@@ -54,9 +54,9 @@ Fourteen families hold every candidate of the assessments the user passed on, an
 | [`memristive`](substrates/memristive/) | memristors and crossbars; phase-transition switches and oscillators; phase-change memories | networks of one unit | planned |
 | [`probabilistic`](substrates/probabilistic/) | p-bits and probabilistic computers; thermodynamic sampling and linear algebra | any Boltzmann law on spins; Gaussians | planned |
 | [`photonics`](substrates/photonics/) | interferometer meshes; delay-loop reservoirs; coherent Ising machines | any unitary; delay dynamics | planned |
-| [`chemical`](substrates/chemical/) | the BZ medium and its programmable arrays; reaction networks as programs; electrochemical oscillators | broadest: polynomial ODEs | planned |
-| [`molecular`](substrates/molecular/) | DNA strand displacement; enzymatic DNA networks | broadest: any reaction network | planned |
-| [`fluids`](substrates/fluids/) | water in a tank; convection cells; rotating, stratified tanks; Faraday waves and walking droplets; capillary and foam networks; bubble logic; Phillips's hydraulic machine | deepest for the atmosphere and ocean | planned |
+| [`chemical`](substrates/chemical/) | the BZ medium and its programmable arrays; reaction networks as programs; electrochemical oscillators | broadest: polynomial ODEs | draft: four simulators |
+| [`molecular`](substrates/molecular/) | DNA strand displacement; enzymatic DNA networks | broadest: any reaction network | draft: three simulators |
+| [`fluids`](substrates/fluids/) | water in a tank; convection cells; rotating, stratified tanks; Faraday waves and walking droplets; capillary and foam networks; bubble logic; Phillips's hydraulic machine | deepest for the atmosphere and ocean | draft: nine simulators |
 | [`soft-matter`](substrates/soft-matter/) | ionic membranes and hydrogels; liquid crystals and active nematics; active colloids | deep | planned |
 | [`mechanical`](substrates/mechanical/) | metamaterials and hysterons; metronomes; soft bodies; granular media and landscapes | deep; programmable graphs | planned |
 | [`learning-networks`](substrates/learning-networks/) | networks of resistors, flows and springs that learn by local rules | the filters they learn | planned |
@@ -77,6 +77,21 @@ The greenest substrate is none of these: the Earth itself, read through the data
 2. **Compilers**: each family's lowering of each kind of task it accepts.
 3. **The intermediate representation**, once two families' compilers show what it must carry.
 4. **Devices** through `observation/`, each held to its family's simulator.
+
+### 4.1 What is Written
+
+The order of work changed at the user's word: fluids, chemical and molecular first (2026-11-06). Their general methods went to physis first (its decision 0022): Lyapunov spectra, Floquet multipliers, continuation, Kuramoto's networks, waves, convection, two-layer flow, Kirchhoff networks, the Potts model, current fluctuations, kinetics of any form with a stiff step, dual rails.
+
+| Module | Headers | Checks |
+|---|---|---|
+| `tasks`, `schedule` | `task.hpp`, `schedule.hpp` | in `check_computer`, `check_runtime` |
+| `computer` | `square.hpp`, `cost.hpp`, `materials.hpp` | `check_computer` (18) |
+| `runtime` | `backend.hpp`, `run.hpp` | `check_runtime` (8) |
+| `fluids` | `tank`, `convection_cell`, `rotating_tank`, `faraday`, `walkers`, `capillary`, `foam`, `bubble_logic`, `phillips` | nine programs (59) |
+| `chemical` | `oregonator`, `bz_array`, `programs`, `electrochemical` | four programs (25) |
+| `molecular` | `strand_displacement`, `seesaw`, `pen` | three programs (17) |
+
+The examples drawn in the gallery's §15 are run by [`research/experiments/2026-11-06-first-physical-substrates`](../../research/experiments/2026-11-06-first-physical-substrates/README.md).
 
 ## 5. Dependencies
 

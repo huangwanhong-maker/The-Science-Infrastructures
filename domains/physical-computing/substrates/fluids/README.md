@@ -1,6 +1,6 @@
 # fluids: Water and Interfaces as Computers
 
-*Status: planned (ADR 0076).* Modes: analogue, reservoir, programmed. **Depth:** the deepest family for the atmosphere and the ocean. Water obeys the Navier–Stokes equations, and a tank stands for its target by similarity (theory note §1.6). The greenest family: water, heat, soap and a turntable, all reusable. Its readings, mostly by camera, carry the cost of conversion.
+*Status: draft (2026-11-06): the nine simulators below are written, each with its check program (59 checks), on physis's decision 0022. Changes from the plan: the tank's forcing conserves volume, since a plunger adds no water, so the echo state property holds for every departure but the mean level; the rotating tank is a channel by images, since a periodic box admits modes the walls forbid, and its transition is stated per azimuthal wavenumber, Θ_m = 16/(π² + (mL/R)²).* Modes: analogue, reservoir, programmed. **Depth:** the deepest family for the atmosphere and the ocean. Water obeys the Navier–Stokes equations, and a tank stands for its target by similarity (theory note §1.6). The greenest family: water, heat, soap and a turntable, all reusable. Its readings, mostly by camera, carry the cost of conversion.
 
 ## 1. The Substrates
 

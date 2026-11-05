@@ -1,6 +1,6 @@
 # schedule: When a Program Runs
 
-*Status: planned (ADR 0076 §2.3).* A schedule says when inputs are applied and states are read. It is kept apart from the program, as Halide keeps a schedule apart from its algorithm (Ragan-Kelley et al. 2013), so that one program can be run under many schedules and each compared on its cost.
+*Status: draft (2026-11-06): sample-and-hold, washout and repetitions, `include/physical_computing/schedule/schedule.hpp`.* A schedule says when inputs are applied and states are read. It is kept apart from the program, as Halide keeps a schedule apart from its algorithm (Ragan-Kelley et al. 2013), so that one program can be run under many schedules and each compared on its cost.
 
 ## 1. What a Schedule Holds
 

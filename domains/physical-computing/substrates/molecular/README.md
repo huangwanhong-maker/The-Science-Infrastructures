@@ -1,6 +1,6 @@
 # molecular: DNA Strand Displacement and Enzymatic DNA Networks
 
-*Status: planned (ADR 0076).* Mode: programmed. **Breadth:** DNA strand displacement realises any reaction network up to its rate constants (Soloveichik, Seelig and Winfree 2010), and so, by [`chemical`](../chemical/)'s dual rails, any polynomial ODE. Provisional until molecular-science is founded (ADR 0076 §2.5).
+*Status: draft (2026-11-06): the three simulators are written (17 checks). Changes from the plan: the PEN simulator is Fujii and Rondelez's predator–prey ecosystem, whose Rosenzweig–MacArthur form (now in physis) has its Hopf point in closed form, since the activator–inhibitor oscillator first written had no Hopf point at any parameters tried and was not kept; the cascades of strand displacement are stiff and are integrated implicitly (physis's `integrate_stiff`), and they converge to the formal network as C_max and q_max grow together.* Mode: programmed. **Breadth:** DNA strand displacement realises any reaction network up to its rate constants (Soloveichik, Seelig and Winfree 2010), and so, by [`chemical`](../chemical/)'s dual rails, any polynomial ODE. Provisional until molecular-science is founded (ADR 0076 §2.5).
 
 ## 1. The Substrates
 

@@ -1,6 +1,6 @@
 # 0076. Physical Computing: Computation by the Dynamics of Matter, its Pipeline and its Substrates
 
-- **Status:** Accepted, provisionally; planned, no code yet
+- **Status:** Accepted, provisionally; being built (2026-11-06: the formalism and the simulators of the fluids, chemical and molecular families, on physis's decision 0022)
 - **Date:** 2026-11-06
 - **Decided by:**
   - **The request.** The user proposed that "emerging computation tech" deserves a domain, after passing on two assessments of candidate substrates. Their premise was that "any dynamical system, or a system that can be changed under some constraints, can potentially be utilized as a computation system". They gave three criteria: complex systems (chaos, nonlinearity, changing attractors, critical transitions, so that AI may discover knowledge in a virtual world), "high generativity capacity (so that we can simulate various phenomena)", and kindness to the environment ("important for climate, Earth environment, ecosystem").
