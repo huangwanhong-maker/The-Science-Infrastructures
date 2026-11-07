@@ -164,7 +164,7 @@ async function openTool(plugin, tool) {
   try {
     const mod = await import(`/plugins/${plugin.name}/${tool.module}`);
     body.replaceChildren();
-    await mod.render(body, context(plugin));
+    await mod.render(body, context(plugin, { spec: tool }));
   } catch (error) {
     dom.failure(body, error);
     console.error(error);

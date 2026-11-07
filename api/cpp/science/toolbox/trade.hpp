@@ -13,7 +13,7 @@
 
 #include "econometrics.hpp"
 
-namespace tools {
+namespace science::toolbox {
 
 // A year of flows as a matrix of exports, with its places.
 struct Bilateral {
@@ -235,4 +235,4 @@ inline Json trade_gravity(const Request& r) {
   return answer("The gravity of trade", std::move(blocks));
 }
 
-}  // namespace tools
+}  // namespace science::toolbox

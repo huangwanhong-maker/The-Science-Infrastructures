@@ -64,7 +64,13 @@ export function createSpaceTimeHost({ THREE, earth, gis, area, theme, cityFar, l
     const flip = sequential && (night !== darkLow);
     return (u) => {
       const t = Math.min(1, Math.max(0, u));
-      if (!sequential) return m.colour(t);
+      if (!sequential) {
+        const c = m.colour(t);
+        if (!night || m.kind !== 'diverging') return c;
+        // The two ends keep the map's validated colours; its pale middle, which by night would glare, sinks towards the night's plum.
+        const a = 0.22 + 0.78 * Math.min(1, Math.abs(2 * t - 1) * 1.5);
+        return [0.09 + (c[0] - 0.09) * a, 0.06 + (c[1] - 0.06) * a, 0.11 + (c[2] - 0.11) * a];
+      }
       const v = 0.14 + 0.86 * t;
       return m.colour(flip ? 1 - v : v);
     };
@@ -217,7 +223,10 @@ export function createSpaceTimeHost({ THREE, earth, gis, area, theme, cityFar, l
         // A count of nothing raises nothing: a cell empty at this moment is not a low column.
         if (!Number.isFinite(v) || (v <= 0 && V.scale && V.scale.low >= 0)) { heights[k] = -1; colours[k] = null; continue; }
         const u = Math.min(1, Math.max(0, V.of(v)));
-        heights[k] = e.top * (0.03 + u);
+        // A value about zero rises by its size, either way; its colour says which.
+        // A point's mark keeps a floor (style.base), so that a value near zero is still seen standing where it was measured.
+        const base = e.style.base ?? (V.scale?.kind === 'diverging' ? 0.015 : 0.03);
+        heights[k] = e.top * (V.scale?.kind === 'diverging' ? base + (1 - base) * 2 * Math.abs(u - 0.5) : base + (1 - base) * u);
         colours[k] = lut[Math.round(u * 63)];
       }
     } else {
@@ -291,11 +300,17 @@ export function createSpaceTimeHost({ THREE, earth, gis, area, theme, cityFar, l
     } else if (mark === 'drape') {
       e.draw = 'drape';
     }
-    moveTo(e, timeline.now, timeline.window, timeline.keep);
+    moveTo(e, timeline.isOpen ? timeline.now : e.rec.span[0], timeline.isOpen ? timeline.window : Infinity, timeline.isOpen ? timeline.keep : 0);
   }
 
   function retime() {
     if (!shown.size) { timeline.close(); return; }
+    // A record of one moment has no line of time to run along.
+    if ([...shown.values()].every((e) => e.rec.span[1] <= e.rec.span[0])) {
+      timeline.close();
+      for (const e of shown.values()) moveTo(e, e.rec.span[0], Infinity, 0);
+      return;
+    }
     let a = Infinity, b = -Infinity;
     for (const e of shown.values()) { a = Math.min(a, e.rec.span[0]); b = Math.max(b, e.rec.span[1]); }
     if (b <= a) b = a + ST.HOUR;
@@ -348,7 +363,7 @@ export function createSpaceTimeHost({ THREE, earth, gis, area, theme, cityFar, l
     const tolerance = Math.max(25, earth.groundMetresPerPixel() * 9);
     const when = (t) => ST.formatTime(t, 'full', 1);
     for (const e of [...shown.values()].reverse()) {
-      const r = e.rec, now = timeline.now, win = timeline.window;
+      const r = e.rec, now = timeline.isOpen ? timeline.now : e.rec.span[0], win = timeline.isOpen ? timeline.window : Infinity;
       if (r.kind === 'events') {
         const b = ST.lowerBound(r.time, now + 1), a = Number.isFinite(win) ? ST.lowerBound(r.time, now - win) : Math.max(0, b - 200000);
         let best = -1, d = tolerance;
@@ -364,7 +379,7 @@ export function createSpaceTimeHost({ THREE, earth, gis, area, theme, cityFar, l
           const q = r.cells[k].ring;
           let inside = false;
           for (let i = 0, j = q.length - 1; i < q.length; j = i++) if ((q[i][1] > lat) !== (q[j][1] > lat) && lon < ((q[j][0] - q[i][0]) * (lat - q[i][1])) / (q[j][1] - q[i][1]) + q[i][0]) inside = !inside;
-          if (inside) return { e, title: r.cells[k].name || String(r.cells[k].id), lines: [when(r.time[s]) , ...(V.name ? [`${V.name}: ${fmt(r.values[V.name][s * n + k])}${r.units[V.name] ? ` ${r.units[V.name]}` : ''}`] : [])] };
+          if (inside) return { e, title: r.cells[k].name || String(r.cells[k].id), lines: [...(r.span[1] > r.span[0] ? [when(r.time[s])] : []), ...(V.name ? [`${V.name}: ${fmt(r.values[V.name][s * n + k])}${r.units[V.name] ? ` ${r.units[V.name]}` : ''}`] : [])] };
         }
       } else if (r.kind === 'grid') {
         const [south, west, north, east] = r.box;

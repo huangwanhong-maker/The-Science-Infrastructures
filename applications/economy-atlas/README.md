@@ -124,9 +124,9 @@ Twenty-seven tools of quantitative economics ([ADR 0056](../../development/decis
 | Growth and macroeconomics | the Solow model; IS–LM with a policy's shift; growth accounting | economics |
 | Games and choice | two-player games; zero-sum games; stable matching; voting rules | nomos |
 
-A tool's form is built from its declaration ([`src/tools.js`](src/tools.js)): a table and its rows (`where year = 2019`), the columns its roles take, and its choices. Every tool opens on an example and runs at once. Where the library's data cannot carry a valid design, the example is simulated and says so: markets whose cost of supply is a valid instrument for their price, regions treated from 2020.
+A tool's form is built from its declaration ([`catalogue.js`](../../visualization/js/toolbox/catalogue.js)): a table and its rows (`where year = 2019`), the columns its roles take, and its choices. Every tool opens on an example and runs at once. Where the library's data cannot carry a valid design, the example is simulated and says so: markets whose cost of supply is a valid instrument for their price, regions treated from 2020.
 
-- **The tables.** The library's ([`tables.py`](tables.py)): the economies by year, 2000–2024, with their trade (OECD BIMTS) beside eleven of the World Bank's indicators and its regions and income groups; the currencies by month, long and wide. One's own: **+ your data** takes a CSV or JSON table (a column is numbers when every filled cell is one). Or a table pasted into the form.
+- **The tables.** The library's ([`economic_tables.py`](../../data/products/economic_tables.py)): the economies by year, 2000–2024, with their trade (OECD BIMTS) beside eleven of the World Bank's indicators and its regions and income groups; the currencies by month, long and wide. One's own: **+ your data** takes a CSV or JSON table (a column is numbers when every filled cell is one). Or a table pasted into the form.
 - **The answers** are figures, tables (copied, or saved as CSV), charts (lines with their intervals, bars, scatters with their fit, matrices) and notes. Values for the economies (growth of income, a tool's effects, a partner's intensity) go to the map as a layer, by **Show on the map**.
 
 `#toolbox&tool=gravity` opens a tool by its id.
@@ -249,11 +249,11 @@ Answers for a year or a span are kept in `data/cache/economy-atlas/answers/`, ke
 | `index.html`, `styles.css`, `src/` | The page: ES modules, no build step; its colours as tokens of day and night |
 | `serve.py`, `engine.py`, `recipe.json` | The server, the engine's builder, the recipe |
 | `engine/economy.cpp` | The engine |
-| `engine/tools.hpp`, `engine/tools/` | The toolbox's engine: reading a request, writing an answer, and a header for each group of tools |
+| [`api/cpp/science/toolbox.hpp`](../../api/cpp/science/toolbox.hpp), `toolbox/` (shared, ADR 0080) | The toolbox's engine: reading a request, writing an answer, and a header for each group of tools |
 | `engine/decide.hpp`, `src/decisions.js` | The Decisions view's engine and page |
 | `datasets.py` | One's own data, read into the library's schemas and kept |
-| `tables.py` | The toolbox's tables, made from the library's products and the World Bank's indicators |
-| `src/toolbox.js`, `src/tools.js`, `src/charts.js` | The toolbox's view, its catalogue of tools, and its charts |
+| `tables.py`, on [`data/products/economic_tables.py`](../../data/products/economic_tables.py) (shared, ADR 0080) | The toolbox's tables, made from the library's products and the World Bank's indicators |
+| `src/toolbox.js`, with [`visualization/js/toolbox/`](../../visualization/js/toolbox/) (shared, ADR 0080) | The toolbox's view, its catalogue of tools, and its charts |
 | `plugins/` | The plug-ins, with their README and three examples |
 | `examples/` | Invented data to try the formats |
 | `src/map.js` | The map, on the visualization layer's 2D GIS (`visualization/js/map`): places, arcs, eddies and the plug-ins' layers on Equal Earth, named by the policy; the card under the pointer, the strip of years; the address it keeps, and its figures |

@@ -412,3 +412,9 @@ table.matrix-chart td { padding: 4px 6px; text-align: right; border-radius: 1px;
 .dc-rail-note { margin: 10px 6px 0; line-height: 1.45; }
 #dc-rail .tb-tool { align-items: flex-start; padding-top: 5px; padding-bottom: 5px; }
 #dc-rail .tb-tool .note { font-size: 11.5px; }
+
+/* ---- the colours of the toolbox's charts (visualization/js/toolbox/charts.js), the atlas's data tokens by day and by night ---- */
+:root {
+  --tb-series-1: var(--driven); --tb-series-2: var(--rose); --tb-series-3: var(--global); --tb-series-4: var(--sends); --tb-series-5: #5E9A4C; --tb-series-6: #A05C9C;
+  --tb-dots: var(--sends); --tb-line: var(--rose); --tb-low: var(--sends); --tb-mid: var(--neutral); --tb-high: var(--draws);
+}

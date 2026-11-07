@@ -15,9 +15,8 @@
 #include <string>
 #include <vector>
 
-namespace tools {
+namespace science::toolbox {
 
-using science::Json;
 using Arr = Json::Array;
 using Obj = Json::Object;
 constexpr double NaN = std::numeric_limits<double>::quiet_NaN();
@@ -171,6 +170,14 @@ inline Json map_values(const std::string& title, const std::map<std::string, dou
   return Json(Obj{{"kind", Json("map")}, {"title", Json(title)}, {"values", Json(std::move(o))}, {"scale", Json(scale)}, {"unit", Json(unit)}});
 }
 
+// A value for each row of the table given, which the page can draw where its rows are places. A row the tool left out
+// (a missing value) has no entry.
+inline Json rows_of(const std::string& title, const std::vector<std::size_t>& rows, const std::vector<double>& values, const std::string& scale, const std::string& unit = "") {
+  Arr at;
+  for (std::size_t i : rows) at.push_back(Json(static_cast<double>(i)));
+  return Json(Obj{{"kind", Json("rows")}, {"title", Json(title)}, {"rows", Json(std::move(at))}, {"values", nums(values)}, {"scale", Json(scale)}, {"unit", Json(unit)}});
+}
+
 // ---- reading what the page typed ---------------------------------------------------------------------------
 
 // Labels as groups 0 … G − 1, in the order they first appear, and the names of the groups.
@@ -242,4 +249,4 @@ inline std::string fixed(double x, int digits = 3) {
   return b;
 }
 
-}  // namespace tools
+}  // namespace science::toolbox

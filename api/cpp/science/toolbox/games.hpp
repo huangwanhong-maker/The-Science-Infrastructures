@@ -18,7 +18,7 @@
 
 #include "answer.hpp"
 
-namespace tools {
+namespace science::toolbox {
 
 namespace ng = nomos::games;
 
@@ -228,4 +228,4 @@ inline Json voting(const Request& r) {
   return answer("Voting rules", std::move(blocks));
 }
 
-}  // namespace tools
+}  // namespace science::toolbox

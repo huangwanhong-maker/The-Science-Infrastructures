@@ -1,13 +1,34 @@
-// Small charts for the toolbox's answers, in SVG and in the atlas's colours: lines (with bands),
-// bars (grouped or stacked, with a band), a scatter (with a line), and a matrix of values. Each
-// answers the pointer with a card, has its legend, and keeps its marks thin.
+// Small charts for a toolbox's answers, in SVG: lines (with bands), bars (grouped or stacked, with a band), a scatter (with a
+// line), and a matrix of values. Each answers the pointer with a card, has its legend, and keeps its marks thin. Their colours
+// are the page's: its stylesheet names them as --tb-series-1 to 6 (validated as neighbours for colour vision deficiencies),
+// --tb-dots, --tb-line, --tb-low, --tb-mid and --tb-high; with none, the Economy Atlas's by day.
 
 import { el, svg, put } from './dom.js';
-import { token, diverging } from './palette.js';
 
-// The series' colours in a fixed order, validated as neighbours for colour vision deficiencies:
-// indigo, rose, gold, sky, green, plum; more series than six share a legend and a table instead.
-export const LINE_COLOURS = () => [token('driven'), token('rose'), token('global'), token('sends'), '#5E9A4C', '#A05C9C'];
+const FALLBACK = { 'series-1': '#5B63B0', 'series-2': '#E0607E', 'series-3': '#C39A2E', 'series-4': '#4A86C5', 'series-5': '#5E9A4C', 'series-6': '#A05C9C',
+  dots: '#4A86C5', line: '#E0607E', low: '#4A86C5', mid: '#F1F0EA', high: '#E0607E' };
+const token = (name) => {
+  const v = typeof document === 'undefined' ? '' : getComputedStyle(document.documentElement).getPropertyValue(`--tb-${name}`).trim();
+  return v || FALLBACK[name];
+};
+const rgb = (c) => {
+  const m = /^rgba?\(\s*([\d.]+)[ ,]+([\d.]+)[ ,]+([\d.]+)/.exec(c);
+  if (m) return [+m[1], +m[2], +m[3]];
+  const s = c.replace('#', '');
+  const x = s.length === 3 ? s.split('').map((k) => k + k).join('') : s;
+  return [0, 2, 4].map((i) => parseInt(x.slice(i, i + 2), 16));
+};
+const mix = (a, b, t) => a.map((x, i) => Math.round(x + (b[i] - x) * t));
+// t in [−1, 1], eased so that small values stay quiet.
+function diverging(t) {
+  const u = Math.max(-1, Math.min(1, Number.isFinite(t) ? t : 0));
+  const s = Math.sign(u) * Math.pow(Math.abs(u), 0.7);
+  const c = mix(rgb(token('mid')), rgb(token(s < 0 ? 'low' : 'high')), Math.abs(s));
+  return `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
+}
+
+// The series' colours in a fixed order; more series than six share a legend and a table instead.
+export const LINE_COLOURS = () => [1, 2, 3, 4, 5, 6].map((k) => token(`series-${k}`));
 
 const fmt = (x) => {
   if (!Number.isFinite(x)) return '—';
@@ -200,12 +221,12 @@ export function scatterChart({ title, x, y, xlabel = '', ylabel = '', labels = n
   const Y = (v) => m.t + ((H - m.t - m.b) * (yt.at(-1) - v)) / (yt.at(-1) - yt[0] || 1);
   axes(host, X, Y, xt, yt, W, H, m, xlabel, ylabel);
   const dots = svg('g', {});
-  pts.forEach(([a, b], i) => put(dots, svg('circle', { cx: X(a).toFixed(1), cy: Y(b).toFixed(1), r: 3.2, fill: token('sends'), 'fill-opacity': 0.55, stroke: 'var(--card)', 'stroke-width': 0.8, 'data-i': i })));
+  pts.forEach(([a, b], i) => put(dots, svg('circle', { cx: X(a).toFixed(1), cy: Y(b).toFixed(1), r: 3.2, fill: token('dots'), 'fill-opacity': 0.55, stroke: 'var(--tb-surface, var(--card, transparent))', 'stroke-width': 0.8, 'data-i': i })));
   put(host, dots);
   if (line) {
     let d = '';
     line.x.forEach((v, i) => { d += `${i ? 'L' : 'M'}${X(v).toFixed(1)},${Y(line.y[i]).toFixed(1)}`; });
-    put(host, svg('path', { d, fill: 'none', stroke: token('rose'), 'stroke-width': 2 }));
+    put(host, svg('path', { d, fill: 'none', stroke: token('line'), 'stroke-width': 2 }));
   }
   const tip = hoverCard(box);
   dots.addEventListener('pointermove', (e) => {

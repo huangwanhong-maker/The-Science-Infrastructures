@@ -233,6 +233,22 @@
         "data/products/rdls_records.py"
       ],
       "done": "data/cache/products/rdls-freetown.json"
+    },
+    {
+      "id": "economic-tables",
+      "title": "The toolbox's tables of the world: economies by year with the World Bank's indicators, and currencies by month",
+      "run": [
+        "data/products/economic_tables.py"
+      ],
+      "done": "data/cache/products/tables/economies.json"
+    },
+    {
+      "id": "city-tables",
+      "title": "The toolbox's tables of the cities: Melbourne's blocks and counters, and Freetown's wards",
+      "run": [
+        "data/products/city_tables.py"
+      ],
+      "done": "data/cache/products/tables/melbourne-blocks.json"
     }
   ]
 }

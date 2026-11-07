@@ -18,8 +18,9 @@
 #include <set>
 
 #include "answer.hpp"
+#include "spatial.hpp"
 
-namespace tools {
+namespace science::toolbox {
 
 namespace tr = tyche::regression;
 namespace ne = nomos::econometrics;
@@ -189,6 +190,7 @@ inline Json ols(const Request& r) {
     blocks.push_back(scatter("The outcome against the fit (the diagonal: a perfect fit)", px, py, "fitted", D.y_name[0], {*lo, *hi}, {*lo, *hi}));
   }
   blocks.push_back(note("β̂ = (XᵀX)⁻¹Xᵀy by Householder QR; robust covariances after White (1980) and MacKinnon and White (1985), clustered after Cameron and Miller (2015). tyche::regression."));
+  residual_blocks(r, D.rows, f.residuals, f.fitted, D.y_name[0], blocks);
   return answer("Linear regression", std::move(blocks));
 }
 
@@ -236,6 +238,11 @@ inline Json glm(const Request& r) {
     blocks.push_back(coefficients("Average marginal effects on the probability that y = 1", mn, e, se, z, p, lo, hi, "z", "The delta method on the coefficients' covariance. nomos::econometrics."));
   }
   blocks.push_back(note("IRLS (McCullagh and Nelder 1989); PPML after Santos Silva and Tenreyro (2006). tyche::regression."));
+  {
+    std::vector<double> e(D.y.size());
+    for (std::size_t i = 0; i < e.size(); i++) e[i] = D.y[i] - f.fitted[i];
+    residual_blocks(r, D.rows, e, f.fitted, D.y_name[0], blocks);
+  }
   return answer(family == "poisson" ? "Poisson regression" : "Binary choice", std::move(blocks));
 }
 
@@ -282,6 +289,17 @@ inline Json panel(const Request& r) {
                                            : "Hausman's test does not reject random effects: both estimators are consistent if the effects are independent of the regressors, and random effects is the more efficient."));
   }
   blocks.push_back(note("Wooldridge (2010), ch. 10; Baltagi (2013), chs 2–3; the two-way effects absorbed by alternating projections. nomos::econometrics."));
+  if (wants_rows(r)) {
+    // Each unit's effect, on each of its rows: what a place holds beyond its regressors, through the panel.
+    std::map<std::int64_t, double> effect;
+    for (std::size_t k = 0; k < fe.unit_labels.size() && k < fe.unit_effects.size(); k++) effect[fe.unit_labels[k]] = fe.unit_effects[k];
+    double mean = 0;
+    for (const auto& [label, a] : effect) mean += a / static_cast<double>(effect.size());
+    std::vector<double> by_row(D.rows.size());
+    for (std::size_t m = 0; m < by_row.size(); m++) by_row[m] = effect[unit[m]] - mean;
+    blocks.push_back(rows_of("Each unit's effect, about their mean: what it holds beyond its regressors", D.rows, by_row, "diverging"));
+    blocks.push_back(rows_of("Residuals: what " + D.y_name[0] + " holds beyond the fit and the effects", D.rows, fe.fit.residuals, "diverging"));
+  }
   return answer("Panel regression", std::move(blocks));
 }
 
@@ -438,4 +456,4 @@ inline Json convergence(const Request& r) {
   return answer("Convergence of incomes", std::move(blocks));
 }
 
-}  // namespace tools
+}  // namespace science::toolbox

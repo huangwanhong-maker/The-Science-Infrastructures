@@ -1,0 +1,95 @@
+{
+  "title": "Quantitative economics",
+  "tagline": "regressions, inequality, series and games, on this place's data",
+  "summary": "The toolbox of quantitative economics on the place open: its tables of blocks, counters, wards and cells, the economies of the world, what is shown in the studio, or a table pasted. Every tool can run for each place, and its answers stand on the map and on the line of time.",
+  "status": "draft",
+  "activity": "use",
+  "order": 9,
+  "lens": "economy",
+  "engine": "engine/main.cpp",
+  "layers": [],
+  "tools": [
+    {
+      "id": "questions",
+      "anywhere": true,
+      "group": "Asked of this place",
+      "title": "Questions of this place",
+      "module": "tools/toolbox.js",
+      "open": "questions",
+      "about": "Questions put in plain words to the tables of the place open, answered by the toolbox and drawn on the map."
+    },
+    {
+      "id": "econometrics",
+      "anywhere": true,
+      "group": "The toolbox",
+      "title": "Regression and panels",
+      "module": "tools/toolbox.js",
+      "open": "econometrics",
+      "about": "Least squares, OLS, logit, probit, Poisson, PPML, fixed effects, random effects, Hausman, instrumental variables, 2SLS, difference in differences, convergence of incomes. Residuals on the map."
+    },
+    {
+      "id": "measurement",
+      "anywhere": true,
+      "group": "The toolbox",
+      "title": "Inequality and concentration",
+      "module": "tools/toolbox.js",
+      "open": "measurement",
+      "about": "Gini, Theil, Atkinson, Palma, Lorenz curve, poverty, Foster Greer Thorbecke, Herfindahl Hirschman, concentration ratios, location quotients, specialisation, dissimilarity, index numbers, Laspeyres, Paasche, Fisher, Törnqvist."
+    },
+    {
+      "id": "space",
+      "anywhere": true,
+      "group": "The toolbox",
+      "title": "Neighbours in space",
+      "module": "tools/toolbox.js",
+      "open": "space",
+      "about": "Moran's I, spatial autocorrelation, local Moran, LISA, hot spots, cold spots, clusters, outliers."
+    },
+    {
+      "id": "series",
+      "anywhere": true,
+      "group": "The toolbox",
+      "title": "Time series",
+      "module": "tools/toolbox.js",
+      "open": "series",
+      "about": "Autocorrelation, unit roots, Dickey Fuller, KPSS, ARIMA, forecasts, trend and cycle, Hodrick Prescott, vector autoregression, VAR, Granger, cointegration, Engle Granger, Johansen."
+    },
+    {
+      "id": "statistics",
+      "anywhere": true,
+      "group": "The toolbox",
+      "title": "Summary and correlation",
+      "module": "tools/toolbox.js",
+      "open": "statistics",
+      "about": "Means, spreads, quantiles, Pearson's and Spearman's correlations."
+    },
+    {
+      "id": "trade",
+      "anywhere": true,
+      "group": "The toolbox",
+      "title": "Trade",
+      "module": "tools/toolbox.js",
+      "open": "trade",
+      "about": "The gravity of trade, PPML, partner concentration, trade intensity, on the world's trade in goods."
+    },
+    {
+      "id": "growth",
+      "anywhere": true,
+      "group": "The toolbox",
+      "title": "Growth and the short run",
+      "module": "tools/toolbox.js",
+      "open": "growth",
+      "about": "The Solow model, golden rule, IS-LM, multipliers, growth accounting, total factor productivity."
+    },
+    {
+      "id": "games",
+      "anywhere": true,
+      "group": "The toolbox",
+      "title": "Games and choice",
+      "module": "tools/toolbox.js",
+      "open": "games",
+      "about": "Nash equilibria, dominance, zero-sum games, stable matching, Gale and Shapley, voting rules, plurality, Borda, runoff, Condorcet, Copeland, Schulze."
+    }
+  ],
+  "source": "The methods: the foundations tyche and nomos and the economics domain, through the API's toolbox. The tables: the City of Melbourne's censuses and counters, Space2Stats, the World Bank, the OECD, and Freetown's flood assessment, as each table says."
+}

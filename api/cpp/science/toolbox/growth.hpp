@@ -9,7 +9,7 @@
 
 #include "answer.hpp"
 
-namespace tools {
+namespace science::toolbox {
 
 // The Solow–Swan model: its steady state, golden rule and path from a share of the steady capital.
 inline Json solow(const Request& r) {
@@ -125,4 +125,4 @@ inline Json growth_accounting(const Request& r) {
   return answer("Growth accounting", std::move(blocks));
 }
 
-}  // namespace tools
+}  // namespace science::toolbox

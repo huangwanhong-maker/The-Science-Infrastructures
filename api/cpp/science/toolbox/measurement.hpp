@@ -8,12 +8,13 @@
 #include <nomos/measurement/decomposition.hpp>
 #include <nomos/measurement/inequality.hpp>
 #include <nomos/measurement/poverty.hpp>
+#include <nomos/measurement/specialisation.hpp>
 
 #include <numeric>
 
 #include "answer.hpp"
 
-namespace tools {
+namespace science::toolbox {
 
 namespace nm = nomos::measurement;
 
@@ -58,10 +59,13 @@ inline Json inequality(const Request& r) {
   const auto A = amounts(r);
   const double eps = r.number("epsilon", 1);
   const auto L = nm::lorenz(A.x, A.w);
+  // The mean log deviation and Atkinson's index from ε = 1 on take logarithms of the amounts, so that a zero leaves them undefined:
+  // where some rows hold nothing, those are left out, and said to be.
+  const bool zeros = std::any_of(A.x.begin(), A.x.end(), [](double v) { return v <= 0; });
   Arr blocks;
   blocks.push_back(figures("The indices", {
-      {"Gini", nm::gini(L)}, {"Theil T, GE(1)", nm::theil_t(A.x, A.w)}, {"Theil L, mean log deviation", nm::theil_l(A.x, A.w)},
-      {"Atkinson A(" + fixed(eps, 2) + ")", nm::atkinson(A.x, eps, A.w)}, {"Palma ratio, top 10% / bottom 40%", nm::palma_ratio(L)},
+      {"Gini", nm::gini(L)}, {"Theil T, GE(1)", nm::theil_t(A.x, A.w)}, {"Theil L, mean log deviation", zeros ? NaN : nm::theil_l(A.x, A.w)},
+      {"Atkinson A(" + fixed(eps, 2) + ")", zeros && eps >= 1 ? NaN : nm::atkinson(A.x, eps, A.w)}, {"Palma ratio, top 10% / bottom 40%", nm::palma_ratio(L)},
       {"share of the top 10%", nm::top_share(L, 0.1)}, {"share of the bottom 40%", L.at(0.4)},
       {"coefficient of variation", nm::coefficient_of_variation(A.x, A.w)}, {"mean", L.mean}}));
   std::vector<double> p, l, equal;
@@ -86,6 +90,7 @@ inline Json inequality(const Request& r) {
     blocks.push_back(table("The groups", {"group", "weight, %", "amount, %", "mean", "Theil T within"}, std::move(rows),
                            "Theil T = Σ_g s_g T_g + Σ_g s_g ln(μ_g/μ): within plus between (Shorrocks 1980)."));
   }
+  if (zeros) blocks.push_back(note("Some rows hold nothing: the mean log deviation" + std::string(eps >= 1 ? " and Atkinson's index for this ε" : "") + " take logarithms of the amounts, and are left out."));
   blocks.push_back(note(std::to_string(A.x.size()) + " rows" + (r.role("weight").empty() ? "" : ", weighted") + ". nomos::measurement; Cowell (2011)."));
   return answer("Inequality", std::move(blocks));
 }
@@ -148,6 +153,58 @@ inline Json concentration(const Request& r) {
 }
 
 // Index numbers from a long table of periods, items, prices and quantities.
+// Where each kind of activity gathers: a table of places by kinds, one column a kind.
+inline Json specialisation(const Request& r) {
+  const auto names = r.role("columns");
+  if (names.size() < 2) throw std::invalid_argument("choose at least two columns, one for each kind");
+  std::vector<std::vector<double>> columns;
+  for (const auto& n : names) {
+    auto c = r.numbers(n);
+    for (double& v : c)
+      if (!std::isfinite(v)) v = 0;  // a cell the source left empty holds none that it says
+    columns.push_back(std::move(c));
+  }
+  const std::size_t n = columns[0].size(), K = names.size();
+  // Only places that hold something of these kinds have a share.
+  std::vector<std::size_t> rows;
+  for (std::size_t i = 0; i < n; i++) {
+    double total = 0;
+    for (const auto& c : columns) total += c[i];
+    if (total > 0) rows.push_back(i);
+  }
+  if (rows.size() < 2) throw std::invalid_argument("too few places hold anything of these kinds");
+  calx::linalg::Rectangular x(rows.size(), K);
+  for (std::size_t m = 0; m < rows.size(); m++)
+    for (std::size_t k = 0; k < K; k++) x(m, k) = columns[k][rows[m]];
+  const auto lq = nomos::measurement::location_quotients(x);
+  std::string focus = r.text("focus", "");
+  auto at = std::find(names.begin(), names.end(), focus);
+  if (at == names.end()) at = names.begin(), focus = names[0];
+  const auto f = static_cast<std::size_t>(at - names.begin());
+
+  Arr kinds;
+  for (std::size_t k = 0; k < K; k++) {
+    std::vector<double> a(rows.size()), rest(rows.size(), 0.0);
+    double total = 0, holds = 0;
+    for (std::size_t m = 0; m < rows.size(); m++) {
+      a[m] = x(m, k);
+      total += a[m];
+      for (std::size_t j = 0; j < K; j++)
+        if (j != k) rest[m] += x(m, j);
+      if (std::isfinite(lq(m, k)) && lq(m, k) > 1) holds += 1;
+    }
+    kinds.push_back(Json(Arr{Json(names[k]), num(total), num(total > 0 ? nomos::measurement::dissimilarity(a, rest) : NaN), num(holds)}));
+  }
+  std::vector<double> focus_lq(rows.size());
+  for (std::size_t m = 0; m < rows.size(); m++) focus_lq[m] = lq(m, f);
+  Arr blocks;
+  blocks.push_back(table("The kinds, and how apart each lies from the rest", {"", "total", "dissimilarity from the rest", "places with a quotient above 1"}, std::move(kinds),
+                         "The index of dissimilarity is the share of a kind that would have to move for it to lie as the rest do (Duncan and Duncan 1955)."));
+  blocks.push_back(rows_of("Location quotient of " + focus + ": its share here over its share of the whole; above 1 it gathers here", rows, focus_lq, "sequential"));
+  blocks.push_back(note("LQ = (x_ij / Σ_j x_ij) / (Σ_i x_ij / Σ_ij x_ij) (Isard 1960). " + std::to_string(rows.size()) + " places hold something of these kinds. nomos::measurement."));
+  return answer("Location quotients", std::move(blocks));
+}
+
 inline Json price_index(const Request& r) {
   const auto period = r.texts(r.one("period")), item = r.texts(r.one("item"));
   const auto price = r.numbers(r.one("price")), quantity = r.numbers(r.one("quantity"));
@@ -211,4 +268,4 @@ inline Json price_index(const Request& r) {
   return answer("Index numbers", std::move(blocks));
 }
 
-}  // namespace tools
+}  // namespace science::toolbox

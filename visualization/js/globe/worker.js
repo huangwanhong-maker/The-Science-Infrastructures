@@ -24,7 +24,8 @@ self.onmessage = async (event) => {
     const fig = figure(msg.figure);
     let tile;
     if (url) {
-      const r = await fetch(url, { signal: controller.signal });
+      // Low priority: a browser gives each host six connections, and a page's own requests should not wait behind a sky of tiles.
+      const r = await fetch(url, { signal: controller.signal, priority: 'low' });
       if (!r.ok) throw new Error(`terrain ${z}/${x}/${y}: HTTP ${r.status}`);
       tile = decodeTile(await r.arrayBuffer());
     } else {

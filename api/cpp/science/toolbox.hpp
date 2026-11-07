@@ -1,5 +1,6 @@
-// The toolbox of the Economy Atlas's engine (ADR 0048): each tool takes the columns of a table, by
-// the roles the page gave them, and parameters, and answers blocks the page draws:
+// The toolbox of quantitative economics (ADR 0056, moved here from the Economy Atlas by ADR 0080, so that any application's
+// engine may answer it): each tool takes the columns of a table, by the roles the page gave them, and parameters, and
+// answers blocks the page draws:
 //
 //   {"kind": "figures", "title", "items": [[label, value, note?]]}       key numbers (or words)
 //   {"kind": "table", "title", "columns": [...], "rows": [[...]], "note"?}
@@ -8,12 +9,14 @@
 //   {"kind": "scatter", "title", "x", "y", "xlabel", "ylabel", "labels"?, "line"?: {"x", "y"}}
 //   {"kind": "matrix", "title", "rows": [...], "columns": [...], "values": [[...]]}
 //   {"kind": "map", "title", "values": {id: number}, "scale": "diverging"|"sequential", "unit"}   to the map, as a layer
+//   {"kind": "rows", "title", "rows": [i], "values": [...], "scale", "unit"}   a value for each row kept, drawn where the rows are places (asked by "by_row", or a tool's own)
+//   {"kind": "each", "title", "columns", "keys", "measures", "left"}           the tool's numbers for each part ("each": [column, ...]; toolbox/each.hpp)
 //   {"kind": "note", "text"}
 //
 // The methods are the foundations' and the domain's: tyche (probability, statistics, regression,
 // time series), nomos (econometrics, measurement, index numbers, games, matching, choice), and the
 // economics domain (growth, macro, trade); the engine only reads, calls and writes. The tools are
-// in tools/, a header for each group.
+// in toolbox/, a header for each group.
 
 #pragma once
 
@@ -21,15 +24,17 @@
 #include <map>
 #include <string>
 
-#include "tools/answer.hpp"
-#include "tools/econometrics.hpp"
-#include "tools/games.hpp"
-#include "tools/growth.hpp"
-#include "tools/measurement.hpp"
-#include "tools/series.hpp"
-#include "tools/trade.hpp"
+#include "toolbox/answer.hpp"
+#include "toolbox/each.hpp"
+#include "toolbox/econometrics.hpp"
+#include "toolbox/games.hpp"
+#include "toolbox/growth.hpp"
+#include "toolbox/measurement.hpp"
+#include "toolbox/series.hpp"
+#include "toolbox/spatial.hpp"
+#include "toolbox/trade.hpp"
 
-namespace tools {
+namespace science::toolbox {
 
 inline const std::map<std::string, std::function<Json(const Request&)>>& registry() {
   static const std::map<std::string, std::function<Json(const Request&)>> R = {
@@ -53,6 +58,8 @@ inline const std::map<std::string, std::function<Json(const Request&)>>& registr
       {"poverty", poverty},
       {"concentration", concentration},
       {"price-index", price_index},
+      {"specialisation", specialisation},
+      {"moran", moran},
       {"game", game},
       {"zero-sum", zero_sum},
       {"matching", matching},
@@ -70,7 +77,9 @@ inline Json run(const Json& request) {
   const auto& R = registry();
   const auto it = R.find(t->as_string());
   if (it == R.end()) throw std::invalid_argument("the engine has no tool \"" + t->as_string() + "\" yet");
+  // For each place (toolbox/each.hpp), when a table's columns name what to split by.
+  if (const Json* e = request.find("each"); e && e->is_array() && !e->as_array().empty()) return each(request, it->second);
   return it->second(Request(request));
 }
 
-}  // namespace tools
+}  // namespace science::toolbox

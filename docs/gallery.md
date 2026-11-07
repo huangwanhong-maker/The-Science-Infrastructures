@@ -1220,7 +1220,34 @@ Anything with a place and a time, drawn through time on the Urban Science Workbe
 </tr>
 </table>
 
-## 18. Credits
+## 18. Quantitative Economics in the Urban Science Workbench
+
+The toolbox of quantitative economics, moved down so that any application answers it, on the place open: its blocks, counters, wards and cells, the world's economies, or a table of one's own ([ADR 0080](../development/decisions/0080-quantitative-economics-in-the-urban-workbench.md)). Every tool can run for each place, and what it finds of places stands on the map.
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/econ-01-questions.jpg"><img src="../assets/gallery/econ-01-questions.jpg" alt="Melbourne's centre beside a panel listing questions in serif italic, grouped under Melbourne, the point looked at, and the world."></a><br><sub>Questions in plain words, put to the place open. Melbourne's come first, then those about the point looked at, then the world's. Each is a tool's form filled in, and can be taken further in the form.</sub></td>
+<td width="50%" valign="top"><a href="../assets/gallery/econ-02-residuals.jpg"><img src="../assets/gallery/econ-02-residuals.jpg" alt="Melbourne's blocks coloured rose and lavender beneath the towers, beside a regression's results."></a><br><sub>Which blocks hold more businesses than their floor space explains? Logarithms of each across 519 blocks in the census of 2024: an elasticity of 0.78, R² 0.43. The residuals lie as a carpet beneath the towers, rose where a block holds many small premises. Neighbours' residuals resemble each other (Moran's I 0.44, p 0.002), so the reported standard errors are too small, and the answer says so.</sub></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/econ-03-uses.jpg"><img src="../assets/gallery/econ-03-uses.jpg" alt="Blocks of Melbourne's centre in pale gold and plum by their share of office floor space, beside a table of the uses."></a><br><sub>Where offices gather: each block's share of office floor space over the municipality's, in the census of 2024 (location quotients, nomos). 123 of 501 blocks stand above 1, the highest at 4.1. The table gives each use's dissimilarity from the rest.</sub></td>
+<td width="50%" valign="top"><a href="../assets/gallery/econ-04-recovery.jpg"><img src="../assets/gallery/econ-04-recovery.jpg" alt="Slender rose and lavender pillars among Melbourne's towers at the pedestrian counters, beside a ranked list."></a><br><sub>Where did the walkers come back after the lockdowns? A regression for each of 45 counters, its months of 2025 against those of 2019. The log ratio runs from −1.28 at Flinders Underpass to +1.03 at RMIT's Building 80. Four counters lacked the months and are left out, counted.</sub></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/econ-05-food.jpg"><img src="../assets/gallery/econ-05-food.jpg" alt="Rose blocks of a hot spot across Melbourne's centre, beside Moran's figures and scatter."></a><br><sub>Where food and drink cluster: Moran's I 0.54 over 603 blocks, each against its six nearest. At 5%, uncorrected for testing each block, 67 blocks are hot spots (rose, in the centre) and 118 cold.</sub></td>
+<td width="50%" valign="top"><a href="../assets/gallery/econ-06-rain.jpg"><img src="../assets/gallery/econ-06-rain.jpg" alt="Pillars at Melbourne's counters coloured by each counter's own effect, beside a panel regression."></a><br><sub>Does rain keep walkers away? Each counter against itself over 54,869 counter-days since October 2024: a millimetre of rain takes 1.4% of a day's walkers (s.e. 0.07%). Each counter's own effect stands at its place, drawn once since it does not change in time.</sub></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/econ-07-gini.jpg"><img src="../assets/gallery/econ-07-gini.jpg" alt="A line rising from 0.70 to 0.74 in the panel, beside Melbourne with nothing drawn on it."></a><br><sub>Has the spread of businesses over the blocks changed? The tool run for each census year: the Gini coefficient of the blocks' counts rose from 0.70 in 2002 to 0.74 in 2024. There is no place to draw, so the answer is a line and the map is cleared.</sub></td>
+<td width="50%" valign="top"><a href="../assets/gallery/econ-08-lights.jpg"><img src="../assets/gallery/econ-08-lights.jpg" alt="Hexagonal cells over Victoria, dark where small and amber about Melbourne, beside a regression."></a><br><sub>What here is brighter than its people explain? The lights of 2024 on the people of 2024, in logarithms, over 2,143 of Space2Stats's cells about Melbourne (R² 0.33). By night, a residual near zero sinks into the dark instead of glaring.</sub></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/econ-09-convergence.jpg"><img src="../assets/gallery/econ-09-convergence.jpg" alt="The globe's hexagonal mosaic of economies in plum and rose, beside the convergence of incomes."></a><br><sub>Do poorer economies grow faster? Growth from 2000 to 2019 against the income of 2000, over 202 economies: β −0.0079 a year (p 8 × 10⁻¹⁴). Each economy's growth stands on its cells of the world's mosaic, in which an area in dispute has no economy.</sub></td>
+<td width="50%" valign="top"><a href="../assets/gallery/econ-10-tools-moran.jpg"><img src="../assets/gallery/econ-10-tools-moran.jpg" alt="The globe with Europe in rose and much of Africa in lavender, beside the form of Moran's I."></a><br><sub>Any tool on any table here: Moran's I of life expectancy in 2019, each economy against its six nearest on the sphere. Its clusters stand on the mosaic: Europe high among high, much of Africa low among low.</sub></td>
+</tr>
+</table>
+
+## 19. Credits
 
 The screenshots are the infrastructure's, under its MIT licence, except the three that show Pangu-Weather's forecasts (§1.3: earth-15, earth-16 and earth-17). Those are shared under CC BY-NC-SA 4.0, the licence of the model's parameters: for learning and research, not for commercial use. The data in all of them keep their own licences.
 
@@ -1294,7 +1321,7 @@ The screenshots are the infrastructure's, under its MIT licence, except the thre
 | A woman's body | The Human Reference Atlas (HuBMAP), 3D Reference Organ Set for United, Female v1.8, modelled from the Visible Human Female | CC BY 4.0 |
 | Abdominal CT and its vessels' labels | The Medical Segmentation Decathlon, Task 08 (Antonelli et al. 2022; Memorial Sloan Kettering Cancer Center), cases 172 and 324 | CC BY-SA 4.0 |
 
-## 19. Making the Screenshots
+## 20. Making the Screenshots
 
 The screenshots were taken with headless Chrome at 1600 × 1000 pixels, driven over the DevTools protocol, and saved as JPEG.
 

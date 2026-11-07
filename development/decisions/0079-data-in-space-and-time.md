@@ -1,6 +1,6 @@
 # 0079. Data in Space and Time: One Contract for Custom Code, and Works Found Again
 
-- **Status:** Accepted, provisionally (2026-11-07). Amends ADR 0078.
+- **Status:** Accepted, provisionally (2026-11-07). Amends ADR 0078. Amended by [ADR 0080](0080-quantitative-economics-in-the-urban-workbench.md): the toolbox's answers become records of the line of time.
 - **Date:** 2026-11-07
 - **Decided by:**
   - **The request.** Having seen ADR 0078's workbench, the user wrote: "original urban workbench's some features seems disappear? Like ABM, Simulation, Oceanography, complex analysis and visualization"; "become delicate, elegant, creative"; and "make plug-in interfaces that allow us visualize spatial temporal data, and utilize spatial temporal data, with custom codes."

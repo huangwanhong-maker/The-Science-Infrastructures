@@ -1,6 +1,6 @@
 # 0056. The Methods of the Social Sciences, nomos, and a Toolbox of Quantitative Economics
 
-- **Status:** Accepted, provisionally
+- **Status:** Accepted, provisionally. Amended by [ADR 0080](0080-quantitative-economics-in-the-urban-workbench.md): the toolbox moved down to the API, the visualization layer and the data library, for every application.
 - **Date:** 2026-11-04 (the work begun 2026-10-24)
 - **Amends:** [ADR 0044](0044-value-in-space-and-time.md), [ADR 0046](0046-the-economy-atlas-data-and-plugins.md)
 - **Decided by:** the user, after ADR 0046: "I think function is so limite. And color can be lighter, and more positive. And I think can add quantantative economics toolbox." Asked which foundations and which groups of tools, the user chose two new foundations and "Econometrics, Time series, Inequality and indices, Trade, games and models, All you think is needed. If something better independent to the economics package, then make new foundation or some else. Low level things better in cpp or python." The user approved the name *nomos* (Greek *νόμος*, law, custom; the *-nomy* of economy). Claude designed the library, the domain's modules, the toolbox and the map's new functions, and wrote this record; two subagents wrote tyche's first modules ([ADR 0048](0048-the-inference-foundation-tyche.md)) and nomos's to the boundaries stated here.

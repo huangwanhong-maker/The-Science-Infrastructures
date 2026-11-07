@@ -17,6 +17,7 @@ const GLYPHS = {
   // Change: rings of years.
   change: (g) => { g.append(svg('path', { d: 'M3.4 12a8.6 8.6 0 1 1 3.2 6.7' }), svg('path', { d: 'M7.4 12a4.6 4.6 0 1 1 1.9 3.7' }), svg('path', { d: 'M3 15.8l3.6 2.9.9-4.1M12 12h.2' })); },
   // Yours: a stone dropped in still water, its rings widening.
+  economy: (g) => { g.append(svg('path', { d: 'M3.5 20.5h17M6 20.5V13M12 20.5V6.5M18 20.5v-10' }), svg('path', { d: 'M3.5 9.5 9 6l5 3 6.5-5' })); },
   yours: (g) => { g.append(svg('circle', { cx: 12, cy: 12, r: 1.6 }), svg('circle', { cx: 12, cy: 12, r: 5.4 }), svg('path', { d: 'M12 2.8a9.2 9.2 0 0 1 9.2 9.2M12 21.2A9.2 9.2 0 0 1 2.8 12' })); },
 };
 

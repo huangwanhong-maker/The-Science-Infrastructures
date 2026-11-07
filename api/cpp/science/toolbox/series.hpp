@@ -14,7 +14,7 @@
 
 #include "econometrics.hpp"
 
-namespace tools {
+namespace science::toolbox {
 
 namespace ts = tyche::time_series;
 
@@ -236,4 +236,4 @@ inline Json cointegration(const Request& r) {
   return answer("Cointegration", std::move(blocks));
 }
 
-}  // namespace tools
+}  // namespace science::toolbox

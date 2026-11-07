@@ -25,7 +25,7 @@
 
 import * as api from './api.js';
 import { el, svg, clear, put, fill, money, quantity, percent, signed, shareBar, download, csv } from './dom.js';
-import { lineChart } from './charts.js';
+import { lineChart } from '/visualization/js/toolbox/charts.js';
 import { diverging, sequential, rampCss, PART, onTheme } from './palette.js';
 import { shared, on, dataset } from './state.js';
 import { datasetChooser } from './data.js';

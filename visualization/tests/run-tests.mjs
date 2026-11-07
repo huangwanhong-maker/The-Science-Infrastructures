@@ -798,6 +798,21 @@ const { check, assert, done } = suite();
   const ev = st.recordFromTable(rows, { lat: 'lat', lon: 'lon', time: 't', numbers: ['v'] }, 'r');
   assert('spacetime: rows that cannot be placed are left out and counted by reason', ev.kind === 'events' && ev.time.length === 2 && ev.report.left['no place on the Earth'] === 1 && ev.report.left['no time that reads'] === 1);
   // An empty cell is not the equator. A row with no latitude must not stretch the record's box to reach it.
+  // The toolbox's catalogue and form (ADR 0080): every tool declared once, its example filling roles it has, a table pasted read as numbers and text.
+  {
+    const { GROUPS, TOOLS, tool } = await import('../js/toolbox/catalogue.js');
+    const { freshForm, parsePaste, rolesOf } = await import('../js/toolbox/form.js');
+    const ids = new Set(TOOLS.map((t) => t.id));
+    assert('toolbox: every tool declared once, in a group that exists', ids.size === TOOLS.length && TOOLS.every((t) => GROUPS.some(([g]) => g === t.group)));
+    const bad = TOOLS.filter((t) => Object.keys(t.preset?.roles || {}).some((role) => !(t.roles || []).some((r) => r.role === role)));
+    assert('toolbox: an example fills only roles its tool has', !bad.length, bad.map((t) => t.id).join());
+    const missing = TOOLS.filter((t) => !t.noTable && (t.preset?.roles || t.preset?.paste) && rolesOf(t, freshForm(t)).missing);
+    assert('toolbox: every example fills every role its tool needs', !missing.length, missing.map((t) => t.id).join());
+    assert('toolbox: Moran\'s I and location quotients stand among the tools', tool('moran')?.group === 'space' && tool('specialisation')?.group === 'measurement');
+    const p = parsePaste('place;kind;n\na;x;3\nb;y;\nc;z;7.5');
+    assert('toolbox: a table pasted: numbers where every filled cell is one, text otherwise, an empty cell null', p.columns.map((c) => c.kind).join() === 'text,text,number' && p.data.n[1] === null && p.data.n[2] === 7.5);
+  }
+
   // A thread's strip: each segment four vertices, two either side of each end, whichever way the screen's normal falls from that end.
   {
     class Attr { constructor(array, size) { this.array = array; this.itemSize = size; } }

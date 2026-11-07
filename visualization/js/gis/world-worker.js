@@ -272,7 +272,8 @@ self.onmessage = async ({ data: job }) => {
     const frame = localFrameAt(origin.lat, origin.lon, origin.height);
     const url = (what) => `${base}/world/${what}/${z}/${x}/${y}`;
     const answers = await Promise.all((kind === 'city' ? [url('city'), url('heights')] : [url('base'), url('heights')]).map(async (u) => {
-      const r = await fetch(u);
+      // Low priority, as the globe's tiles: what a person asks of an engine goes first when a connection frees.
+      const r = await fetch(u, { priority: 'low' });
       if (!r.ok) throw new Error(`${u} answered ${r.status}`);
       return r.json();
     }));

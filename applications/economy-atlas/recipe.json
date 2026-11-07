@@ -70,7 +70,7 @@
         "applications/economy-atlas/tables.py",
         "make"
       ],
-      "done": "data/cache/economy-atlas/tables/economies.json"
+      "done": "data/cache/products/tables/economies.json"
     }
   ]
 }

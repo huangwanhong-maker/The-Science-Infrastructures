@@ -27,6 +27,11 @@
       "question": "how its record unfolds in time"
     },
     {
+      "id": "economy",
+      "title": "Economy",
+      "question": "what it holds, who gains, and what explains it"
+    },
+    {
       "id": "yours",
       "title": "Yours",
       "question": "your own data and code, in space and time"

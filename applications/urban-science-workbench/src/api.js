@@ -8,7 +8,9 @@ export async function plugins() {
 
 export function asker(plugin) {
   return async (op, body = {}) => {
-    const r = await fetch(`/api/${plugin}/${op}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    // High priority: the tiles of the city and the globe hold most of a host's six connections while the camera moves, and are
+    // asked at low priority, so that what a person asked for takes the next connection to free.
+    const r = await fetch(`/api/${plugin}/${op}`, { method: 'POST', priority: 'high', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
     const answer = await r.json().catch(() => ({ message: `the server answered ${r.status}` }));
     if (!r.ok) throw new Error(answer.message || `the server answered ${r.status}`);
     return answer;

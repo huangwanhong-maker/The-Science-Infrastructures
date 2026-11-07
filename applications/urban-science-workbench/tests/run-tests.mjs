@@ -25,7 +25,7 @@ import { spawnSync } from 'node:child_process';
 
 import { suite, ROOT } from '../../../development/tools/checks.mjs';
 
-const { assert, skip, done } = suite();
+const { assert, check, skip, done } = suite();
 const APP = resolve(ROOT, 'applications/urban-science-workbench');
 
 // ---- plug-ins ---------------------------------------------------------------------------------------
@@ -435,6 +435,44 @@ for (const p of plugins) {
   const lines = (r.stdout || '').split(/\r?\n/).filter((l) => /^(ok|FAIL)\s/.test(l));
   if (!lines.length) assert('the studio: its checks run', false, (r.stderr || r.stdout || '').slice(-500));
   for (const l of lines) assert(`the studio: ${l.replace(/^(ok|FAIL)\s+/, '').replace(/: .*$/, '')}`, l.startsWith('ok'), l.includes(': ') ? l.slice(l.indexOf(': ') + 2) : '');
+}
+
+// Quantitative economics: every question answered by its engine on the library's tables; a tool for each place, residuals by row,
+// location quotients and Moran's I against what they must be; the tables against their sources (check_economics.py).
+{
+  const r = spawnSync('python', [join(APP, 'tests', 'check_economics.py')], { cwd: ROOT, encoding: 'utf8', maxBuffer: 1 << 26, timeout: 600000, env: { ...process.env, PYTHONIOENCODING: 'utf-8' } });
+  let seen = 0;
+  for (const line of (r.stdout || '').split(/\r?\n/)) {
+    if (!line.startsWith('{')) continue;
+    let rec;
+    try { rec = JSON.parse(line); } catch { continue; }
+    seen++;
+    if (rec.kind === 'check') check(rec.name, rec.value, rec.limit, rec.unit || '');
+    else if (rec.kind === 'assert') assert(rec.name, rec.ok, rec.detail || '');
+    else if (rec.kind === 'skip') skip(rec.name);
+  }
+  assert('economics: check_economics.py ran to the end', r.status === 0 && seen > 0, (r.stderr || '').trim().split('\n').slice(-4).join(' | '));
+}
+
+// Its pure parts: what is drawn of an answer, and when.
+{
+  const A = await import('../plugins/economics/answers.js');
+  assert('economics: a year, a month and a civil day as milliseconds in UTC', A.moment(2024, 'year') === Date.UTC(2024, 0, 1) && A.moment('2025-03', 'month') === Date.UTC(2025, 2, 15) && A.moment('2024-10-30', 'date') === Date.UTC(2024, 9, 30));
+  const table = { data: { block: ['a', 'b', 'a', 'b'], year: [2020, 2020, 2024, 2024] }, places: { kind: 'cells', column: 'block', time: 'year', time_kind: 'year', rings: { a: [[0, 0], [1, 0], [0, 1]], b: [[1, 1], [2, 1], [1, 2]] }, names: { a: 'A', b: 'B' } } };
+  const d = A.drawables([{ kind: 'rows', title: 'r', rows: [0, 1, 3], values: [1, 2, 4], scale: 'diverging' }], table);
+  assert('economics: rows of a table are its places at their moments', d.length === 1 && d[0].values.map((v) => `${v.id}@${v.time}=${v.value}`).join() === 'a@2020=1,b@2020=2,b@2024=4');
+  const rec = await A.recordOf(d[0], table, 'test');
+  assert('economics: a record of cells by moment, a place without a value at a moment left empty', rec.kind === 'cells' && rec.time.length === 2 && rec.cells.length === 2 && rec.values.r[1][0] === null && rec.values.r[1][1] === 4);
+  const constant = await A.recordOf(A.drawables([{ kind: 'rows', title: 'c', rows: [0, 1, 2, 3], values: [5, 7, 5, 7], scale: 'diverging' }], table)[0], table, 'test');
+  assert('economics: a value that does not change in time for any place stands at one moment', constant.time.length === 1 && constant.values.c[0].join() === '5,7');
+  const still = A.ranking(A.drawables([{ kind: 'rows', title: 'c', rows: [0, 1, 2, 3], values: [5, 7, 5, 7], scale: 'diverging' }], table)[0], table);
+  assert('economics: and its list names every place once, at no moment', still.last === undefined && still.count === 2 && still.high[0].name === 'B');
+  const e = A.drawables([{ kind: 'each', title: 'e', columns: ['block'], keys: [['a'], ['b']], measures: [{ name: 'x · estimate', values: [0.5, null] }], left: [] }], table);
+  assert('economics: a tool for each place gives a measure by place', e.length === 1 && e[0].values[0].id === 'a' && e[0].values[1].value === null);
+  const R = A.ranking(d[0], table);
+  assert('economics: the highest and lowest at the last moment, by name', R.last === 2024 && R.high[0].name === 'B' && R.count === 1);
+  const hex = A.hexAbout(144.96, -37.81, 46);
+  assert('economics: a point\'s mark is a hexagon of its radius', hex.length === 6 && Math.abs((hex[0][0] - 144.96) * 111320 * Math.cos(-37.81 * Math.PI / 180) - 46) < 1e-6);
 }
 
 // A script in JavaScript is a module with the same contract: the example, on a track of known speed.

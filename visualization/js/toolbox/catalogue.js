@@ -1,10 +1,11 @@
-// The toolbox's catalogue (ADR 0048). Each tool declares what it reads and what it asks, from which
-// its form is built: roles (the columns of a table it uses) and parameters. The engine answers it
-// (engine/tools.hpp) with the methods of the foundations tyche and nomos and of the economics domain.
+// The toolbox's catalogue (ADR 0056; here since ADR 0080, for any application). Each tool declares what it reads and what it asks,
+// from which its form is built: roles (the columns of a table it uses) and parameters. The engine answers it
+// (api/cpp/science/toolbox.hpp) with the methods of the foundations tyche and nomos and of the economics domain.
 // A preset fills the form with an example on the library's data, so that every tool can be run at once.
 //
 //   role:  {role, label, kind: 'number'|'any', many?, optional?}
-//   param: {name, label, kind: 'number'|'integer'|'choice'|'boolean'|'text'|'area', default, options?, min?, max?, step?, help?}
+//   param: {name, label, kind: 'number'|'integer'|'choice'|'boolean'|'text'|'area'|'chosen', default, options?, min?, max?, step?, help?, role?}
+//          ('chosen': one of the columns a role has taken)
 
 const COV = { name: 'covariance', label: 'Standard errors', kind: 'choice', default: 'HC1', options: [['classical', 'classical'], ['HC0', 'robust HC0'], ['HC1', 'robust HC1'], ['HC2', 'robust HC2'], ['HC3', 'robust HC3'], ['cluster', 'clustered']] };
 const LOGS = { name: 'logs', label: 'Take logarithms of', kind: 'choice', default: 'none', options: [['none', 'none'], ['y', 'the outcome'], ['x', 'the regressors'], ['both', 'both']] };
@@ -17,6 +18,7 @@ export const GROUPS = [
   ['econometrics', 'Econometrics'],
   ['series', 'Time series'],
   ['measurement', 'Inequality and indices'],
+  ['space', 'Neighbours in space'],
   ['trade', 'Trade'],
   ['growth', 'Growth and macroeconomics'],
   ['games', 'Games and choice'],
@@ -131,6 +133,12 @@ export const TOOLS = [
     roles: [{ role: 'value', label: 'Size', kind: 'number' }, { role: 'label', label: 'Names', kind: 'any', optional: true }],
     params: [{ name: 'k', label: 'Concentration ratio of the largest k', kind: 'integer', default: 4, min: 1 }],
     preset: { table: 'economies', where: { year: 2024 }, roles: { value: 'exports', label: 'name' } } },
+  { id: 'specialisation', group: 'measurement', title: 'Location quotients', foundation: 'nomos',
+    summary: 'Where each kind of activity gathers: its share of a place over its share of the whole, and how far each kind lies apart from the rest.',
+    about: 'Isard (1960); the index of dissimilarity after Duncan and Duncan (1955). One row a place, one column a kind. The example is invented, to show the form.',
+    roles: [{ role: 'columns', label: 'The kinds', kind: 'number', many: true }],
+    params: [{ name: 'focus', label: 'The kind to draw', kind: 'chosen', role: 'columns', default: '' }],
+    preset: { paste: 'region,farming,mines,factories,offices\nnorth,420,30,110,90\neast,60,10,520,310\nsouth,250,340,90,60\nwest,40,5,180,690\ncentre,30,0,240,980', roles: { columns: ['farming', 'mines', 'factories', 'offices'] }, params: { focus: 'offices' } } },
   { id: 'price-index', group: 'measurement', title: 'Index numbers', foundation: 'nomos',
     summary: 'Laspeyres, Paasche, Fisher and Törnqvist price and quantity indices, direct or chained.',
     about: 'Diewert (1976); the CPI Manual (ILO, IMF et al. 2020).',
@@ -138,6 +146,15 @@ export const TOOLS = [
       { role: 'quantity', label: 'Quantity', kind: 'number' }],
     params: [{ name: 'chained', label: 'chained', kind: 'boolean', default: false }],
     preset: { paste: 'period,item,price,quantity\n2022,bread,2.00,50\n2022,coffee,8.00,6\n2022,rent,900,1\n2023,bread,2.30,46\n2023,coffee,9.50,5\n2023,rent,960,1\n2024,bread,2.40,47\n2024,coffee,11.00,4\n2024,rent,1010,1\n', roles: { period: 'period', item: 'item', price: 'price', quantity: 'quantity' } } },
+
+  // ---- neighbours in space ------------------------------------------------------------------------------
+  { id: 'moran', group: 'space', title: 'Moran’s I', foundation: 'tyche',
+    summary: 'Whether values at neighbouring places resemble each other, over the whole map and place by place: hot spots, cold spots and outliers.',
+    about: 'Moran (1950); Cliff and Ord (1981); local after Anselin (1995). One row a place. Where a common trend runs across the map, I measures the trend: a regression’s residuals are the thing to test.',
+    roles: [{ role: 'value', label: 'Value', kind: 'number' }, { role: 'lon', label: 'Longitude, degrees', kind: 'number' }, { role: 'lat', label: 'Latitude, degrees', kind: 'number' },
+      { role: 'id', label: 'Place (to carry to the map)', kind: 'any', optional: true }],
+    params: [{ name: 'k', label: 'Neighbours of each place', kind: 'integer', default: 6, min: 1 }, { name: 'permutations', label: 'Permutations', kind: 'integer', default: 499, min: 0 }],
+    preset: { table: 'economies', where: { year: 2019 }, roles: { value: 'life_expectancy', lon: 'longitude', lat: 'latitude', id: 'iso3' } } },
 
   // ---- trade ------------------------------------------------------------------------------------------------
   { id: 'trade-gravity', group: 'trade', title: 'The gravity of trade', foundation: 'tyche', noTable: true,

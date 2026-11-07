@@ -8,7 +8,7 @@
 import * as api from './api.js';
 import { el, svg, put, fill } from './dom.js';
 import { onTheme, token } from './palette.js';
-import { lineChart, formatNumber as fmt } from './charts.js';
+import { lineChart, formatNumber as fmt } from '/visualization/js/toolbox/charts.js';
 import { shared, emit } from './state.js';
 import { namingPolicy } from '/visualization/js/map/index.js';
 
