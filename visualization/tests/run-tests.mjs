@@ -756,6 +756,34 @@ const { check, assert, done } = suite();
   check('gis: a counter-clockwise square has area +100', gis.ringArea(sq) - 100, 1e-12);
   assert('gis: orientation reverses a clockwise ring and drops a closing point', gis.ringArea(gis.oriented([[0, 0], [0, 10], [10, 10], [10, 0], [0, 0]])) === 100);
   assert('gis: containment inside and outside, and with a hole', gis.inRing([5, 5], sq) && !gis.inRing([15, 5], sq) && !gis.inPolygon([5, 5], sq, [[[4, 4], [6, 4], [6, 6], [4, 6]]]));
+  // Triangles of a polygon: their areas sum to its own, with holes and any winding; on polygons of known area and on random stars.
+  const triArea = (tri, pts) => { let a = 0; for (let i = 0; i < tri.length; i += 3) { const [p, q, r] = [pts[tri[i]], pts[tri[i + 1]], pts[tri[i + 2]]]; a += ((q[0] - p[0]) * (r[1] - p[1]) - (q[1] - p[1]) * (r[0] - p[0])) / 2; } return a; };
+  check('gis: the triangles of a square sum to its area, wound either way', Math.abs(triArea(gis.triangulate(sq), sq) - 100) + Math.abs(triArea(gis.triangulate([...sq].reverse()), [...sq].reverse()) - 100), 1e-9);
+  const hole2 = [[3, 3], [3, 7], [7, 7], [7, 3]], hole3 = [[1, 1], [1, 2], [2, 2], [2, 1]];
+  check('gis: with two holes, its area less theirs', triArea(gis.triangulate(sq, [hole2, hole3]), [...sq, ...hole2, ...hole3]) - 83, 1e-9);
+  const comb = [[0, 0], [20, 0]];
+  for (let i = 20; i > 0; i -= 2) comb.push([i, 10], [i - 1, 1]);
+  comb.push([0, 10]);
+  check('gis: a comb, all reflex points', triArea(gis.triangulate(comb), comb) - gis.ringArea(comb), 1e-9);
+  const cee = [[0, 0], [10, 0], [10, 3], [3, 3], [3, 7], [10, 7], [10, 10], [0, 10]], inCee = [[1, 1], [2, 1], [2, 2], [1, 2]];
+  check('gis: a hole bridged past a reflex point', triArea(gis.triangulate(cee, [inCee]), [...cee, ...inCee]) - (gis.ringArea(cee) - 1), 1e-9);
+  let worstTri = 0;
+  for (let t = 0, seed = 7; t < 400; t++) {
+    const rand = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+    const n = 3 + Math.floor(rand() * 40), star = [], inner = [];
+    for (let i = 0; i < n; i++) { const a = (2 * Math.PI * i) / n, R = 5 + rand() * 10; star.push([R * Math.cos(a), R * Math.sin(a)]); }
+    for (let i = 0; i < 5; i++) { const a = (2 * Math.PI * i) / 5; inner.push([2 * Math.cos(a), 2 * Math.sin(a)]); }
+    worstTri = Math.max(worstTri, Math.abs(triArea(gis.triangulate(star, [inner]), [...star, ...inner]) - (gis.ringArea(star) - Math.abs(gis.ringArea(inner)))));
+  }
+  check('gis: on 400 random stars with a hole', worstTri, 1e-9);
+  assert('gis: a degenerate ring gives no triangles, and no failure', gis.triangulate([[0, 0], [1, 1], [2, 2]]).length === 0);
+  // The Web Mercator pyramid of the world's tiles.
+  const [wx, wy] = gis.tileOf(27.7172, 85.324);
+  const wb = gis.tileBox(wx, wy);
+  assert('gis: a place lies in the box of its tile', wb[0] <= 27.7172 && 27.7172 < wb[2] && wb[1] <= 85.324 && 85.324 < wb[3]);
+  check('gis: tiles meet: the north of one is the south of the next', gis.tileBox(wx, wy + 1)[2] - wb[0], 1e-12);
+  check('gis: the equator lies on a tile\'s edge at any level', gis.tileBox(0, 2 ** 13)[2], 1e-12);
+  assert('gis: a near view asks for one tile out, a far one for no more than three', gis.reachOf(600, 0) === 1 && gis.reachOf(9000, 0) === 3 && gis.reachOf(25000, 60) === 3);
   const c = gis.centroid([[0, 0], [4, 0], [4, 2], [0, 2]]);
   check('gis: the centroid of a rectangle', Math.hypot(c[0] - 2, c[1] - 1), 1e-12);
   const rib = gis.ribbon([[0, 0], [30, 0], [30, 40]], 6);

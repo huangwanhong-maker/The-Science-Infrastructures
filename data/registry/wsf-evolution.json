@@ -1,0 +1,41 @@
+{
+  "id": "wsf-evolution",
+  "domain": "geography",
+  "title": "World Settlement Footprint Evolution: the year each 30 m cell first stood built, 1985-2015",
+  "provider": "German Aerospace Center (DLR), Earth Observation Center, with the World Bank; the WSF Evolution download directory",
+  "credit": "WSF Evolution, DLR, CC BY 4.0",
+  "files": [
+    {
+      "url": "https://download.geoservice.dlr.de/WSF_EVO/files/WSFevolution_v1_144_-38.tif",
+      "file": "WSFevolution_v1_144_-38.tif",
+      "size": 3946891,
+      "sha256": "881e0298f57a76200e425b4aa61086fa9c6bbcbc6a700417ac071507206de97f"
+    },
+    {
+      "url": "https://download.geoservice.dlr.de/WSF_EVO/files/WSFevolution_v1_-76_40.tif",
+      "file": "WSFevolution_v1_-76_40.tif",
+      "size": 8447635,
+      "sha256": "ad636e96fce0263f8e8d5d13a286df88f6bfb4827c362203f5eb7a55a8f97d31"
+    },
+    {
+      "url": "https://download.geoservice.dlr.de/WSF_EVO/files/WSFevolution_v1_-74_40.tif",
+      "file": "WSFevolution_v1_-74_40.tif",
+      "size": 5381106,
+      "sha256": "9ea8754a7e62b78e0bd189cab4299ce15f4b99034fc67e9667fe8562e62d48b7"
+    },
+    {
+      "url": "https://download.geoservice.dlr.de/WSF_EVO/files/WSFevolution_v1_-14_8.tif",
+      "file": "WSFevolution_v1_-14_8.tif",
+      "size": 2342469,
+      "sha256": "e628ce04acf2152040bc1e8dcf0854d880ae1be13b2c97928732fc522cd67c5d"
+    }
+  ],
+  "format": "GeoTIFF, one band of int32, WGS 84, tiles of 2 x 2 degrees named by their south-west corner, 256 x 256 internal tiles, LZW: the year in 1985-2015 in which a cell was first detected as settlement from Landsat, 0 where never.",
+  "coverage": "The tiles of the workbench's cities: Melbourne (144_-38), New York (-76_40 and -74_40, which meet at 74 W), Freetown (-14_8).",
+  "licence": "CC BY 4.0 (DLR geoservice terms: https://creativecommons.org/licenses/by/4.0)",
+  "citation": "Marconcini, M., Metz-Marconcini, A., Esch, T. and Gorelick, N. (2021), Understanding Current Trends in Global Urbanisation: The World Settlement Footprint Suite, GI_Forum 9(1), 33-38. The 10 m World Settlement Footprint Tracker (ESA, DLR, World Bank; 2016-2026) has no open download of its grids, and is not used.",
+  "used_by": [
+    "data/products/territory_rasters.py",
+    "applications/urban-science-workbench"
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "title": "The Urban Science Workbench's engine and records",
-  "about": "The plug-ins' C++ on the urban-science and architecture domains and the foundations, compiled with g++ 11 or later (natively or in WSL) into data/cache/engines/urban/; then the records: the City of Melbourne's pedestrian counts (the archive of 2009–2022, about 60 MB zipped, and the live two years), its sensors and its census of land use; Open-Meteo's hourly weather; Victoria's public holidays; OpenStreetMap's holdings with their opening hours along the named streets, and its buildings, ways and spaces for the 3D city model of Melbourne, and New York's ways and spaces; Valdrada's compiled city of Lower Manhattan (its buildings at their surveyed heights, its trees and its shore); New York's pedestrian counter on the Brooklyn Bridge, its weather and holidays; Melbourne's buildings at every census, its developments, its heritage register and its event permits for the record of events of Event Spacetime; and the products built from them. Several minutes in all.",
+  "about": "The plug-ins' C++ on the urban-science and architecture domains and the foundations, compiled with g++ 11 or later (natively or in WSL) into data/cache/engines/urban/; then the records: the City of Melbourne's pedestrian counts (the archive of 2009–2022, about 60 MB zipped, and the live two years), its sensors and its census of land use; Open-Meteo's hourly weather; Victoria's public holidays; OpenStreetMap's holdings with their opening hours along the named streets, and its buildings, ways and spaces for the 3D city model of Melbourne, and New York's ways and spaces; Valdrada's compiled city of Lower Manhattan (its buildings at their surveyed heights, its trees and its shore); New York's pedestrian counter on the Brooklyn Bridge, its weather and holidays; Melbourne's buildings at every census, its developments, its heritage register and its event permits for the record of events of Event Spacetime; and the products built from them. Several minutes in all; the Degree of Urbanisation, the World Bank's surveys of poverty, and Freetown's flood risk assessment. What any other place needs (its buildings, ways, heights, grids and hazards) is asked for when the camera arrives there.",
   "steps": [
     {
       "id": "engine",
@@ -165,6 +165,74 @@
         "data/products/city_events.py"
       ],
       "done": "data/cache/products/city-events-melbourne.json"
+    },
+    {
+      "id": "areas-in-dispute",
+      "title": "The areas in dispute, so that no claimant's colour falls on them",
+      "run": [
+        "data/products/disputed_areas.py"
+      ],
+      "done": "data/cache/products/areas-in-dispute.json"
+    },
+    {
+      "id": "ghsl-smod",
+      "title": "The Degree of Urbanisation of the whole Earth, at 1 km (GHS-SMOD)",
+      "run": [
+        "data/acquisition/fetch.py",
+        "ghsl-smod"
+      ],
+      "done": "data/cache/ghsl-smod/retrieval.json"
+    },
+    {
+      "id": "worldbank-pip",
+      "title": "Every survey of poverty and inequality (the World Bank's Platform)",
+      "run": [
+        "data/acquisition/fetch.py",
+        "worldbank-pip"
+      ],
+      "done": "data/cache/worldbank-pip/**/retrieval.json"
+    },
+    {
+      "id": "poverty-latest",
+      "title": "Each economy's latest survey",
+      "run": [
+        "data/products/poverty_latest.py"
+      ],
+      "done": "data/cache/products/poverty-latest.json"
+    },
+    {
+      "id": "freetown-flood-risk",
+      "title": "Freetown's flood risk assessment: its maps, buildings and loss tables (about 230 MB)",
+      "run": [
+        "data/acquisition/fetch.py",
+        "freetown-flood-risk"
+      ],
+      "done": "data/cache/freetown-flood-risk/retrieval.json"
+    },
+    {
+      "id": "freetown-flood",
+      "title": "Freetown's flood maps, made ready to draw",
+      "run": [
+        "data/products/freetown_flood.py"
+      ],
+      "done": "data/cache/products/freetown-flood.json"
+    },
+    {
+      "id": "rdls-schema",
+      "title": "The Risk Data Library Standard's schema",
+      "run": [
+        "data/acquisition/fetch.py",
+        "rdls-schema"
+      ],
+      "done": "data/cache/rdls-schema/retrieval.json"
+    },
+    {
+      "id": "rdls-freetown",
+      "title": "The assessment's record in that standard",
+      "run": [
+        "data/products/rdls_records.py"
+      ],
+      "done": "data/cache/products/rdls-freetown.json"
     }
   ]
 }

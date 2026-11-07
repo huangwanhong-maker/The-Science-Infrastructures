@@ -401,4 +401,32 @@ for (const p of plugins) {
   }
 }
 
+// The territory: a hexagon over an area in dispute takes no economy; one beside it keeps its own.
+{
+  const driver = [
+    'import json, sys', `sys.path.insert(0, ${JSON.stringify(APP)})`, 'import engine',
+    'if not engine.status("territory")["current"]: print(json.dumps({"skip": "the engine of The territory is not built from the present sources"})); raise SystemExit',
+    'w = engine.Worker("territory")',
+    'places = {"Srinagar": [34.08, 74.80], "Simferopol": [44.95, 34.10], "Laayoune": [27.15, -13.20], "Delhi": [28.61, 77.21], "Paris": [48.85, 2.35], "Tokyo": [35.68, 139.69]}',
+    'out = {}',
+    'for res in (2, 3):',
+    '    a = w.ask({"op": "earth_people", "res": res})',
+    '    if not a.get("ok"): print(json.dumps({"skip": str(a.get("error"))})); raise SystemExit',
+    '    a = a["result"]',
+    '    at = dict(zip(a["cells"], a["code"]))',
+    '    for name, (lat, lon) in places.items():',
+    '        c = w.ask({"op": "bin_points", "res": res, "points": [[lat, lon, 1]]})["result"]["cells"][0]',
+    '        out[f"{name}:{res}"] = at.get(c, "no cell")',
+    'w.stop()', 'print(json.dumps(out))',
+  ].join('\n');
+  const r = spawnSync('python', ['-c', driver], { cwd: ROOT, encoding: 'utf8', maxBuffer: 1 << 29, env: { ...process.env, PYTHONIOENCODING: 'utf-8' } });
+  let O = null;
+  try { O = JSON.parse(r.stdout); } catch { assert('the territory: the engine answers', false, (r.stderr || r.stdout || '').slice(-400)); }
+  if (O && O.skip) skip(`the territory: ${O.skip}`);
+  else if (O) {
+    assert('the territory: no economy on a cell over an area in dispute', [2, 3].every((k) => ['Srinagar', 'Simferopol', 'Laayoune'].every((n) => O[`${n}:${k}`] === null)), JSON.stringify(O));
+    assert('the territory: an economy on the cells of others, at their most people', O['Paris:3'] === 'FRA' && O['Tokyo:3'] === 'JPN' && O['Delhi:3'] === 'IND', JSON.stringify(O));
+  }
+}
+
 done();

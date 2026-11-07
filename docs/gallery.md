@@ -1170,7 +1170,30 @@ Matter that computes by its own dynamics: the first simulators of the physical-c
 </tr>
 </table>
 
-## 16. Credits
+## 16. The Whole Earth in the Urban Science Workbench
+
+One view from the globe to a doorstep, in pink and purple, with the world's development data on it ([ADR 0078](../development/decisions/0078-the-whole-earth-in-the-urban-workbench.md)). Any place opens as one comes down to it. Three plug-ins join the workbench: *The territory*, *Flood risk* and *Reach and use*.
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/urban-world-01-kathmandu.jpg"><img src="../assets/gallery/urban-world-01-kathmandu.jpg" alt="Kathmandu in three dimensions, in plum, with buildings on its terrain and the place's name in serif italic."></a><br><sub>Kathmandu, prepared for nothing: asked for as the camera arrives, about 154,000 buildings from Overture Maps stand on the terrain. Those with a recorded height stand out; the rest stand at GHS-BUILT-H's estimate, drawn fainter, and say so when picked.</sub></td>
+<td width="50%" valign="top"><a href="../assets/gallery/urban-world-02-reach.jpg"><img src="../assets/gallery/urban-world-02-reach.jpg" alt="A wave of minutes along Kathmandu's streets, in rose, from a place picked."></a><br><sub>A wave of minutes down the streets, on foot, from a place picked: an hour's walk over the ways in view, at a declared speed. It is a lower bound: no signals, no gradients.</sub></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/urban-world-03-freetown.jpg"><img src="../assets/gallery/urban-world-03-freetown.jpg" alt="Freetown between the sea and the hills, its river floods in pale green and the Council's records as rose columns."></a><br><sub>Freetown: the assessment's depth at a 1-in-100-year river flood on the ground, the Council's recorded floods as rose columns, on buildings from the world's tiles.</sub></td>
+<td width="50%" valign="top"><a href="../assets/gallery/urban-world-04-freetown-reached.jpg"><img src="../assets/gallery/urban-world-04-freetown-reached.jpg" alt="Columns over Freetown by the value of the buildings in the water, beside the panel of curves."></a><br><sub>What it reaches: 7,293 of 153,435 buildings, $384 million, in over 15 cm. Beside it, the assessment's annual loss recomputed from its 1,943 events: $808,904.91, its own figure to the cent.</sub></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/urban-world-05-poverty.jpg"><img src="../assets/gallery/urban-world-05-poverty.jpg" alt="The globe with hexagonal columns over each economy, coloured by the share of people below $3 a day."></a><br><sub>Poverty at $3 a day, each economy's latest survey, on the H3 cells its people live in (physis's H3, held to h3-py). Where no survey stands, and on a cell holding any part of an area in dispute, no economy's colour.</sub></td>
+<td width="50%" valign="top"><a href="../assets/gallery/urban-world-06-composite.jpg"><img src="../assets/gallery/urban-world-06-composite.jpg" alt="Columns over Victoria of a composite index, with its sliders of weights."></a><br><sub>One's own index of a region, from Space2Stats' cells: the columns follow the weights (nomos). A description by those weights, as the panel says, and not a measure.</sub></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/urban-world-07-usage.jpg"><img src="../assets/gallery/urban-world-07-usage.jpg" alt="Hexagonal columns over Melbourne's centre, coloured by departure from habit."></a><br><sub>Where the walkers go: the Urban Space Usage Index on H3 cells at Melbourne's counters, each cell's share of the day and its departure from the same weekday over twelve weeks. It follows the clock's date.</sub></td>
+<td width="50%" valign="top"><a href="../assets/gallery/urban-world-08-dusk.jpg"><img src="../assets/gallery/urban-world-08-dusk.jpg" alt="Melbourne's centre at dusk from the ground, windows lit, the world's tiles trailing off in a stipple."></a><br><sub>Melbourne at dusk, the model's streets and the world's tiles as one city, its edge dissolving as an engraving trails off. The light is the real Sun's on that date.</sub></td>
+</tr>
+</table>
+
+## 17. Credits
 
 The screenshots are the infrastructure's, under its MIT licence, except the three that show Pangu-Weather's forecasts (§1.3: earth-15, earth-16 and earth-17). Those are shared under CC BY-NC-SA 4.0, the licence of the model's parameters: for learning and research, not for commercial use. The data in all of them keep their own licences.
 
@@ -1186,6 +1209,11 @@ The screenshots are the infrastructure's, under its MIT licence, except the thre
 | Imagery of the Earth | VIIRS true colour, Blue Marble and Black Marble (NASA, via GIBS) | NASA, acknowledge |
 | Country indicators | World Bank, World Development Indicators | CC BY 4.0 |
 | Earthquakes | USGS ComCat | Public domain |
+| Buildings, ways, water and land of any place | Overture Maps release 2026-10-21.0, from OpenStreetMap, Google Open Buildings, Microsoft and others | ODbL 1.0 |
+| Estimated heights of buildings | GHS-BUILT-H R2023A (European Commission JRC) | CC BY 4.0 |
+| Regions, cell by cell | Space2Stats (World Bank), with its sources' credits | CC BY 4.0 |
+| Poverty and inequality | Poverty and Inequality Platform (World Bank) | CC BY 4.0 |
+| Freetown's flood risk | Freetown Flood Risk Assessment (World Bank, JBA Risk Management, Freetown City Council) | CC BY 4.0 |
 | The ocean beneath a place | HYCOM ESPC-D-V02 (US Navy, via HYCOM.org) | Public release, distribution unlimited |
 | Tectonic plates | PB2002 (Bird 2003), as converted by H. Ahlenius (Nordpil); motion NNR-MORVEL56 (Argus et al. 2011) | ODC Attribution 1.0 |
 | GPS velocities and positions | Nevada Geodetic Laboratory (Blewitt, Hammond and Kreemer 2018) | None stated; supplied as is; cited |
@@ -1238,7 +1266,7 @@ The screenshots are the infrastructure's, under its MIT licence, except the thre
 | A woman's body | The Human Reference Atlas (HuBMAP), 3D Reference Organ Set for United, Female v1.8, modelled from the Visible Human Female | CC BY 4.0 |
 | Abdominal CT and its vessels' labels | The Medical Segmentation Decathlon, Task 08 (Antonelli et al. 2022; Memorial Sloan Kettering Cancer Center), cases 172 and 324 | CC BY-SA 4.0 |
 
-## 17. Making the Screenshots
+## 18. Making the Screenshots
 
 The screenshots were taken with headless Chrome at 1600 × 1000 pixels, driven over the DevTools protocol, and saved as JPEG.
 

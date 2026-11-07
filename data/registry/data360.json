@@ -1,0 +1,16 @@
+{
+  "id": "data360",
+  "kind": "service",
+  "domain": "geography",
+  "title": "Data360: the World Bank's indicators, searched by meaning and read by economy",
+  "provider": "The World Bank, Data360 API (data360api.worldbank.org)",
+  "credit": "Data360, World Bank",
+  "format": "Asked on demand by data/acquisition/services.py and kept in data/cache/data360/. The same service data360-mcp offers to language models; the workbench asks it directly.",
+  "coverage": "The databases Data360 holds, among them the World Development Indicators.",
+  "licence": "As each database states; the World Development Indicators are CC BY 4.0.",
+  "citation": "World Bank (2026), Data360, https://data360.worldbank.org.",
+  "used_by": [
+    "data/acquisition/services.py",
+    "applications/urban-science-workbench"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "title": "Flood risk",
+  "summary": "A city's flood risk read from its own assessment: how deep each flood reaches on a 1 m map, which buildings it reaches, what the wards stand to lose each year, and how large a loss to expect once in so many years; with the hazards named for any place on Earth.",
+  "status": "draft",
+  "activity": "research",
+  "order": 7,
+  "lens": "risk",
+  "engine": "engine/main.cpp",
+  "layers": [
+    { "id": "depth", "areas": ["freetown"], "group": "Freetown", "title": "how deep each flood reaches", "module": "layers/depth.js", "default": true, "exclusive": "ground", "scale": [200, 120000],
+      "about": "The depth of a flood at a return period, river or surface water, from JBA's maps of 1 m (taken here at about 4 m): the assessment's own hazard, on the ground." },
+    { "id": "reached", "areas": ["freetown"], "group": "Freetown", "title": "the buildings it reaches", "module": "layers/reached.js", "scale": [400, 60000],
+      "about": "Of the assessment's 153,435 modelled buildings, those standing in over 15 cm at the flood chosen: columns on H3 cells by the value reached." },
+    { "id": "wards", "areas": ["freetown"], "group": "Freetown", "title": "what each ward stands to lose", "module": "layers/wards.js", "scale": [1500, 180000],
+      "about": "The average annual loss of each ward from the assessment's model, raised on its own ground, its height the loss per square kilometre." },
+    { "id": "reported", "areas": ["freetown"], "group": "Freetown", "title": "where the Council records floods", "module": "layers/reported.js", "scale": [300, 120000],
+      "about": "The flash-flood places and areas recorded by the Freetown City Council: a check of the model by what the city has seen." }
+  ],
+  "tools": [
+    { "id": "curves", "areas": ["freetown"], "title": "What a flood costs the city", "module": "tools/curves.js", "about": "The assessment's annual loss and its exceedance curves, its own figures beside what is recomputed here from its 1,943 modelled events." },
+    { "id": "hazards", "anywhere": true, "title": "The hazards named for this place", "module": "tools/hazards.js", "about": "ThinkHazard!'s levels for an administrative unit: river and coastal floods, earthquakes, cyclones, landslides and others, by a name anywhere on Earth." }
+  ],
+  "source": "Freetown Flood Risk Assessment (World Bank, JBA Risk Management, Freetown City Council; CC BY 4.0); ThinkHazard! (GFDRR). The exposure is urban-science's, the curves tyche's."
+}

@@ -4,16 +4,21 @@
   "status": "draft",
   "activity": "research",
   "order": 3,
-  "warm": ["status"],
+  "warm": [
+    "status"
+  ],
   "layers": [
     {
       "id": "foam",
       "group": "The record as a 2-complex",
       "title": "the district's events in spacetime",
       "module": "layers/foam.js",
-      "areas": ["melbourne"],
+      "areas": [
+        "melbourne"
+      ],
       "default": false,
-      "about": "The district's buildings, streets and junctions as worldlines rising over the years of the record, the interfaces between them as sheets between their worldlines, cut where an event meets them; the events as beads at their place and date (built, refurbished, completed, registered, a street closed and opened), the censuses as ticks; a plane at the clock's date with the network of what stood then. Lower the city's opacity to see it through the towers."
+      "about": "The district's buildings, streets and junctions as worldlines rising over the years of the record, the interfaces between them as sheets between their worldlines, cut where an event meets them; the events as beads at their place and date (built, refurbished, completed, registered, a street closed and opened), the censuses as ticks; a plane at the clock's date with the network of what stood then. Lower the city's opacity to see it through the towers.",
+      "lens": "change"
     }
   ],
   "tools": [
@@ -21,8 +26,11 @@
       "id": "record",
       "title": "The record and its complex",
       "module": "tools/record.js",
-      "areas": ["melbourne"],
-      "about": "What the district's record holds and where it comes from; its event complex and refinement, their cells and homology; the network of the moment at the clock's date; how the spacetime is drawn (the scale of time, the refined complex or the events as single vertices, which cells); an event picked on the map, with what it touches."
+      "areas": [
+        "melbourne"
+      ],
+      "about": "What the district's record holds and where it comes from; its event complex and refinement, their cells and homology; the network of the moment at the clock's date; how the spacetime is drawn (the scale of time, the refined complex or the events as single vertices, which cells); an event picked on the map, with what it touches.",
+      "lens": "change"
     }
   ],
   "engine": "engine/main.cpp",

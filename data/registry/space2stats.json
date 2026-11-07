@@ -1,0 +1,16 @@
+{
+  "id": "space2stats",
+  "kind": "service",
+  "domain": "geography",
+  "title": "World Bank Space2Stats: population, flood exposure, night lights, built area, urbanisation and hazards aggregated to H3 level 6, for any area",
+  "provider": "The World Bank, Space2Stats API (space2stats.ds.io)",
+  "credit": "Space2Stats, World Bank, CC BY 4.0",
+  "format": "Asked on demand, a box at a time, by data/acquisition/services.py, and kept in data/cache/space2stats/. JSON: hex_id, the cell's polygon and the fields asked for.",
+  "coverage": "The land of the Earth, at H3 resolution 6 (about 36 km² a cell).",
+  "licence": "CC BY 4.0 for the database (World Bank Data Catalog, dataset 0066915); its layers keep the sources' credits: WorldPop, GHSL, VIIRS (Colorado School of Mines), Fathom flood exposure, JBA and others.",
+  "citation": "Stefanini Vicente, B. et al. (2025), Space2Stats: a spatial data platform, World Bank, https://worldbank.github.io/DECAT_Space2Stats.",
+  "used_by": [
+    "data/acquisition/services.py",
+    "applications/urban-science-workbench"
+  ]
+}

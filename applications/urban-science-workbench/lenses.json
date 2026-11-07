@@ -1,0 +1,10 @@
+{
+  "about": "What can be looked at, by the question it answers. A plug-in's layers and analyses name their lens in its manifest (\"lens\"); nothing else in the shell orders them. Each lens draws a small glyph of its own (src/shell/lenses.js).",
+  "lenses": [
+    { "id": "people", "title": "People", "question": "who lives here, and how it has grown" },
+    { "id": "movement", "title": "Movement", "question": "how it moves, and what it can reach" },
+    { "id": "fabric", "title": "Fabric", "question": "what it is made of and what it does" },
+    { "id": "risk", "title": "Risk", "question": "what threatens it, and what is exposed" },
+    { "id": "change", "title": "Change", "question": "how its record unfolds in time" }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "id": "ghs-built-h",
+  "kind": "service",
+  "domain": "geography",
+  "title": "GHS-BUILT-H R2023A: the average height of the buildings on each 3 arc-second cell of the Earth, 2018",
+  "provider": "European Commission, Joint Research Centre, Global Human Settlement Layer",
+  "credit": "GHS-BUILT-H R2023A, European Commission JRC, CC BY 4.0",
+  "licence": "CC BY 4.0",
+  "citation": "Pesaresi, M., Politis, P. (2023), GHS-BUILT-H R2023A: GHS building height, derived from AW3D30, SRTM30, and Sentinel-2 composite (2018), European Commission, Joint Research Centre.",
+  "format": "GeoTIFF in zip archives of 10 degree tiles, fetched behind the scenes the first time a region is seen (data/acquisition/world_city.py) and kept in data/cache/ghsl-built-h/ (3.5 to 95 MB each).",
+  "coverage": "The whole Earth's land, about 100 m at the equator: an estimate from elevation models and imagery, not a measurement of any building.",
+  "urls": {
+    "tile": "https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_BUILT_H_GLOBE_R2023A/GHS_BUILT_H_ANBH_E2018_GLOBE_R2023A_4326_3ss/V1-0/tiles/GHS_BUILT_H_ANBH_E2018_GLOBE_R2023A_4326_3ss_V1_0_R{r}_C{c}.zip"
+  },
+  "used_by": [
+    "data/acquisition/world_city.py",
+    "applications/urban-science-workbench"
+  ]
+}

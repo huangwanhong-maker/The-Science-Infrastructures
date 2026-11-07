@@ -90,6 +90,7 @@ Decisions that concern only one library are recorded in that library's own `deve
 | [0075](0075-agents-in-the-city.md) | Agents in the city: walkers, households, owners and occupiers, simulated and drawn | Accepted, provisionally; amends 0071 |
 | [0076](0076-physical-computing.md) | Physical computing: computation by the dynamics of matter, a pipeline after calx's and TVM's (tasks, an optional future IR, compiler, schedule, runtime, backends) with a simulator as each family's first backend, and fourteen families of substrates planned | Accepted, provisionally; planned |
 | [0077](0077-the-programme-named-noetarium.md) | The programme named Noetarium: the Science and Humanity Infrastructure | Accepted |
+| [0078](0078-the-whole-earth-in-the-urban-workbench.md) | The whole Earth in the Urban Science Workbench: one 3D GIS, any city, the world's development data | Accepted, provisionally; amends 0060 |
 
 ## 2. Template
 

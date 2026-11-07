@@ -1,0 +1,16 @@
+{
+  "id": "thinkhazard",
+  "kind": "service",
+  "domain": "geography",
+  "title": "ThinkHazard!: the level of each natural hazard for an administrative unit",
+  "provider": "GFDRR, ThinkHazard! (thinkhazard.org)",
+  "credit": "ThinkHazard!, GFDRR",
+  "format": "Asked on demand by data/acquisition/services.py and kept in data/cache/thinkhazard/. JSON: a search of units by name; a unit's report of eleven hazards, each high, medium, low, very low or no data.",
+  "coverage": "Administrative units of the Global Administrative Unit Layers, level 2 at finest.",
+  "licence": "Open for use with attribution (the site's terms); the code is GPL-3.0 and is not used.",
+  "citation": "GFDRR (2026), ThinkHazard!, https://thinkhazard.org.",
+  "used_by": [
+    "data/acquisition/services.py",
+    "applications/urban-science-workbench"
+  ]
+}

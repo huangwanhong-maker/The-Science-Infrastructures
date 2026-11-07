@@ -754,9 +754,52 @@ ACQUIRE = {"tiles": acquire_tiles, "tap": acquire_tap, "griddap": acquire_gridda
 
 # ---- listing ----------------------------------------------------------------
 
+# ---- windows of rasters, and services asked on demand ------------------------------
+
+def acquire_windows(manifest: dict, profile: str | None, overrides: dict, refresh: bool) -> bool:
+    """Windows of GeoTIFFs on the web, read by range requests (formats/tiff.py) and kept as numpy arrays: only the
+    tiles a window touches are fetched, so that a corner of a 34 MB raster costs a few requests. The transform of each
+    window (x0, dx, y0, dy; rows north to south) is in retrieval.json."""
+    import numpy as np
+    sys.path.insert(0, str(DATA / "formats"))
+    from tiff import GeoTIFF
+    folder = CACHE / manifest["id"]
+    folder.mkdir(parents=True, exist_ok=True)
+    provenance = folder / "retrieval.json"
+    earlier = {e["file"]: e for e in load(provenance).get("windows", [])} if provenance.exists() else {}
+    done, ok = [], True
+    for w in manifest["windows"]:
+        dest = folder / w["file"]
+        if dest.exists() and w["file"] in earlier and not refresh:
+            done.append(earlier[w["file"]])
+            continue
+        s, west, n, e = w["box"]
+        try:
+            a, transform = GeoTIFF.url(w["url"]).read_box(west, s, e, n)
+        except Exception as error:  # a raster that fails is reported; the others are kept
+            print(f"  {w['file']}: FAILED ({error})")
+            ok = False
+            continue
+        np.save(dest, a)
+        done.append({"file": w["file"], "url": w["url"], "box": w["box"], "transform": list(transform), "shape": list(a.shape), "retrieved_at": now(), **{k: v for k, v in w.items() if k not in ("file", "url", "box")}})
+        print(f"  {w['file']}: {a.shape[1]} x {a.shape[0]} {a.dtype}")
+    provenance.write_text(json.dumps({"dataset": manifest["id"], "windows": done, "retrieved_at": now()}, indent=2) + "\n", encoding="utf-8")
+    return ok
+
+
+def acquire_service(manifest: dict, profile: str | None, overrides: dict, refresh: bool) -> bool:
+    print(f"  {manifest['id']} is a service asked on demand (data/acquisition/services.py); nothing to fetch ahead of time")
+    return True
+
+
+ACQUIRE.update(windows=acquire_windows, service=acquire_service)
+
+
 def describe(manifest: dict) -> None:
     kind = manifest.get("kind", "files")
     print(f"{manifest['id']:30s} {kind:8s} {manifest['title']}")
+    if kind in ("windows", "service"):
+        return
     if kind == "files":
         total = sum(f.get("size") or 0 for f in manifest["files"])
         print(f"{'':39s}{len(manifest['files'])} file(s), {total / 1e6:.1f} MB")

@@ -183,3 +183,83 @@ export function ribbon(line, width) {
   }
   return out;
 }
+
+// The triangles of a polygon with holes, by ear clipping, each hole first bridged to the outer ring at a point it can see (Eberly,
+// "Triangulation by ear clipping", 2002). Returns indices into [...outer, ...holes.flat()], three a triangle; their areas sum to
+// the polygon's. Rings may wind either way and need not be closed; degenerate input gives fewer triangles, never a failure.
+export function triangulate(outer, holes = []) {
+  const pts = [...outer];
+  const indices = (ring, start, ccw) => {
+    const ids = ring.map((_, i) => start + i);
+    return (ringArea(ring) > 0) === ccw ? ids : ids.reverse();
+  };
+  let loop = indices(outer, 0, true);
+  const inner = holes.map((h) => { const start = pts.length; pts.push(...h); return indices(h, start, false); })
+    .map((ids) => { let m = 0; ids.forEach((id, k) => { if (pts[id][0] > pts[ids[m]][0]) m = k; }); return { ids, m }; })
+    .sort((a, b) => pts[b.ids[b.m]][0] - pts[a.ids[a.m]][0]);
+  const cross = (a, b, c) => (pts[b][0] - pts[a][0]) * (pts[c][1] - pts[a][1]) - (pts[b][1] - pts[a][1]) * (pts[c][0] - pts[a][0]);
+  const inside = (p, a, b, c) => {
+    const [x, y] = pts[p], [ax, ay] = pts[a], [bx, by] = pts[b], [cx, cy] = pts[c];
+    if ((x === ax && y === ay) || (x === bx && y === by) || (x === cx && y === cy)) return false;
+    const d1 = (bx - ax) * (y - ay) - (by - ay) * (x - ax), d2 = (cx - bx) * (y - by) - (cy - by) * (x - bx), d3 = (ax - cx) * (y - cy) - (ay - cy) * (x - cx);
+    return d1 >= 0 && d2 >= 0 && d3 >= 0;
+  };
+  for (const { ids, m } of inner) {
+    const M = pts[ids[m]];
+    let best = Infinity, at = -1;
+    for (let i = 0; i < loop.length; i++) {
+      const a = pts[loop[i]], b = pts[loop[(i + 1) % loop.length]];
+      if ((a[1] > M[1]) === (b[1] > M[1])) continue;
+      const x = a[0] + ((M[1] - a[1]) / (b[1] - a[1])) * (b[0] - a[0]);
+      if (x >= M[0] && x < best) { best = x; at = a[0] > b[0] ? i : (i + 1) % loop.length; }
+    }
+    if (at < 0) {   // the hole lies outside: join it at the nearest point, as bad input allows
+      let near = Infinity;
+      loop.forEach((id, i) => { const d = Math.hypot(pts[id][0] - M[0], pts[id][1] - M[1]); if (d < near) { near = d; at = i; } });
+    } else {
+      // A reflex point of the ring may lie between: the one nearest in angle from the hole's point is visible.
+      const I = pts.length;
+      pts.push([best, M[1]]);
+      const P = loop[at];
+      let angle = Infinity, length = Infinity;
+      loop.forEach((id, i) => {
+        if (id === P) return;
+        const prev = loop[(i + loop.length - 1) % loop.length], next = loop[(i + 1) % loop.length];
+        if (cross(prev, id, next) >= 0) return;
+        const up = pts[P][1] > M[1];
+        const [a, b, c] = up ? [ids[m], I, P] : [ids[m], P, I];
+        if (!inside(id, a, b, c)) return;
+        const dx = pts[id][0] - M[0], dy = pts[id][1] - M[1], tilt = Math.abs(dy) / (Math.hypot(dx, dy) || 1), far = Math.hypot(dx, dy);
+        if (tilt < angle || (tilt === angle && far < length)) { angle = tilt; length = far; at = i; }
+      });
+      pts.pop();
+    }
+    const cycle = [...ids.slice(m), ...ids.slice(0, m), ids[m]];
+    loop = [...loop.slice(0, at + 1), ...cycle, ...loop.slice(at)];
+  }
+  // Clip ears from a linked loop.
+  const out = [];
+  const n = loop.length;
+  if (n < 3) return out;
+  const prev = loop.map((_, i) => (i + n - 1) % n), next = loop.map((_, i) => (i + 1) % n);
+  let left = n, i = 0, tried = 0;
+  while (left > 3 && tried <= left) {
+    const a = prev[i], c = next[i];
+    const turn = cross(loop[a], loop[i], loop[c]);
+    let ear = turn > 0;
+    if (ear) for (let k = next[c]; k !== a; k = next[k]) {
+      if (inside(loop[k], loop[a], loop[i], loop[c])) { ear = false; break; }
+    }
+    if (ear || turn === 0) {
+      if (ear) out.push(loop[a], loop[i], loop[c]);
+      next[a] = c, prev[c] = a;
+      left--;
+      i = c;
+      tried = 0;
+    } else { i = c; tried++; }
+  }
+  if (left === 3) { if (cross(loop[prev[i]], loop[i], loop[next[i]]) > 0) out.push(loop[prev[i]], loop[i], loop[next[i]]); return out; }
+  // What self-crossing input leaves: a fan of what turns the right way.
+  for (let k = next[i]; next[k] !== i; k = next[k]) if (cross(loop[i], loop[k], loop[next[k]]) > 0) out.push(loop[i], loop[k], loop[next[k]]);
+  return out;
+}

@@ -1,0 +1,252 @@
+{
+  "id": "jrc-flood-hazard",
+  "kind": "windows",
+  "domain": "geography",
+  "title": "Global river flood hazard maps (GloFAS v2.1): the depth of water at return periods of 10 to 500 years, about the workbench's cities",
+  "provider": "European Commission, Copernicus Emergency Management Service, JRC open data (CEMS-GLOFAS/flood_hazard)",
+  "credit": "CEMS GloFAS river flood hazard maps, European Union, CC BY 4.0",
+  "windows": [
+    {
+      "file": "melbourne-rp10.npy",
+      "url": "https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/CEMS-GLOFAS/flood_hazard/RP10/ID254_S30_E140_RP10_depth.tif",
+      "box": [
+        -38.12,
+        144.62,
+        -37.5,
+        145.3
+      ],
+      "area": "melbourne",
+      "return_period": 10,
+      "nodata_below": 0
+    },
+    {
+      "file": "melbourne-rp20.npy",
+      "url": "https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/CEMS-GLOFAS/flood_hazard/RP20/ID254_S30_E140_RP20_depth.tif",
+      "box": [
+        -38.12,
+        144.62,
+        -37.5,
+        145.3
+      ],
+      "area": "melbourne",
+      "return_period": 20,
+      "nodata_below": 0
+    },
+    {
+      "file": "melbourne-rp50.npy",
+      "url": "https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/CEMS-GLOFAS/flood_hazard/RP50/ID254_S30_E140_RP50_depth.tif",
+      "box": [
+        -38.12,
+        144.62,
+        -37.5,
+        145.3
+      ],
+      "area": "melbourne",
+      "return_period": 50,
+      "nodata_below": 0
+    },
+    {
+      "file": "melbourne-rp100.npy",
+      "url": "https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/CEMS-GLOFAS/flood_hazard/RP100/ID254_S30_E140_RP100_depth.tif",
+      "box": [
+        -38.12,
+        144.62,
+        -37.5,
+        145.3
+      ],
+      "area": "melbourne",
+      "return_period": 100,
+      "nodata_below": 0
+    },
+    {
+      "file": "melbourne-rp200.npy",
+      "url": "https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/CEMS-GLOFAS/flood_hazard/RP200/ID254_S30_E140_RP200_depth.tif",
+      "box": [
+        -38.12,
+        144.62,
+        -37.5,
+        145.3
+      ],
+      "area": "melbourne",
+      "return_period": 200,
+      "nodata_below": 0
+    },
+    {
+      "file": "melbourne-rp500.npy",
+      "url": "https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/CEMS-GLOFAS/flood_hazard/RP500/ID254_S30_E140_RP500_depth.tif",
+      "box": [
+        -38.12,
+        144.62,
+        -37.5,
+        145.3
+      ],
+      "area": "melbourne",
+      "return_period": 500,
+      "nodata_below": 0
+    },
+    {
+      "file": "new-york-rp10.npy",
+      "url": "https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/CEMS-GLOFAS/flood_hazard/RP10/ID54_N50_W80_RP10_depth.tif",
+      "box": [
+        40.4,
+        -74.35,
+        41.0,
+        -73.65
+      ],
+      "area": "new-york",
+      "return_period": 10,
+      "nodata_below": 0
+    },
+    {
+      "file": "new-york-rp20.npy",
+      "url": "https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/CEMS-GLOFAS/flood_hazard/RP20/ID54_N50_W80_RP20_depth.tif",
+      "box": [
+        40.4,
+        -74.35,
+        41.0,
+        -73.65
+      ],
+      "area": "new-york",
+      "return_period": 20,
+      "nodata_below": 0
+    },
+    {
+      "file": "new-york-rp50.npy",
+      "url": "https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/CEMS-GLOFAS/flood_hazard/RP50/ID54_N50_W80_RP50_depth.tif",
+      "box": [
+        40.4,
+        -74.35,
+        41.0,
+        -73.65
+      ],
+      "area": "new-york",
+      "return_period": 50,
+      "nodata_below": 0
+    },
+    {
+      "file": "new-york-rp100.npy",
+      "url": "https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/CEMS-GLOFAS/flood_hazard/RP100/ID54_N50_W80_RP100_depth.tif",
+      "box": [
+        40.4,
+        -74.35,
+        41.0,
+        -73.65
+      ],
+      "area": "new-york",
+      "return_period": 100,
+      "nodata_below": 0
+    },
+    {
+      "file": "new-york-rp200.npy",
+      "url": "https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/CEMS-GLOFAS/flood_hazard/RP200/ID54_N50_W80_RP200_depth.tif",
+      "box": [
+        40.4,
+        -74.35,
+        41.0,
+        -73.65
+      ],
+      "area": "new-york",
+      "return_period": 200,
+      "nodata_below": 0
+    },
+    {
+      "file": "new-york-rp500.npy",
+      "url": "https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/CEMS-GLOFAS/flood_hazard/RP500/ID54_N50_W80_RP500_depth.tif",
+      "box": [
+        40.4,
+        -74.35,
+        41.0,
+        -73.65
+      ],
+      "area": "new-york",
+      "return_period": 500,
+      "nodata_below": 0
+    },
+    {
+      "file": "freetown-rp10.npy",
+      "url": "https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/CEMS-GLOFAS/flood_hazard/RP10/ID105_N10_W20_RP10_depth.tif",
+      "box": [
+        8.2,
+        -13.45,
+        8.7,
+        -12.95
+      ],
+      "area": "freetown",
+      "return_period": 10,
+      "nodata_below": 0
+    },
+    {
+      "file": "freetown-rp20.npy",
+      "url": "https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/CEMS-GLOFAS/flood_hazard/RP20/ID105_N10_W20_RP20_depth.tif",
+      "box": [
+        8.2,
+        -13.45,
+        8.7,
+        -12.95
+      ],
+      "area": "freetown",
+      "return_period": 20,
+      "nodata_below": 0
+    },
+    {
+      "file": "freetown-rp50.npy",
+      "url": "https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/CEMS-GLOFAS/flood_hazard/RP50/ID105_N10_W20_RP50_depth.tif",
+      "box": [
+        8.2,
+        -13.45,
+        8.7,
+        -12.95
+      ],
+      "area": "freetown",
+      "return_period": 50,
+      "nodata_below": 0
+    },
+    {
+      "file": "freetown-rp100.npy",
+      "url": "https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/CEMS-GLOFAS/flood_hazard/RP100/ID105_N10_W20_RP100_depth.tif",
+      "box": [
+        8.2,
+        -13.45,
+        8.7,
+        -12.95
+      ],
+      "area": "freetown",
+      "return_period": 100,
+      "nodata_below": 0
+    },
+    {
+      "file": "freetown-rp200.npy",
+      "url": "https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/CEMS-GLOFAS/flood_hazard/RP200/ID105_N10_W20_RP200_depth.tif",
+      "box": [
+        8.2,
+        -13.45,
+        8.7,
+        -12.95
+      ],
+      "area": "freetown",
+      "return_period": 200,
+      "nodata_below": 0
+    },
+    {
+      "file": "freetown-rp500.npy",
+      "url": "https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/CEMS-GLOFAS/flood_hazard/RP500/ID105_N10_W20_RP500_depth.tif",
+      "box": [
+        8.2,
+        -13.45,
+        8.7,
+        -12.95
+      ],
+      "area": "freetown",
+      "return_period": 500,
+      "nodata_below": 0
+    }
+  ],
+  "format": "GeoTIFF tiles of 10 x 10 degrees at 3 arc-seconds (about 90 m), float32 metres, Deflate, 256 x 256 internal tiles; only the windows named are read, by HTTP range requests, and kept as numpy arrays with their transforms in retrieval.json.",
+  "coverage": "River floods only, without defences: coasts, surface water and the flood walls of a real city are not in them. Water bodies are excluded.",
+  "licence": "CC BY 4.0",
+  "citation": "Baugh, C., Colonese, J., D'Angelo, C., Dottori, F., Neal, J., Prudhomme, C. and Salamon, P. (2024), Global river flood hazard maps, European Commission, Joint Research Centre, http://data.europa.eu/89h/jrc-floods-floodmapgl_rp50y-tif.",
+  "used_by": [
+    "data/products/territory_rasters.py",
+    "applications/urban-science-workbench"
+  ]
+}

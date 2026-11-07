@@ -1,15 +1,15 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="night">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Urban Science Workbench</title>
-  <meta name="description" content="A three-dimensional GIS of cities — buildings, streets, holdings and their hours, pedestrian sensors — lit by the real Sun, with analyses of streets on top: rhythm, response to weather and holidays, mixing of uses, affinity and catalysis between stores, crowds as kinematic waves.">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M4 27 H28 M7 27 V13 L12 9 L17 13 V27 M17 27 V7 H25 V27' fill='none' stroke='%232f2427' stroke-width='1.6'/%3E%3Cpath d='M4 21 Q10 18 16 21 T28 21' fill='none' stroke='%234f8a8b' stroke-width='2'/%3E%3Ccircle cx='21' cy='11' r='1.8' fill='%23b4645a'/%3E%3C/svg%3E">
+  <meta name="description" content="A three-dimensional GIS from the whole Earth to a street: the world's people, lights, settlements and hazards on one globe, cities standing on it in three dimensions, lit by the real Sun, with the analysis of their streets and buildings on top.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 3 27.3 9.5v13L16 29 4.7 22.5v-13z' fill='%23150D1B' stroke='%23EE8FBD' stroke-width='1.4'/%3E%3Cpath d='M16 10.5 21 13.4v5.2L16 21.5l-5-2.9v-5.2z' fill='none' stroke='%23B892DD' stroke-width='1.2'/%3E%3Ccircle cx='16' cy='16' r='1.5' fill='%23EE8FBD'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" media="print" onload="this.media='all'"
-        href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..600&display=swap">
+        href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..600&family=IBM+Plex+Sans+Condensed:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
   <link rel="stylesheet" href="styles.css">
   <script type="importmap">
     {
@@ -22,26 +22,40 @@
   <script type="module" src="src/app.js"></script>
 </head>
 <body>
-  <header class="top">
-    <a class="brand" href="#">
-      <svg viewBox="0 0 32 32" aria-hidden="true"><path class="frame" d="M4 27 H28 M7 27 V13 L12 9 L17 13 V27 M17 27 V7 H25 V27"/><path class="sea" d="M4 21 Q10 18 16 21 T28 21"/><circle class="dot" cx="21" cy="11" r="1.8"/></svg>
-      <span>Urban Science Workbench</span>
-    </a>
-    <select id="area" title="the city shown"></select>
-    <span class="where" id="where"></span>
-    <span class="grow"></span>
-    <span class="lamp" id="data-lamp" title="the data library's products">data</span>
-    <span class="lamp" id="lamp" title="the engines">engine</span>
-    <button class="plain" id="theme" title="day or night">night</button>
-  </header>
-  <nav class="rail" id="rail"></nav>
-  <main id="main">
+  <main id="stage">
     <div id="map" class="map"></div>
-    <div id="legend" class="legend-stack"></div>
-    <div id="info" class="info" hidden></div>
-    <div id="clock" class="clock"></div>
-    <aside id="panel" class="panel-drawer" hidden></aside>
+    <svg id="neatline" class="overlay" aria-hidden="true"></svg>
+    <div id="pins" class="overlay"></div>
+    <svg id="leader" class="overlay" aria-hidden="true"></svg>
   </main>
+
+  <header id="plate" class="plate">
+    <div class="mark">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><path class="m1" d="M16 2.5 27.7 9.25v13.5L16 29.5 4.3 22.75V9.25z"/><path class="m2" d="M16 10 21.2 13v6L16 22l-5.2-3v-6z"/><path class="m3" d="M16 2.5V10M27.7 22.75 21.2 19M4.3 22.75 10.8 19"/><circle class="m4" cx="16" cy="16" r="1.5"/></svg>
+      <span>Urban Science Workbench</span>
+    </div>
+    <h1 id="place-title" title="Go to a place">The Earth</h1>
+    <div id="place-line" class="place-line"></div>
+    <div id="gazetteer" class="gazetteer" hidden></div>
+  </header>
+
+  <nav id="lenses" class="lenses" aria-label="What to look at"></nav>
+
+  <section id="info" class="probe vellum" hidden></section>
+  <div id="legend" class="legends"></div>
+
+  <aside id="panel" class="folio vellum" hidden></aside>
+
+  <section id="navigator" class="navigator">
+    <div id="status" class="status"></div>
+    <div id="ladder" class="ladder"></div>
+    <div id="compass" class="compass"></div>
+    <div id="view-keys" class="view-keys"></div>
+    <div id="scalebar" class="scalebar"></div>
+  </section>
+
+  <div id="credits" class="credits"></div>
+  <footer id="clock" class="clock"></footer>
   <div id="hover" class="hover" hidden></div>
 </body>
 </html>

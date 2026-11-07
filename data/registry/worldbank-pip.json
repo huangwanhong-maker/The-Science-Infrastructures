@@ -1,0 +1,39 @@
+{
+  "id": "worldbank-pip",
+  "kind": "http",
+  "domain": "economics",
+  "title": "Poverty and Inequality Platform: every survey-year estimate of poverty and inequality, by economy",
+  "provider": "The World Bank, Poverty and Inequality Platform API v1",
+  "credit": "World Bank PIP, CC BY 4.0",
+  "requests": [
+    {
+      "url": "https://api.worldbank.org/pip/v1/pip?country=all&year=all&povline={povline}&fill_gaps=false&format=json",
+      "file": "pip.json"
+    }
+  ],
+  "parameters": {
+    "povline": {
+      "type": "float",
+      "default": 3.0,
+      "min": 0.1,
+      "max": 100,
+      "description": "The poverty line, 2021 PPP dollars a day (the international line is $3.00 since June 2025)"
+    }
+  },
+  "profiles": {
+    "international": {
+      "description": "The international poverty line of $3.00 a day",
+      "parameters": {
+        "povline": 3.0
+      }
+    }
+  },
+  "default_profile": "international",
+  "format": "JSON, a row for each economy, reporting year and level (national, urban, rural): headcount, poverty gap, mean, median, Gini, decile shares, population.",
+  "coverage": "About 172 economies; surveys from 1963 to the latest update.",
+  "licence": "CC BY 4.0 (World Bank terms of use for datasets)",
+  "citation": "World Bank (2026), Poverty and Inequality Platform, https://pip.worldbank.org.",
+  "used_by": [
+    "applications/urban-science-workbench"
+  ]
+}

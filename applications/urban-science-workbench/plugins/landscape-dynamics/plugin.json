@@ -10,27 +10,39 @@
       "group": "The district as cells",
       "title": "the district as a complex",
       "module": "layers/cells.js",
-      "areas": ["melbourne", "new-york"],
+      "areas": [
+        "melbourne",
+        "new-york"
+      ],
       "default": false,
-      "about": "The walking network of a district as a regular cell complex, drawn as a complex: on the ground, or by dimension with each cell joined to its faces and the incidences' signs; each segment's orientation; the holes; a picked cell's closure and star; the state set on the cells and the edits made to them."
+      "about": "The walking network of a district as a regular cell complex, drawn as a complex: on the ground, or by dimension with each cell joined to its faces and the incidences' signs; each segment's orientation; the holes; a picked cell's closure and star; the state set on the cells and the edits made to them.",
+      "lens": "fabric"
     },
     {
       "id": "landscape",
       "group": "The district as cells",
       "title": "the landscape running (a model)",
       "module": "layers/landscape.js",
-      "areas": ["melbourne", "new-york"],
+      "areas": [
+        "melbourne",
+        "new-york"
+      ],
       "default": false,
-      "about": "A day of the district run as one process, following the clock: walkers at the junctions and their flow along the streets, the warmth of each block, the two stores open or shut, the lane appearing when it is built and the cells it rewrites, its recognition."
+      "about": "A day of the district run as one process, following the clock: walkers at the junctions and their flow along the streets, the warmth of each block, the two stores open or shut, the lane appearing when it is built and the cells it rewrites, its recognition.",
+      "lens": "change"
     },
     {
       "id": "spacetime",
       "group": "The district as cells",
       "title": "the district's spacetime (a model)",
       "module": "layers/spacetime.js",
-      "areas": ["melbourne", "new-york"],
+      "areas": [
+        "melbourne",
+        "new-york"
+      ],
       "default": false,
-      "about": "The same day with time rising above the district: each street a sheet coloured by the walkers it carries, each junction a worldline, the cells beginning and ending where the lane is built, the lane deepening once it is recognised; the events as beads joined to those that read them, and a plane at the clock's hour."
+      "about": "The same day with time rising above the district: each street a sheet coloured by the walkers it carries, each junction a worldline, the cells beginning and ending where the lane is built, the lane deepening once it is recognised; the events as beads joined to those that read them, and a plane at the clock's hour.",
+      "lens": "change"
     },
     {
       "id": "rooms",
@@ -38,14 +50,39 @@
       "title": "a building's rooms and their warmth (a model)",
       "module": "layers/rooms.js",
       "default": false,
-      "about": "A building picked on the map as a box of rooms on its floors, each room a cell, coloured by its temperature at the clock's hour as the Sun and the air warm it; stairs, doors and merged rooms as they are opened."
+      "about": "A building picked on the map as a box of rooms on its floors, each room a cell, coloured by its temperature at the clock's hour as the Sun and the air warm it; stairs, doors and merged rooms as they are opened.",
+      "lens": "fabric"
     }
   ],
   "tools": [
-    { "id": "workspace", "title": "The district: complex, freedom, dynamics", "module": "tools/workspace.js", "about": "The district as a cell complex, on the ground or by dimension, a picked cell with its faces and what it bounds; what its cells carry at the start, set by hand, and the cells themselves rewritten (a street cut, a passage opened, two blocks joined), each edit checked and its order given; the landscape run on that complex from that state from the clock's hour, drawn on the map as the clock plays, with what could happen at each hour and what did." },
-    { "id": "exact", "title": "The landscape's events, exactly", "module": "tools/exact.js", "about": "The stores, the rule, the lane and its meaning composed from their parts and solved exactly: how often each joint state holds and whether it runs round; which coarser descriptions forget something exactly, which do not and for how long they stay close; how interventions interact on an outcome; what a record says." },
-    { "id": "building", "title": "A building's rooms", "module": "tools/building.js", "about": "A building picked on the map as a complex of rooms: its heat through the day under the Sun, how long it remembers a disturbance, and doors, stairs and merged rooms with the heat they keep and the rooms one can reach." },
-    { "id": "scales", "title": "Scales and memory", "module": "tools/scales.js", "about": "How fast the district evens out and along which division; the flows round its holes; what the streets remember of the shops along them; walkers counted one by one and as a flow." }
+    {
+      "id": "workspace",
+      "title": "The district: complex, freedom, dynamics",
+      "module": "tools/workspace.js",
+      "about": "The district as a cell complex, on the ground or by dimension, a picked cell with its faces and what it bounds; what its cells carry at the start, set by hand, and the cells themselves rewritten (a street cut, a passage opened, two blocks joined), each edit checked and its order given; the landscape run on that complex from that state from the clock's hour, drawn on the map as the clock plays, with what could happen at each hour and what did.",
+      "lens": "fabric"
+    },
+    {
+      "id": "exact",
+      "title": "The landscape's events, exactly",
+      "module": "tools/exact.js",
+      "about": "The stores, the rule, the lane and its meaning composed from their parts and solved exactly: how often each joint state holds and whether it runs round; which coarser descriptions forget something exactly, which do not and for how long they stay close; how interventions interact on an outcome; what a record says.",
+      "lens": "change"
+    },
+    {
+      "id": "building",
+      "title": "A building's rooms",
+      "module": "tools/building.js",
+      "about": "A building picked on the map as a complex of rooms: its heat through the day under the Sun, how long it remembers a disturbance, and doors, stairs and merged rooms with the heat they keep and the rooms one can reach.",
+      "lens": "fabric"
+    },
+    {
+      "id": "scales",
+      "title": "Scales and memory",
+      "module": "tools/scales.js",
+      "about": "How fast the district evens out and along which division; the flows round its holes; what the streets remember of the shops along them; walkers counted one by one and as a flow.",
+      "lens": "change"
+    }
   ],
   "engine": "engine/main.cpp",
   "source": "The urban-science domain's landscape module and its theory note, theory/landscape-dynamics.md"

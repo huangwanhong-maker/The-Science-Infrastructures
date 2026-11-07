@@ -1,0 +1,22 @@
+{
+  "id": "rdls-schema",
+  "domain": "geography",
+  "title": "The Risk Data Library Standard 1.0: the JSON schema of hazard, exposure, vulnerability and loss datasets",
+  "provider": "GFDRR, the rdl-standard repository, tag 1__0__0",
+  "credit": "Risk Data Library Standard, GFDRR, CC BY-SA 4.0",
+  "files": [
+    {
+      "url": "https://raw.githubusercontent.com/GFDRR/rdl-standard/1__0__0/schema/rdls_schema.json",
+      "file": "rdls_schema.json",
+      "size": 90992,
+      "sha256": "85584d8d39c9c4525f3d64c2a8734df7ddc8d40d9d7c3fb1842f55fbb759302d"
+    }
+  ],
+  "format": "JSON Schema 2020-12. It is fetched and read, not committed: its licence is share-alike.",
+  "coverage": "The standard's dataset object and its codelists.",
+  "licence": "CC BY-SA 4.0",
+  "citation": "GFDRR (2025), Risk Data Library Standard 1.0.0, https://docs.riskdatalibrary.org.",
+  "used_by": [
+    "data/products/rdls_records.py"
+  ]
+}

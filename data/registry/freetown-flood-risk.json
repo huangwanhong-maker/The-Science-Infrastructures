@@ -1,0 +1,241 @@
+{
+  "id": "freetown-flood-risk",
+  "domain": "urban-science",
+  "title": "Freetown, Sierra Leone Flood Risk Assessment: 1 m flood maps at return periods of 20 to 1500 years, 153,436 modelled buildings, and the event loss tables",
+  "provider": "The World Bank with JBA Risk Management and the Freetown City Council; World Bank Data Catalog, dataset 0066934",
+  "credit": "Freetown Flood Risk Assessment, World Bank, JBA Risk Management, CC BY 4.0",
+  "files": [
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095923/2023s0512_Freetown_Flood_Hazard_Maps.zip",
+      "member": "2023s0512_Freetown_Flood_Hazard_Maps/2023s0512_JBA_Freetown_Flood_Hazard_Maps/Freetown_202304_FLRF_U_RP20_RD_1m_4326.tif.ovr",
+      "file": "FLRF-RP20.tif.ovr",
+      "size": 21961736,
+      "sha256": "fbe8f9e746bd6f410fa81fbb46d0a234ddb61c0a1c33a3300d8db9c030b2aab2"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095923/2023s0512_Freetown_Flood_Hazard_Maps.zip",
+      "member": "2023s0512_Freetown_Flood_Hazard_Maps/2023s0512_JBA_Freetown_Flood_Hazard_Maps/Freetown_202304_FLRF_U_RP50_RD_1m_4326.tif.ovr",
+      "file": "FLRF-RP50.tif.ovr",
+      "size": 23675996,
+      "sha256": "184336b382bf0f9c7e1e1efc9c376581c25a4594d68c8e496a9657f4f6e6d5d5"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095923/2023s0512_Freetown_Flood_Hazard_Maps.zip",
+      "member": "2023s0512_Freetown_Flood_Hazard_Maps/2023s0512_JBA_Freetown_Flood_Hazard_Maps/Freetown_202304_FLRF_U_RP100_RD_1m_4326.tif.ovr",
+      "file": "FLRF-RP100.tif.ovr",
+      "size": 25597211,
+      "sha256": "bee4f7e56c60607af263752efb93dd9b1cec98df811b93927d6432d31a19d1c7"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095923/2023s0512_Freetown_Flood_Hazard_Maps.zip",
+      "member": "2023s0512_Freetown_Flood_Hazard_Maps/2023s0512_JBA_Freetown_Flood_Hazard_Maps/Freetown_202304_FLRF_U_RP200_RD_1m_4326.tif.ovr",
+      "file": "FLRF-RP200.tif.ovr",
+      "size": 27320113,
+      "sha256": "6491787bc136d0f6647cfdf5a59fcc594b790fc896b725cda71ce89844237a6b"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095923/2023s0512_Freetown_Flood_Hazard_Maps.zip",
+      "member": "2023s0512_Freetown_Flood_Hazard_Maps/2023s0512_JBA_Freetown_Flood_Hazard_Maps/Freetown_202304_FLRF_U_RP500_RD_1m_4326.tif.ovr",
+      "file": "FLRF-RP500.tif.ovr",
+      "size": 29505401,
+      "sha256": "6a249cf012c3e6536e428a4cc2d571d7d618ce6ffb2147d4cbd82c019adb5da9"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095923/2023s0512_Freetown_Flood_Hazard_Maps.zip",
+      "member": "2023s0512_Freetown_Flood_Hazard_Maps/2023s0512_JBA_Freetown_Flood_Hazard_Maps/Freetown_202304_FLRF_U_RP1500_RD_1m_4326.tif.ovr",
+      "file": "FLRF-RP1500.tif.ovr",
+      "size": 33782626,
+      "sha256": "b95f6f49cdadae609beab756a5a21a6d13b72c3952e71fbe6176bbab77a85d41"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095923/2023s0512_Freetown_Flood_Hazard_Maps.zip",
+      "member": "2023s0512_Freetown_Flood_Hazard_Maps/2023s0512_JBA_Freetown_Flood_Hazard_Maps/Freetown_202304_FLSW_U_RP20_RD_1m_4326.tif.ovr",
+      "file": "FLSW-RP20.tif.ovr",
+      "size": 6549007,
+      "sha256": "e22718556b44cd3c3ee62ca3d27bbda9abe2a40c298cddf7f82f6af6ef7f26be"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095923/2023s0512_Freetown_Flood_Hazard_Maps.zip",
+      "member": "2023s0512_Freetown_Flood_Hazard_Maps/2023s0512_JBA_Freetown_Flood_Hazard_Maps/Freetown_202304_FLSW_U_RP50_RD_1m_4326.tif.ovr",
+      "file": "FLSW-RP50.tif.ovr",
+      "size": 7763186,
+      "sha256": "cba2d40b0e32677d6873c54dce56754546ef1e7e6468d580cfe972c58618f9bd"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095923/2023s0512_Freetown_Flood_Hazard_Maps.zip",
+      "member": "2023s0512_Freetown_Flood_Hazard_Maps/2023s0512_JBA_Freetown_Flood_Hazard_Maps/Freetown_202304_FLSW_U_RP100_RD_1m_4326.tif.ovr",
+      "file": "FLSW-RP100.tif.ovr",
+      "size": 8622790,
+      "sha256": "eb816bd7d9c5dee722f237b36e3fc32292a0108bd0bcdda3c129c6de89ed8f31"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095923/2023s0512_Freetown_Flood_Hazard_Maps.zip",
+      "member": "2023s0512_Freetown_Flood_Hazard_Maps/2023s0512_JBA_Freetown_Flood_Hazard_Maps/Freetown_202304_FLSW_U_RP200_RD_1m_4326.tif.ovr",
+      "file": "FLSW-RP200.tif.ovr",
+      "size": 9589500,
+      "sha256": "7f13d49fa73503f4330b3211615d20ceb5c147692ca7054425bcb13d1df57ebd"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095923/2023s0512_Freetown_Flood_Hazard_Maps.zip",
+      "member": "2023s0512_Freetown_Flood_Hazard_Maps/2023s0512_JBA_Freetown_Flood_Hazard_Maps/Freetown_202304_FLSW_U_RP500_RD_1m_4326.tif.ovr",
+      "file": "FLSW-RP500.tif.ovr",
+      "size": 11071960,
+      "sha256": "2953b8435a5bb90b23732fccfa9987fe1dcc2a0487edf438f7e031d2b0e7103a"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095923/2023s0512_Freetown_Flood_Hazard_Maps.zip",
+      "member": "2023s0512_Freetown_Flood_Hazard_Maps/2023s0512_JBA_Freetown_Flood_Hazard_Maps/Freetown_202304_FLSW_U_RP1500_RD_1m_4326.tif.ovr",
+      "file": "FLSW-RP1500.tif.ovr",
+      "size": 12850451,
+      "sha256": "bfe074f7b3489cf5ed804456e317de6f82b87877ddd38a087f4d784746161d47"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095925/2023s0512_Modelled_Exposure.zip",
+      "member": "2023s0512_Modelled_Exposure/Freetown portfolio/Freetown_ptf_v2.csv",
+      "file": "Freetown_ptf_v2.csv",
+      "size": 20268155,
+      "sha256": "03ac1a0089cbb88cdb355ec978386058b4bf1ae88f0f25613cb21f1eb340e2a5"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095924/2023s0512_Freetown_Probabilistic_Analysis_Results.zip",
+      "member": "2023s0512_Freetown_Probabilistic_Analysis_Results/2023s0512_SLE_Freetown_03_gul_S1_aalcalc.csv",
+      "file": "2023s0512_SLE_Freetown_03_gul_S1_aalcalc.csv",
+      "size": 73,
+      "sha256": "83653ca4ba7fc7cfb5ed295079797bc158347a0429c7039987487ff7f3e87167"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095924/2023s0512_Freetown_Probabilistic_Analysis_Results.zip",
+      "member": "2023s0512_Freetown_Probabilistic_Analysis_Results/2023s0512_SLE_Freetown_03_gul_S1_eltcalc.csv",
+      "file": "2023s0512_SLE_Freetown_03_gul_S1_eltcalc.csv",
+      "size": 89027,
+      "sha256": "e07596433ed81fed6bab1f4ffbab0d79d91c9a7507394a07a7a746264aaf5d16"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095924/2023s0512_Freetown_Probabilistic_Analysis_Results.zip",
+      "member": "2023s0512_Freetown_Probabilistic_Analysis_Results/2023s0512_SLE_Freetown_03_gul_S1_leccalc_wheatsheaf_mean_aep.csv",
+      "file": "2023s0512_SLE_Freetown_03_gul_S1_leccalc_wheatsheaf_mean_aep.csv",
+      "size": 765,
+      "sha256": "d79f244676a2b2032f3c61b3a182739e0e580d5d0f42f818f02d36bd4f888e95"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095924/2023s0512_Freetown_Probabilistic_Analysis_Results.zip",
+      "member": "2023s0512_Freetown_Probabilistic_Analysis_Results/2023s0512_SLE_Freetown_03_gul_S1_leccalc_wheatsheaf_mean_oep.csv",
+      "file": "2023s0512_SLE_Freetown_03_gul_S1_leccalc_wheatsheaf_mean_oep.csv",
+      "size": 766,
+      "sha256": "5acba2d8155901e530aa178bd15777a9e6ac65a9be5512340fba79108940cbb2"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095924/2023s0512_Freetown_Probabilistic_Analysis_Results.zip",
+      "member": "2023s0512_Freetown_Probabilistic_Analysis_Results/2023s0512_SLE_Freetown_03_gul_S1_pltcalc.csv",
+      "file": "2023s0512_SLE_Freetown_03_gul_S1_pltcalc.csv",
+      "size": 124170,
+      "sha256": "df92f37e706e5d7acfa8903f39c8ab9661c0505207bd39bbcb87b13b8a2a5769"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095924/2023s0512_Freetown_Probabilistic_Analysis_Results.zip",
+      "member": "2023s0512_Freetown_Probabilistic_Analysis_Results/2023s0512_SLE_Freetown_03_gul_S2_aalcalc.csv",
+      "file": "2023s0512_SLE_Freetown_03_gul_S2_aalcalc.csv",
+      "size": 37,
+      "sha256": "776c1738bf2ad543dbd35f4700a7e9ae653b8c0503185cd1b699ac056089b1e4"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095924/2023s0512_Freetown_Probabilistic_Analysis_Results.zip",
+      "member": "2023s0512_Freetown_Probabilistic_Analysis_Results/2023s0512_SLE_Freetown_03_gul_S2_eltcalc.csv",
+      "file": "2023s0512_SLE_Freetown_03_gul_S2_eltcalc.csv",
+      "size": 54263,
+      "sha256": "3470c319cea4ce592eb02447932ac094c9c08b8d6279d53aa7ab164d2632f4fe"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095924/2023s0512_Freetown_Probabilistic_Analysis_Results.zip",
+      "member": "2023s0512_Freetown_Probabilistic_Analysis_Results/2023s0512_SLE_Freetown_03_gul_S2_leccalc_wheatsheaf_mean_aep.csv",
+      "file": "2023s0512_SLE_Freetown_03_gul_S2_leccalc_wheatsheaf_mean_aep.csv",
+      "size": 306,
+      "sha256": "ba38459c94907ebe800c40406828652319865d3c39b14b99678cc9a4d70564cd"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095924/2023s0512_Freetown_Probabilistic_Analysis_Results.zip",
+      "member": "2023s0512_Freetown_Probabilistic_Analysis_Results/2023s0512_SLE_Freetown_03_gul_S2_leccalc_wheatsheaf_mean_oep.csv",
+      "file": "2023s0512_SLE_Freetown_03_gul_S2_leccalc_wheatsheaf_mean_oep.csv",
+      "size": 309,
+      "sha256": "e861e0ccf20170e2475f51091c1ab782a15b4b732d5e328309c816d9e1a683eb"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095924/2023s0512_Freetown_Probabilistic_Analysis_Results.zip",
+      "member": "2023s0512_Freetown_Probabilistic_Analysis_Results/2023s0512_SLE_Freetown_03_gul_S2_pltcalc.csv",
+      "file": "2023s0512_SLE_Freetown_03_gul_S2_pltcalc.csv",
+      "size": 72186,
+      "sha256": "bbb17f6f5e72a9ed49d4487eb804d20089e378979e40c1bafe6bf13f8ef5b4d2"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095922/2023s0512_Freetown_Flood_Hazard_and_Loss_Maps.zip",
+      "member": "2023s0512_Freetown_Flood_Hazard_and_Loss_Maps/Shapefiles/Freetown_Admin4_AAL/Freetown_Admin4_Combined_Flood_AAL.shp",
+      "file": "Freetown_Admin4_Combined_Flood_AAL.shp",
+      "size": 180260,
+      "sha256": "2d965d7eb53b1aaf5fcae2db6bd5d48b839a13db249b22533e600b1028c6b585"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095922/2023s0512_Freetown_Flood_Hazard_and_Loss_Maps.zip",
+      "member": "2023s0512_Freetown_Flood_Hazard_and_Loss_Maps/Shapefiles/Freetown_Admin4_AAL/Freetown_Admin4_Combined_Flood_AAL.dbf",
+      "file": "Freetown_Admin4_Combined_Flood_AAL.dbf",
+      "size": 74866,
+      "sha256": "5b842fe187e2999bc9d399debf3b7394b897ecc68dc2c83af5a1a39b081a2370"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095922/2023s0512_Freetown_Flood_Hazard_and_Loss_Maps.zip",
+      "member": "2023s0512_Freetown_Flood_Hazard_and_Loss_Maps/Shapefiles/Freetown_Admin4_AAL/Freetown_Admin4_Combined_Flood_AAL.prj",
+      "file": "Freetown_Admin4_Combined_Flood_AAL.prj",
+      "size": 145,
+      "sha256": "a02a27b1d1982c8516d83398e85a3c8b1aef1713c13ef4d84d7bde17430c07c4"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095922/2023s0512_Freetown_Flood_Hazard_and_Loss_Maps.zip",
+      "member": "2023s0512_Freetown_Flood_Hazard_and_Loss_Maps/Shapefiles/Freetown_City_Council_Flood_Points/Freetown_City_Council_flash_flood_points.shp",
+      "file": "Freetown_City_Council_flash_flood_points.shp",
+      "size": 1360,
+      "sha256": "02a41bc726548873633c694553ca3de7368730ad79746567e1f1d2277439cdc0"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095922/2023s0512_Freetown_Flood_Hazard_and_Loss_Maps.zip",
+      "member": "2023s0512_Freetown_Flood_Hazard_and_Loss_Maps/Shapefiles/Freetown_City_Council_Flood_Points/Freetown_City_Council_flash_flood_points.dbf",
+      "file": "Freetown_City_Council_flash_flood_points.dbf",
+      "size": 2843,
+      "sha256": "8311bd61f5e150e7e6b79bd7b642934ee4a980f3479afcd3757c4ea22f17db99"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095922/2023s0512_Freetown_Flood_Hazard_and_Loss_Maps.zip",
+      "member": "2023s0512_Freetown_Flood_Hazard_and_Loss_Maps/Shapefiles/Freetown_City_Council_Flood_Points/Freetown_City_Council_flash_flood_points.prj",
+      "file": "Freetown_City_Council_flash_flood_points.prj",
+      "size": 145,
+      "sha256": "a02a27b1d1982c8516d83398e85a3c8b1aef1713c13ef4d84d7bde17430c07c4"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095922/2023s0512_Freetown_Flood_Hazard_and_Loss_Maps.zip",
+      "member": "2023s0512_Freetown_Flood_Hazard_and_Loss_Maps/Shapefiles/Freetown_City_Council_Flood_Points/Freetown_City_Council_flash_flood_areas.shp",
+      "file": "Freetown_City_Council_flash_flood_areas.shp",
+      "size": 2676,
+      "sha256": "0bd4c621311ed09223df0b311f02668f21e93fda64d1283682f1cfcfebbc322c"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095922/2023s0512_Freetown_Flood_Hazard_and_Loss_Maps.zip",
+      "member": "2023s0512_Freetown_Flood_Hazard_and_Loss_Maps/Shapefiles/Freetown_City_Council_Flood_Points/Freetown_City_Council_flash_flood_areas.dbf",
+      "file": "Freetown_City_Council_flash_flood_areas.dbf",
+      "size": 154,
+      "sha256": "d15f5245932019dd998eedae61862c7b4f529448116b731940679d6bfc5b4af5"
+    },
+    {
+      "url": "https://datacatalogfiles.worldbank.org/ddh-published/0066934/DR0095922/2023s0512_Freetown_Flood_Hazard_and_Loss_Maps.zip",
+      "member": "2023s0512_Freetown_Flood_Hazard_and_Loss_Maps/Shapefiles/Freetown_City_Council_Flood_Points/Freetown_City_Council_flash_flood_areas.prj",
+      "file": "Freetown_City_Council_flash_flood_areas.prj",
+      "size": 145,
+      "sha256": "a02a27b1d1982c8516d83398e85a3c8b1aef1713c13ef4d84d7bde17430c07c4"
+    }
+  ],
+  "format": "From the hazard archive (650 MB), the reduced-resolution overviews (.ovr, GDAL's external overviews of the 1 m depth rasters) of river (FLRF) and surface-water (FLSW) flooding at each return period, read by range requests as zip members; the full 1 m rasters are not fetched. The modelled portfolio (Freetown_ptf_v2.csv: each building's latitude, longitude, occupancy and insured value in US dollars). The Oasis loss outputs: average annual loss (aalcalc), event loss table (eltcalc), aggregate and occurrence exceedance curves (leccalc), year loss table (pltcalc), by occupancy (S1) and for the 1 m area (S2). Average annual loss by ward (shapefile), and the City Council's flash-flood points and areas.",
+  "coverage": "Freetown's 1 m DEM area; modelled river and surface-water flooding, baseline climate, undefended.",
+  "licence": "CC BY 4.0 (World Bank Data Catalog)",
+  "citation": "World Bank (2023), Freetown, Sierra Leone Flood Risk Assessment, https://datacatalog.worldbank.org/search/dataset/0066934.",
+  "used_by": [
+    "data/products/freetown_flood.py",
+    "applications/urban-science-workbench"
+  ]
+}

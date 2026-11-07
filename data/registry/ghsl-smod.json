@@ -1,0 +1,26 @@
+{
+  "id": "ghsl-smod",
+  "domain": "geography",
+  "title": "GHS-SMOD R2023A: the degree of urbanisation of the Earth in 2025, on the WGS 84 grid of 30 arc-seconds",
+  "provider": "European Commission, Joint Research Centre (JRC), Global Human Settlement Layer; GHS_SMOD_E2025_GLOBE_R2023A_4326_30ss, version 2.0",
+  "credit": "GHS-SMOD R2023A, European Commission JRC, CC BY 4.0",
+  "release": "R2023A",
+  "epoch": 2025,
+  "files": [
+    {
+      "url": "https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_SMOD_GLOBE_R2023A/GHS_SMOD_E2025_GLOBE_R2023A_4326_30ss/V2-0/GHS_SMOD_E2025_GLOBE_R2023A_4326_30ss_V2_0.zip",
+      "member": "GHS_SMOD_E2025_GLOBE_R2023A_4326_30ss_V2_0.tif",
+      "file": "GHS_SMOD_E2025_GLOBE_R2023A_4326_30ss_V2_0.tif",
+      "size": 23982578,
+      "sha256": "32c074929dcf3f74908d3ef84c7c899a1e85060347d2fb10dbef45f5a2cbdbb7"
+    }
+  ],
+  "format": "GeoTIFF of one band of classes of the Degree of Urbanisation stage I: 30 urban centre, 23 dense urban cluster, 22 semi-dense urban cluster, 21 suburban or peri-urban, 13 rural cluster, 12 low density rural, 11 very low density rural, 10 water.",
+  "coverage": "The whole Earth at the epoch 2025; epochs 1975-2030 every five years are in the same release.",
+  "licence": "CC BY 4.0 (the JRC's reuse policy). Changes made here: windows about the workbench's cities, classes recoded to eight steps.",
+  "citation": "Schiavina, M., Melchiorri, M. and Pesaresi, M. (2023), GHS-SMOD R2023A: GHS settlement layers, application of the Degree of Urbanisation methodology (stage I) to GHS-POP R2023A and GHS-BUILT-S R2023A, multitemporal (1975-2030), European Commission, Joint Research Centre, doi:10.2905/A0DF7A6F-49DE-46EA-9BDE-563437A6E2BA.",
+  "used_by": [
+    "data/products/territory_rasters.py",
+    "applications/urban-science-workbench"
+  ]
+}

@@ -7,6 +7,14 @@ those with C++, an engine built by ``engine.py`` and kept running here, one proc
 
     GET  /api/plugins                    the plug-ins: their manifests and whether their engines are current
     POST /api/<plugin>/<op>              {…}: one request to a plug-in's engine
+    GET  /tiles/terrain/earth/<z>/<x>/<y>  a terrain tile (the data library's tiles), built on first request
+    GET  /world/city/<z>/<x>/<y>         any place's buildings and ways (Overture Maps; data/acquisition/world_city.py), kept once asked
+    GET  /world/base/<z>/<x>/<y>         any place's water and open land
+    GET  /world/heights/<z>/<x>/<y>      the ground and the buildings' average height on a grid over a tile
+    GET  /world/raster?kind=&lat=&lon=[&rp=]  a raster about a place (settlement, urbanisation, flood): {meta, data's address}
+    GET  /world/space2stats?lat=&lon=    a tile of Space2Stats' cells
+    GET  /world/thinkhazard?name= | code= the hazards of an administrative unit
+    GET  /world/data360?q= | db=&id=     indicators by meaning, or an indicator's values by economy
     GET  /setup                          the recipe (recipe.json): building the engines, and whether it is done
     POST /setup/run[?again=1]            build them (again)
 
@@ -23,8 +31,10 @@ then open http://127.0.0.1:8970/ in a browser.
 from __future__ import annotations
 
 import argparse
+import concurrent.futures
 import http.server
 import json
+import re
 import sys
 import threading
 import time
@@ -51,13 +61,37 @@ TYPES = {
 }
 
 sys.path.insert(0, str(APP))
+sys.path.insert(0, str(ROOT / "data"))
 import engine  # noqa: E402
+from tiles.pyramid import TileKey  # noqa: E402
+from tiles.terrain import TerrainService, decode as decode_terrain  # noqa: E402
+sys.path.insert(0, str(ROOT / "data" / "acquisition"))
+import services  # noqa: E402
+import world_city  # noqa: E402
 
 RECIPE = None
 WRITES = {"allowed": True, "token": None}
 WORKERS: dict[str, engine.Worker] = {}
 CACHE: dict[tuple[str, str], str] = {}
 LOCK = threading.Lock()
+TERRAIN = TerrainService(ROOT / "data" / "cache")
+TILE = re.compile(r"^/tiles/terrain/earth/(\d+)/(\d+)/(\d+)$")
+# Terrain tiles are built a few at a time, so that a page asking for many does not starve the rest.
+BUILDS = threading.BoundedSemaphore(8)
+MAX_TERRAIN_LEVEL = 18
+WORLD = re.compile(r"^/world/(city|base|heights)/(\d+)/(\d+)/(\d+)$")
+WORLD_TILES = threading.BoundedSemaphore(6)
+# A city tile's vector data is read in pure Python, tens of thousands of footprints: apart from the server's own thread, so that the
+# page goes on being answered while a place it has not seen is prepared.
+READERS: concurrent.futures.ProcessPoolExecutor | None = None
+
+
+def read_city_tile(z: int, x: int, y: int) -> str:
+    global READERS
+    with LOCK:
+        if READERS is None:
+            READERS = concurrent.futures.ProcessPoolExecutor(max_workers=3)
+    return READERS.submit(world_city.city_tile, z, x, y).result(timeout=240)
 
 
 def recipe_job():
@@ -127,7 +161,68 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             return self.reply_json({"plugins": out}, 200)
         if url.path == "/setup":
             return self.reply_json(*self.recipe_request(url))
+        tile = TILE.match(url.path)
+        if tile:
+            return self.tile_request(*map(int, tile.groups()))
+        world = WORLD.match(url.path)
+        if world:
+            return self.world_tile(world.group(1), *map(int, world.groups()[1:]))
+        if url.path.startswith("/world/"):
+            return self.world_service(url.path.split("/", 2)[2], dict(urllib.parse.parse_qsl(url.query)))
         return super().do_GET()
+
+    def world_tile(self, kind: str, z: int, x: int, y: int) -> None:
+        if x >= 2 ** z or y >= 2 ** z or z > 14 or (kind != "heights" and z < 13):
+            return self.reply_json({"message": "no such tile"}, 404)
+        try:
+            with WORLD_TILES:
+                if kind == "city":
+                    text = read_city_tile(z, x, y)
+                elif kind == "base":
+                    text = world_city.base_tile(z, x, y)
+                else:
+                    text = json.dumps(world_city.heights_of(z, x, y, TERRAIN, TileKey, decode_terrain))
+        except Exception as error:  # a source that fails is reported for this tile; the place stays as it was
+            return self.reply_json({"message": f"{kind} {z}/{x}/{y}: {error}"}, 502)
+        self.reply_text(text, 200)
+
+    def world_service(self, name: str, q: dict) -> None:
+        try:
+            if name == "space2stats":
+                return self.reply_json(services.space2stats_tile(float(q["lat"]), float(q["lon"])), 200)
+            if name == "thinkhazard":
+                return self.reply_json({"report": services.thinkhazard_report(int(q["code"]))} if "code" in q else {"units": services.thinkhazard_search(q["name"])}, 200)
+            if name == "data360":
+                return self.reply_json({"values": services.data360_values(q["db"], q["id"])} if "id" in q else {"found": services.data360_search(q["q"])}, 200)
+            if name == "raster":
+                return self.reply_json(services.raster_window(q["kind"], float(q["lat"]), float(q["lon"]), int(q["rp"]) if "rp" in q else None), 200)
+        except KeyError as error:
+            return self.reply_json({"message": f"the request names no {error}"}, 400)
+        except ValueError as error:
+            return self.reply_json({"message": str(error)}, 400)
+        except Exception as error:  # the world's services go down; the page says so where it was asked
+            return self.reply_json({"message": f"the service could not answer: {error}"}, 502)
+        self.reply_json({"message": f"no service {name}"}, 404)
+
+    def tile_request(self, z: int, x: int, y: int) -> None:
+        if z > MAX_TERRAIN_LEVEL:
+            return self.reply_json({"message": f"no terrain below level {MAX_TERRAIN_LEVEL}"}, 404)
+        key = TileKey(z, x, y)
+        try:
+            key.check()
+            with BUILDS:
+                data = TERRAIN.tile("earth", key)
+        except ValueError as error:
+            return self.reply_json({"message": str(error)}, 404)
+        except FileNotFoundError as error:
+            return self.reply_json({"message": f"the terrain's sources are not in the cache ({error})"}, 503)
+        except Exception as error:  # a source that fails is reported for this tile; the page draws its parent
+            return self.reply_json({"message": f"terrain {z}/{x}/{y}: {error}"}, 502)
+        self.send_response(200)
+        self.send_header("Content-Type", "application/octet-stream")
+        self.send_header("Content-Length", str(len(data)))
+        self.end_headers()
+        self.wfile.write(data)
 
     def do_POST(self) -> None:
         url = urllib.parse.urlparse(self.path)
@@ -147,7 +242,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         if name not in {p["name"] for p in engine.plugins() if p["engine"]}:
             return self.reply_json({"message": f"no plug-in {name} with an engine"}, 404)
         length = int(self.headers.get("Content-Length", "0") or 0)
-        if length > 4 * 1024 * 1024:
+        if length > 96 * 1024 * 1024:
             return self.reply_json({"message": "the request is too large"}, 413)
         try:
             body = json.loads(self.rfile.read(length).decode("utf-8") or "{}")
@@ -201,7 +296,10 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         self.wfile.write(data)
 
     def end_headers(self) -> None:
-        self.send_header("Cache-Control", "no-cache")
+        if not TILE.match(urllib.parse.urlparse(self.path).path):
+            self.send_header("Cache-Control", "no-cache")
+        else:
+            self.send_header("Cache-Control", "public, max-age=86400")
         super().end_headers()
 
     def log_message(self, format: str, *args) -> None:
@@ -241,6 +339,8 @@ def main(argv: list[str]) -> int:
     finally:
         for w in WORKERS.values():
             w.stop()
+        if READERS is not None:
+            READERS.shutdown(wait=False, cancel_futures=True)
     return 0
 
 

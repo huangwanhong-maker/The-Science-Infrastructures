@@ -23,7 +23,11 @@
         "west": 144.9617,
         "north": -37.8117,
         "east": 144.9697
-      }
+      },
+      "title": "Melbourne's centre",
+      "short": "Melbourne",
+      "ground_m": 33,
+      "tag": "streets, walkers, records since 2002"
     },
     {
       "id": "new-york",
@@ -48,6 +52,32 @@
         "west": -74.0128,
         "north": 40.7082,
         "east": -74.0055
+      },
+      "title": "Lower Manhattan",
+      "short": "New York",
+      "ground_m": -25,
+      "tag": "towers, the bridge's walkers"
+    },
+    {
+      "id": "freetown",
+      "name": "Freetown",
+      "title": "Freetown",
+      "short": "Freetown",
+      "lat": 8.4757,
+      "lon": -13.2332,
+      "timezone": "Africa/Freetown",
+      "ground_m": 60,
+      "tag": "floods, on a map of 1 m",
+      "world": true,
+      "view": {
+        "tilt": 56,
+        "heading": 12,
+        "box": [
+          8.455,
+          -13.27,
+          8.495,
+          -13.2
+        ]
       }
     }
   ]

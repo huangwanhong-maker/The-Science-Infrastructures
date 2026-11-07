@@ -10,24 +10,57 @@
       "group": "Walkers as agents",
       "title": "walkers on the streets (a model)",
       "module": "layers/walkers.js",
-      "areas": ["melbourne"],
+      "areas": [
+        "melbourne"
+      ],
       "default": false,
-      "about": "Every walker of the model at the clock's hour, moving between its places every ten seconds, keeping left; coloured by its pattern (passing through, arriving at work, leaving, between buildings, visiting shops, an event's crowd) or by what it is doing (walking, waiting at red, queued at a full street, standing at the event); the streets beneath by their density, or by how many more or fewer walk them in a scenario; the queues at full streets' mouths; a simulated record's events in pale violet glass."
+      "about": "Every walker of the model at the clock's hour, moving between its places every ten seconds, keeping left; coloured by its pattern (passing through, arriving at work, leaving, between buildings, visiting shops, an event's crowd) or by what it is doing (walking, waiting at red, queued at a full street, standing at the event); the streets beneath by their density, or by how many more or fewer walk them in a scenario; the queues at full streets' mouths; a simulated record's events in pale violet glass.",
+      "lens": "movement"
     },
     {
       "id": "counters",
       "group": "Walkers as agents",
       "title": "counters: counted and simulated",
       "module": "layers/counters.js",
-      "areas": ["melbourne"],
+      "areas": [
+        "melbourne"
+      ],
       "default": false,
-      "about": "At each of the City's counters in the district that counts each way, two columns at the clock's hour: what it counts on average at that hour of the week (2025–26) and what the walkers passing its line make it read."
+      "about": "At each of the City's counters in the district that counts each way, two columns at the clock's hour: what it counts on average at that hour of the week (2025–26) and what the walkers passing its line make it read.",
+      "lens": "movement"
     }
   ],
   "tools": [
-    { "id": "walkers", "title": "Walkers of the district", "module": "tools/walkers.js", "areas": ["melbourne"], "about": "Who is on the district's streets at the clock's hour and through the day; each counter's reading beside its count and the calibration's expectation; how the walkers' departures were set from the counters." },
-    { "id": "regime", "title": "A street closed or one-way", "module": "tools/regime.js", "areas": ["melbourne"], "about": "A street, or a block of it picked on the map, closed to walkers passing through or made one-way for a few hours: the walkers run again beside the same hours as built, and how they redistribute is drawn on the map; or all three regimes side by side." },
-    { "id": "event", "title": "An event's crowd", "module": "tools/event.js", "areas": ["melbourne"], "about": "The City's event permits on the district's streets, with what the counters counted that day; a crowd brought to a street and the walkers around it; the record they make, every event simulated; the street's regime decided online by POMCP on the walkers, the crowd's size unknown." }
+    {
+      "id": "walkers",
+      "title": "Walkers of the district",
+      "module": "tools/walkers.js",
+      "areas": [
+        "melbourne"
+      ],
+      "about": "Who is on the district's streets at the clock's hour and through the day; each counter's reading beside its count and the calibration's expectation; how the walkers' departures were set from the counters.",
+      "lens": "movement"
+    },
+    {
+      "id": "regime",
+      "title": "A street closed or one-way",
+      "module": "tools/regime.js",
+      "areas": [
+        "melbourne"
+      ],
+      "about": "A street, or a block of it picked on the map, closed to walkers passing through or made one-way for a few hours: the walkers run again beside the same hours as built, and how they redistribute is drawn on the map; or all three regimes side by side.",
+      "lens": "movement"
+    },
+    {
+      "id": "event",
+      "title": "An event's crowd",
+      "module": "tools/event.js",
+      "areas": [
+        "melbourne"
+      ],
+      "about": "The City's event permits on the district's streets, with what the counters counted that day; a crowd brought to a street and the walkers around it; the record they make, every event simulated; the street's regime decided online by POMCP on the walkers, the crowd's size unknown.",
+      "lens": "movement"
+    }
   ],
   "engine": "engine/main.cpp",
   "source": "The urban-science domain's movement module (walkers as agents on nomos's agents engine, regimes as decisions on tyche's POMCP; ADR 0075), calibrated as the district-economy flow study calibrates its flow (research/experiments/2026-11-05-a-district-economy-as-a-flow)",

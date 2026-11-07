@@ -1,0 +1,17 @@
+{
+  "title": "Reach and use",
+  "summary": "How far one can go from any place over the ways drawn there, as a wave of minutes running down the streets; and how a city's walkers share themselves among its places, day by day, against their habit.",
+  "status": "draft",
+  "activity": "research",
+  "order": 6,
+  "lens": "movement",
+  "engine": "engine/main.cpp",
+  "layers": [
+    { "id": "reach", "anywhere": true, "pickFirst": true, "group": "Anywhere", "title": "how far in so many minutes", "module": "layers/reach.js", "scale": [150, 30000],
+      "about": "Pick a place on the map: the minutes to every way about it run down the streets as a wave, on foot or by road, at declared speeds. On the ways the world's archives hold for what is in view." },
+    { "id": "usage", "areas": ["melbourne"], "group": "The walkers", "title": "where the walkers go, against their habit", "module": "layers/usage.js", "scale": [300, 30000],
+      "about": "The Urban Space Usage Index on H3 cells: each cell's share of the day's walkers at the counters, and how far that departs from the same weekday over the twelve weeks before. Follows the clock's date." }
+  ],
+  "tools": [],
+  "source": "The ways: Overture Maps and OpenStreetMap. The counts: City of Melbourne's pedestrian counting system. The methods after GOSTnets and eca-resilience, written here (urban-science's access and usage, morphe's shortest paths, physis's H3)."
+}

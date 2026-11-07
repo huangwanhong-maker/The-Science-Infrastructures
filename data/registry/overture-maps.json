@@ -1,0 +1,21 @@
+{
+  "id": "overture-maps",
+  "kind": "service",
+  "domain": "geography",
+  "title": "Overture Maps: the world's buildings, ways, water and land use, as PMTiles archives read tile by tile",
+  "provider": "Overture Maps Foundation, release 2026-10-21.0",
+  "credit": "© OpenStreetMap contributors, Overture Maps Foundation; building footprints also from Google Open Buildings and Microsoft",
+  "licence": "ODbL 1.0 for these themes (buildings, transportation, base), with share-alike on a database derived from them; the tiles kept here are a cache and are not redistributed.",
+  "citation": "Overture Maps Foundation (2026), Overture Maps Data, release 2026-10-21.0, https://overturemaps.org.",
+  "format": "PMTiles v3 of Mapbox Vector Tiles, levels 0 to 14 (buildings, transportation) and 0 to 13 (base), read by HTTP range requests (data/formats/pmtiles.py) and reduced tile by tile by data/acquisition/world_city.py, kept in data/cache/world-city/.",
+  "coverage": "The whole Earth, as far as its sources map it. About 2.7 billion footprints. Heights: `height` where known, rare; `num_floors` on 15 to 60 % in the cities tried; elsewhere none, and data/registry/ghs-built-h.json stands in.",
+  "urls": {
+    "buildings": "https://tiles.overturemaps.org/2026-10-21.0/buildings.pmtiles",
+    "transportation": "https://tiles.overturemaps.org/2026-10-21.0/transportation.pmtiles",
+    "base": "https://tiles.overturemaps.org/2026-10-21.0/base.pmtiles"
+  },
+  "used_by": [
+    "data/acquisition/world_city.py",
+    "applications/urban-science-workbench"
+  ]
+}

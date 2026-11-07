@@ -180,3 +180,12 @@ python data/acquisition/fetch.py ecmwf-ifs --profile glance                # ECM
 python data/acquisition/fetch.py oisst --set start=2026-01-01 --set end=2026-01-31
 python data/acquisition/fetch.py worldbank-indicators --set indicator=SP.POP.65UP.TO.ZS   # share aged 65 and over
 ```
+
+## Services Asked on Demand
+
+Some sources are services or world archives, asked for a place when the camera arrives there, and kept (`../acquisition/services.py`, `../acquisition/world_city.py`; [ADR 0078](../../development/decisions/0078-the-whole-earth-in-the-urban-workbench.md)). Their manifests have the kind `service`, and say what each is and its terms; none is fetched in advance:
+- `overture-maps`: the world's buildings, ways, water and land use;
+- `ghs-built-h`: the average height of buildings on 100 m cells, standing in where a building has none;
+- `space2stats`: H3 level 6 cells of people, lights, built land, urbanisation and hazards;
+- `thinkhazard`: the level of each hazard for an administrative unit;
+- `data360`: the World Bank's indicators, searched by meaning.

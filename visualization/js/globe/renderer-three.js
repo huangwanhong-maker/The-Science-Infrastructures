@@ -22,6 +22,15 @@
 // first lit as the ground is, the second not, so that it reads at night. The provenance of the
 // terrain can be laid over: amber where the source filled a gap, blue where the tile is finer than
 // its data, violet where detail is synthetic.
+//
+// Four things an application may ask of a frame, each off unless asked (Cosmopoiesis asks none): a ground
+// made level (`flat`: a box of the local frame at an origin within which the terrain stands at one height,
+// feathered back to the real terrain, so that a city's plan, drawn in that frame, lies on it); the imagery
+// graded into a palette (`grade`: its luminance mapped through shadow, middle and light on land and two colours
+// on the sea, the picture kept as a texture of light and dark, not as a photograph); aerial haze (`haze`: a
+// colour the ground fades into with distance, the depth of a view near the ground); and a raster draped on the
+// ground (`drape`: a map of values over a box of longitude and latitude, coloured by a ramp and optionally cut at a
+// value, so that a map of years can show what stood by a year).
 
 const VERTEX = /* glsl */ `
 #include <common>
@@ -30,20 +39,35 @@ attribute vec3 up;
 attribute float provenance;
 attribute float height;
 uniform vec3 relCentre;
+uniform vec4 flatBox;     // half-widths east and north, the feather (m), the amount (0: off)
+uniform vec3 flatOrigin;  // the box's centre relative to the tile's centre, body axes (m)
+uniform vec3 flatEast;
+uniform vec3 flatNorth;
+uniform float flatHeight;
 varying vec2 vUv;
 varying vec3 vNormal;
 varying vec3 vUp;
 varying vec3 vRel;
 varying float vProvenance;
 varying float vHeight;
+varying float vFlat;
 void main() {
   vUv = uv;
   vNormal = normal;
   vUp = up;
-  vRel = relCentre + position;
   vProvenance = provenance;
   vHeight = height;
-  vec4 mv = modelViewMatrix * vec4(position, 1.0);
+  vec3 placed = position;
+  vFlat = 0.0;
+  if (flatBox.w > 0.0) {
+    vec3 d = position - flatOrigin;
+    float beyond = max(abs(dot(d, flatEast)) - flatBox.x, abs(dot(d, flatNorth)) - flatBox.y);
+    vFlat = (1.0 - smoothstep(0.0, flatBox.z, beyond)) * flatBox.w;
+    placed += up * (flatHeight - height) * vFlat;
+    vNormal = normalize(mix(normal, up, vFlat));
+  }
+  vRel = relCentre + placed;
+  vec4 mv = modelViewMatrix * vec4(placed, 1.0);
   gl_Position = projectionMatrix * mv;
   #include <logdepthbuf_vertex>
 }
@@ -68,12 +92,32 @@ uniform vec3 sunDir;
 uniform float lighting;   // 0 the Earth, 1 a rough body (the Moon, the planets), 2 the Sun (emissive)
 uniform float overlay;    // 0 to 1: the provenance laid over
 uniform float exposure;
+uniform float gradeAmount;
+uniform vec3 gradeShadow;
+uniform vec3 gradeMiddle;
+uniform vec3 gradeLight;
+uniform vec3 gradeSeaDeep;
+uniform vec3 gradeSeaLight;
+uniform vec3 nightTint;
+uniform vec3 glintTint;
+uniform vec3 hazeColour;
+uniform float hazeDensity;
+uniform vec3 flatTint;
+uniform float flatTintAmount;
+uniform vec4 tileBox;     // west, south, the span in longitude and in latitude (degrees)
+uniform sampler2D drapeMap;
+uniform sampler2D drapeRamp;
+uniform vec4 drapeBox;    // west, south, the span in longitude and in latitude (degrees)
+uniform float drapeOpacity;
+uniform float drapeCut;   // values above it are not drawn (1: all)
+uniform float drapeFloor; // values at or below it are not drawn
 varying vec2 vUv;
 varying vec3 vNormal;
 varying vec3 vUp;
 varying vec3 vRel;
 varying float vProvenance;
 varying float vHeight;
+varying float vFlat;
 
 vec3 byHeight(float h) {
   if (lighting > 0.5) return vec3(0.55, 0.53, 0.50) + 0.00002 * h;
@@ -95,6 +139,14 @@ void main() {
   vec3 up = normalize(vUp);
   vec3 s = normalize(sunDir);
   vec3 albedo = hasBase > 0.5 ? texture2D(baseMap, inRegion(baseRegion)).rgb : byHeight(vHeight);
+  if (gradeAmount > 0.0) {
+    // A curve lifts the shadows of the linear luminance, so that land reads as a texture and not as black.
+    float l = pow(clamp(dot(albedo, vec3(0.299, 0.587, 0.114)), 0.0, 1.0), 0.55);
+    vec3 g = vProvenance > 5.5
+      ? mix(gradeSeaDeep, gradeSeaLight, smoothstep(0.08, 0.62, l))
+      : (l < 0.5 ? mix(gradeShadow, gradeMiddle, l * 2.0) : mix(gradeMiddle, gradeLight, (l - 0.5) * 2.0));
+    albedo = mix(albedo, g, gradeAmount);
+  }
   vec3 colour;
   if (lighting > 1.5) {
     // The Sun shines by itself, darkened toward its limb: I(μ) = 1 − u (1 − μ), u = 0.6, the order of
@@ -120,11 +172,11 @@ void main() {
       vec3 v = normalize(-vRel);
       vec3 h = normalize(s + v);
       float glint = pow(max(dot(up, h), 0.0), 180.0) * 0.9 + pow(max(dot(up, h), 0.0), 18.0) * 0.06;
-      colour += vec3(1.0, 0.94, 0.86) * glint * smoothstep(0.0, 0.08, dot(up, s));
+      colour += glintTint * glint * smoothstep(0.0, 0.08, dot(up, s));
     }
     if (hasNight > 0.5) {
       vec3 lights = texture2D(nightMap, inRegion(nightRegion)).rgb;
-      colour += lights * lights * 1.6 * (1.0 - daylight);
+      colour += lights * lights * 1.6 * nightTint * (1.0 - daylight);
     }
     colour = mix(albedo * 0.025, colour, max(daylight, 0.0) * 0.9 + 0.1);
   }
@@ -139,6 +191,20 @@ void main() {
   }
   vec3 pc = provenanceColour(vProvenance);
   if (overlay > 0.0 && pc.r >= 0.0) colour = mix(colour, pc * (0.35 + 0.65 * max(dot(n, s), 0.25)), 0.55 * overlay);
+  if (flatTintAmount > 0.0) colour = mix(colour, flatTint, vFlat * flatTintAmount);
+  if (drapeOpacity > 0.0) {
+    vec2 ll = tileBox.xy + vUv * tileBox.zw;
+    vec2 q = (ll - drapeBox.xy) / drapeBox.zw;
+    if (q.x >= 0.0 && q.x <= 1.0 && q.y >= 0.0 && q.y <= 1.0) {
+      float value = texture2D(drapeMap, vec2(q.x, q.y)).r;
+      if (value > drapeFloor && value <= drapeCut) {
+        vec4 tone = texture2D(drapeRamp, vec2(value, 0.5));
+        float lit = 0.62 + 0.38 * smoothstep(-0.10, 0.12, dot(up, s));
+        colour = mix(colour, tone.rgb * lit, tone.a * drapeOpacity);
+      }
+    }
+  }
+  if (hazeDensity > 0.0) colour = mix(colour, hazeColour, 1.0 - exp(-length(vRel) * hazeDensity));
   gl_FragColor = vec4(colour * exposure, 1.0);
   #include <colorspace_fragment>
 }
@@ -161,6 +227,8 @@ const ATMOSPHERE_FRAGMENT = /* glsl */ `
 #include <common>
 #include <logdepthbuf_pars_fragment>
 uniform vec3 sunView;
+uniform vec3 airDay;
+uniform vec3 airDusk;
 varying vec3 vNormal;
 varying vec3 vView;
 void main() {
@@ -168,7 +236,7 @@ void main() {
   float rim = 1.0 - abs(dot(normalize(vNormal), normalize(vView)));
   float glow = pow(rim, 3.2);
   float lit = smoothstep(-0.35, 0.45, dot(normalize(vNormal), normalize(sunView)));
-  vec3 colour = mix(vec3(0.30, 0.50, 0.95), vec3(0.85, 0.62, 0.55), pow(1.0 - lit, 2.0)) * glow * (0.12 + 1.1 * lit);
+  vec3 colour = mix(airDay, airDusk, pow(1.0 - lit, 2.0)) * glow * (0.12 + 1.1 * lit);
   gl_FragColor = vec4(colour, glow * (0.15 + 0.85 * lit));
   #include <colorspace_fragment>
 }
@@ -195,6 +263,13 @@ export function createGlobeRenderer(THREE, { fig, lighting = 'earth', atmosphere
         refMap: { value: blank }, refRegion: { value: new THREE.Vector3(0, 0, 1) }, refOpacity: { value: 0 },
         sunDir: { value: new THREE.Vector3(1, 0, 0) }, relCentre: { value: new THREE.Vector3() },
         lighting: { value: lighting === 'sun' ? 2 : lighting === 'moon' || lighting === 'body' ? 1 : 0 }, overlay: { value: 0 }, exposure: { value: 1 },
+        flatBox: { value: new THREE.Vector4(0, 0, 1, 0) }, flatOrigin: { value: new THREE.Vector3() }, flatEast: { value: new THREE.Vector3(1, 0, 0) },
+        flatNorth: { value: new THREE.Vector3(0, 1, 0) }, flatHeight: { value: 0 }, flatTint: { value: new THREE.Color(0, 0, 0) }, flatTintAmount: { value: 0 },
+        gradeAmount: { value: 0 }, gradeShadow: { value: new THREE.Color(0, 0, 0) }, gradeMiddle: { value: new THREE.Color(0.5, 0.5, 0.5) }, gradeLight: { value: new THREE.Color(1, 1, 1) },
+        gradeSeaDeep: { value: new THREE.Color(0, 0, 0.1) }, gradeSeaLight: { value: new THREE.Color(0.2, 0.3, 0.5) }, nightTint: { value: new THREE.Color(1, 1, 1) }, glintTint: { value: new THREE.Color(1.0, 0.94, 0.86) },
+        hazeColour: { value: new THREE.Color(0, 0, 0) }, hazeDensity: { value: 0 },
+        tileBox: { value: new THREE.Vector4(0, 0, 1, 1) }, drapeMap: { value: blank }, drapeRamp: { value: blank }, drapeBox: { value: new THREE.Vector4(0, 0, 1, 1) },
+        drapeOpacity: { value: 0 }, drapeCut: { value: 1 }, drapeFloor: { value: -1 },
       },
     });
   }
@@ -204,7 +279,7 @@ export function createGlobeRenderer(THREE, { fig, lighting = 'earth', atmosphere
     const geometry = new THREE.SphereGeometry(1, 96, 48);
     shell = new THREE.Mesh(geometry, new THREE.ShaderMaterial({
       vertexShader: ATMOSPHERE_VERTEX, fragmentShader: ATMOSPHERE_FRAGMENT,
-      uniforms: { sunView: { value: new THREE.Vector3(1, 0, 0) } },
+      uniforms: { sunView: { value: new THREE.Vector3(1, 0, 0) }, airDay: { value: new THREE.Color(0.30, 0.50, 0.95) }, airDusk: { value: new THREE.Color(0.85, 0.62, 0.55) } },
       side: THREE.BackSide, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
     }));
     shell.matrixAutoUpdate = false;
@@ -266,7 +341,11 @@ export function createGlobeRenderer(THREE, { fig, lighting = 'earth', atmosphere
     // camera, world axes (m, double); rotation: 3 x 3 body-fixed → world (row-major arrays);
     // sunBody: the Sun's direction in the body-fixed frame; base, night: layer ids; data, reference:
     // { layer, opacity } or null; overlay: the provenance's opacity, 0..1; sunView: the Sun's
-    // direction in world axes (for the atmosphere) }.
+    // direction in world axes (for the atmosphere); and, each optional and off unless given,
+    // flat: { centre (body-fixed, m), east, north (unit, body axes), halfEast, halfNorth, feather (m), height (m), tint, tintAmount },
+    // grade: { amount, shadow, middle, light, seaDeep, seaLight, nightTint } (linear rgb),
+    // haze: { colour, density (per m) }, drape: { map, ramp (textures), box: [west, south, spanLon, spanLat] (degrees), opacity, cut, floor },
+    // air: { day, dusk } (the atmosphere's colours) }.
     draw(selection, frame) {
       for (const mesh of meshes) mesh.visible = false;
       const R = frame.rotation, c = frame.bodyRelative;
@@ -292,6 +371,42 @@ export function createGlobeRenderer(THREE, { fig, lighting = 'earth', atmosphere
         u.relCentre.value.set(R[0][0] * dx + R[1][0] * dy + R[2][0] * dz, R[0][1] * dx + R[1][1] * dy + R[2][1] * dz, R[0][2] * dx + R[1][2] * dy + R[2][2] * dz);
         u.overlay.value = frame.overlay || 0;
         u.exposure.value = frame.exposure ?? 1;
+        const fl = frame.flat;
+        u.flatBox.value.w = 0;
+        u.flatTintAmount.value = 0;
+        if (fl) {
+          u.flatBox.value.set(fl.halfEast, fl.halfNorth, fl.feather, fl.amount ?? 1);
+          u.flatOrigin.value.set(fl.centre[0] - ctr[0], fl.centre[1] - ctr[1], fl.centre[2] - ctr[2]);
+          u.flatEast.value.set(...fl.east);
+          u.flatNorth.value.set(...fl.north);
+          u.flatHeight.value = fl.height;
+          if (fl.tint) u.flatTint.value.setRGB(...fl.tint);
+          u.flatTintAmount.value = fl.tintAmount || 0;
+        }
+        const gr = frame.grade;
+        u.gradeAmount.value = gr ? gr.amount ?? 1 : 0;
+        if (gr) {
+          u.gradeShadow.value.setRGB(...gr.shadow);
+          u.gradeMiddle.value.setRGB(...gr.middle);
+          u.gradeLight.value.setRGB(...gr.light);
+          u.gradeSeaDeep.value.setRGB(...gr.seaDeep);
+          u.gradeSeaLight.value.setRGB(...gr.seaLight);
+          if (gr.nightTint) u.nightTint.value.setRGB(...gr.nightTint);
+          if (gr.glint) u.glintTint.value.setRGB(...gr.glint);
+        }
+        u.hazeDensity.value = frame.haze ? frame.haze.density : 0;
+        if (frame.haze) u.hazeColour.value.setRGB(...frame.haze.colour);
+        const dr = frame.drape;
+        u.drapeOpacity.value = dr ? dr.opacity ?? 1 : 0;
+        if (dr) {
+          const span = 180 / 2 ** tile.z;
+          u.tileBox.value.set(-180 + tile.x * span, 90 - (tile.y + 1) * span, span, span);
+          u.drapeMap.value = dr.map;
+          u.drapeRamp.value = dr.ramp;
+          u.drapeBox.value.set(...dr.box);
+          u.drapeCut.value = dr.cut ?? 1;
+          u.drapeFloor.value = dr.floor ?? -1;
+        }
         const texture = (id) => {
           const i = id && images.find((im) => im && im.layer === id);
           const tex = i && i.owner.images.get(i.layer)?.gpu;
@@ -314,6 +429,10 @@ export function createGlobeRenderer(THREE, { fig, lighting = 'earth', atmosphere
         shell.matrix.set(R[0][0] * r, R[0][1] * r, R[0][2] * rb, c[0], R[1][0] * r, R[1][1] * r, R[1][2] * rb, c[1], R[2][0] * r, R[2][1] * r, R[2][2] * rb, c[2], 0, 0, 0, 1);
         shell.matrixWorldNeedsUpdate = true;
         if (frame.sunView) shell.material.uniforms.sunView.value.set(...frame.sunView);
+        if (frame.air) {
+          shell.material.uniforms.airDay.value.setRGB(...frame.air.day);
+          shell.material.uniforms.airDusk.value.setRGB(...frame.air.dusk);
+        }
         shell.visible = frame.atmosphere !== false;
       }
     },
