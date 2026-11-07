@@ -8,4 +8,6 @@ export * from './style.js';     // colours of categories, magnitudes and signed 
 export * from './renderer-three.js'; // the scene: solids, flats, ribbons, points; picking, hover, the Sun, flights
 export * from './prisms.js';     // columns on cells, drawn by one mesh and a table of heights and colours
 export * from './world.js';      // any place on Earth: tiles of buildings and ways, asked for as the camera comes near
+export * as spacetime from './spacetime.js';      // data in space and time: its forms, its files and its line of time
+export * from './spacetime-marks.js';             // marks that live in time, on the graphics card
 export * from './earth.js';      // one view from the whole globe to a street: the Earth beneath a city, columns and rasters over it, the sky

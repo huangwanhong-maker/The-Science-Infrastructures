@@ -1,5 +1,7 @@
 {
   "title": "Human flow",
+  "tagline": "walkers as agents, simulated on the streets",
+  "lens": "movement",
   "summary": "The district's walkers as agents: every walker of the urban-science domain's movement model on the Hoddle Grid's streets, its departures set by the City's counters each way, moving with the clock; the counters' readings beside what they count; a street closed or made one-way and an event's crowd brought to a street, with how the walkers redistribute; the street's regime decided online by POMCP on the walkers themselves; every record they make marked simulated.",
   "status": "draft",
   "activity": "research",

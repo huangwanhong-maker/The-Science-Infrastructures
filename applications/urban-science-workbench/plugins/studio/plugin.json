@@ -1,0 +1,19 @@
+{
+  "title": "The studio",
+  "tagline": "your own data and code, in space and time",
+  "summary": "Your own data in space and time, and your own code over it: a file dropped on the page, or any record of the data library, drawn through time on the map; a script in JavaScript, Python or C++ given what is shown and answering what to draw.",
+  "status": "draft",
+  "activity": "research",
+  "order": 8,
+  "lens": "yours",
+  "layers": [
+    {"id": "earthquakes", "anywhere": true, "global": true, "group": "Records to begin from", "title": "earthquakes since 1976", "module": "layers/library.js", "source": "gcmt", "scale": [20000, 60000000], "about": "The Global CMT catalogue's 70,000 earthquakes, each opening on the map at its moment, sized and coloured by its moment magnitude. The plates draw themselves."},
+    {"id": "cyclones", "anywhere": true, "global": true, "group": "Records to begin from", "title": "tropical cyclones, the last three years", "module": "layers/library.js", "source": "ibtracs", "scale": [20000, 60000000], "about": "IBTrACS's best tracks: each storm a thread drawn up to the moment, coloured by its wind."},
+    {"id": "this-month", "anywhere": true, "global": true, "group": "Records to begin from", "title": "earthquakes this month", "module": "layers/library.js", "source": "usgs", "scale": [20000, 60000000], "about": "USGS's earthquakes of the last month, as fetched into the data library."},
+    {"id": "walkers-week", "areas": ["melbourne"], "group": "Records to begin from", "title": "the walkers through a mean week", "module": "layers/library.js", "source": "walkers-week", "scale": [300, 40000], "about": "Each of Melbourne's counters as a column rising and falling through a mean week: a record of cells, at a city's scale, among its buildings."}
+  ],
+  "tools": [
+    {"id": "studio", "anywhere": true, "title": "Your data and your code", "module": "tools/studio.js", "about": "Drop a file, or take a record from the library; write a script in JavaScript, Python or C++ that is given what is shown and answers what to draw."}
+  ],
+  "source": "The contract is api/python/science/spacetime.py, api/cpp/spacetime_plugin.hpp and visualization/js/gis/spacetime.js; scripts/ holds examples in each language."
+}

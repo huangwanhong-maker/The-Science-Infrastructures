@@ -429,4 +429,25 @@ for (const p of plugins) {
   }
 }
 
+// The studio's server: who may run a script, and that scripts in Python and C++ answer as they should.
+{
+  const r = spawnSync('python', [join(APP, 'tests', 'check_studio.py')], { cwd: ROOT, encoding: 'utf8', maxBuffer: 1 << 26, timeout: 480000, env: { ...process.env, PYTHONIOENCODING: 'utf-8' } });
+  const lines = (r.stdout || '').split(/\r?\n/).filter((l) => /^(ok|FAIL)\s/.test(l));
+  if (!lines.length) assert('the studio: its checks run', false, (r.stderr || r.stdout || '').slice(-500));
+  for (const l of lines) assert(`the studio: ${l.replace(/^(ok|FAIL)\s+/, '').replace(/: .*$/, '')}`, l.startsWith('ok'), l.includes(': ') ? l.slice(l.indexOf(': ') + 2) : '');
+}
+
+// A script in JavaScript is a module with the same contract: the example, on a track of known speed.
+{
+  const api = (await import('../../../visualization/js/index.js')).gis.spacetime;
+  const { create } = await import('../plugins/studio/scripts/track_speed.js');
+  const plugin = create(api);
+  const track = { id: 'a', name: 'along the equator', time: [0, 3600000, 7200000], lat: [0, 0, 0], lon: [0, 1, 2] };
+  const results = plugin.run([{ kind: 'tracks', title: 't', tracks: [track] }], { fastest: 1 }, { progress() {} });
+  const speed = results[0].tracks[0].values.speed;
+  assert('the studio: the JavaScript example measures a track of known speed: a degree of the equator an hour', Math.abs(speed[1] - 111.195) < 0.01, String(speed[1]));
+  assert('the studio: its description is the contract\'s', plugin.describe().kind === 'spacetime-analysis' && plugin.describe().language === 'javascript');
+  assert('the studio: what it answers can be drawn', api.prepared(results[0]).count === 1);
+}
+
 done();

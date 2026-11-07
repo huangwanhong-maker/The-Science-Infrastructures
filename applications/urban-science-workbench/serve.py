@@ -15,6 +15,12 @@ those with C++, an engine built by ``engine.py`` and kept running here, one proc
     GET  /world/space2stats?lat=&lon=    a tile of Space2Stats' cells
     GET  /world/thinkhazard?name= | code= the hazards of an administrative unit
     GET  /world/data360?q= | db=&id=     indicators by meaning, or an indicator's values by economy
+    GET  /studio/scripts                 the studio's scripts in plugins/studio/scripts
+    GET  /studio/script?file=            one's text          GET /studio/describe?file=   its description
+    POST /studio/script                  {file, code}: keep it there
+    POST /studio/run                     {file, records, params, context}: run it; returns {job}
+    GET  /studio/job/<id>                its state, progress and results
+    POST /studio/job/<id>/cancel         stop it
     GET  /setup                          the recipe (recipe.json): building the engines, and whether it is done
     POST /setup/run[?again=1]            build them (again)
 
@@ -66,8 +72,10 @@ import engine  # noqa: E402
 from tiles.pyramid import TileKey  # noqa: E402
 from tiles.terrain import TerrainService, decode as decode_terrain  # noqa: E402
 sys.path.insert(0, str(ROOT / "data" / "acquisition"))
+sys.path.insert(0, str(ROOT / "api" / "python"))
 import services  # noqa: E402
 import world_city  # noqa: E402
+from science import spacetime  # noqa: E402
 
 RECIPE = None
 WRITES = {"allowed": True, "token": None}
@@ -92,6 +100,32 @@ def read_city_tile(z: int, x: int, y: int) -> str:
         if READERS is None:
             READERS = concurrent.futures.ProcessPoolExecutor(max_workers=3)
     return READERS.submit(world_city.city_tile, z, x, y).result(timeout=240)
+
+
+# ---- the studio: scripts over data in space and time (ADR 0079) ---------------------------------------------------------------
+
+SCRIPTS = APP / "plugins" / "studio" / "scripts"
+SCRIPT_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,63}\.(py|cpp|js)$")
+STUDIO_SECONDS = 600
+_studio: dict = {"host": None, "jobs": {}}
+
+
+def studio_host() -> spacetime.Host:
+    if _studio["host"] is None:
+        _studio["host"] = spacetime.Host(SCRIPTS, ROOT / "data" / "cache" / "urban-workbench" / "scripts", include_dirs=engine.include_dirs("studio"))
+    return _studio["host"]
+
+
+def studio_job(job: dict, body: dict) -> None:
+    def progress(fraction: float, text: str) -> None:
+        job["progress"], job["text"] = fraction, text
+    try:
+        job["results"] = studio_host().run(job["file"], {"records": body.get("records") or [], "context": body.get("context") or {}}, body.get("params") or {},
+                                           progress=progress, cancel=job["cancel"], seconds=STUDIO_SECONDS)
+        job["state"], job["progress"] = "done", 1.0
+    except Exception as error:  # a script's failure is reported to the page, never raised in the server
+        job["state"] = "cancelled" if job["cancel"].is_set() else "failed"
+        job["message"] = str(error)
 
 
 def recipe_job():
@@ -169,6 +203,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             return self.world_tile(world.group(1), *map(int, world.groups()[1:]))
         if url.path.startswith("/world/"):
             return self.world_service(url.path.split("/", 2)[2], dict(urllib.parse.parse_qsl(url.query)))
+        if url.path.startswith("/studio/"):
+            return self.studio_get(url.path[len("/studio/"):], dict(urllib.parse.parse_qsl(url.query)))
         return super().do_GET()
 
     def world_tile(self, kind: str, z: int, x: int, y: int) -> None:
@@ -224,8 +260,95 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(data)
 
+    def studio_get(self, path: str, q: dict) -> None:
+        try:
+            if path == "scripts":
+                files = sorted(p.name for p in SCRIPTS.iterdir() if p.is_file() and SCRIPT_NAME.match(p.name))
+                return self.reply_json({"scripts": [{"file": f} for f in files], "refusal": self.studio_refusal(False)}, 200)
+            if path == "script":
+                return self.reply_json({"file": q["file"], "code": self.script_path(q["file"]).read_text(encoding="utf-8")}, 200)
+            if path == "describe":
+                return self.reply_json(studio_host().describe(q["file"]), 200)
+            if path.startswith("job/"):
+                job = _studio["jobs"].get(path[4:])
+                if job is None:
+                    return self.reply_json({"message": "no such run"}, 404)
+                return self.reply_json({k: v for k, v in job.items() if k != "cancel"}, 200)
+        except KeyError as error:
+            return self.reply_json({"message": f"the request names no {error}"}, 400)
+        except (ValueError, FileNotFoundError) as error:
+            return self.reply_json({"message": str(error)}, 400)
+        except Exception as error:
+            return self.reply_json({"message": str(error)}, 500)
+        self.reply_json({"message": "no such request"}, 404)
+
+    @staticmethod
+    def script_path(name: str) -> Path:
+        if not SCRIPT_NAME.match(str(name)):
+            raise ValueError(f"{name}: a script's name is letters, digits, - and _, ending .py, .cpp or .js")
+        return SCRIPTS / name
+
+    def studio_refusal(self, check_request: bool = True) -> str | None:
+        """Why this server would not write or run a script for this request, or None. A script runs with the authority of whoever started the server, so that
+        only the server's own page, at its own address, may ask: any other page in the same browser could otherwise post here."""
+        if not WRITES["allowed"]:
+            return "this server runs no scripts: start it with --token to allow it"
+        if not check_request:
+            return None
+        if WRITES["token"] and self.headers.get("Authorization", "") != f"Bearer {WRITES['token']}":
+            return "running a script on this server needs its token"
+        host = self.headers.get("Host", "")
+        if self.headers.get("X-Workbench") != "studio" or "application/json" not in self.headers.get("Content-Type", ""):
+            return "a script is run only from the workbench's own page"
+        origin = self.headers.get("Origin")
+        if origin is None or urllib.parse.urlparse(origin).netloc != host:
+            return "a script is run only from the workbench's own page"
+        name = host.rsplit(":", 1)[0]
+        if not WRITES["token"] and name not in ("127.0.0.1", "localhost", "[::1]"):
+            return "a script is run only at this computer's own address"
+        return None
+
+    def studio_post(self, path: str) -> None:
+        refusal = self.studio_refusal()
+        if refusal:
+            return self.reply_json({"message": refusal}, 403)
+        length = int(self.headers.get("Content-Length", "0") or 0)
+        if length > 512 * 1024 * 1024:
+            return self.reply_json({"message": "the request is too large"}, 413)
+        try:
+            body = json.loads(self.rfile.read(length).decode("utf-8") or "{}")
+            if path == "script":
+                target = self.script_path(body["file"])
+                code = str(body["code"])
+                SCRIPTS.mkdir(parents=True, exist_ok=True)
+                if not target.exists() or target.read_text(encoding="utf-8") != code:
+                    target.write_text(code, encoding="utf-8")
+                return self.reply_json({"file": target.name}, 200)
+            if path == "run":
+                target = self.script_path(body["file"])
+                if target.suffix == ".js":
+                    raise ValueError("a script in JavaScript runs in the page")
+                ident = f"{int(time.time() * 1000):x}"
+                job = {"id": ident, "file": target.name, "state": "running", "progress": 0.0, "text": "", "cancel": threading.Event()}
+                _studio["jobs"][ident] = job
+                threading.Thread(target=studio_job, args=(job, body), daemon=True).start()
+                return self.reply_json({"job": ident}, 200)
+            if path.startswith("job/") and path.endswith("/cancel"):
+                job = _studio["jobs"].get(path[4:-7])
+                if job is None:
+                    return self.reply_json({"message": "no such run"}, 404)
+                job["cancel"].set()
+                return self.reply_json({"cancelled": job["id"]}, 200)
+        except KeyError as error:
+            return self.reply_json({"message": f"the request names no {error}"}, 400)
+        except ValueError as error:
+            return self.reply_json({"message": str(error)}, 400)
+        self.reply_json({"message": "no such request"}, 404)
+
     def do_POST(self) -> None:
         url = urllib.parse.urlparse(self.path)
+        if url.path.startswith("/studio/"):
+            return self.studio_post(url.path[len("/studio/"):])
         if url.path == "/setup/run":
             with LOCK:
                 CACHE.clear()

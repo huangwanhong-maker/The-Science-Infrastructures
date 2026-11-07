@@ -180,6 +180,22 @@ export function createEarth(THREE, container, options = {}) {
     sets.delete(id);
   }
 
+  // Any object whose geometry is relative to a body-fixed centre, kept relative to the eye: marks of one's own.
+  const objects = new Map();
+  function addObject(id, object, centre) {
+    removeObject(id);
+    object.matrixAutoUpdate = false;
+    scene.add(object);
+    objects.set(id, { object, centre });
+  }
+  function removeObject(id) {
+    const o = objects.get(id);
+    if (!o) return;
+    scene.remove(o.object);
+    o.object.traverse((q) => { q.geometry?.dispose(); [].concat(q.material || []).forEach((m) => m.dispose()); });
+    objects.delete(id);
+  }
+
   const rampTexture = (ramp) => {
     const data = new Uint8Array(4 * 256);
     for (let i = 0; i < 256; i++) {
@@ -209,6 +225,12 @@ export function createEarth(THREE, container, options = {}) {
     map.needsUpdate = true;
     const [s, w, n, e] = spec.box;
     drape = { map, ramp: rampTexture(spec.ramp), box: [w, s, e - w, n - s], opacity: spec.opacity ?? 0.85, cut: spec.cut ?? 1, floor: spec.floor ?? 0 };
+  }
+  // Another frame of a drape given as bytes, of the same size: a raster through time.
+  function setDrapeData(data) {
+    if (!drape || !drape.map.isDataTexture) return;
+    drape.map.image.data = data;
+    drape.map.needsUpdate = true;
   }
 
   // ---- a city's frame --------------------------------------------------------------------------------------
@@ -314,6 +336,11 @@ export function createEarth(THREE, container, options = {}) {
       flat: city && city.level ? { centre: city.centre, east: city.east, north: city.north, halfEast: city.halfEast, halfNorth: city.halfNorth, feather: city.feather, height: city.height, amount: city.amount ?? 1, tint: look.tint, tintAmount: look.tintAmount } : null,
       drape,
     });
+    for (const o of objects.values()) {
+      const r = sub(o.centre, P);
+      o.object.matrix.set(1, 0, 0, r[0], 0, 1, 0, r[1], 0, 0, 1, r[2], 0, 0, 0, 1);
+      o.object.matrixWorldNeedsUpdate = true;
+    }
     for (const s of sets.values()) {
       const r = sub(s.centre, P);
       s.prisms.object.matrix.set(1, 0, 0, r[0], 0, 1, 0, r[1], 0, 0, 1, r[2], 0, 0, 0, 1);
@@ -372,7 +399,7 @@ export function createEarth(THREE, container, options = {}) {
 
   return {
     THREE, fig, canvas, renderer, scene, camera, controls, tree, frame, resize, project, groundAt, bindCity, driver,
-    addColumns, removeColumns, columns: sets, setDrape, setDrapeCut: (cut) => { if (drape) drape.cut = cut; }, hasDrape: () => !!drape, setDrapeOpacity: (a) => { if (drape) drape.opacity = a; },
+    addColumns, removeColumns, columns: sets, addObject, removeObject, setDrapeData, setDrape, setDrapeCut: (cut) => { if (drape) drape.cut = cut; }, hasDrape: () => !!drape, setDrapeOpacity: (a) => { if (drape) drape.opacity = a; },
     onChange: (f) => { changed = f; },
     setLook: (changes) => { look = { ...look, ...changes }; },
     // The Sun, from its subsolar point (degrees).

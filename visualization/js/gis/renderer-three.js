@@ -360,6 +360,14 @@ export function cityScene(THREE, { MapControls }, container, options = {}) {
     return layers.get(id);
   }
 
+  // An object of one's own, in the scene's axes: it is kept and let go with the layers, and picked by whoever made it.
+  function addObject(id, object) {
+    remove(id);
+    scene.add(object);
+    layers.set(id, { kind: 'object', object, style: { pick: false } });
+    return layers.get(id);
+  }
+
   // A building under a ray, by its box and then its footprint: tens of thousands are asked at the speed of a mouse.
   function pickBuilt(ray) {
     const o = [ray.origin.x, -ray.origin.z, ray.origin.y], d = [ray.direction.x, -ray.direction.z, ray.direction.y];
@@ -927,7 +935,7 @@ void main() {
 
   return {
     THREE, scene, camera, renderer, controls, layers,
-    toWorld, fit, setSun, setPalette, addSolids, addFlats, addRibbons, addPoints, addPrisms, addRaster, addSlabs, addSwarm, setSwarm, addArrows, addArcs, addTubes, addBuiltSolids, addBuiltPaint, addBuiltGround, addWave, setWave, restyle, setVisible, setLift, remove, flyTo,
+    toWorld, fit, setSun, setPalette, addSolids, addFlats, addRibbons, addPoints, addPrisms, addRaster, addSlabs, addSwarm, setSwarm, addArrows, addArcs, addTubes, addBuiltSolids, addBuiltPaint, addBuiltGround, addWave, setWave, addObject, restyle, setVisible, setLift, remove, flyTo,
     // Where what is drawn of the world's tiles trails off: about a point of the local frame, within a radius (m); none at 0.
     setDissolve(x, y, radius) { facade.dissolve.value.set(x, -y, radius); },
     // The box the Sun's shadows are computed over, which may follow the view, apart from the box the camera was fitted to.

@@ -1193,7 +1193,34 @@ One view from the globe to a doorstep, in pink and purple, with the world's deve
 </tr>
 </table>
 
-## 17. Credits
+## 17. Data in Space and Time
+
+Anything with a place and a time, drawn through time on the Urban Science Workbench's map, and custom code over it, in JavaScript, Python or C++, under one contract ([ADR 0079](../development/decisions/0079-data-in-space-and-time.md)). The older works are named again beside the questions, each still as it was.
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/spacetime-01-earthquakes.jpg"><img src="../assets/gallery/spacetime-01-earthquakes.jpg" alt="The Pacific's rim traced in pale rose blooms on the night globe, with a line of time above the clock."></a><br><sub>Global CMT's 70,451 earthquakes since 1976, a record of the library. Each opens as a ring and fades; the line of time above the clock shows how much happens along it, and how long a mark stays. Moving the moment costs the page nothing, since time is a single value on the graphics card.</sub></td>
+<td width="50%" valign="top"><a href="../assets/gallery/spacetime-02-studio-cpp.jpg"><img src="../assets/gallery/spacetime-02-studio-cpp.jpg" alt="The globe beside the studio's panel, showing a C++ program and the parameters drawn from it."></a><br><sub>The studio. A script in C++ is given what is shown and answers what to draw; the form is built from the parameters it declares. This one counts the events on physis's H3 cells, and was compiled on first use against the foundations and the domains.</sub></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/spacetime-03-hexagons.jpg"><img src="../assets/gallery/spacetime-03-hexagons.jpg" alt="Hexagonal columns in plum rising along the arcs of Indonesia and the western Pacific."></a><br><sub>What that program answered: the earthquakes on 5,415 cells of H3's resolution 3, in 60 steps of 309 days, shown here around 2001. A cell with nothing in that step raises nothing; heights follow the square root of the count, since a few cells hold most.</sub></td>
+<td width="50%" valign="top"><a href="../assets/gallery/spacetime-04-density.jpg"><img src="../assets/gallery/spacetime-04-density.jpg" alt="A soft band of pale gold over the Pacific's rim on the globe, in a Gaussian density."></a><br><sub>A script in Python, on numpy: a Gaussian kernel density of the same catalogue, 250 km across and over a window of 1,856 days, laid on the ground as a raster that changes with the moment.</sub></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/spacetime-05-cyclones.jpg"><img src="../assets/gallery/spacetime-05-cyclones.jpg" alt="Fine lines of tropical cyclone tracks over the western Pacific, a few bright at their fronts."></a><br><sub>IBTrACS's 400 tropical cyclones of the last three years, in September 2025: threads drawn up to the moment, brightest at the front, what has passed staying faint. Their colour is the wind, from 5.1 to 84.9 m/s.</sub></td>
+<td width="50%" valign="top"><a href="../assets/gallery/spacetime-06-walkers-week.jpg"><img src="../assets/gallery/spacetime-06-walkers-week.jpg" alt="Columns of plum and gold among Melbourne's towers, tallest in the centre of the city."></a><br><sub>Melbourne's 93 pedestrian counters through a mean week, here a Wednesday at 12:30. Its moments are read in the city's own zone and by the days of the week, since its Monday is nominal. Any plug-in draws a record in this way, by `ctx.st.show(record)`.</sub></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/spacetime-07-table-dropped.jpg"><img src="../assets/gallery/spacetime-07-table-dropped.jpg" alt="Fine pale lines of three journeys across Melbourne's centre, with low buildings and the record's card."></a><br><sub>A table dropped on the page, which opens the studio. Here it holds three journeys across the centre, invented for this picture; its columns are told by their names and contents, and a repeating id makes its rows tracks. A row that cannot be placed is left out and counted on the card. Among a city's buildings a thread stays faintly seen where one stands in front of it.</sub></td>
+<td width="50%" valign="top"><a href="../assets/gallery/works-01-tide.jpg"><img src="../assets/gallery/works-01-tide.jpg" alt="Teal water standing in Melbourne's streets between low buildings, with Street Oceanography open in the list of works."></a><br><sub>The older works, named again. *By work* lists them, with what each is, and this place's stand under its name. Street Oceanography's tide at 17:30: water one metre deep for every hundred people an hour, over buildings drawn low. This date lies beyond the record, so it is the tide the calendars alone predict.</sub></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="../assets/gallery/works-02-walkers.jpg"><img src="../assets/gallery/works-02-walkers.jpg" alt="Melbourne's towers at midday with fine coloured walkers along the streets at their feet."></a><br><sub>Human flow's agents: on a model Saturday from 12:30 to 12:45, 5,110 walkers in the district and 384 waiting at red, coloured by what they are doing (ADR 0075). Nothing here had broken in the new shell; it could no longer be found by name.</sub></td>
+<td width="50%" valign="top"><a href="../assets/gallery/works-03-foam-record.jpg"><img src="../assets/gallery/works-03-foam-record.jpg" alt="Event Spacetime's worldlines rising through a half-seen Melbourne beside the panel of the record and its complex."></a><br><sub>Event Spacetime: the district's record as a 2-complex rising above the city, from 2002 to 2025, with 1,195 volumes as its edges, 2,299 interfaces as its faces and 1,313 events as its vertices. The foam dims the city for itself, and gives it back when it is turned off.</sub></td>
+</tr>
+</table>
+
+## 18. Credits
 
 The screenshots are the infrastructure's, under its MIT licence, except the three that show Pangu-Weather's forecasts (§1.3: earth-15, earth-16 and earth-17). Those are shared under CC BY-NC-SA 4.0, the licence of the model's parameters: for learning and research, not for commercial use. The data in all of them keep their own licences.
 
@@ -1258,6 +1285,7 @@ The screenshots are the infrastructure's, under its MIT licence, except the thre
 | The ground's classes | CRUST1.0 (Laske, Masters, Ma and Pasyanos 2013): where it has water, ice and sediments | Published model; cited |
 | The Moon's crustal field | T2015_449 (Wieczorek 2018, Zenodo 10.5281/zenodo.3873648), from the surface vector mapping of Tsunakawa et al. (2015) | CC BY 4.0 |
 | Space weather | NOAA SWPC: the real-time solar wind (DSCOVR, ACE), the planetary K index, GOES's X-rays and protons | Public domain; SWPC credited |
+| A city's record of events | City of Melbourne: the Census of Land Use and Employment (CLUE), the development activity monitor and event permits; the Victorian Heritage Database (Heritage Council of Victoria) | CC BY 4.0 |
 | Pedestrian counts | City of Melbourne, Pedestrian Counting System (the archive of 2009–2022 and the live record since October 2024) | Counts: none stated, the City's open data CC BY 4.0; locations CC BY 4.0 |
 | Buildings, streets and spaces of a city | OpenStreetMap contributors, through Overpass | ODbL 1.0 |
 | Hourly weather | Open-Meteo, from ERA5 and the IFS | CC BY 4.0 |
@@ -1266,7 +1294,7 @@ The screenshots are the infrastructure's, under its MIT licence, except the thre
 | A woman's body | The Human Reference Atlas (HuBMAP), 3D Reference Organ Set for United, Female v1.8, modelled from the Visible Human Female | CC BY 4.0 |
 | Abdominal CT and its vessels' labels | The Medical Segmentation Decathlon, Task 08 (Antonelli et al. 2022; Memorial Sloan Kettering Cancer Center), cases 172 and 324 | CC BY-SA 4.0 |
 
-## 18. Making the Screenshots
+## 19. Making the Screenshots
 
 The screenshots were taken with headless Chrome at 1600 × 1000 pixels, driven over the DevTools protocol, and saved as JPEG.
 

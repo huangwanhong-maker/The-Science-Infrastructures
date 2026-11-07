@@ -23,6 +23,7 @@ import { createNavigator, distance, scaleName } from './shell/navigator.js';
 import { createRibbon, createYears } from './shell/ribbon.js';
 import { createNeatline } from './shell/neatline.js';
 import { createLenses } from './shell/lenses.js';
+import { createSpaceTimeHost } from './shell/spacetime-host.js';
 
 const { h } = dom;
 const DEG = Math.PI / 180;
@@ -35,7 +36,7 @@ const state = {
   buildingForm: remembered('urban-buildings', 'full'),
   // How much of the city is seen (1 solid, toward 0 a ghost), over its buildings, ways, spaces and trees, so that a
   // model drawn above it (a foam in spacetime) can be seen through it; the buildings' form multiplies with it.
-  cityOpacity: (() => { const v = parseFloat(remembered('urban-city-opacity', '1')); return Number.isFinite(v) ? Math.min(1, Math.max(0.04, v)) : 1; })(),
+  cityOpacity: (() => { const v = parseFloat(remembered('urban-city-solid', '1')); return Number.isFinite(v) ? Math.min(1, Math.max(0.04, v)) : 1; })(),
   separation: 0, groundPlain: remembered('urban-ground', 'image') === 'plain',
   ui: {},
 };
@@ -138,11 +139,11 @@ function select(sel) {
 
 function context(plugin, extra = {}) {
   return {
-    plugin, ask: asker(plugin.name), dom, chart, finding, gis: state.gis, G, THREE, frame: state.frame, area: state.area, clock: state.clock, world: state.world,
+    plugin, ask: asker(plugin.name), dom, chart, finding, gis: state.gis, G, THREE, frame: state.frame, area: state.area, clock: state.clock, world: state.world, st: state.spacetime,
     model: state.model, selection: state.selection, select, earth: state.earth,
     onSelect: (f) => { state.selectListeners.push(f); state.disposers.push(() => { state.selectListeners = state.selectListeners.filter((x) => x !== f); }); },
     openTool: (id, sel) => { if (sel) select(sel); openTool(plugin, plugin.tools.find((t) => t.id === id)); },
-    cityOpacity: () => state.cityOpacity, setCityOpacity: (v) => setCityOpacity(v),
+    cityOpacity: () => state.cityOpacity, setCityOpacity: (v, o) => setCityOpacity(v, o),
     theme: themeNow(),
     base: `/plugins/${plugin.name}/`,
     onDispose: (f) => state.disposers.push(f),
@@ -241,9 +242,10 @@ function setBuildingForm(form) {
   applyOpacity();
 }
 
-function setCityOpacity(v) {
+// Remembered only when a person chose it: a layer that dims the city for itself gives it back.
+function setCityOpacity(v, { keep = true } = {}) {
   state.cityOpacity = Math.min(1, Math.max(0.04, Number.isFinite(v) ? v : 1));
-  remember('urban-city-opacity', state.cityOpacity);
+  if (keep) remember('urban-city-solid', state.cityOpacity);
   for (const el of document.querySelectorAll('[data-role="city-opacity"]')) if (parseFloat(el.value) !== state.cityOpacity) el.value = String(state.cityOpacity);
   applyOpacity();
 }
@@ -382,28 +384,65 @@ function tidyLegend(card) {
 // The default scales: a city's layers from the doorstep to the metropolis.
 const CITY_SCALE = [40, 60000];
 
+// Where a layer or a tool can be had: the names of the places, or of the workbench's cities, when it is not of anywhere.
+function placesOf(x) {
+  if (x.global || x.anywhere) return 'anywhere';
+  const ids = x.areas || state.areas.filter((a) => a.id !== 'freetown').map((a) => a.id);
+  return ids.map((id) => state.areas.find((a) => a.id === id)?.short || id).join(' and ');
+}
 function lensItems() {
-  const items = [], plan = [];
+  const items = [], plan = [], works = [];
   for (const p of state.plugins) {
     if (p.status === 'planned') { plan.push(p); continue; }
     for (const l of p.layers || []) {
-      if (!inArea(l)) continue;
       const key = `${p.name}/${l.id}`;
       items.push({
         kind: 'layer', key, plugin: p, spec: l, lens: l.lens || p.lens || 'fabric', group: l.group, title: l.title, about: l.about, scale: l.scale || CITY_SCALE,
+        here: inArea(l), places: placesOf(l), areas: l.areas,
         isOn: () => state.layers.get(key)?.on ?? false, isLoading: () => state.layers.get(key)?.loading ?? false,
         isAway: () => !l.global && state.ui.cityFar === true,
       });
     }
     for (const t of p.tools || []) {
-      if (!inArea(t)) continue;
-      items.push({ kind: 'tool', key: `${p.name}/${t.id}`, plugin: p, spec: t, lens: t.lens || p.lens || 'fabric', title: t.title, about: t.about });
+      items.push({ kind: 'tool', key: `${p.name}/${t.id}`, plugin: p, spec: t, lens: t.lens || p.lens || 'fabric', title: t.title, about: t.about, here: inArea(t), places: placesOf(t), areas: t.areas });
     }
+    works.push({ name: p.name, title: p.title, tagline: p.tagline || '', lens: p.lens || (p.layers?.[0]?.lens) || 'fabric' });
   }
-  return { items, plan };
+  return { items, plan, works };
+}
+
+// The works of the place open, under its name: what was written for it, and what holds anywhere is not named again.
+function placeWorks() {
+  const el = document.getElementById('place-works');
+  if (!el) return;
+  const near = state.area && !state.ui.cityFar;
+  if (!near) { if (el.childElementCount) { el.replaceChildren(); document.body.classList.remove('has-works'); } return; }
+  const key = `${state.area.id}`;
+  if (el.dataset.area === key && el.childElementCount) return;
+  el.dataset.area = key;
+  const here = state.plugins.filter((p) => p.status !== 'planned' && [...(p.layers || []), ...(p.tools || [])].some((x) => x.areas ? x.areas.includes(state.area.id) : !state.area.generic && !x.global && !x.anywhere));
+  const list = here.length ? here : state.plugins.filter((p) => ['territory', 'access', 'studio'].includes(p.name));
+  el.replaceChildren(...list.map((p) => h('button', { title: p.tagline || p.summary || '', onclick: () => state.ui.lenses.showWork(p.name) }, p.title)));
+  document.body.classList.toggle('has-works', list.length > 0);
+}
+
+// A layer or a tool of another place: go there, and then turn it on.
+async function goThenDo(d, act) {
+  const id = d.areas?.[0] || state.areas[0].id;
+  const area = state.areas.find((a) => a.id === id);
+  if (!area) return;
+  await openArea(area, { view: 'fly' });
+  act();
+  state.ui.lenses.refresh();
+}
+
+function onToolRow(t) {
+  if (!inArea(t.spec)) return goThenDo(t, () => openTool(t.plugin, t.spec));
+  return openTool(t.plugin, t.spec);
 }
 
 function onLayerRow(d, on) {
+  if (on && !inArea(d.spec)) { goThenDo(d, () => toggleLayer(d.plugin, d.spec, true)); return; }
   toggleLayer(d.plugin, d.spec, on);
   if (!on) return;
   // A layer asked for where it cannot be seen: go to where it can.
@@ -476,13 +515,18 @@ async function gazetteer() {
   if (!state.places) {
     try { state.places = (await (await fetch('/data/products/places/earth.json')).json()).places; } catch { state.places = []; }
   }
-  const input = h('input', { type: 'search', placeholder: 'A place on Earth', 'aria-label': 'a place on Earth' });
+  const input = h('input', { type: 'search', placeholder: 'A place on Earth, or a way of seeing it', 'aria-label': 'a place on Earth, or a way of seeing it' });
   const list = h('ul', {});
   const fly = (lon, lat, range) => { box.hidden = true; state.earth.flyTo({ lon: lon * DEG, lat: lat * DEG, height: state.earth.tree.heightAt(lon * DEG, lat * DEG) || 0, range, tilt: range < 3e5 ? 56 * DEG : 0 }, 4.2); };
   const draw = () => {
     const q = input.value.trim().toLowerCase();
     const rows = [];
     for (const a of state.areas) if (!q || (a.title || a.name).toLowerCase().includes(q) || a.name.toLowerCase().includes(q)) rows.push(h('li', { onclick: () => { box.hidden = true; goToArea(a); } }, h('i', {}, a.title || a.name), h('span', {}, a.tag || 'in three dimensions')));
+    if (q) for (const d of lensItems().items) {
+      if (rows.length > 10) break;
+      if (!`${d.title} ${d.plugin.title} ${d.about || ''}`.toLowerCase().includes(q)) continue;
+      rows.push(h('li', { class: 'way', onclick: () => { box.hidden = true; if (d.kind === 'tool') onToolRow(d); else onLayerRow(d, true); state.ui.lenses.refresh(); } }, d.title, h('span', {}, `${d.plugin.title}${d.here ? '' : `, in ${d.places}`}`)));
+    }
     if (q) for (const p of state.places) {
       if (rows.length > 24) break;
       if (p[0].toLowerCase().includes(q)) rows.push(h('li', { onclick: () => fly(p[1], p[2], p[3] === 'Country' ? 3.5e6 : 3200) }, p[0], h('span', {}, p[3] === 'Country' ? (p[4] || '') : (p[4] || p[3]))));
@@ -640,6 +684,7 @@ async function openArea(area, { view = 'fly', keepLayers = false } = {}) {
   state.gis.onPick(onPick);
   state.gis.onHover(onHover);
   state.gis.onFrame(onFrame);
+  state.spacetime.sceneChanged();
   state.clock = createClock(state.area, state.clock ? { date: state.clock.date, hour: state.clock.hour } : {});
   const applySun = (c) => {
     const s = c.sun;
@@ -651,8 +696,9 @@ async function openArea(area, { view = 'fly', keepLayers = false } = {}) {
   state.clock.on((c) => { for (const [, e] of state.layers) if (e.handle && e.handle.setTime) e.handle.setTime(c); });
   applySun(state.clock);
   state.ribbon.bind(state.clock);
-  const { items, plan } = lensItems();
-  state.ui.lenses.set(items, plan);
+  const { items, plan, works } = lensItems();
+  state.ui.lenses.set(items, plan, works);
+  document.getElementById('place-works')?.replaceChildren();
   viewKeys();
   history.replaceState(null, '', `#${area.id}`);
   for (const p of state.plugins.filter((x) => x.status !== 'planned'))
@@ -698,6 +744,8 @@ function onPick(hit, ev) {
     if (sel) { if (at && !sel.at) sel.at = at; return select(sel); }
   }
   if (!at) return select(null);
+  const inTime = state.spacetime.pickAt(at.lat, at.lon);
+  if (inTime) return select(inTime);
   for (const [, e] of state.layers) {
     if (!e.handle || !e.handle.pickAt) continue;
     const sel = e.handle.pickAt(at.lat, at.lon);
@@ -715,7 +763,8 @@ function onHover(hit, ev) {
   }
   if (!text && ev) {
     const at = state.earth.groundAt(ev.clientX, ev.clientY);
-    if (at) for (const [, e] of state.layers) if (e.handle && e.handle.hoverAt) { text = e.handle.hoverAt(at.lat, at.lon); if (text) break; }
+    if (at) text = state.spacetime.hoverAt(at.lat, at.lon);
+    if (at && !text) for (const [, e] of state.layers) if (e.handle && e.handle.hoverAt) { text = e.handle.hoverAt(at.lat, at.lon); if (text) break; }
   }
   if (!text || !ev) { box.hidden = true; return; }
   box.textContent = text;
@@ -741,7 +790,10 @@ function onFrame(now) {
     state.ui.citySeen = seen;
     city.style.opacity = seen.toFixed(3);
     state.gis.setPaused(seen <= 0.002);
-    state.ui.cityFar = seen <= 0.002;
+    const far = seen <= 0.002;
+    const flipped = state.ui.cityFar !== far;
+    state.ui.cityFar = far;
+    if (flipped && state.spacetime.needsRebuild()) state.spacetime.sceneChanged();
     E.city && (E.city.amount = seen);
     const legend = document.getElementById('legend');
     if (state.ui.cityCard) {
@@ -755,6 +807,7 @@ function onFrame(now) {
   if (now - titleAt > 120) {
     titleAt = now;
     credits(v);
+    placeWorks();
     // A legend stands while its layer means something at this height.
     for (const [, e] of state.layers) {
       if (!e.legend || !e.spec?.scale) continue;
@@ -806,13 +859,30 @@ async function start() {
   applyLook();
   createWorldTiles();
   placesList();
+  state.spacetime = createSpaceTimeHost({
+    THREE, earth: state.earth, gis: () => state.gis, theme: themeNow, cityFar: () => state.ui.cityFar,
+    area: { current: () => state.area, clock: () => state.clock },
+    legendEl: () => document.getElementById('legend'), openLegend,
+  });
+  // A file dropped anywhere goes to the studio, which opens to take it.
+  window.addEventListener('dragover', (e) => { if (e.dataTransfer?.types?.includes('Files')) { e.preventDefault(); document.body.classList.add('st-dragging'); } });
+  window.addEventListener('dragleave', (e) => { if (!e.relatedTarget) document.body.classList.remove('st-dragging'); });
+  window.addEventListener('drop', (e) => {
+    const file = e.dataTransfer?.files?.[0];
+    if (!file) return;
+    e.preventDefault();
+    document.body.classList.remove('st-dragging');
+    if (state.spacetime.dropped(file)) return;
+    const studio = state.plugins.find((p) => p.name === 'studio');
+    if (studio) openTool(studio, studio.tools.find((t) => t.id === 'studio'));
+  });
   state.years = createYears();
   state.ribbon = createRibbon(document.getElementById('clock'), { theme: themeNow });
   state.ui.navigator = createNavigator({ ladderEl: document.getElementById('ladder'), compassEl: document.getElementById('compass'), scaleEl: document.getElementById('scalebar'), earth: state.earth });
   state.ui.neatline = createNeatline(document.getElementById('neatline'), state.earth);
   state.ui.lenses = createLenses(document.getElementById('lenses'), {
     lensList: state.lenses, onToggle: onLayerRow, plannedPanel,
-    onTool: (t) => openTool(t.plugin, t.spec),
+    onTool: onToolRow,
   });
   drawPins();
   lamps();
@@ -832,7 +902,10 @@ async function start() {
     await openArea(state.areas[0], { view: 'keep' });
     state.earth.setView({ lon: lon * DEG, lat: lat * DEG, height: 0, range: 3600, tilt: 56 * DEG, heading: 0.35 });
   } else await openArea(state.areas[0], { view: 'keep' });
-  window.addEventListener('keydown', (e) => { if (e.key === 'Escape') { if (!document.getElementById('panel').hidden) closePanel(); else select(null); } });
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { if (!document.getElementById('gazetteer').hidden) document.getElementById('gazetteer').hidden = true; else if (!document.getElementById('panel').hidden) closePanel(); else select(null); }
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); gazetteer(); }
+  });
   // The page's state for its own checks and for its pictures.
   window.workbench = { state, goToArea, openArea, select, toggleLayer, openTool, closePanel };
 }

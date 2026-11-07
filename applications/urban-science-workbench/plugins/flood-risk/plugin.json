@@ -1,5 +1,6 @@
 {
   "title": "Flood risk",
+  "tagline": "a city's floods, and what they reach",
   "summary": "A city's flood risk read from its own assessment: how deep each flood reaches on a 1 m map, which buildings it reaches, what the wards stand to lose each year, and how large a loss to expect once in so many years; with the hazards named for any place on Earth.",
   "status": "draft",
   "activity": "research",

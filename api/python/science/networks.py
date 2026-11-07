@@ -359,11 +359,34 @@ def include_closure(source: Path, dirs: list[Path]) -> list[Path]:
     return seen
 
 
+def dirs_needed(source: Path, dirs: list[Path]) -> list[Path]:
+    """Those of the include directories that the source's headers are found in. Every include is looked for in every directory given, so that a long list costs
+    a compiler thousands of lookups, and minutes where the sources lie across a slow mount (WSL's /mnt/c)."""
+    used: list[Path] = []
+    closure = include_closure(source, dirs)
+    for f in closure[1:]:
+        for d in dirs:
+            try:
+                f.relative_to(d.resolve())
+            except ValueError:
+                continue
+            if d not in used:
+                used.append(d)
+    return used
+
+
 class Host:
     """The plug-ins of one application's plugins/ directory: listed, described, compiled (C++)
     and run, each run a process in a directory of its own under `work`. C++ programs are built
     with the compiler hosting.py finds (natively, or g++ in WSL) against `include_dirs` and
-    api/cpp, into work/bin/, again when the source or any header it includes is newer."""
+    api/cpp, into work/bin/, again when the source or any header it includes is newer. A host of
+    other subjects (spacetime.py) names its own module and kind, and what a run is given."""
+
+    module = "science.networks"
+    kind = "network-analysis"
+
+    def request_of(self, subject: dict, chosen: dict) -> dict:
+        return {"network": plain(subject), "params": chosen}
 
     def __init__(self, plugins: Path, work: Path, include_dirs=(), python: str | None = None):
         self.plugins = Path(plugins).resolve()
@@ -410,7 +433,7 @@ class Host:
                 return cxx, binary
             binary.parent.mkdir(parents=True, exist_ok=True)
             building = binary.with_name(f"{binary.name}.{uuid.uuid4().hex[:8]}.part")
-            includes = [arg for d in self.include_dirs if d.is_dir() for arg in ("-I", cxx.path(d))]
+            includes = [arg for d in dirs_needed(path, self.include_dirs) if d.is_dir() for arg in ("-I", cxx.path(d))]
             done = subprocess.run([*cxx.command, "-std=c++20", "-O2", *includes, "-o", cxx.path(building), cxx.path(path)],
                                   cwd=path.parent, capture_output=True, text=True, encoding="utf-8", errors="replace",
                                   creationflags=NO_WINDOW)
@@ -433,7 +456,7 @@ class Host:
         compiler of a C++ plug-in (None for a script)."""
         if path.suffix == ".py":
             tail = ["describe", str(path)] if args[0] == "--describe" else ["run", str(path), str(args[1])]
-            return [self.python, "-m", "science.networks", *tail], None
+            return [self.python, "-m", self.module, *tail], None
         cxx, binary = self.binary(path)
         tail = ["--describe"] if args[0] == "--describe" else ["--run", cxx.path(Path(args[1]))]
         return [*cxx.runner(), cxx.path(binary), *tail], cxx
@@ -456,7 +479,7 @@ class Host:
         description = json.loads(done.stdout)
         description["file"] = f"plugins/{path.name}"
         description.setdefault("language", "python" if path.suffix == ".py" else "cpp")
-        description.setdefault("kind", "network-analysis")
+        description.setdefault("kind", self.kind)
         description.setdefault("params", [])
         self._described[path] = (key, description)
         return dict(description)
@@ -472,7 +495,7 @@ class Host:
         (self.work / "tmp").mkdir(parents=True, exist_ok=True)
         work = Path(tempfile.mkdtemp(prefix="run-", dir=str(self.work / "tmp")))
         try:
-            (work / "input.json").write_text(json.dumps({"network": plain(network), "params": chosen}, ensure_ascii=False,
+            (work / "input.json").write_text(json.dumps(self.request_of(network, chosen), ensure_ascii=False,
                                                         allow_nan=False), encoding="utf-8")
             command, cxx = self._command(path, "--run", work)
             process = subprocess.Popen(command, cwd=ROOT, env=self._environment(), stdout=subprocess.PIPE, stderr=subprocess.PIPE,

@@ -82,6 +82,12 @@ here.field("gfs-forecast").sample("tmp2m", 139.69, 35.69, "now+1d")
 
 The two cannot drift apart, and the checks hold them to each other exactly.
 
+### 2.8 Plug-ins over Data in Space and Time
+
+Some plug-ins are given what happened where and when ([ADR 0079](../development/decisions/0079-data-in-space-and-time.md)). A **record** is events, tracks, cells, a grid or flows, in degrees on WGS 84 and milliseconds in UTC. A plug-in is given the records shown, its parameters and the context of the view, and answers records, tables, curves and notes.
+
+The classes are `science.spacetime.SpaceTimeAnalysis` in Python and `science::spacetime::Analysis` in C++ ([`cpp/spacetime_plugin.hpp`](cpp/spacetime_plugin.hpp)); the same names hold in JavaScript ([`visualization/js/gis/spacetime.js`](../visualization/js/gis/spacetime.js)). `spacetime.Host` is `networks.Host`, on records, so that they run as processes behind the same file contract. The Urban Science Workbench binds it to its [studio's scripts](../applications/urban-science-workbench/plugins/studio/scripts/README.md), which are the guide.
+
 ### 2.7 Plug-ins over Networks of Places
 
 Some applications draw flows between places rather than fields on a grid: the Economy Atlas draws the world's trade between economies ([ADR 0046](../development/decisions/0046-the-economy-atlas-data-and-plugins.md)). Their plug-ins are given a **network**, places (an id, a name, a latitude and longitude, a group) and flows between them (a value, optionally a kind), and answer **results** the application draws: `values` (a number for each place), `arcs` (flows between places), and the sketches, tables and notes of §2.3. The classes are [python/science/networks.py](python/science/networks.py) (`Network`, `NetworkAnalysis`, `values`, `arcs`, `param`) and [cpp/network_plugin.hpp](cpp/network_plugin.hpp) (`science::network::Analysis`, `SCIENCE_NETWORK_PLUGIN`); an application binds a `networks.Host` to its own `plugins/`, with the include directories its C++ plug-ins may use.
@@ -300,7 +306,7 @@ The version is in the path: `/api/v1`. Within v1, endpoints and fields are added
 | [`python/science/`](python/science/) | The package `science`: `Client` ([client.py](python/science/client.py)), `Local` ([local.py](python/science/local.py)), the bridge's pool ([bridge.py](python/science/bridge.py)), field products ([fields.py](python/science/fields.py)), plug-ins ([plugins.py](python/science/plugins.py)) and their hosting ([hosting.py](python/science/hosting.py)), plug-ins over networks of places and their host ([networks.py](python/science/networks.py)); [pyproject.toml](python/pyproject.toml) | draft |
 | [`js/science.mjs`](js/science.mjs) | The JavaScript client, for Node and browsers | draft |
 | [`cpp/science.hpp`](cpp/science.hpp), [`cpp/science/`](cpp/science/) | The C++ client, header-only: `Client`, `Field`, the stream; its JSON ([json.hpp](cpp/science/json.hpp)) and its HTTP over the system's sockets ([http.hpp](cpp/science/http.hpp)) | draft |
-| [`cpp/plugin.hpp`](cpp/plugin.hpp), [`cpp/network_plugin.hpp`](cpp/network_plugin.hpp) | The classes of C++ plug-ins: over fields (§2.3), and over networks of places (§2.7) | draft |
+| [`cpp/plugin.hpp`](cpp/plugin.hpp), [`cpp/network_plugin.hpp`](cpp/network_plugin.hpp), [`cpp/spacetime_plugin.hpp`](cpp/spacetime_plugin.hpp) | The classes of C++ plug-ins: over fields (§2.3), over networks of places (§2.7), and over data in space and time (§2.8) | draft |
 | [`c/`](c/) | The C client ([science.h](c/science.h)), implemented over the C++ ([science.cpp](c/science.cpp)) | draft |
 | [`Makefile`](Makefile) | Builds `libscience.a`, `libscience.so`, the C and C++ examples and the check programs into `build/` | draft |
 | [`openapi.json`](openapi.json) | The description of every endpoint (OpenAPI 3.1) | draft |

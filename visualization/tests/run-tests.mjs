@@ -777,6 +777,86 @@ const { check, assert, done } = suite();
   }
   check('gis: on 400 random stars with a hole', worstTri, 1e-9);
   assert('gis: a degenerate ring gives no triangles, and no failure', gis.triangulate([[0, 0], [1, 1], [2, 2]]).length === 0);
+  // Data in space and time: dates as files write them, tables, GeoJSON, records in columns, the line of time.
+  const st = gis.spacetime;
+  const at = (s) => st.parseTime(s);
+  assert('spacetime: an ISO date with its zone is read as it says', at('2024-03-01T12:00:00+11:00').t === Date.UTC(2024, 2, 1, 1) && at('2024-03-01T01:00:00Z').t === Date.UTC(2024, 2, 1, 1) && !at('2024-03-01T01:00:00Z').assumed);
+  assert('spacetime: a time with no zone is taken as UTC, and said to be', at('2024-03-01 01:00').t === Date.UTC(2024, 2, 1, 1) && at('2024-03-01 01:00').assumed === true);
+  assert('spacetime: a date alone is its midnight, and a year its first day', at('2024-03-01').t === Date.UTC(2024, 2, 1) && at('2015').t === Date.UTC(2015, 0, 1));
+  assert('spacetime: a number by its size: a year, seconds, milliseconds', at(1999).t === Date.UTC(1999, 0, 1) && at(1700000000).t === 1700000000000 && at(1700000000000).t === 1700000000000);
+  assert('spacetime: a date that reads two ways is refused, with its reason', /two ways/.test(at('03/04/2020').why));
+  assert('spacetime: what is no date is refused', !!at('yesterday-ish').why && !!at('').why && !!at('2024-13-01').why);
+  const tb = st.readTable('\ufefflat;lon;time;note\r\n1;2;2024-01-01;"a; b ""c"" d"\r\n\r\n3;4;2024-01-02;\n');
+  assert('spacetime: a table: its delimiter found, quotes as RFC 4180 has them, blank lines passed over', tb.columns.join() === 'lat,lon,time,note' && tb.rows.length === 2 && tb.rows[0][3] === 'a; b "c" d');
+  const g1 = st.guessColumns({ columns: ['Latitude', 'LONG', 'timestamp', 'depth', 'place'], rows: [['1', '2', '2024-01-01', '5', 'x'], ['3', '4', '2024-01-02', '6', 'y']] });
+  assert('spacetime: columns told by their names, numbers by their contents', g1.lat === 'Latitude' && g1.lon === 'LONG' && g1.time === 'timestamp' && g1.numbers.join() === 'depth' && g1.label === 'place');
+  const g2 = st.guessColumns({ columns: ['id', 'lat', 'lon', 'when'], rows: [['a', '1', '2', '2024-01-01'], ['a', '1', '3', '2024-01-02'], ['b', '2', '2', '2024-01-01'], ['b', '2', '3', '2024-01-02']] });
+  assert('spacetime: an id that repeats says which thing a row is', g2.track === 'id');
+  const g3 = st.guessColumns({ columns: ['id', 'lat', 'lon', 'when'], rows: [['a', '1', '2', '2024-01-01'], ['b', '1', '3', '2024-01-02']] });
+  assert('spacetime: an id that does not repeat says nothing of tracks', g3.track === null);
+  const rows = { columns: ['lat', 'lon', 't', 'v'], rows: [['1', '2', '2024-01-02', '7'], ['95', '2', '2024-01-02', '7'], ['1', '2', 'never', '7'], ['3', '4', '2024-01-01', '']] };
+  const ev = st.recordFromTable(rows, { lat: 'lat', lon: 'lon', time: 't', numbers: ['v'] }, 'r');
+  assert('spacetime: rows that cannot be placed are left out and counted by reason', ev.kind === 'events' && ev.time.length === 2 && ev.report.left['no place on the Earth'] === 1 && ev.report.left['no time that reads'] === 1);
+  // An empty cell is not the equator. A row with no latitude must not stretch the record's box to reach it.
+  // A thread's strip: each segment four vertices, two either side of each end, whichever way the screen's normal falls from that end.
+  {
+    class Attr { constructor(array, size) { this.array = array; this.itemSize = size; } }
+    const stand = {
+      BufferGeometry: class { setAttribute(n, a) { this[n] = a; } setIndex(i) { this.index = i; } }, BufferAttribute: Attr,
+      Vector2: class { copy() {} }, Vector3: class {}, Sphere: class {},
+      ShaderMaterial: class { constructor(o) { Object.assign(this, o); } dispose() { this.gone = true; } },
+      Mesh: class { constructor(g, m) { this.geometry = g; this.material = m; this.children = []; } add(c) { this.children.push(c); } },
+      AdditiveBlending: 1, NormalBlending: 2, DoubleSide: 3, GreaterDepth: 4,
+    };
+    stand.BufferGeometry.prototype.dispose = () => {};
+    const s = gis.createThreads(stand, { position: Float32Array.of(0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0), time: Float32Array.of(0, 0.5, 0.5, 1), value: Float32Array.of(0, 0.25, 0.25, 1) }, { ramp: {} });
+    const g = s.object.geometry, P = g.position.array, O = g.aOther.array, F = g.aFlip.array, A = g.aAcross.array;
+    assert('spacetime marks: a thread of two segments is eight vertices and four triangles', P.length === 24 && g.index.array.length === 12 && Math.max(...g.index.array) === 7);
+    assert('spacetime marks: each end of a strip knows the other, and its flip keeps a side a side', O[0] === 1 && P[6] === 1 && O[6] === 0 && F[0] === 1 && F[2] === -1 && A[0] === A[2] && A[1] === A[3] && A[0] === -A[1]);
+    assert('spacetime marks: time and value follow the vertices given', g.aTime.array[0] === 0 && g.aTime.array[2] === 0.5 && g.aTime.array[7] === 1 && g.aValue.array[7] === 1);
+    assert('spacetime marks: hidden behind what stands in front, unless asked', s.object.children.length === 0);
+    const c = gis.createThreads(stand, { position: Float32Array.of(0, 0, 0, 1, 0, 0), time: Float32Array.of(0, 1), value: Float32Array.of(0, 1) }, { ramp: {}, through: 0.3 });
+    const ghost = c.object.children[0];
+    assert('spacetime marks: seen through, drawn where something is nearer, its moment shared', ghost && ghost.material.depthFunc === stand.GreaterDepth && ghost.material.defines.THROUGH === '0.300' && ghost.material.uniforms === c.material.uniforms && ghost.geometry === c.object.geometry);
+    c.setTime(0.5, 0.1, 0.2);
+    assert('spacetime marks: the moment moved on one reaches the other', ghost.material.uniforms.uNow.value === 0.5 && ghost.material.uniforms.uKeep.value === 0.2);
+    c.dispose();
+    assert('spacetime marks: both materials let go', ghost.material.gone && c.material.gone);
+  }
+  const holes = st.recordFromTable({ columns: ['lat', 'lon', 't'], rows: [['-37.8', '144.9', '2024-01-01'], ['', '144.9', '2024-01-02'], ['-37.9', ' ', '2024-01-03'], ['0', '0', '2024-01-04']] }, { lat: 'lat', lon: 'lon', time: 't' }, 'r');
+  assert('spacetime: an empty coordinate is left out, and a true zero is kept', holes.time.length === 2 && holes.lat[1] === 0 && holes.report.left['no place on the Earth'] === 2);
+  const heldBack = st.prepared(holes);
+  assert('spacetime: what the file\'s reader left out is said with the record drawn', heldBack.left['no place on the Earth'] === 2 && heldBack.box[0] === -37.8);
+  assert('spacetime: a blank value is missing, not nought', ev.values.v[1] === null && ev.values.v[0] === 7);
+  let refused = '';
+  try { st.recordFromTable(rows, { lat: 'lat', lon: 'lon' }); } catch (e) { refused = e.message; }
+  assert('spacetime: a table with no column said for the time is refused, saying which', /the time/.test(refused));
+  const trk = st.recordFromTable({ columns: ['id', 'lat', 'lon', 't'], rows: [['a', '1', '1', '2024-01-02'], ['a', '0', '0', '2024-01-01'], ['b', '5', '5', '2024-01-01'], ['b', '6', '6', '2024-01-03']] }, { lat: 'lat', lon: 'lon', time: 't', track: 'id' });
+  assert('spacetime: rows of one thing make a track, in order of time', trk.kind === 'tracks' && trk.tracks.length === 2 && trk.tracks[0].lat[0] === 0);
+  const gp = st.recordFromGeoJSON({ type: 'FeatureCollection', features: [{ type: 'Feature', geometry: { type: 'Point', coordinates: [10, 20] }, properties: { time: '2024-01-01', mag: 5 } }, { type: 'Feature', geometry: { type: 'Point', coordinates: [11, 21] }, properties: { mag: 6 } }] });
+  assert('spacetime: GeoJSON points with a time are events, those without left out', gp.kind === 'events' && gp.lon[0] === 10 && gp.lat[0] === 20 && gp.values.mag[0] === 5 && gp.report.left['no time'] === 1);
+  const gl = st.recordFromGeoJSON({ type: 'Feature', geometry: { type: 'LineString', coordinates: [[0, 0], [1, 1]] }, properties: { times: ['2024-01-01', '2024-01-02'], name: 'x' } });
+  assert('spacetime: a GeoJSON line with its times is a track', gl.kind === 'tracks' && gl.tracks[0].time.length === 2 && gl.tracks[0].name === 'x');
+  const gc = st.recordFromGeoJSON({ type: 'FeatureCollection', features: [0, 1].flatMap((d) => ['a', 'b'].map((id, k) => ({ type: 'Feature', id, geometry: { type: 'Polygon', coordinates: [[[k, 0], [k + 1, 0], [k + 1, 1], [k, 0]]] }, properties: { time: `2024-01-0${d + 1}`, n: d * 10 + k } }))) });
+  assert('spacetime: GeoJSON polygons over times are cells', gc.kind === 'cells' && gc.cells.length === 2 && gc.time.length === 2 && gc.values.n[1][1] === 11 && gc.cells[0].ring.length === 3);
+  assert('spacetime: a file read by what it is', st.readRecords('lat,lon,t\n1,2,3', 'a.csv').table.rows.length === 1 && st.readRecords('{"kind":"events","time":[],"lat":[],"lon":[]}', 'b.json').records[0].title === 'b' && st.readRecords('{"a":1}\n{"a":2,"b":3}', 'c.jsonl').table.columns.join() === 'a,b');
+  const p1 = st.prepared({ kind: 'events', title: 't', time: [30, 10, 20, null], lat: [3, 1, 2, 0], lon: [3, 1, 200, 0], values: { v: [3, 1, null, 0] } });
+  assert('spacetime: events in columns, in order of time, a missing value NaN', [...p1.time].join() === '10,20,30' && p1.values.v[0] === 1 && Number.isNaN(p1.values.v[1]) && p1.left['no time'] === 1);
+  assert('spacetime: their span, box and the range of each variable', p1.span.join() === '10,30' && p1.box[0] === 1 && p1.box[2] === 3 && p1.ranges.v.join() === '1,3');
+  const refuses = (x) => { try { st.prepared(x); return false; } catch { return true; } };
+  assert('spacetime: what cannot be drawn is refused rather than drawn wrong', refuses({ kind: 'clouds' }) && refuses({ kind: 'events', time: [1], lat: [], lon: [] }) && refuses({ kind: 'events', time: [null], lat: [0], lon: [0] }) && refuses({ kind: 'cells', time: [1], cells: [{ id: 'a', ring: [[0, 0], [1, 1], [1, 0]] }], values: { v: [[1, 2]] } }) && refuses({ kind: 'grid', time: [1], box: [0, 0, 1, 1], width: 2, height: 2, values: { v: [[1, 2, 3]] } }));
+  const p2 = st.prepared({ kind: 'tracks', tracks: [{ id: 'a', time: [2, 1], lat: [2, 1], lon: [2, 1] }, { id: 'b', time: [1], lat: [1], lon: [1] }] });
+  assert('spacetime: a track in order of time, one of a single point left out and said', p2.count === 1 && p2.tracks[0].lat[0] === 1 && p2.left['a track of fewer than two points'] === 1);
+  const p3 = st.prepared({ kind: 'flows', places: [{ id: 'a', lat: 0, lon: 0 }, { id: 'b', lat: 1, lon: 1 }], flows: [{ from: 'a', to: 'b', time: 5, value: 2 }, { from: 'a', to: 'z', time: 6 }] });
+  assert('spacetime: flows between known places only', p3.count === 1 && p3.left['a flow between unknown places'] === 1);
+  assert('spacetime: the first time at or after a moment', st.lowerBound(Float64Array.from([1, 3, 3, 5]), 3) === 1 && st.lowerBound(Float64Array.from([1, 3]), 9) === 2 && st.lowerBound(Float64Array.from([1, 3]), 0) === 0);
+  const hist = st.histogram([0, 1, 2, 3, 10], [0, 10], 5);
+  assert('spacetime: a histogram holds every time, the last in the last bin', hist.reduce((a, b) => a + b, 0) === 5 && hist[0] === 2 && hist[4] === 1);
+  const inOrder = (ticks, a, b) => ticks.length >= 1 && ticks.every((q, k) => q.t >= a && q.t <= b && (k === 0 || q.t > ticks[k - 1].t));
+  const decades = st.timeTicks(Date.UTC(1976, 0, 1), Date.UTC(2026, 0, 1), 6), months = st.timeTicks(Date.UTC(2024, 0, 15), Date.UTC(2024, 8, 15), 8), hours = st.timeTicks(Date.UTC(2024, 0, 1), Date.UTC(2024, 0, 2), 6);
+  assert('spacetime: ticks fall within their span, in order, on round moments', inOrder(decades, Date.UTC(1976, 0, 1), Date.UTC(2026, 0, 1)) && decades.every((q) => new Date(q.t).getUTCFullYear() % 10 === 0) && inOrder(months, Date.UTC(2024, 0, 15), Date.UTC(2024, 8, 15)) && months.every((q) => new Date(q.t).getUTCDate() === 1) && inOrder(hours, Date.UTC(2024, 0, 1), Date.UTC(2024, 0, 2)) && hours.every((q) => q.t % 3600000 === 0));
+  assert('spacetime: a moment read to fit its span', st.formatTime(Date.UTC(2003, 5, 7), 'full', 50 * st.YEAR) === '2003' && st.formatTime(Date.UTC(2003, 5, 7), 'full', 5 * st.YEAR) === 'Jun 2003' && st.formatTime(Date.UTC(2003, 5, 7), 'full', 100 * st.DAY) === '7 Jun 2003');
+  assert('spacetime: a window read in words', st.formatSpan(30 * st.DAY) === '30 days' && st.formatSpan(5 * st.YEAR) === '5 years' && st.formatSpan(3 * st.HOUR) === '3 hours');
   // The Web Mercator pyramid of the world's tiles.
   const [wx, wy] = gis.tileOf(27.7172, 85.324);
   const wb = gis.tileBox(wx, wy);

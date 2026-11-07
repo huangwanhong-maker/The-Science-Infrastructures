@@ -1,6 +1,6 @@
 # 0078. The Whole Earth in the Urban Science Workbench: One 3D GIS, Any City, the World's Development Data
 
-- **Status:** Accepted, provisionally (2026-11-07). Amends ADR 0060 (the workbench's map), and the workbench's colour in CLAUDE.md §7.
+- **Status:** Accepted, provisionally (2026-11-07). Amends ADR 0060 (the workbench's map), and the workbench's colour in CLAUDE.md §7. Amended by [ADR 0079](0079-data-in-space-and-time.md): works are named again beside the lenses.
 - **Date:** 2026-11-06 to 2026-11-07
 - **Decided by:**
   - **The request.** The user asked to "build a 3D GIS view, largely revise the UI", reusing the Earth Atlas and Cosmopoiesis, to integrate "such tools and data that we can integrate" from a list of the World Bank's and others' tools and data "and visualization on the 3D GIS", in pink-purple, because the page was "too normal, and unclear". Then: "we doesn't want just do several cities... If impossible to get all data, then ignore this requirement".

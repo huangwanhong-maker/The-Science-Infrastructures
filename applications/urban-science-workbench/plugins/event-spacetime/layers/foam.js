@@ -158,13 +158,14 @@ export async function layer(ctx) {
     unseenKey.hidden = !(state.view.colour === 'unseen' && state.memory);
     if (what === 'error') status.textContent = state.error;
   });
+  let dimmedFrom = null;
   try {
     await ensureRecord(ctx);
     build();
     status.textContent = summary();
     look();
     // A foam is easier to read through a city half seen.
-    if (ctx.cityOpacity && ctx.cityOpacity() > 0.5) ctx.setCityOpacity(0.35);
+    if (ctx.cityOpacity && ctx.cityOpacity() > 0.5) { dimmedFrom = ctx.cityOpacity(); ctx.setCityOpacity(0.35, { keep: false }); }
   } catch (e) {
     status.textContent = String(e.message || e);
   }
@@ -212,7 +213,8 @@ export async function layer(ctx) {
       }
       return null;
     },
-    dispose() { off(); },
+    // The city given back as it was found, unless someone has moved its slider since.
+    dispose() { off(); if (dimmedFrom != null && ctx.cityOpacity && ctx.cityOpacity() === 0.35) ctx.setCityOpacity(dimmedFrom, { keep: false }); },
   };
 }
 

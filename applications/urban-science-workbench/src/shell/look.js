@@ -21,7 +21,7 @@ function sky(stops) {
 const THEMES = {
   night: {
     space: rgb('#0B0611'), grain: 1,
-    grade: { amount: 0.94, shadow: rgb('#170E22'), middle: rgb('#5B3C6E'), light: rgb('#E6B9D2'), seaDeep: rgb('#0D0A22'), seaLight: rgb('#2B2355'), nightTint: rgb('#FFC2DA'), glint: [0.20, 0.10, 0.20] },
+    grade: { amount: 0.94, shadow: rgb('#170E22'), middle: rgb('#5B3C6E'), light: rgb('#E6B9D2'), seaDeep: rgb('#0D0A22'), seaLight: rgb('#2B2355'), nightTint: rgb('#FFC2DA'), glint: [0.075, 0.04, 0.085] },
     air: { day: [0.46, 0.30, 0.82], dusk: [0.95, 0.42, 0.62] },
     sky: sky({
       night: { zenith: '#0B0611', horizon: '#1E1230', below: '#120A1C', sun: '#000000' },
